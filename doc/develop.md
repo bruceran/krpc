@@ -1,8 +1,16 @@
 
 # 整体架构
 
+	* 
+	
+	
+	* 关系
 		
-			
+		  一个进程内通常启动一个app
+		  每个app内可以启动多个server,多个client,多个webserver
+		  每个app内可启动多个service, service可绑定到不同的server, 或者client(PUSH调用)，或者绑定到webserver
+		  每个app内可启动多个referer, referer可绑定到不同的client, 或者server(PUSH调用)
+		  service和referer都可以在method级别做一些配置，如重试策略，线程池，流控参数等
 
 # krpc协议
 
@@ -294,7 +302,7 @@
     spring-schema-server.xml
     spring-schema-client.xml
   
-  这种方式参考dubbo实现，但配置值不同，参考配置参数详解
+  这种配置方式形式上来自dubbo，但具体配置值不同，参考配置参数详解
 
 # 和spring框架集成(spring boot方式)
   
