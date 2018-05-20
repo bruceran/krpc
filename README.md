@@ -29,7 +29,6 @@
 	  
 	  如何启动krpc
 	  和spring框架集成(java config方式)
-	  和spring框架集成(xml方式)
 	  和spring框架集成(schema方式)
 	  和spring框架集成(spring boot方式)
 

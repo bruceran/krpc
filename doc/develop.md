@@ -272,13 +272,6 @@
 						.build().initAndStart();
 				return app;
 	    }
-# 和spring框架集成(xml方式)
-
-		服务端参考；src/test/java/krpc/test/xml
-			spring-server.xml
-			spring-client.xml
-		
-		这种方式配置较复杂的时候不方便，不建议使用，应采用schema方式
 		
 # 和spring框架集成(schema方式)
 
