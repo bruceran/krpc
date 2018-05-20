@@ -36,12 +36,12 @@
 
 # 框架目录结构
 
-		README.md 本文件
-		LICENSE  许可证
-		build.gradle gradle配置文件
-		src/ 所有源码
-		doc/ 文档目录
-		dist/ 编译后的jar包, pb工具, 依赖的jar包
+	README.md 本文件
+	LICENSE  许可证
+	build.gradle gradle配置文件
+	src/ 所有源码
+	doc/ 文档目录
+	dist/ 编译后的jar包, pb工具, 依赖的jar包
 
 # 框架依赖说明
 
@@ -49,29 +49,29 @@
   
 	强依赖：缺少以下依赖框架无法编译和运行
   
-			compile 'org.slf4j:slf4j-api:1.7.22'  -- logback
-			compile 'ch.qos.logback:logback-core:1.2.1'   -- logback
-			compile 'ch.qos.logback:logback-classic:1.2.1'  -- logback
-			
-			框架自身的log框架是logback, 若应用程序使用了其它日志框架，可自行加入以下jar包透明地转换到logback, 统一使用logback来做日志
-			jcl-over-slf4j-1.6.6.jar   -- java common logging --> logback
-			log4j-over-slf4j-1.6.6.jar   -- log4j -> logback
-			
-			compile 'com.google.protobuf:protobuf-java:3.5.1'   -- protobuff 支持
-			compile 'io.netty:netty-all:4.1.16.Final'     -- netty 4
-			compile 'javassist:javassist:3.12.1.GA'    -- 字节码生成
+		compile 'org.slf4j:slf4j-api:1.7.22'  -- logback
+		compile 'ch.qos.logback:logback-core:1.2.1'   -- logback
+		compile 'ch.qos.logback:logback-classic:1.2.1'  -- logback
+		
+		框架自身的log框架是logback, 若应用程序使用了其它日志框架，可自行加入以下jar包透明地转换到logback, 统一使用logback来做日志
+		jcl-over-slf4j-1.6.6.jar   -- java common logging --> logback
+		log4j-over-slf4j-1.6.6.jar   -- log4j -> logback
+		
+		compile 'com.google.protobuf:protobuf-java:3.5.1'   -- protobuff 支持
+		compile 'io.netty:netty-all:4.1.16.Final'     -- netty 4
+		compile 'javassist:javassist:3.12.1.GA'    -- 字节码生成
 	
 	可选依赖：
 	
-			HTTP网关的json转换功能: 默认插件是jackson插件, 需要以下2个依赖
-				compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
-				compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-				如果服务只启动tcp功能，未启动http网关，则不用以上依赖
+		HTTP网关的json转换功能: 默认插件是jackson插件, 需要以下2个依赖; 如果服务只启动tcp功能，未启动http网关，则不用以上依赖
+			compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
+			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
 			
-			网络包压缩；默认为不压缩, 除非配置使用snappy压缩才会用到以下依赖
-				compile 'org.xerial.snappy:snappy-java:1.1.2.3'
-			
-			SPRING框架依赖；若使用krpc schema支持需用到以下依赖
-				compile 'org.springframework:spring-core:4.1.6.RELEASE'
-				compile 'org.springframework:spring-beans:4.1.6.RELEASE'
-				compile 'org.springframework:spring-context:4.1.6.RELEASE'		
+		
+		网络包压缩；默认为不压缩, 除非配置使用snappy压缩才会用到以下依赖
+			compile 'org.xerial.snappy:snappy-java:1.1.2.3'
+		
+		SPRING框架依赖；若使用krpc schema支持需用到以下依赖
+			compile 'org.springframework:spring-core:4.1.6.RELEASE'
+			compile 'org.springframework:spring-beans:4.1.6.RELEASE'
+			compile 'org.springframework:spring-context:4.1.6.RELEASE'		
