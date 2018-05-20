@@ -253,10 +253,10 @@
         
           @Bean(destroyMethod = "stopAndClose")
           public RpcApp rpcApp(UserService userService) { // 自动注入该服务
-        		RpcApp app = new Bootstrap() 
-        				.addService(UserService.class,userService) 
-        				.build().initAndStart();
-        		return app;
+            RpcApp app = new Bootstrap() 
+            		.addService(UserService.class,userService) 
+            		.build().initAndStart();
+            return app;
           }
           
           ... // 其它bean
@@ -270,10 +270,23 @@
         public RpcApp rpcApp() {
         	RpcApp app = new Bootstrap() 
         			.addReferer("us",UserService.class,"127.0.0.1:5600") 
+              .addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600")         			
         			.build().initAndStart();
         	return app;
         }
 		
+        @Bean
+        public UserService userService(RpcApp app) {
+          UserService us = app.getReferer("us");
+          return us;
+        }
+            
+        @Bean
+        public UserServiceAsync userServiceAsync(RpcApp app) {
+        	UserServiceAsync usa = app.getReferer("usa");
+        	return usa;
+        }            
+    		
 # 和spring框架集成(schema方式)
 
   服务端参考；src/test/java/krpc/test/schema
