@@ -15,15 +15,15 @@
 		  插件加载机制：spi, 想法来自dubbo
 		  动态代理机制：javasssist, 想法来自dubbo
 		  和spring的schema集成方式: 想法来自dubbo
-		  接口契约形式：以proto文件为契约， 想法来自scalabpe的服务描述文件
+		  接口契约形式：以proto文件为契约， 想法来自scalabpe的服务描述文件; 也是protobuff对服务接口申明的默认方式
 		  接口形式：每个请求一个入参，一个响应； scalabpe实践中最好的接口形式
 		  错误码还是异常: 错误码； scalabpe实践中发现最好的编码方式, 使用异常会污染客户端代码; rpc调用出错是正常现象，不是异常;
+		  使用服务号和消息号来定位服务：想法来自scalabpe里的avenue协议
 		  通用的http网关：想法来自scalabpe, 和zuul不谋而合
 
-		独创之处：
+    独创之处：
 		  
 		  客户端异步调用以及异步调用组合: 使用java 8的CompletableFuture, 比其他rpc框架都好
 		  服务端异步实现：比其他框架的实现都好
 		  PUSH调用：比其他框架的实现都好
-		  调用链跟踪：想法来自dapper/zipkin，但有独创之处
 		  HTTP通用网关：通用，可扩展，轻量, 不用容器；比其他框架的实现都好
