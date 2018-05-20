@@ -6,11 +6,11 @@
 
 # krpc协议
 
-    krpc协议是自定义的TCP长连接协议, 了解底层通讯协议有助于更好地理解krpc框架
+  krpc协议是自定义的TCP长连接协议, 了解底层通讯协议有助于更好地理解krpc框架
 	
-    每个网络包分为3部分：8字节的固定头部+protobuff形式的扩展包头+protobuff形式的包体(包体可选)
+  每个网络包分为3部分：8字节的固定头部+protobuff形式的扩展包头+protobuff形式的包体(包体可选)
     
-    固定头部含义：
+  固定头部含义：
     
 	    0........ 8........16........24........32
 	    1  |-----KR---------|----- headLen--------| //标识和包头长度
@@ -21,9 +21,9 @@
 	    KR 标识 2字节，'KR'这2个特殊字符表示是krpc网络包
 	    headLen 2字节 扩展包头长度
 	    bodyLen 4字节 扩展包头+包体长度 (不包括8字节的固定头部)
-	    
-	  扩展包头, protobuff形式，长度不定(值越小包越短，默认值不传输)，目前包括以下字段：
-	  
+
+  扩展包头, protobuff形式，长度不定(值越小包越短，默认值不传输)，目前包括以下字段：
+
       direction int32 1=请求 2=响应
       serviceId int32 服务号
       msgId int32 消息号
@@ -32,11 +32,11 @@
       peers string 网络包经过的所有节点
       retCode int32 错误码，仅用于响应包，某些情况下可以无包体，通过此字段确定错误码
       timeout int32 超时时间，客户端的超时时间可以传给服务端，服务端可以根据此信息丢弃已过期未执行的包
-      compress int32 包体是否做了压缩以及压缩方式
+      compress int32 包体是否做了压缩以及压缩方式  0=不压缩 1=zlib 2=snappy
     
-      目前服务号1已被框架使用，其中 serviceId=1 msgId=1 为心跳包
+      目前服务号1已被框架使用，其中 serviceId=1 msgId=1 为心跳包, 心跳包无sequence
       
-    包体, protobuff形式	
+  包体, protobuff形式	
       
       框架对请求包无要求
       框架要求业务响应包里必须要有一个retCode来标识错误码
@@ -109,7 +109,7 @@
 			    static int updateProfileMsgId = 2;
 			}
 	
-			同步接口形式如下；(仅用于客户端)
+			异步接口形式如下；(仅用于客户端)
 			
 			package com.xxx.userservice.proto;
 			
@@ -124,7 +124,6 @@
 			    static int updateProfileMsgId = 2;
 			}
 	
-
 	使用krpc.bat文件来生成所有代码，后续可使用下列方式:
 	
     1) 将生成好的源码文件拷贝到项目的固定目录下即可使用
@@ -142,9 +141,8 @@
   	-100001=参数不正确
 		-100002=用户不存在
 	  	  
-# 如何启动krpc
+# 如何启动krpc, 以下展示不用spring框架下如何启动krpc。
 
-		以下展示不用spring框架下如何启动krpc。
 	  参考；src/test/java/krpc/test/call
 		
 		import krpc.bootstrap.*;
@@ -153,7 +151,8 @@
 			
 			UserServiceImpl impl = new UserServiceImpl(); // UserServiceImpl是一个实现了UserService接口的类
 	
-			RpcApp app = new Bootstrap()  // 不指定服务端口默认是 5600端口
+			RpcApp app = new Bootstrap()
+			  .addServer(5600)  // 去掉这一行绑定默认的5600端口
 				.addService(UserService.class,impl) // 增加服务
 				.build().initAndStart();
 
