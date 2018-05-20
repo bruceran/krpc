@@ -66,8 +66,7 @@
 		HTTP网关的json转换功能: 默认插件是jackson插件, 需要以下2个依赖; 如果服务只启动tcp功能，未启动http网关，则不用以上依赖
 			compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
 			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-			
-		
+
 		网络包压缩；默认为不压缩, 除非配置使用snappy压缩才会用到以下依赖
 			compile 'org.xerial.snappy:snappy-java:1.1.2.3'
 		

@@ -6,7 +6,7 @@
 
 # krpc协议
 
-	  krpc协议是自定义的TCP长连接协议, 了解底层通讯协议有助于更好地理解krpc框架
+    krpc协议是自定义的TCP长连接协议, 了解底层通讯协议有助于更好地理解krpc框架
 	
     每个网络包分为3部分：8字节的固定头部+protobuff形式的扩展包头+protobuff形式的包体(包体可选)
     
@@ -24,8 +24,8 @@
 	    
 	  扩展包头, protobuff形式，长度不定(值越小包越短，默认值不传输)，目前包括以下字段：
 	  
-	  	direction int32 1=请求 2=响应
-	  	serviceId int32 服务号
+      direction int32 1=请求 2=响应
+      serviceId int32 服务号
       msgId int32 消息号
       sequence int32 包标识
       traceId string 全链路跟踪标识，此字符串具有以下几个含义：全链路不变的traceId, spanId, parentSpanId
@@ -39,109 +39,108 @@
     包体, protobuff形式	
       
       框架对请求包无要求
-			框架要求业务响应包里必须要有一个retCode来标识错误码
-			传输时请求和响应包都可以不传
+      框架要求业务响应包里必须要有一个retCode来标识错误码
+      传输时请求和响应包都可以不传
 
 # 接口定义
 
-		使用google proto文件来定义接口。
-		
-		示例proto文件；
-		
-				syntax="proto3";
-		
-				import "krpcbase.proto"; 
-				option java_multiple_files=true;
-				option java_generic_services=true;
-				
-				option java_package="com.xxx.userservice.proto";
-				option java_outer_classname="UserServiceMetas";
-				
-				message LoginReq {
-					string userName = 1;
-					string password = 2;
-				}
-				
-				message LoginRes {
-					int32 retCode = 1;
-					string retMsg = 2;
-					string userId = 3;
-				}
-				
-				message UpdateProfileReq {
-					string userId = 1;
-					string mobile = 2;
-				}
-				
-				message UpdateProfileRes {
-					int32 retCode = 1;
-					string retMsg = 2;
-				}
-								
-				service UserService {
-					option (serviceId) = 100;
-					rpc login(LoginReq) returns (LoginRes)  {
-				    option (msgId) = 1;
-				  };
-					rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  {
-				    option (msgId) = 2;
-				  };
-				} 
-	  
-	  必须使用 syntax="proto3";
-	  必须使用 import "krpcbase.proto"; 来引入服务号消息号扩展, 否则生成的服务接口无法使用	
-	  必须使用 option java_multiple_files = true; 保证生成的java类无嵌套，简化代码
-	  必须使用 option java_generic_services = true; 来根据service定义生成java类
-		必须使用定制的protoc.exe文件来生成service接口，标准的protoc.exe根据service定义生成的java接口不能满足要求
-		
-		生成的接口：(此接口不用生成直接手写也可以)
-		
-				同步接口形式如下；(客户端和服务端通用)
-		
-				package com.xxx.userservice.proto;
-				
-				public interface UserService {
-					  LoginRes login(LoginReq req) ;
-					  UpdateProfileRes updateProfile(UpdateProfileReq req);
-				
-				    static int serviceId = 100;
-				    static int loginMsgId = 1;
-				    static int updateProfileMsgId = 2;
-				}
-		
-				同步接口形式如下；(仅用于客户端)
-				
-				package com.xxx.userservice.proto;
-				
-				import java.util.concurrent.CompletableFuture;
-				
-				public interface UserServiceAsync {
-					  CompletableFuture<LoginRes> login(LoginReq req) ;
-					  CompletableFuture<UpdateProfileRes> updateProfile(UpdateProfileReq req);
-				
-				    static int serviceId = 100;
-				    static int loginMsgId = 1;
-				    static int updateProfileMsgId = 2;
-				}
-		
+	使用google proto文件来定义接口。
+	
+	示例proto文件；
+	
+			syntax="proto3";
+	
+			import "krpcbase.proto"; 
+			option java_multiple_files=true;
+			option java_generic_services=true;
+			
+			option java_package="com.xxx.userservice.proto";
+			option java_outer_classname="UserServiceMetas";
+			
+			message LoginReq {
+				string userName = 1;
+				string password = 2;
+			}
+			
+			message LoginRes {
+				int32 retCode = 1;
+				string retMsg = 2;
+				string userId = 3;
+			}
+			
+			message UpdateProfileReq {
+				string userId = 1;
+				string mobile = 2;
+			}
+			
+			message UpdateProfileRes {
+				int32 retCode = 1;
+				string retMsg = 2;
+			}
+							
+			service UserService {
+				option (serviceId) = 100;
+				rpc login(LoginReq) returns (LoginRes)  {
+			    option (msgId) = 1;
+			  };
+				rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  {
+			    option (msgId) = 2;
+			  };
+			} 
+  
+  必须使用 syntax="proto3";
+  必须使用 import "krpcbase.proto"; 来引入服务号消息号扩展, 否则生成的服务接口无法使用	
+  必须使用 option java_multiple_files = true; 保证生成的java类无嵌套，简化代码
+  必须使用 option java_generic_services = true; 来根据service定义生成java类
+	必须使用定制的protoc.exe文件来生成service接口，标准的protoc.exe根据service定义生成的java接口不能满足要求
+	
+	生成的接口：(此接口不用生成直接手写也可以)
+	
+			同步接口形式如下；(客户端和服务端通用)
+	
+			package com.xxx.userservice.proto;
+			
+			public interface UserService {
+				  LoginRes login(LoginReq req) ;
+				  UpdateProfileRes updateProfile(UpdateProfileReq req);
+			
+			    static int serviceId = 100;
+			    static int loginMsgId = 1;
+			    static int updateProfileMsgId = 2;
+			}
+	
+			同步接口形式如下；(仅用于客户端)
+			
+			package com.xxx.userservice.proto;
+			
+			import java.util.concurrent.CompletableFuture;
+			
+			public interface UserServiceAsync {
+				  CompletableFuture<LoginRes> login(LoginReq req) ;
+				  CompletableFuture<UpdateProfileRes> updateProfile(UpdateProfileReq req);
+			
+			    static int serviceId = 100;
+			    static int loginMsgId = 1;
+			    static int updateProfileMsgId = 2;
+			}
+	
 
-		使用krpc.bat文件来生成所有代码，后续可使用下列方式:
-		
+	使用krpc.bat文件来生成所有代码，后续可使用下列方式:
+	
     1) 将生成好的源码文件拷贝到项目的固定目录下即可使用
     2) 若只想引用jar包也可拷贝jar包到项目依赖位置（本地目录或maven仓库）
-	  3) 对http通用网关动态调用接口，会用到生成的 xxx.proto.pb 文件
+    3) 对http通用网关动态调用接口，会用到生成的 xxx.proto.pb 文件
 
 # 约定
 
-	  所有服务号从100开始
-	  所有消息号从1开始
-	  
-	  业务层错误码格式建议为： -xxxyyy  xxx为服务号 yyy为具体错误码，不同服务的错误码不同，如-100001 
-	  krpc框架内部的错误码为-zzz 只有3位数，和业务层错误码很容易区分
-	  框架默认会从 classpath下的 error.properties 文件里根据错误码得到错误提示并放入响应包里，无需在业务层代码中设置响应的retMsg
-	  	-100001=参数不正确
-			-100002=用户不存在
-
+  所有服务号从100开始
+  所有消息号从1开始
+  
+  业务层错误码格式建议为： -xxxyyy  xxx为服务号 yyy为具体错误码，不同服务的错误码不同，如-100001 
+  krpc框架内部的错误码为-zzz 只有3位数，和业务层错误码很容易区分
+  框架默认会从 classpath下的 error.properties 文件里根据错误码得到错误提示并放入响应包里，无需在业务层代码中设置响应的retMsg
+  	-100001=参数不正确
+		-100002=用户不存在
 	  	  
 # 如何启动krpc
 
