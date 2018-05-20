@@ -262,30 +262,30 @@
           ... // 其它bean
         }
 
-  * 客户端参考；src/test/java/krpc/test/javaconfig/client
+  * 客户端参考: src/test/java/krpc/test/javaconfig/client
       
         客户端： 在java config文件里启动krpc：
       
-        @Bean(destroyMethod = "stopAndClose")
-        public RpcApp rpcApp() {
-        	RpcApp app = new Bootstrap() 
-        			.addReferer("us",UserService.class,"127.0.0.1:5600") 
-              .addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600")         			
-        			.build().initAndStart();
-        	return app;
-        }
-		
-        @Bean
-        public UserService userService(RpcApp app) {
-          UserService us = app.getReferer("us");
-          return us;
-        }
+            @Bean(destroyMethod = "stopAndClose")
+            public RpcApp rpcApp() {
+              RpcApp app = new Bootstrap() 
+                .addReferer("us",UserService.class,"127.0.0.1:5600") 
+                .addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600")         			
+                .build().initAndStart();
+              return app;
+            }
             
-        @Bean
-        public UserServiceAsync userServiceAsync(RpcApp app) {
-        	UserServiceAsync usa = app.getReferer("usa");
-        	return usa;
-        }            
+            @Bean
+            public UserService userService(RpcApp app) {
+              UserService us = app.getReferer("us");
+              return us;
+            }
+            
+            @Bean
+            public UserServiceAsync userServiceAsync(RpcApp app) {
+              UserServiceAsync usa = app.getReferer("usa");
+              return usa;
+            }            
     		
 # 和spring框架集成(schema方式)
 
