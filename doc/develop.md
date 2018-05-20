@@ -48,47 +48,48 @@
 	
 	示例proto文件；
 	
-			syntax="proto3";
-	
-			import "krpcbase.proto"; 
-			option java_multiple_files=true;
-			option java_generic_services=true;
-			
-			option java_package="com.xxx.userservice.proto";
-			option java_outer_classname="UserServiceMetas";
-			
-			message LoginReq {
-				string userName = 1;
-				string password = 2;
-			}
-			
-			message LoginRes {
-				int32 retCode = 1;
-				string retMsg = 2;
-				string userId = 3;
-			}
-			
-			message UpdateProfileReq {
-				string userId = 1;
-				string mobile = 2;
-			}
-			
-			message UpdateProfileRes {
-				int32 retCode = 1;
-				string retMsg = 2;
-			}
-							
-			service UserService {
-				option (serviceId) = 100;
-				rpc login(LoginReq) returns (LoginRes)  { option (msgId) = 1; };
-				rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  { option (msgId) = 2; };
-			} 
+		syntax="proto3";
+
+		import "krpcbase.proto"; 
+		option java_multiple_files=true;
+		option java_generic_services=true;
+		
+		option java_package="com.xxx.userservice.proto";
+		option java_outer_classname="UserServiceMetas";
+		
+		message LoginReq {
+			string userName = 1;
+			string password = 2;
+		}
+		
+		message LoginRes {
+			int32 retCode = 1;
+			string retMsg = 2;
+			string userId = 3;
+		}
+		
+		message UpdateProfileReq {
+			string userId = 1;
+			string mobile = 2;
+		}
+		
+		message UpdateProfileRes {
+			int32 retCode = 1;
+			string retMsg = 2;
+		}
+						
+		service UserService {
+			option (serviceId) = 100;
+			rpc login(LoginReq) returns (LoginRes)  { option (msgId) = 1; };
+			rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  { option (msgId) = 2; };
+		} 
   
-  必须使用 syntax="proto3";
-  必须使用 import "krpcbase.proto"; 来引入服务号消息号扩展, 否则生成的服务接口无法使用	
-  必须使用 option java_multiple_files = true; 保证生成的java类无嵌套，简化代码
-  必须使用 option java_generic_services = true; 来根据service定义生成java类
-  必须使用定制的protoc.exe文件来生成service接口，标准的protoc.exe根据service定义生成的java接口不能满足要求
+  * 必须使用 syntax="proto3"
+  * 必须使用 import "krpcbase.proto"; 来引入服务号消息号扩展, 否则生成的服务接口无法使用
+  * 必须使用 option java_multiple_files = true; 保证生成的java类无嵌套，简化代码
+  * 必须使用 option java_generic_services = true; 来根据service定义生成java类
+  * 必须使用定制的protoc.exe文件来生成service接口，标准的protoc.exe根据service定义生成的java接口不能满足要求
+  
 	
 	生成的接口：(此接口不用生成直接手写也可以)
 	
