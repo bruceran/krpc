@@ -95,31 +95,31 @@
 	
 			同步接口形式如下；(客户端和服务端通用)
 	
-			package com.xxx.userservice.proto;
-			
-			public interface UserService {
-        LoginRes login(LoginReq req) ;
-        UpdateProfileRes updateProfile(UpdateProfileReq req);
+        package com.xxx.userservice.proto;
         
-        static int serviceId = 100;
-        static int loginMsgId = 1;
-        static int updateProfileMsgId = 2;
-			}
-	
-			异步接口形式如下；(仅用于客户端)
-			
-			package com.xxx.userservice.proto;
-			
-			import java.util.concurrent.CompletableFuture;
-			
-			public interface UserServiceAsync {
-        CompletableFuture<LoginRes> login(LoginReq req) ;
-        CompletableFuture<UpdateProfileRes> updateProfile(UpdateProfileReq req);
+        public interface UserService {
+            LoginRes login(LoginReq req) ;
+            UpdateProfileRes updateProfile(UpdateProfileReq req);
+            
+            static int serviceId = 100;
+            static int loginMsgId = 1;
+            static int updateProfileMsgId = 2;
+        }
         
-        static int serviceId = 100;
-        static int loginMsgId = 1;
-        static int updateProfileMsgId = 2;
-			}
+        步接口形式如下；(仅用于客户端)
+        
+        package com.xxx.userservice.proto;
+        
+        import java.util.concurrent.CompletableFuture;
+        
+        public interface UserServiceAsync {
+            CompletableFuture<LoginRes> login(LoginReq req) ;
+            CompletableFuture<UpdateProfileRes> updateProfile(UpdateProfileReq req);
+            
+            static int serviceId = 100;
+            static int loginMsgId = 1;
+            static int updateProfileMsgId = 2;
+        }
 	
 	使用krpc.bat文件来生成所有代码，后续可使用下列方式:
 	
@@ -129,7 +129,7 @@
 
 # 约定
 
-  * 所有服务号从100开始
+  * 所有业务层服务号从100开始
   
   * 所有消息号从1开始
   
@@ -139,6 +139,8 @@
   
   * 框架默认会从 classpath下的 error.properties 文件里根据错误码得到错误提示并放入响应包里，无需在业务层代码中设置响应的retMsg
   
+      error.properties 格式如下：
+      
     	-100001=参数不正确
   		-100002=用户不存在
 	  	  
@@ -153,9 +155,9 @@
 			UserServiceImpl impl = new UserServiceImpl(); // UserServiceImpl是一个实现了UserService接口的类
 	
 			RpcApp app = new Bootstrap()
-			  .addServer(5600)  // 去掉这一行绑定默认的5600端口
-				.addService(UserService.class,impl) // 增加服务
-				.build().initAndStart();
+        .addServer(5600)  // 去掉这一行绑定默认的5600端口
+        .addService(UserService.class,impl) // 增加服务
+        .build().initAndStart();
 
 		启动客户端：
 			
