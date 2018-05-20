@@ -93,7 +93,7 @@
 	
 	生成的接口：(此接口不用生成直接手写也可以)
 	
-			同步接口形式如下；(客户端和服务端通用)
+      同步接口形式如下；(客户端和服务端通用)
 	
         package com.xxx.userservice.proto;
         
@@ -106,7 +106,7 @@
             static int updateProfileMsgId = 2;
         }
         
-        步接口形式如下；(仅用于客户端)
+      异步接口形式如下；(仅用于客户端)
         
         package com.xxx.userservice.proto;
         
@@ -146,65 +146,65 @@
 	  	  
 # 如何启动krpc, 以下展示不用spring框架下如何启动krpc。
 
-	  参考；src/test/java/krpc/test/call
+  * 参考；src/test/java/krpc/test/call
 		
 		import krpc.bootstrap.*;
 
-		启动服务端：
+  * 启动服务端：
 			
-			UserServiceImpl impl = new UserServiceImpl(); // UserServiceImpl是一个实现了UserService接口的类
-	
-			RpcApp app = new Bootstrap()
+      UserServiceImpl impl = new UserServiceImpl(); // UserServiceImpl是一个实现了UserService接口的类
+      
+      RpcApp app = new Bootstrap()
         .addServer(5600)  // 去掉这一行绑定默认的5600端口
         .addService(UserService.class,impl) // 增加服务
         .build().initAndStart();
 
-		启动客户端：
+  * 启动客户端：
 			
-			RpcApp app = new Bootstrap() 
-					.addReferer("us",UserService.class,"127.0.0.1:5600")  // 增加referer, 如果打算使用同步调用需这一行
-					.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") // 增加异步referer, 如果打算使用异步调用需这一行
-					.build().initAndStart();
+      RpcApp app = new Bootstrap() 
+      	.addReferer("us",UserService.class,"127.0.0.1:5600")  // 增加referer, 如果打算使用同步调用需这一行
+      	.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") // 增加异步referer, 如果打算使用异步调用需这一行
+      	.build().initAndStart();
 		
-		  UserService us = app.getReferer("us"); // 获取同步代理
-		  UserServiceAsync usa = app.getReferer("usa");  // 获取异步代理
-		
-			LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();  // pb风格的对象创建
+      UserService us = app.getReferer("us"); // 获取同步代理
+      UserServiceAsync usa = app.getReferer("usa");  // 获取异步代理
+      
+      LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();  // pb风格的对象创建
+      
+      LoginRes res = us.login(req); // 同步调用
+      
+      CompletableFuture<LoginRes> f1 = usa.login(req);  // 做异步调用
+      ... // do other things
+      LoginRes res1 = f1.get(); // 获取结果后再处理
 			
-			LoginRes res = us.login(req); // 同步调用
+      CompletableFuture<LoginRes> f2 = usa.login(req);  // 做异步调用，添加listener
+      f2.thenAccept( (res2) -> { log.info("retCode="+res2.getRetCode()+", retMsg="+res2.getRetMsg() ); } );
+      ...  // 在CompletableFuture的基础上可以做各种组合
 		
-			CompletableFuture<LoginRes> f1 = usa.login(req);  // 做异步调用
-			... // do other things
-			LoginRes res1 = f1.get(); // 获取结果后再处理
-			
-			CompletableFuture<LoginRes> f2 = usa.login(req);  // 做异步调用，添加listener
-			f2.thenAccept( (res2) -> { log.info("retCode="+res2.getRetCode()+", retMsg="+res2.getRetMsg() ); } );
-			...  // 在CompletableFuture的基础上可以做各种组合
-		
-		在服务中既作为服务端提供服务也作为客户端访问其他服务：
+  * 在服务中既作为服务端提供服务也作为客户端访问其他服务：
 
-			UserServiceImpl impl = new UserServiceImpl(); // 实现UserService接口
-	
-			RpcApp app = new Bootstrap() 
-				.addService(UserService.class,impl) 
-				.addReferer("us",Xxx.class,"127.0.0.1:5800") // 此处假设要引用外部Xxx服务
-				.build().initAndStart();		
-
+      UserServiceImpl impl = new UserServiceImpl(); // 实现UserService接口
+      
+      RpcApp app = new Bootstrap() 
+        .addService(UserService.class,impl) 
+        .addReferer("us",Xxx.class,"127.0.0.1:5800") // 此处假设要引用外部Xxx服务
+        .build().initAndStart();		
+      
       ...
       
       每个rpcapp里可以创建多个service和多个referer
 
-		对外提供http接口都需要在classpath下先编辑好routes.xml文件，示例：
+  * 对外提供http接口都需要在classpath下先编辑好routes.xml文件，示例：
 		
-			<?xml version="1.0" encoding="utf-8"?>    
-			<routes>    
-		    <group hosts="*" prefix="/user"  methods="get,post" serviceId="100">  
-			    	<url path="/test1" msgId="1"/>  
-			    	<url path="/test1" msgId="2"/>  
-				</group>
-			</routes>  
+    <?xml version="1.0" encoding="utf-8"?>    
+    <routes>    
+      <group hosts="*" prefix="/user"  methods="get,post" serviceId="100">  
+      	<url path="/test1" msgId="1"/>  
+      	<url path="/test1" msgId="2"/>  
+      </group>
+    </routes>  
 			
-		服务对外同时提供tcp接口和http接口:
+  * 服务对外同时提供tcp接口和http接口:
 		
 			UserServiceImpl impl = new UserServiceImpl();
 	
@@ -219,73 +219,73 @@
 		  	curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/x-www-form-urlencoded" --data "userName=a&password=b"
 				curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/json" --data '{"userName":"a","password":"b"}'
 						  
-		启动HTTP通用网关(静态方式), 要求网关中classpath中有protoc生成的jar包依赖
+  * 启动HTTP通用网关(静态方式), 要求网关中classpath中有protoc生成的jar包依赖
 		
-			RpcApp app = new Bootstrap()
-					.addWebServer(8888)  // 相比普通的客户端多出来的一行
-					.addReferer("us",UserService.class,"127.0.0.1:5600") 
-					.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
-					.build().initAndStart();
+      RpcApp app = new Bootstrap()
+        .addWebServer(8888)  // 相比普通的客户端多出来的一行
+        .addReferer("us",UserService.class,"127.0.0.1:5600") 
+        .addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
+        .build().initAndStart();
 
-		启动HTTP通用网关(动态方式), 网关中不用jar包，只用生成的userservice.proto.pb文件
+  * 启动HTTP通用网关(动态方式), 网关中不用jar包，只用生成的userservice.proto.pb文件
 		
-				RpcApp app = new Bootstrap()
-					.addWebServer(8888) 
-					.addReferer("us",100,"127.0.0.1:5600") // 第二个参数不用接口名而是改用服务号			
-					.build().initAndStart();
+      RpcApp app = new Bootstrap()
+        .addWebServer(8888) 
+        .addReferer("us",100,"127.0.0.1:5600") // 第二个参数不用接口名而是改用服务号			
+        .build().initAndStart();
 
 # 和spring框架集成(java config方式)
 		
-		服务端参考；src/test/java/krpc/test/javaconfig/server
+  * 服务端参考；src/test/java/krpc/test/javaconfig/server
 		
-				服务端： 实现userservice接口：
-				
-				@Component("userService")
-				class UserServiceImpl implements UserService {
-					...		
-				}
-		
-				服务端： 在java config文件里启动krpc：
-		
-				@Configuration
-				@ComponentScan(basePackages = "krpc.test.javaconfig.server" }) // 扫描此目录下的所有bean去获取UserService实例
-				public class MyServerJavaConfig   {
-				
-				    @Bean(destroyMethod = "stopAndClose")
-				    public RpcApp rpcApp(UserService userService) { // 自动注入该服务
-							RpcApp app = new Bootstrap() 
-									.addService(UserService.class,userService) 
-									.build().initAndStart();
-							return app;
-				    }
-				    
-				    ... // 其它bean
-				}
+      服务端： 实现userservice接口：
+      
+      @Component("userService")
+      class UserServiceImpl implements UserService {
+        ...		
+      }
+      
+      服务端： 在java config文件里启动krpc：
+      
+      @Configuration
+      @ComponentScan(basePackages = "krpc.test.javaconfig.server" }) // 扫描此目录下的所有bean去获取UserService实例
+      public class MyServerJavaConfig   {
+      
+        @Bean(destroyMethod = "stopAndClose")
+        public RpcApp rpcApp(UserService userService) { // 自动注入该服务
+      		RpcApp app = new Bootstrap() 
+      				.addService(UserService.class,userService) 
+      				.build().initAndStart();
+      		return app;
+        }
+        
+        ... // 其它bean
+      }
 
-	  客户端参考；src/test/java/krpc/test/javaconfig/client
-
-	  客户端： 在java config文件里启动krpc：
-	  
-	    @Bean(destroyMethod = "stopAndClose")
-	    public RpcApp rpcApp() {
-				RpcApp app = new Bootstrap() 
-						.addReferer("us",UserService.class,"127.0.0.1:5600") 
-						.build().initAndStart();
-				return app;
-	    }
+  * 客户端参考；src/test/java/krpc/test/javaconfig/client
+      
+      客户端： 在java config文件里启动krpc：
+      
+      @Bean(destroyMethod = "stopAndClose")
+      public RpcApp rpcApp() {
+      	RpcApp app = new Bootstrap() 
+      			.addReferer("us",UserService.class,"127.0.0.1:5600") 
+      			.build().initAndStart();
+      	return app;
+      }
 		
 # 和spring框架集成(schema方式)
 
-		服务端参考；src/test/java/krpc/test/schema
-		
-			spring-schema-server.xml
-			spring-schema-client.xml
-		
-		这种方式参考dubbo实现，但配置值不同，参考配置参数详解
+  服务端参考；src/test/java/krpc/test/schema
+  
+    spring-schema-server.xml
+    spring-schema-client.xml
+  
+  这种方式参考dubbo实现，但配置值不同，参考配置参数详解
 
 # 和spring框架集成(spring boot方式)
-
-		暂不支持
+  
+  暂不支持
 		
 # 配置参数详解				  
 
