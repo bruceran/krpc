@@ -146,7 +146,7 @@
 	  	  
 # 如何启动krpc, 以下展示不用spring框架下如何启动krpc。
 
-  * 参考；src/test/java/krpc/test/call
+  * 参考: src/test/java/krpc/test/call
 		
 		import krpc.bootstrap.*;
 
@@ -200,25 +200,25 @@
         <routes>    
           <group hosts="*" prefix="/user"  methods="get,post" serviceId="100">  
           	<url path="/test1" msgId="1"/>  
-          	<url path="/test1" msgId="2"/>  
+          	<url path="/test2" msgId="2"/>  
           </group>
         </routes>  
 			
   * 服务对外同时提供tcp接口和http接口:
 		
-  			UserServiceImpl impl = new UserServiceImpl();
-  	
-  			RpcApp app = new Bootstrap()
-  				.addWebServer(8888)  // http服务
-  				.addServer(5600)  // tcp服务, 去掉这一行只对外提供http接口
-  				.addService(UserService.class,impl)
-  				.build().initAndStart();
+        UserServiceImpl impl = new UserServiceImpl();
+        
+        RpcApp app = new Bootstrap()
+          .addWebServer(8888)  // http服务
+          .addServer(5600)  // tcp服务, 去掉这一行只对外提供http接口
+          .addService(UserService.class,impl)
+          .build().initAndStart();
   						
   		  按上述的routes.xml通过以下三种方式访问接口都可以：
-  		  	curl -i http://localhost:8888/user/test1?userName=a&password=b
-  		  	curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/x-www-form-urlencoded" --data "userName=a&password=b"
-  				curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/json" --data '{"userName":"a","password":"b"}'
-  						  
+          curl -i http://localhost:8888/user/test1?userName=a&password=b
+          curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/x-www-form-urlencoded" --data "userName=a&password=b"
+          curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/json" --data '{"userName":"a","password":"b"}'
+          		  
   * 启动HTTP通用网关(静态方式), 要求网关中classpath中有protoc生成的jar包依赖
 		
         RpcApp app = new Bootstrap()
