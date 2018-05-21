@@ -1,0 +1,3 @@
+krpc.registry.EtcdRegistry
+krpc.registry.ZooKeeperRegistry
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:krpc="http://krpc.org/schema/krpc"
+  
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+       http://krpc.org/schema/krpc
+       http://krpc.org/schema/krpc.xsd ">
+
+	<krpc:application id="app" name="app" />
+
+	<krpc:registry type="etcd" addrs="1.1.1.1:1111" />
+ 
+	<krpc:client/>
+	
+	<krpc:referer id="userService" interfaceName="com.xxx.userservice.proto.UserService"/>
+ 
+</beans>

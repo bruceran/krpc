@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>    
+<routes>    
+ 
+    <url hosts="*" path="/test5" methods="get,post" serviceId="100" msgId="5"/>  
+    <url hosts="*" path="/test6" methods="get,post" serviceId="100" msgId="6"/>  
+
+</routes>  

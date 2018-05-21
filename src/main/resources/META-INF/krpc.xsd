@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema  xmlns="http://www.w3.org/2001/XMLSchema" 
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            xmlns:krpc="http://krpc.org/schema/krpc"
+            targetNamespace="http://krpc.org/schema/krpc">
+
+    <import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <import namespace="http://www.springframework.org/schema/beans"/>
+
+    <element name="application">
+	    <complexType>
+              <attribute name="id" type="string" use="optional"/>
+              <attribute name="name" type="string" use="optional"/>
+              <attribute name="mockFile" type="string" use="optional"/>
+              <attribute name="errorMsgConverter" type="string" use="optional"/>
+              <attribute name="flowControl" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+
+    <element name="registry">
+	    <complexType>
+              <attribute name="id" type="string" use="optional"/>
+              <attribute name="type" type="string" use="optional"/>
+              <attribute name="addrs" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+    
+    <element name="client">
+	    <complexType>
+              <attribute name="id" type="string" use="optional"/>
+              <attribute name="pingSeconds" type="string" use="optional"/>
+              <attribute name="maxPackageSize" type="string" use="optional"/>
+              <attribute name="connectTimeout" type="string" use="optional"/>
+              <attribute name="reconnectSeconds" type="string" use="optional"/>
+              <attribute name="ioThreads" type="string" use="optional"/>
+              <attribute name="connections" type="string" use="optional"/>
+              <attribute name="notifyThreads" type="string" use="optional"/>
+              <attribute name="notifyMaxThreads" type="string" use="optional"/>
+              <attribute name="notifyQueueSize" type="string" use="optional"/>
+              <attribute name="threads" type="string" use="optional"/>
+              <attribute name="maxThreads" type="string" use="optional"/>
+              <attribute name="queueSize" type="string" use="optional"/>
+              <attribute name="loadBalance" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+	
+    <element name="server">
+	    <complexType>
+              <attribute name="id" type="string" use="optional"/>
+              <attribute name="port" type="string" use="optional"/>
+              <attribute name="host" type="string" use="optional"/>
+              <attribute name="idleSeconds" type="string" use="optional"/>
+              <attribute name="maxPackageSize" type="string" use="optional"/>
+              <attribute name="maxConns" type="string" use="optional"/>
+              <attribute name="ioThreads" type="string" use="optional"/>
+              <attribute name="notifyThreads" type="string" use="optional"/>
+              <attribute name="notifyMaxThreads" type="string" use="optional"/>
+              <attribute name="notifyQueueSize" type="string" use="optional"/>
+              <attribute name="threads" type="string" use="optional"/>
+              <attribute name="maxThreads" type="string" use="optional"/>
+              <attribute name="queueSize" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+
+    <element name="webserver">
+	    <complexType>
+              <attribute name="id" type="string" use="optional"/>
+              <attribute name="port" type="string" use="optional"/>
+              <attribute name="host" type="string" use="optional"/>
+              <attribute name="idleSeconds" type="string" use="optional"/>
+              <attribute name="maxContentLength" type="string" use="optional"/>
+              <attribute name="maxConns" type="string" use="optional"/>
+              <attribute name="ioThreads" type="string" use="optional"/>
+              <attribute name="threads" type="string" use="optional"/>
+              <attribute name="maxThreads" type="string" use="optional"/>
+              <attribute name="queueSize" type="string" use="optional"/>
+              <attribute name="sessionService" type="string" use="optional"/>
+              <attribute name="jsonConverter" type="string" use="optional"/>
+              <attribute name="routesFile" type="string" use="optional"/>
+              <attribute name="sessionIdCookieName" type="string" use="optional"/>
+              <attribute name="sessionIdCookiePath" type="string" use="optional"/>
+              <attribute name="protoDir" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+    
+    <element name="method">
+	    <complexType>
+              <attribute name="pattern" type="string" use="optional"/>
+              <attribute name="timeout" type="string" use="optional"/>
+              <attribute name="retryLevel" type="string" use="optional"/>
+              <attribute name="retryCount" type="string" use="optional"/>
+              <attribute name="threads" type="string" use="optional"/>
+              <attribute name="maxThreads" type="string" use="optional"/>
+              <attribute name="queueSize" type="string" use="optional"/>
+              <attribute name="flowControl" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+
+ 	<element name="service">
+	    <complexType>
+              <sequence minOccurs="0" maxOccurs="unbounded">
+		            <element ref="krpc:method" minOccurs="0" maxOccurs="unbounded"/>
+		      </sequence>	    
+              <attribute name="id" type="string" use="optional"/>
+              <attribute name="interfaceName" type="string" use="optional"/>
+              <attribute name="impl" type="string" use="optional"/>
+              <attribute name="transport" type="string" use="optional"/>
+              <attribute name="reverse" type="string" use="optional"/>
+              <attribute name="registryNames" type="string" use="optional"/>
+              <attribute name="group" type="string" use="optional"/>
+              <attribute name="threads" type="string" use="optional"/>
+              <attribute name="maxThreads" type="string" use="optional"/>
+              <attribute name="queueSize" type="string" use="optional"/>
+              <attribute name="flowControl" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+
+ 	<element name="referer">
+	    <complexType>   
+              <sequence minOccurs="0" maxOccurs="unbounded">
+		            <element ref="krpc:method" minOccurs="0" maxOccurs="unbounded"/>
+		      </sequence>	  	    
+              <attribute name="id" type="string" use="optional"/>
+              <attribute name="interfaceName" type="string" use="optional"/>
+              <attribute name="serviceId" type="string" use="optional"/>
+              <attribute name="transport" type="string" use="optional"/>
+              <attribute name="reverse" type="string" use="optional"/>
+              <attribute name="direct" type="string" use="optional"/>
+              <attribute name="registryName" type="string" use="optional"/>
+              <attribute name="group" type="string" use="optional"/>
+              <attribute name="timeout" type="string" use="optional"/>
+              <attribute name="retryLevel" type="string" use="optional"/>
+              <attribute name="retryCount" type="string" use="optional"/>
+              <attribute name="loadBalance" type="string" use="optional"/>
+              <attribute name="zip" type="string" use="optional"/>
+              <attribute name="minSizeToZip" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+
+    <element name="monitor">
+	    <complexType>
+              <attribute name="logThreads" type="string" use="optional"/>
+              <attribute name="logQueueSize" type="string" use="optional"/>
+              <attribute name="logFormatter" type="string" use="optional"/>
+              <attribute name="maskFields" type="string" use="optional"/>
+              <attribute name="maxRepeatedSizeToLog" type="string" use="optional"/>
+              <attribute name="serverAddr" type="string" use="optional"/>
+              <attribute name="printDefault" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+    
+</schema>
+

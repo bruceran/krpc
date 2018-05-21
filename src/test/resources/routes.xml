@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>    
+<routes>    
+ 
+ 	<import file="routes-b.xml"/>  
+
+	<plugin name="dummy" params="a=1;b=2"/>
+	
+    <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
+ 
+    <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" />  
+    <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
+
+    <group   prefix="/abc"  methods="get,post" serviceId="100">  
+    	<url path="/test3" msgId="3"/>  
+    	<url path="/test4" msgId="4"/>  
+	</group>
+	
+</routes>  

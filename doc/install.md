@@ -41,7 +41,12 @@
 	build.gradle gradle配置文件
 	src/ 所有源码
 	doc/ 文档目录
-	dist/ 编译后的jar包, pb工具, 依赖的jar包
+	doc/proto  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件    
+	dist/
+	dist/gradle-3.3-all.zip gradle工具，方便下载
+	dist/tools protoc工具
+  dist/lib 编译后输出的krpcjar文件
+	
 
 # 框架依赖说明
 
