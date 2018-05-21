@@ -1,7 +1,7 @@
 
 # 整体架构
 
-	* 核心架构
+	* 简洁而不简单的核心架构
 	
       客户端业务层代码                                         服务端业务层代码 
 	    -------------------------------------------------------------------------
@@ -12,24 +12,27 @@
 	    -------------------------------------------------------------------------
       网络层数据传输               <----  正向或逆向调用  ---->    网络层数据传输
 	
-	* 关系
+	* 强大的功能
 		
 		  一个进程内通常启动一个app
 		  每个app内可以启动多个server,多个client,多个webserver
 		  每个app内可启动多个service, service可绑定到不同的server, 或者client(PUSH调用)，或者webserver
 		  每个app内可启动多个referer, referer可绑定到不同的client, 或者server(PUSH调用)
-		  service和referer都可以在method级别做一些配置
+		  每个service或referer都可以在method级别做更多配置
 		  每个app内可配置一个monitorservice做日志相关配置
 		  每个app内可配置多个注册与服务插件，可同时连接多个注册与发现服务
 		  
 		  框架内的client,server,webserver是重量级对象，因谨慎创建实例；
 		  框架内的service/referer是非常轻量的，在框架内部无对应实体，仅仅是一些配置值；
+		  启动时生成的动态代理也是非常轻量的，就是一行转发代码到RpcClient
+		  对Netty4的封装是只做了最轻量的封装，减少不必要的层次
+		  逆向调用(PUSH)和正向调用一样简洁
 
-	* 扩展机制
+	* 强大的扩展机制
 	
 	    a) 使用预定义的spi接口进行功能扩展
 	    b) 框架内部几乎都是以接口方式进行编程，所有实体类的创建都在BootStrap类中，可通过继承BootStrap类做更深度的定制
-	    c) 框架本身只对logback,protobuff3,netty4有强依赖，其它依赖都是可选的
+	    c) 框架本身只对logback,protobuff3,netty4有强依赖，其它依赖都是可选的, 都是可以替换的
 	
 # krpc协议
 
@@ -329,4 +332,136 @@
 		
 # 配置参数详解				  
 
+	可打开 src/main/resources/krpc.xsd 了解框架支持哪些配置参数, 每个参数的具体含义如下：
+	
+## application
+
+    name 应用名，用在上报给注册与发现服务时使用
+    mockFile 开发阶段可通过此文件来对service做mock, 暂未实现
+    errorMsgConverter 错误码错误消息转换文件，默认为classpath下的error.properties
+    flowControl 流量控制策略，默认不启用, 可配置为 memory 或 redis (暂未实现)
+    
+## registry
+
+    id 名称
+    type 注册与发现服务的类型, 暂未实现，应该会支持几种常见的: zookeeper, etcd, consul
+    address 注册与发现服务连接地址
+
+## client
+ 
+    id 名称 不填则会自动生成
+    pingSeconds  心跳间隔时间，秒，默认为60
+    maxPackageSize  最大包长，字节， 默认为 1000000
+    connectTimeout 连接超时 毫秒， 默认为15000
+    reconnectSeconds  重连间隔，秒，默认为1
+    ioThreads  netty4内部io读写线程，默认为0，由系统自动分配
+    connections 每个地址建立的连接数， 默认为1, 如果发现netty4单连接已经出现io瓶颈可增打连接数
+    notifyThreads 当使用异步调用时，异步回调的线程池线程数量，默认为0，由系统自动分配
+    notifyMaxThreads 同上，可配置一个大于notifyThreads的值，默认为0，也就是notifyMaxThreads=notifyThreads
+    notifyQueueSize 同上，线程池中固定队列大小，默认为10000
+    threads 当使用PUSH调用时, client可以作为server, 此时收到的请求在此线程池中运行, 默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
+    maxThreads 同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
+    queueSize 同上，线程池中固定队列大小，默认为10000
+	
+## server	
+
+    id 名称 不填则会自动生成
+    port  绑定的端口，默认为 5600
+    host  绑定的IP, 默认为*， 绑定所有IP
+    idleSeconds 允许的最大读写超时时间，秒，默认为180
+    maxPackageSize 最大包长，字节， 默认为 1000000
+    maxConns 服务端允许的同时的客户端连接数，默认为500000
+    ioThreads netty4内部io读写线程，默认为0，由系统自动分配
+    notifyThreads  当使用PUSH调用时, server可以作为client, 这时若采用异步方式调用客户端，异步回调的线程池线程数量，默认为0，由系统自动分配
+    notifyMaxThreads 同上，可配置一个大于notifyThreads的值，默认为0，也就是notifyMaxThreads=notifyThreads
+    notifyQueueSize 同上，线程池中固定队列大小，默认为10000
+    threads  服务端收到的请求在此线程池中运行, 默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
+    maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
+    queueSize 同上，线程池中固定队列大小，默认为10000
+
+## webserver	
+
+    id 名称 不填则会自动生成
+    port  绑定的端口，默认为 8600
+    host  绑定的IP, 默认为*， 绑定所有IP
+    idleSeconds  允许的最大读写超时时间，秒，默认为60
+    maxContentLength 最大包长，字节， 默认为 1000000 (文件上传会有单独的配置参数控制大小)
+    maxConns 服务端允许的同时的客户端连接数，默认为500000
+    ioThreads  netty4内部io读写线程，默认为0，由系统自动分配
+    notifyThreads  当使用PUSH调用时, server可以作为client, 这时若采用异步方式调用客户端，异步回调的线程池线程数量，默认为0，由系统自动分配
+    notifyMaxThreads 同上，可配置一个大于notifyThreads的值，默认为0，也就是notifyMaxThreads=notifyThreads
+    notifyQueueSize 同上，线程池中固定队列大小，默认为10000
+    threads  服务端收到的请求在此线程池中运行, 默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
+    maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
+    queueSize 同上，线程池中固定队列大小，默认为10000
+         
+    sessionService  会话服务插件, 支持 memory,redis(暂未实现), 默认为memory
+    jsonConverter json序列化使用的json框架，默认为 jackson
+    routesFile 路由配置文件， 默认为 routes.xml，会自动搜索classpath下的routes.xml配置文件
+    sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID
+
+## service
+
+    id 名称 不填则会自动生成
+    interfaceName 接口名
+    impl 实现类的bean name ref
+    transport 引用的server或webserver或client的id, 如果reverse=false, 则对应server或webserver的id; 如果reverse=true, 则对应client的id;
+    reverse 正向调用还是逆向调用, 值为 true 或 false, 默认为 false
+    registryNames 注册与发现服务名, 可填多个，用逗号隔开, 引用的是 registry的id
+    group  注册与发现服务里的分组
+    threads 服务级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
+    maxThreads 服务级别的线程池配置参数, 含义同server
+    queueSize 服务级别的线程池配置参数, 含义同server
+    flowControl 流量控制参数，前提要app级别开启了流量控制，格式为：seconds1=allowed1;seconds2=allowed2;... 示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
+    
+    每个service可配置0个或多个method在消息级别做配置
+
+## referer
+
+    id 名称 不填则会自动生成
+    interfaceName 接口名
+    serviceId 服务号 (http动态网关无接口类，根据服务号来配置)，不可和interfaceName同时使用
+    transport  引用的client或server的id, 如果reverse=false, 则对应client的id; 如果reverse=true, 则对应server的id;
+    reverse 正向调用还是逆向调用, 值为 true 或 false, 默认为 false
+    direct 指定此参数可直连服务，无需通过注册与发现服务
+    registryName  注册与发现服务名, 只能填一个
+    group  册与发现服务里的分组
+    timeout 超时时间, 毫秒，默认为3000
+    retryLevel 重试级别, 默认为 no_retry
+    retryCount 重试次数，默认为0
+    loadBalance 负载均衡策略，可配置为 rr,random,responsetime, 默认为 rr
+    zip 压缩方式 0=不压缩 1=zlib 2=snappy
+    minSizeToZip 启用压缩所需的最小字节数, 默认为10000
+ 
+    每个referer可配置0个或多个method在消息级别做配置
+ 
+## method	    
+
+    pattern 消息匹配模式
+      若第一个字符是数值，则表示是以消息ID作为匹配模式，格式示例：1-3,8,100-200,... 以逗号为分割符，以-来指定一段连续消息ID
+      若第一个字符不是数值，则表示是以正则表达式来匹配消息名
+    
+    以下3个参数只用于referer
+    timeout 消息级别的超时时间，毫秒，默认为3000
+    retryLevel 消息级别的重试级别, 默认为 no_retry
+    retryCount 消息级别的试次数，默认为0
+    
+    以下4个参数只用于service
+    threads 消息级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
+    maxThreads 消息级别的线程池配置参数, 含义同server
+    queueSize 消息级别的线程池配置参数, 含义同server
+    flowControl 消息控制参数，前提要app级别开启了流量控制，格式为：seconds1=allowed1;seconds2=allowed2;... 示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
+    
+## monitor
+ 
+    maskFields 日志里要屏蔽的字段，屏蔽后输出***代替原来的值
+    maxRepeatedSizeToLog 对repeated参数, 输出前n项，否则日志会太大，默认为1
+    logFormatter 日志格式，可选 simple, jackson， 默认为simple
+    logThreads 异步输出日志的线程数，默认为1
+    logQueueSize 异步输出日志的固定队列大小，默认为10000
+    serverAddr 监控服务地址
+    printDefault 是否输出protobuff消息里的默认值, 默认为false
+    
+
+	
 	
