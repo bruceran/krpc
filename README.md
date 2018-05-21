@@ -18,6 +18,7 @@
 	  安装gradle 3.3
 	  框架目录结构
 	  框架依赖说明
+	  PROTOC工具安装	  
 
 ## [开发指南](doc/develop.md)
 
@@ -55,3 +56,4 @@
     HTTP网关插件
     HTTP网关会话服务插件
     HTTP网关json转换插件
+
