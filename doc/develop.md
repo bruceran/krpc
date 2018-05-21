@@ -82,10 +82,11 @@
 	示例proto文件；
 	
 		syntax="proto3";
-
-		import "krpcbase.proto"; 
-		option java_multiple_files=true;
-		option java_generic_services=true;
+    import "descriptor.proto";
+    extend google.protobuf.ServiceOptions {  int32 serviceId = 1001;   }  
+    extend google.protobuf.MethodOptions {  int32 msgId = 1002;  }  
+    option java_multiple_files=true;
+    option java_generic_services=true;
 		
 		option java_package="com.xxx.userservice.proto";
 		option java_outer_classname="UserServiceMetas";
@@ -117,12 +118,16 @@
 			rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  { option (msgId) = 2; };
 		} 
   
-  * 必须使用 syntax="proto3"
-  * 必须使用 import "krpcbase.proto"; 来引入服务号消息号扩展, 否则生成的服务接口无法使用
-  * 必须使用 option java_multiple_files = true; 保证生成的java类无嵌套，简化代码
-  * 必须使用 option java_generic_services = true; 来根据service定义生成java接口, 否则只会生成输入输出类
-  * 必须使用定制的protoc.exe文件来生成service接口，标准的protoc.exe根据service定义生成的java接口不能满足要求
+  * 以下几行为固定，不可修改:
   
+      syntax="proto3";  // 必须使用protobuffer 3版本
+      import "descriptor.proto"; // 来引入服务号服务号消息号扩展, 否则生成的服务接口无法使用
+      extend google.protobuf.ServiceOptions {  int32 serviceId = 1001;   }  // 内部tag, 固定用1001,不可修改
+      extend google.protobuf.MethodOptions {  int32 msgId = 1002;  }  // 内部tag, 固定用1002,不可修改
+      option java_multiple_files=true; // 保证生成的java类无嵌套，简化代码
+      option java_generic_services=true; // 来根据service定义生成java接口, 否则只会生成输入输出类
+
+  * 使用krpc.bat  xxx.proto 文件来生成该文件的服务描述文件
 	
 	生成的接口：(此接口不用生成直接手写也可以)
 	
@@ -154,11 +159,11 @@
             static int updateProfileMsgId = 2;
         }
 	
-	使用krpc.bat文件来生成所有代码，后续可使用下列方式:
+	后续可以以下方式之一来使用生成好的文件:
 	
-    * 将生成好的源码文件拷贝到项目的固定目录下即可使用
-    * 若只想引用jar包也可拷贝jar包到项目依赖位置（本地目录或maven仓库）
-    * 对http通用网关动态调用接口，会用到生成的 xxx.proto.pb 文件
+    * 将生成好的源码文件拷贝到项目的固定目录下
+    * 若不想复制源码只想引用jar包也可拷贝jar包到项目依赖位置（本地目录或maven仓库）
+    * 对http通用网关动态调用接口，需要用到生成的 xxx.proto.pb 文件
 
 # 约定
 
