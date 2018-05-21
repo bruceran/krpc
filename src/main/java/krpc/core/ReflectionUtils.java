@@ -31,16 +31,15 @@ public class ReflectionUtils {
 	static Object[] dummyParameters = new Object[0];
 	static Class<?>[] callableTypes = new Class<?>[] {RpcCallable.class};
 	
-	public static String retCodeField = "retCode_"; // can be configured
-	public static String retMsgField = "retMsg_"; // can be configured
 	public static String retCodeFieldInMap = "retCode"; // can be configured
 	public static String retMsgFieldInMap = "retMsg"; // can be configured
-
+	public static String retCodeField = "retCode_";
+	public static String retMsgField = "retMsg_";
 	static Map<String,Field> retCodeFields = new HashMap<String,Field>();
 	static Map<String,Field> retMsgFields = new HashMap<String,Field>();
-	static ConcurrentHashMap<String,Object> errors = new ConcurrentHashMap<String,Object>();
 	static Field metaPeersField = null;
 	static Field metaCompressField = null;
+	static ConcurrentHashMap<String,Object> errors = new ConcurrentHashMap<String,Object>();
 	
 	static {
 		init();
@@ -52,8 +51,10 @@ public class ReflectionUtils {
 			metaPeersField.setAccessible(true);
 			metaCompressField = RpcMeta.class.getDeclaredField("compress_");
 			metaCompressField.setAccessible(true);
+			retCodeField = retCodeFieldInMap + "_";
+			retMsgField = retMsgFieldInMap + "_";
 		} catch(Exception e) {
-			throw new RuntimeException("hops field not found in RpcMeta");
+			throw new RuntimeException("ReflectionUtils init failed");
 		}		
 	}
 	
@@ -62,13 +63,14 @@ public class ReflectionUtils {
     		DynamicMessage dm = (DynamicMessage)object;
     		FieldDescriptor f = dm.getDescriptorForType().findFieldByName(retCodeFieldInMap);
     		if( f == null )
-    			return -99999999;  // should not be called
+    			return -99999999;  // should not be executed
     		return (Integer)dm.getField(f);
     	}
+    	
         try {  
         	Field f = retCodeFields.get(object.getClass().getName());
         	if( f == null ) {
-        		return -99999999;  // should not be called
+        		return -99999999;  // should not be executed
         	}
 
             return (Integer)f.get(object);
@@ -98,6 +100,7 @@ public class ReflectionUtils {
     			return "";
     		return (String)dm.getField(f);
     	}    	
+    	
         try {  
         	Field f = retMsgFields.get(object.getClass().getName());
         	if( f == null ) {
@@ -318,7 +321,6 @@ public class ReflectionUtils {
         	throw new RuntimeException("interface_parse_msgId_exception");
         }
 	}
-    
     
     public static HashMap<String,Object> getMethodInfo(Class<?> intf) {  
     	try {  

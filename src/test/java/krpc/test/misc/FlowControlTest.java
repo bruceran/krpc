@@ -14,7 +14,7 @@ public class FlowControlTest {
 		impl.addLimit(100, 3, 5);
 		
 		for(int i=0;i<8;++i) {
-			boolean failed = impl.exceedLimit(100, 1);
+			boolean failed = impl.exceedLimit(100, 1,null);
 			System.out.println("failed="+failed);
 			Thread.sleep(100);
 		}

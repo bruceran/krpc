@@ -319,7 +319,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
 			if( flowControl != null ) {
 				if( !flowControl.isAsync() ) {
-					boolean exceeded = flowControl.exceedLimit(data.getMeta().getServiceId(), data.getMeta().getMsgId());
+					boolean exceeded = flowControl.exceedLimit(data.getMeta().getServiceId(), data.getMeta().getMsgId(),null);
 					if( exceeded ) {
 			        	sendErrorResponse(ctx,data.getBody(),RetCodes.FLOW_LIMIT);
 			        	return;

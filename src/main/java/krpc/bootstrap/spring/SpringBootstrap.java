@@ -13,7 +13,7 @@ public class SpringBootstrap {
 	boolean inited = false;
 	boolean stopped = false;
 	boolean closed = false;
-	Bootstrap bootstrap = new Bootstrap();
+	Bootstrap bootstrap = new Bootstrap(); // todo can be customized
 	RpcApp rpcApp = null;
 	
     public void build() {

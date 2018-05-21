@@ -25,7 +25,6 @@ public interface ServiceMetas {
 	void addService(Class<?> intf, Object impl,RpcCallable callable);
 	void addReferer(Class<?> intf, Object impl,RpcCallable callable);
 	void addAsyncReferer(Class<?> intf, Object impl,RpcCallable callable);
-	
 	void addDirect(int serviceId,int msgId, Class<?> reqCls, Class<?> resCls); // for monitor use
 	
 	Descriptor findDynamicReqDescriptor(int serviceId,int msgId);

@@ -13,10 +13,10 @@ import krpc.web.WebReq;
 import krpc.web.WebRes;
 import krpc.web.plugin.*;
 
-public class DummyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugin, PreParsePlugin, PostSessionPlugin,
+public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugin, PreParsePlugin, PostSessionPlugin,
 		PostRenderPlugin, PostParsePlugin, ParserPlugin, AsyncPostSessionPlugin, AsyncPostParsePlugin,InitClose {
 
-	static Logger log = LoggerFactory.getLogger(DummyWebPlugin.class);
+	static Logger log = LoggerFactory.getLogger(LogOnlyWebPlugin.class);
 	
 	JacksonJsonConverter c = new JacksonJsonConverter();
 	Timer t = new Timer();

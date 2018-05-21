@@ -7,7 +7,7 @@ abstract public class RpcContextData {
 	protected String connId;
 	RpcMeta meta;
 	long startNanos = System.nanoTime();
-	long timeUsed = 0; // nano timespan
+	long timeUsed = 0; // nano time
 	long responseTime = 0;
 	
 	public RpcContextData(String connId,RpcMeta meta) {
@@ -40,8 +40,9 @@ abstract public class RpcContextData {
 	}
 	
 	public String getRemoteIp() {
-		int p = connId.indexOf(":");
-		return connId.substring(0,p);		
+		String remoteAddr = getRemoteAddr(); // to support ipv6
+		int p = remoteAddr.lastIndexOf(":");
+		return remoteAddr.substring(0,p);		
 	}
 	
 	public String getRemoteAddr() {

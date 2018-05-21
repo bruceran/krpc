@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public interface Plugin {
-	default void config(String params) {}
 	
+	default void config(String params) {}
 
 	static Map<String,String> splitParams(String params, String sep1, String sep2) {
 		String[] ss = params.split(sep1);

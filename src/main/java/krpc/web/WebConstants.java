@@ -21,10 +21,10 @@ public class WebConstants {
 	static public final String MIMETYPE_FORM = "application/x-www-form-urlencoded";
 
 	static public final String ContentFormat = "{\"retCode\":%d,\"retMsg\":\"%s\"}";	
-	
-	//static public final String ContentType = "content-type";
-	//static public final String ContentLength = "content-length";
+
 	static public final String Server = "krpc webserver/1.0";
+	
+	static private final String CHARSET_TAG = "charset=";
 	
 	static public String toHeaderName(String s) {
 		StringBuilder b = new StringBuilder();
@@ -40,9 +40,9 @@ public class WebConstants {
 
 	static public String parseCharSet(String s) {
 		s = s.toLowerCase();
-		int p = s.indexOf("charset=");
+		int p = s.indexOf(CHARSET_TAG);
 		if( p >= 0 ) {
-			p += 8;
+			p += CHARSET_TAG.length();
 			int p2 = s.indexOf(";",p);
 			if( p2 >= 0 )
 				return s.substring(p,p2);

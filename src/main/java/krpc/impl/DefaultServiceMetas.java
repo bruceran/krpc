@@ -83,6 +83,8 @@ public class DefaultServiceMetas implements ServiceMetas {
 		return res;
 	}
 
+	// todo serviceId duplicated check,  referer sync/async use the same serviceId
+	
 	private void addImpl(Class<?> intf, Object obj,boolean isService) {
 		
 		ReflectionUtils.checkInterface(intf,obj);
@@ -143,7 +145,7 @@ public class DefaultServiceMetas implements ServiceMetas {
 				resClsMap.putIfAbsent(serviceId+"."+msgId, resCls);
 				reqParserMap.putIfAbsent(serviceId+"."+msgId, reqParser);
 				resParserMap.putIfAbsent(serviceId+"."+msgId, resParser);
-				msgNames.put(serviceId+"."+msgId, serviceName+"."+msgName);
+				msgNames.putIfAbsent(serviceId+"."+msgId, serviceName+"."+msgName);
 			}
 		}
 	}
@@ -211,4 +213,5 @@ public class DefaultServiceMetas implements ServiceMetas {
 	
 		return res;
 	}	
+	
 }
