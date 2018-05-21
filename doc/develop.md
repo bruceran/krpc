@@ -491,7 +491,7 @@
       
       </routes>
       
-  * 可通过import导入routes.xml，以便按服务分别存放路由
+  * 可通过import导入其它routes文件，这样可以按服务分别存放路由
   
   * 可通过dir定义静态资源目录，上传目录等
   
@@ -524,7 +524,7 @@
   * 绝大多数插件并不需要配置参数，不需要参数的插件直接在plugins里引用就可以；如果插件需要配置参数，则需使用plugin节点来进行参数配置
   
         name 插件名
-        params 插件参数，由插件自行解析的字符串，系统默认的风格为 a=1;b=2 这种形式，使用分号和等于号做分隔符
+        params 插件参数，由插件自行解析的字符串，系统自带插件采用的风格为 a=1;b=2 这种形式，使用分号和等于号做分隔符
         
 # HTTP通用网关参数映射
     
@@ -540,7 +540,7 @@
         常规参数映射，按参数名映射到protobuffer消息里的参数名
         session 里的信息 -> 按参数名映射到protobuffer消息里的参数名 (名称冲突则总是session里的优先, 客户端无法覆盖session参数)
         
-        特殊参数映射，后端服务可以获取到http调用的所有细节
+        特殊参数映射，如果有需要，后端服务可以获取到http调用的所有细节, 一般建议不要去获取这些特殊信息
         
             session id -> sessionId
             http method -> httpMethod 值为 get,post,put,delete
@@ -562,8 +562,10 @@
         headerXxx 单值 -> 会转换为http输出的 header     
         cookieXxx 单值 -> 会转换为http输出的 cookie, cookie可带参数，格式为：值^key=value;key=value;...  key支持 domain,path,maxAge,httpOnly,secure,wrap    
         session 不能是单值，必须是消息(Map) -> 
-          如 session 消息里带 logFlag = 0 则会删除会话；否则将返回的session信息保存到会话上; 后续收到请求会自动将会话里的信息取出发给后端服务
-          常规情况下后端服务不用去存储会话信息，甚至不用关心sessionId; 如果有特殊需求，后端也可以根据sessionId做自己的存储策略
+          如果成功完成登录，后端服务返回的session中应带 loginFlag=1, 以便框架在后续做登录检验；
+          如 session 消息里带 loginFlag = 0 则会删除会话；否则将返回的session信息保存到会话上; 
+          后续收到请求会自动将会话里的信息做登录验证，并把已登录信息转发给后端服务
+          常规情况下后端服务不用去存储会话信息，也不用关心sessionId; 如果有特殊需求，后端也可以根据sessionId做自己的存储策略
         
         以上处理完毕后将剩余消息转换成json并输出, 如需控制输出格式或内容，可通过插件进行定制
     
