@@ -81,43 +81,43 @@
 	注意必须将2个文件放在 descriptor.proto 和 krpcext.proto 文件放在同一级目录才能编译成功，否则会报错
 	
 	示例proto文件；
-	
-    syntax="proto3";
-    
-    import "krpcext.proto";
-    option java_multiple_files=true;
-    option java_generic_services=true;
-    
-    option java_package="com.xxx.userservice.proto";
-    option java_outer_classname="UserServiceMetas";
+      
+      syntax="proto3";
+      
+      import "krpcext.proto";
+      option java_multiple_files=true;
+      option java_generic_services=true;
+      
+      option java_package="com.xxx.userservice.proto";
+      option java_outer_classname="UserServiceMetas";
+      
+      message LoginReq {
+        string userName = 1;
+        string password = 2;
+      }
+      
+      message LoginRes {
+        int32 retCode = 1;
+        string retMsg = 2;
+        string userId = 3;
+      }
+      
+      message UpdateProfileReq {
+        string userId = 1;
+        string mobile = 2;
+      }
+      
+      message UpdateProfileRes {
+        int32 retCode = 1;
+        string retMsg = 2;
+      }
+      		
+      service UserService {
+        option (krpc.serviceId) = 100;
+        rpc login(LoginReq) returns (LoginRes)  { option (krpc.msgId) = 1; };
+        rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  { option (krpc.msgId) = 2; };
+      } 
 
-		message LoginReq {
-			string userName = 1;
-			string password = 2;
-		}
-		
-		message LoginRes {
-			int32 retCode = 1;
-			string retMsg = 2;
-			string userId = 3;
-		}
-		
-		message UpdateProfileReq {
-			string userId = 1;
-			string mobile = 2;
-		}
-		
-		message UpdateProfileRes {
-			int32 retCode = 1;
-			string retMsg = 2;
-		}
-						
-		service UserService {
-			option (krpc.serviceId) = 100;
-			rpc login(LoginReq) returns (LoginRes)  { option (krpc.msgId) = 1; };
-			rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  { option (krpc.msgId) = 2; };
-		} 
-  
   * 以下几行为固定，不可修改:
   
       syntax="proto3";  // 必须使用protobuffer 3版本
