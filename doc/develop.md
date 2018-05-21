@@ -1,8 +1,16 @@
 
 # 整体架构
 
-	* 
+	* 核心架构
 	
+	    客户端业务层代码                                         服务端业务层代码 
+	    -------------------------------------------------------------------------
+	       启动时生成的动态代理
+	       RpcClient            --->  注册与发现服务  <---         RpcServer
+	       Cluster Manager
+	       Netty4 Transport     --->   krpc codec     <---         Netty4 Transport
+	    -------------------------------------------------------------------------
+      网络层数据传输 	                                            网络层数据传输
 	
 	* 关系
 		
@@ -11,6 +19,8 @@
 		  每个app内可启动多个service, service可绑定到不同的server, 或者client(PUSH调用)，或者绑定到webserver
 		  每个app内可启动多个referer, referer可绑定到不同的client, 或者server(PUSH调用)
 		  service和referer都可以在method级别做一些配置，如重试策略，线程池，流控参数等
+		  每个app内可配置一个monitorservice做日志相关配置
+		  每个app内可配置多个注册与服务插件，可同时连接多个注册与发现服务
 
 # krpc协议
 
