@@ -33,7 +33,7 @@
 	  和spring框架集成(spring boot方式)
 
 	  配置参数详解
-	  route.xml配置
+	  routes.xml配置
 	  HTTP通用网关参数映射
 
 ## [日志格式说明](doc/log.md) 
