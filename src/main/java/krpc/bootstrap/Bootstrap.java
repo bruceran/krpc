@@ -109,8 +109,7 @@ public class Bootstrap {
 	private HashMap<String, RefererConfig> referers = new HashMap<>();
 	private HashMap<String, WebServerConfig> webServers = new HashMap<>();
 
-	HashMap<String, LoadBalance> loadBalanceTypes = new HashMap<>(); // not
-																		// sington
+	HashMap<String, LoadBalance> loadBalanceTypes = new HashMap<>(); // not sington
 	HashMap<String, Registry> registryTypes = new HashMap<>();
 	HashMap<String, FlowControl> flowControlTypes = new HashMap<>();
 	HashMap<String, ErrorMsgConverter> errorMsgConverterTypes = new HashMap<>();
@@ -813,7 +812,7 @@ public class Bootstrap {
 					}
 				}
 				
-				// serviceId not allowed to duplicated
+				// todo serviceId not allowed to duplicated
 			}
 
 		}
@@ -822,19 +821,28 @@ public class Bootstrap {
 	}
 
 	void loadProtos(RpcApp app,String proto) {
-		List<String> files = getProtoFiles(proto);
-
+		
+		if( isEmpty(proto) ) {
+			log.info("no dynamic proto resource need to load");
+			return;
+		}
+		
+		if( !proto.endsWith("/") ) proto = proto + "/";
+				
 		try {
 			InputStream basein = RpcMetas.class.getResourceAsStream("descriptor.proto.pb");
 			FileDescriptorSet baseSet = FileDescriptorSet.parseFrom(basein);  
 			basein.close();
 			FileDescriptor base = FileDescriptor.buildFrom(baseSet.getFile(0),new FileDescriptor[] {});  
 			
-			for(String file:files) {
-				loadProtoFile(app,base,proto + file);  
+			List<String> files = getProtoFiles(proto);
+			if( files != null ) {
+				for(String file:files) {
+					loadProtoFile(app,base,proto + file);  
+				}
 			}
 		 } catch(Exception e) {
-			 log.error("load pb file error",e);
+			 log.error("load dynamic proto resource failed",e);
 		 }		
 	}
 
@@ -860,7 +868,7 @@ public class Bootstrap {
 			        String msgName = m.getName();  
 			        Field f2 = m.getOptions().getUnknownFields().getField(KrpcExt.MSGID_FIELD_NUMBER);
 			        int msgId = f2.getVarintList().get(0).intValue();
-			        log.info(String.format("serviceId=%d,msgId=%d,serviceName=%s,msgName=%s loaded",serviceId,msgId,serviceName,msgName));
+			        log.info(String.format("dynamic proto resource loaded, serviceId=%d,msgId=%d,serviceName=%s,msgName=%s",serviceId,msgId,serviceName,msgName));
 			        Descriptor reqDesc = m.getInputType();
 			        Descriptor resDesc = m.getOutputType();
 			        app.serviceMetas.addDynamic(serviceId,msgId,reqDesc,resDesc,serviceName,msgName);
@@ -873,6 +881,11 @@ public class Bootstrap {
 		List<String> l = new ArrayList<>();
 	
         URL classResourceURL = this.getClass().getClassLoader().getResource(proto);  
+        if( classResourceURL == null ) {
+        	log.info("no dynamic proto resource loaded from "+proto);
+        	return null;
+        }
+        
         String classResourcePath = classResourceURL.getPath(); 
         if (classResourceURL.getProtocol().equals("file")) { 
         	
@@ -888,7 +901,7 @@ public class Bootstrap {
                 } 
             } 
             
-        } else if (classResourceURL.getProtocol().equals("jar")) { 
+        } else if (classResourceURL.getProtocol().equals("jar")) {
  
             String jarPath = classResourcePath.substring(classResourcePath.indexOf("/"), classResourceURL.getPath().indexOf("!")); 
             try { 
@@ -898,16 +911,15 @@ public class Bootstrap {
                     JarEntry jarEntry = (JarEntry)jarEntries.nextElement();  
                     String resourceName = jarEntry.getName();  
                     if (resourceName.endsWith(".proto.pb") && !jarEntry.isDirectory()) {  
-                        l.add(resourceName);  
+                        l.add(resourceName.substring(proto.length()));  
                     } 
                 } 
                 jarFile.close();
             } catch (Exception e) {  
-                throw new RuntimeException("no proto file found");
+                throw new RuntimeException("load dynamic proto resource failed",e);
             } 
         } 
 
-        l.remove("descriptor.proto.pb");
 		return l;
 	}
 	
