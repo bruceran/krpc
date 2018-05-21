@@ -45,8 +45,9 @@
 	dist/
 	dist/gradle-3.3-all.zip gradle工具，方便下载
 	dist/tools protoc工具
-  dist/lib 编译后输出的krpcjar文件
+  dist/lib 编译后输出的krpc框架的jar文件, 此框架仅此一个文件
 	
+	将源码下载到本地后运行 gradle build若无错误则表示编译成功
 
 # 框架依赖说明
 
@@ -68,7 +69,7 @@
 	
 	可选依赖：
 	
-		HTTP网关的json转换功能: 默认插件是jackson插件, 需要以下2个依赖; 如果服务只启动tcp功能，未启动http网关，则不用以上依赖
+		HTTP网关的json转换功能: 默认插件是jackson插件, 需要以下2个依赖; 如果服务只启动tcp功能，未启动http网关，则不用以下依赖
 			compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
 			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
 
@@ -80,15 +81,15 @@
 			compile 'org.springframework:spring-beans:4.1.6.RELEASE'
 			compile 'org.springframework:spring-context:4.1.6.RELEASE'		
 
-# PROTOC工具安装
+# PROTOC工具安装及使用
 
   * 必须使用定制的protoc-3.5.1.exe文件来生成service接口，标准的protoc-3.5.1.exe根据service定义生成的java接口不能满足要求
   
-  * 将本项目的dist/tool 目录加入path环境变量, 输入命令：protoc-3.5.1.exe --version  因看到有输出 "libprotoc 3.5.1" 字样
+  * 将本项目的dist/tool 目录加入path环境变量, 输入命令：protoc-3.5.1.exe --version  看到有输出 "libprotoc 3.5.1" 字样表示成功
   
-  * 编译命令： krpc.bat  yourprotofile.proto  此脚本每次只能一个文件
+  * 编译proto文件的命令： krpc.bat  yourprotofile.proto  此脚本每次只能处理一个文件
   
   * 生成的java文件放在target子目录下，同时会在proto文件相同目录生成一个时间戳完全一致的 yourprotofile.proto.pb (此文件只用于动态http网关，一般不用)
   
-  * bin目录下附带了一个简单的 test.proto, 可进入此目录，输入krpc.bat test.proto查看输出的文件
+  * bin目录下附带了一个简单的 test.proto, 可进入此目录，输入krpc.bat test.proto查看示例输出文件
   

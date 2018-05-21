@@ -64,7 +64,7 @@
       traceId string 全链路跟踪标识，此字符串具有以下几个含义：全链路不变的traceId, spanId, parentSpanId
       peers string 网络包经过的所有节点
       retCode int32 错误码，仅用于响应包，某些情况下可以无包体，通过此字段确定错误码
-      timeout int32 超时时间，客户端的超时时间可以传给服务端，服务端可以根据此信息丢弃已过期未执行的包
+      timeout int32 超时时间，客户端的超时时间可以传给服务端，服务端可以根据此时间快速丢弃队列中已过期未执行的消息
       compress int32 包体是否做了压缩以及压缩方式  0=不压缩 1=zlib 2=snappy
     
       目前服务号1已被框架使用，其中 serviceId=1 msgId=1 为心跳包, 心跳包无sequence
@@ -78,6 +78,7 @@
 # 接口定义
 
 	使用google proto文件来定义接口。
+	注意必须将2个文件放在 descriptor.proto 和 krpcext.proto 文件放在同一级目录才能编译成功，否则会报错
 	
 	示例proto文件；
 	
@@ -120,13 +121,16 @@
   * 以下几行为固定，不可修改:
   
       syntax="proto3";  // 必须使用protobuffer 3版本
+      
       import "krpcext.proto"; // 此文件中包含了所有krpc在标准protobuffer上做的扩展定义
+      
       option java_multiple_files=true; // 保证生成的java类无嵌套，简化代码
+      
       option java_generic_services=true; // 来根据service定义生成java接口, 否则只会生成输入输出类
 
   * 使用krpc.bat  xxx.proto 文件来生成该文件的服务描述文件
 	
-	生成的接口：(此接口不用生成直接手写也可以)
+	生成的接口：
 	
       同步接口形式如下；(客户端和服务端通用)
 	
@@ -145,8 +149,6 @@
       异步接口形式如下；(仅用于客户端)
         
         package com.xxx.userservice.proto;
-        
-        import java.util.concurrent.CompletableFuture;
         
         public interface UserServiceAsync {
             static final public int serviceId = 100;
@@ -170,7 +172,7 @@
   
   * 所有消息号从1开始
   
-  * 业务层错误码格式建议为： -xxxyyy  xxx为服务号 yyy为具体错误码，不同服务的错误码不同，如-100001 
+  * 业务层错误码格式建议为： -xxxyyy,  xxx为服务号 yyy为具体错误码，不同服务的错误码不同，如-100001 
   
   * krpc框架内部的错误码为-zzz 只有3位数，和业务层错误码很容易区分
   

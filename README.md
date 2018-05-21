@@ -18,7 +18,7 @@
 	  安装gradle 3.3
 	  框架目录结构
 	  框架依赖说明
-	  PROTOC工具安装	  
+	  PROTOC工具安装及使用	  
 
 ## [开发指南](doc/develop.md)
 
