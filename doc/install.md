@@ -77,9 +77,13 @@
 
 # PROTOC工具安装
 
-    必须使用定制的protoc-3.5.1.exe文件来生成service接口，标准的protoc-3.5.1.exe根据service定义生成的java接口不能满足要求
-    将本项目的dist/tool 目录加入path环境变量, 输入命令：protoc-3.5.1.exe --version  因看到有输出 "libprotoc 3.5.1" 字样
-    编译命令： krpc.bat  yourprotofile.proto  此脚本每次只能一个文件
-    生成的java文件放在target子目录下，同时会生成一个时间戳完全一致的 yourprotofile.proto.pb (此文件只用于动态http网关，一般不用)
-    bin目录下附带了一个简单的 test.proto, 可进入此目录，输入krpc.bat test.proto查看输出的文件
-    
+  * 必须使用定制的protoc-3.5.1.exe文件来生成service接口，标准的protoc-3.5.1.exe根据service定义生成的java接口不能满足要求
+  
+  * 将本项目的dist/tool 目录加入path环境变量, 输入命令：protoc-3.5.1.exe --version  因看到有输出 "libprotoc 3.5.1" 字样
+  
+  * 编译命令： krpc.bat  yourprotofile.proto  此脚本每次只能一个文件
+  
+  * 生成成的java文件放在target子目录下，同时会生成一个时间戳完全一致的 yourprotofile.proto.pb (此文件只用于动态http网关，一般不用)
+  
+  * bin目录下附带了一个简单的 test.proto, 可进入此目录，输入krpc.bat test.proto查看输出的文件
+  
