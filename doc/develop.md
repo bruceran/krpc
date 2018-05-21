@@ -499,17 +499,19 @@
 
   * 每个url支持以下属性：
   
-        hosts 允许的域名，*表示不限制，默认为*
-        path 访问路径
-        methods 访问方法，支持get,post,put,delete, 默认为get,post; 如果post body是json格式，默认也会直接做解析，无需额外配置
+        hosts 允许的域名，*表示不限制，默认为*; 通用网关支持按不同的域名分开配置
+        path 访问路径,  path中支持变量， 如 /abc/{region}/{userId}, 以支持纯rest风格的开发
+        methods 访问方法，支持get,post,put,delete, 默认为get,post; 如果body是json格式，默认也会直接做解析，无需额外配置
         serviceId path对应的服务号
         msgId path对应的消息号
         plugins 用来配置插件名，允许多个，用逗号隔开
         sessionMode 会话模式 0=不需要会话 1=只需要会话ID 2=有会话则把会话信息传给后端，但不强制登录 2=必须要登录, 默认为0
 
-  * group用来配置一组url公共的属性，简化配置
+        每个url里的其它属性也会保存下来，如果自定义插件需要一些扩展属性，也可以从context中获取到这些自定义的属性
+        
+  * group用来配置一组url公共的属性，简化url配置
   
-        group节点不支持配置 path 和msgId
+        group节点不支持配置 path 和 msgId
         group节点允许配置的节点:
         
         hosts 允许的域名，*表示不限制，默认为*
@@ -520,6 +522,7 @@
         sessionMode 会话模式 0=不需要会话 1=只需要会话ID 2=有会话则把会话信息传给后端，但不强制登录 2=必须要登录, 默认为0
 
   * 绝大多数插件并不需要配置参数，不需要参数的插件直接在plugins里引用就可以；如果插件需要配置参数，则需使用plugin节点来进行参数配置
+  
         name 插件名
         params 插件参数，由插件自行解析的字符串，系统默认的风格为 a=1;b=2 这种形式，使用分号和等于号做分隔符
         
@@ -528,14 +531,14 @@
       webserver框架会自动将http里的http元信息，header,cookie,session,入参等映射到protobuff请求消息；
       webserver框架也会自动将protobuff响应消息映射到http里的http元信息,header,cookie,操作session, 输出内容等；
       通过以上的机制，webserver可以承担一个通用网关的功能，业务开发无需在http层再做开发，只需开发后台服务;
-      webserver提供强大的扩展机制，业务可根据自己的需要开发必要的插件来实现一些特殊功能：必须特定的签名校验方法，特殊的内容输出等
+      webserver提供强大的扩展机制，业务可根据自己的需要开发必要的插件来实现一些特殊功能：比如特定的签名校验方法，特殊的内容输出等
       
       请求映射规则：
       
-        需映射，不关心的参数就不要在protobuffer消息里定义, 关心的参数按名称定义即可
+        按需映射，不关心的参数就不要在protobuffer消息里定义, 关心的参数按名称定义即可
         
         常规参数映射，按参数名映射到protobuffer消息里的参数名
-        session 里的信息 -> 按参数名映射到protobuffer消息里的参数名
+        session 里的信息 -> 按参数名映射到protobuffer消息里的参数名 (名称冲突则总是session里的优先, 客户端无法覆盖session参数)
         
         特殊参数映射，后端服务可以获取到http调用的所有细节
         
@@ -554,11 +557,11 @@
         
         protobuff的消息里如带一些特殊参数，则会先做处理再从响应里删除再转换为json输出
         
-        httpCode 单值 -> 会转换为实际的http code
+        httpCode 单值 -> 会转换为实际的http code, 不设置则默认为200
         httpContentType 单值 -> 会转换为实际的http header里的content-type
-        headerXxx 单值 -> 会转换为 http输出的 header     
-        cookieXxx 单值 -> 会转换为 http输出的 cookie, cookie可带参数，格式为：值^key=value;key=value;...  key支持 domain,path,maxAge,httpOnly,secure,wrap    
-        session 不能是单值，必须是消息 -> 
+        headerXxx 单值 -> 会转换为http输出的 header     
+        cookieXxx 单值 -> 会转换为http输出的 cookie, cookie可带参数，格式为：值^key=value;key=value;...  key支持 domain,path,maxAge,httpOnly,secure,wrap    
+        session 不能是单值，必须是消息(Map) -> 
           如 session 消息里带 logFlag = 0 则会删除会话；否则将返回的session信息保存到会话上; 后续收到请求会自动将会话里的信息取出发给后端服务
           常规情况下后端服务不用去存储会话信息，甚至不用关心sessionId; 如果有特殊需求，后端也可以根据sessionId做自己的存储策略
         
