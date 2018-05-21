@@ -82,15 +82,15 @@
 	
 	示例proto文件；
 	
-		syntax="proto3";
-
+    syntax="proto3";
+    
     import "krpcext.proto";
     option java_multiple_files=true;
     option java_generic_services=true;
-		
-		option java_package="com.xxx.userservice.proto";
-		option java_outer_classname="UserServiceMetas";
-		
+    
+    option java_package="com.xxx.userservice.proto";
+    option java_outer_classname="UserServiceMetas";
+
 		message LoginReq {
 			string userName = 1;
 			string password = 2;
