@@ -6,9 +6,9 @@
       客户端业务层代码                                         服务端业务层代码 
 	    -------------------------------------------------------------------------
 	       启动时生成的动态代理
-	       RpcClient            --->  注册与发现服务  <---         RpcServer
+	       RpcClient            --->  注册与发现服务   <---         RpcServer
 	       Cluster Manager
-	       Netty4 Transport     --->   krpc codec     <---         Netty4 Transport
+	       Netty4 Transport     --->   krpc codec      <---         Netty4 Transport
 	    -------------------------------------------------------------------------
       网络层数据传输                                           网络层数据传输
 	
