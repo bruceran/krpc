@@ -83,7 +83,7 @@
   
   * 编译命令： krpc.bat  yourprotofile.proto  此脚本每次只能一个文件
   
-  * 生成成的java文件放在target子目录下，同时会生成一个时间戳完全一致的 yourprotofile.proto.pb (此文件只用于动态http网关，一般不用)
+  * 生成的java文件放在target子目录下，同时会在proto文件相同目录生成一个时间戳完全一致的 yourprotofile.proto.pb (此文件只用于动态http网关，一般不用)
   
   * bin目录下附带了一个简单的 test.proto, 可进入此目录，输入krpc.bat test.proto查看输出的文件
   

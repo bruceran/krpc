@@ -1,0 +1,80 @@
+syntax="proto3";
+
+import "krpcext.proto";
+option java_multiple_files=true;
+option java_generic_services=true;
+
+option java_package="com.xxx.httptest.proto";
+option java_outer_classname="HttpTestMetas";
+
+message Session {
+	string loginFlag = 1;
+	string userId = 2;
+	string userName = 3;
+	string mobile = 4;
+}
+
+enum Status {
+	NOT_READY = 0;
+	READY = 1;
+	PAID = 2;
+}
+
+
+message OrderItem {
+	string name = 1;
+	int32 quantity = 2;
+	double price = 3;
+	string note = 4;
+}
+	
+message HttpTestReq {
+	string httpMethod = 1;
+	string httpSchema = 2;
+	string httpPath = 3;
+	string httpQueryString = 4;
+	string httpContentType = 5;
+	string httpContent = 6;
+
+	Session session = 7;
+	
+	string orderId = 8;
+	int32 quantity1 = 9;
+	uint32 quantity2 = 10;
+	int64 quantity3 = 11;
+	uint64 quantity4 = 12;
+	float price1 = 13;
+	double price2 = 14;
+	
+	Status status = 15;
+	repeated OrderItem items = 16;
+
+	string userId = 17;
+	string userName = 18;
+	string mobile = 19;
+	
+	string sessionId = 20;
+	string headerHost = 21;
+	string cookieTnk = 22;
+	
+	repeated string colors = 23;
+}
+				
+message HttpTestRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+	
+	string userId = 3;
+	Session session = 4;
+	
+	int32 httpCode = 5;
+	string httpContentType = 6;
+	
+	string headerLocation = 7;
+	string headerXmmDddCcc = 8;
+	string cookieTnk = 9;	
+	
+	int32 totalPrice = 10;
+}
+
+

@@ -1,0 +1,10 @@
+syntax="proto3";
+
+package krpc;
+
+import "descriptor.proto";
+extend google.protobuf.ServiceOptions {  int32 serviceId = 1001;   }  
+extend google.protobuf.MethodOptions {  int32 msgId = 1002;  }  
+
+option java_package="krpc";
+option java_outer_classname="KrpcExt";

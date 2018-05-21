@@ -1,0 +1,30 @@
+syntax="proto3";
+
+package krpc.core.proto;
+option java_package="krpc.core.proto";
+option java_outer_classname="RpcMetas";
+option java_multiple_files = true;
+
+message RpcMeta {
+
+    enum Direction { INVALID_DIRECTION = 0 ; REQUEST = 1; RESPONSE = 2; }
+    Direction direction = 1;
+    int32 serviceId = 2;
+    int32 msgId = 3;
+    int32 sequence = 4;
+    string traceId = 5; // only for request
+    int32 retCode = 6; // only for response
+    int32 timeout = 7;  // only for request
+    string peers = 8; // only for request
+    string attachment = 9; // only for request
+    int32 compress = 10; // for both req/res, 0=no compress, 1=gzip 2=snappy
+
+/*
+    signature fields
+    encrypt fields
+    sampleFlag
+    stressFlag
+    clientId
+*/
+
+};

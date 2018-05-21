@@ -82,9 +82,8 @@
 	示例proto文件；
 	
 		syntax="proto3";
-    import "descriptor.proto";
-    extend google.protobuf.ServiceOptions {  int32 serviceId = 1001;   }  
-    extend google.protobuf.MethodOptions {  int32 msgId = 1002;  }  
+
+    import "krpcext.proto";
     option java_multiple_files=true;
     option java_generic_services=true;
 		
@@ -113,17 +112,15 @@
 		}
 						
 		service UserService {
-			option (serviceId) = 100;
-			rpc login(LoginReq) returns (LoginRes)  { option (msgId) = 1; };
-			rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  { option (msgId) = 2; };
+			option (krpc.serviceId) = 100;
+			rpc login(LoginReq) returns (LoginRes)  { option (krpc.msgId) = 1; };
+			rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)  { option (krpc.msgId) = 2; };
 		} 
   
   * 以下几行为固定，不可修改:
   
       syntax="proto3";  // 必须使用protobuffer 3版本
-      import "descriptor.proto"; // 来引入服务号服务号消息号扩展, 否则生成的服务接口无法使用
-      extend google.protobuf.ServiceOptions {  int32 serviceId = 1001;   }  // 内部tag, 固定用1001,不可修改
-      extend google.protobuf.MethodOptions {  int32 msgId = 1002;  }  // 内部tag, 固定用1002,不可修改
+      import "krpcext.proto"; // 此文件中包含了所有krpc在标准protobuffer上做的扩展定义
       option java_multiple_files=true; // 保证生成的java类无嵌套，简化代码
       option java_generic_services=true; // 来根据service定义生成java接口, 否则只会生成输入输出类
 
@@ -136,12 +133,13 @@
         package com.xxx.userservice.proto;
         
         public interface UserService {
-            LoginRes login(LoginReq req) ;
-            UpdateProfileRes updateProfile(UpdateProfileReq req);
-            
-            static int serviceId = 100;
-            static int loginMsgId = 1;
-            static int updateProfileMsgId = 2;
+            static final public int serviceId = 100;
+        
+            com.xxx.userservice.proto.LoginRes login(com.xxx.userservice.proto.LoginReq req);
+            static final public int loginMsgId = 1;
+        
+            com.xxx.userservice.proto.UpdateProfileRes updateProfile(com.xxx.userservice.proto.UpdateProfileReq req);
+            static final public int updateProfileMsgId = 2;
         }
         
       异步接口形式如下；(仅用于客户端)
@@ -151,18 +149,19 @@
         import java.util.concurrent.CompletableFuture;
         
         public interface UserServiceAsync {
-            CompletableFuture<LoginRes> login(LoginReq req) ;
-            CompletableFuture<UpdateProfileRes> updateProfile(UpdateProfileReq req);
-            
-            static int serviceId = 100;
-            static int loginMsgId = 1;
-            static int updateProfileMsgId = 2;
+            static final public int serviceId = 100;
+        
+            java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.LoginRes> login(com.xxx.userservice.proto.LoginReq req);
+            static final public int loginMsgId = 1;
+        
+            java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.UpdateProfileRes> updateProfile(com.xxx.userservice.proto.UpdateProfileReq req);
+            static final public int updateProfileMsgId = 2;
         }
 	
 	后续可以以下方式之一来使用生成好的文件:
 	
     * 将生成好的源码文件拷贝到项目的固定目录下
-    * 若不想复制源码只想引用jar包也可拷贝jar包到项目依赖位置（本地目录或maven仓库）
+    * 若不想复制源码只想引用jar包也可拷贝jar包到项目依赖位置（本地目录或maven仓库） (目前暂不支持)
     * 对http通用网关动态调用接口，需要用到生成的 xxx.proto.pb 文件
 
 # 约定
@@ -407,6 +406,7 @@
     jsonConverter json序列化使用的json框架，默认为 jackson
     routesFile 路由配置文件， 默认为 routes.xml，会自动搜索classpath下的routes.xml配置文件
     sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID
+    sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为/
     
     protoDir proto文件所在目录，默认为 proto, 会自动搜索classpath下的proto/子目录下的所有xxx.proto.pb文件
 

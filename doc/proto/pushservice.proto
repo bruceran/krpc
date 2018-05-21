@@ -1,0 +1,28 @@
+syntax="proto3";
+
+import "krpcext.proto";
+option java_multiple_files=true;
+option java_generic_services=true;
+
+option java_package="com.xxx.pushservice.proto";
+option java_outer_classname="PushServiceMetas";
+
+message PushReq {
+	string clientId = 1;
+	string message = 2;
+}
+message PushRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+}
+
+service PushService {
+   option (krpc.serviceId) = 101;
+	rpc push(PushReq) returns (PushRes)  { option (krpc.msgId) = 1; };
+}
+
+
+service PushServicev2 {
+  option (krpc.serviceId) = 102;
+	rpc pushv2(PushReq) returns (PushRes)  { option (krpc.msgId) = 1; };
+}
