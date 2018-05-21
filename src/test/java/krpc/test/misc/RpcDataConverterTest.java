@@ -22,6 +22,7 @@ import krpc.web.impl.DefaultRpcDataConverter;
 
 public class RpcDataConverterTest {
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test1() throws Exception {
 		
@@ -80,6 +81,7 @@ public class RpcDataConverterTest {
 			item2.put("quantity", "124");
 			item2.put("price", "1.02");		
 			
+			@SuppressWarnings("rawtypes")
 			ArrayList list = new ArrayList();
 			list.add(item1);
 			list.add(item2);

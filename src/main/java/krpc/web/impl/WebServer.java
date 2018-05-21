@@ -64,7 +64,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	static Logger log = LoggerFactory.getLogger(WebServer.class);
 
 	String sessionIdCookieName = DefaultSessionIdCookieName;
-	String sessionIdCookiePath = "/";
+	String sessionIdCookiePath = "";
 
 	FlowControl flowControl;
 	ServiceMetas serviceMetas;

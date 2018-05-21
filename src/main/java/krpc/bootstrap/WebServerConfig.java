@@ -24,7 +24,7 @@ public class WebServerConfig  {
 	String protoDir = "proto";
 	
 	String sessionIdCookieName = WebConstants.DefaultSessionIdCookieName;
-	String sessionIdCookiePath = "/"; // todo 多应用下可能用不同值
+	String sessionIdCookiePath = "";
 
 	public WebServerConfig() {
 	}

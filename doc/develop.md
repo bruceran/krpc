@@ -35,7 +35,7 @@
 	
 	    a) 使用预定义的spi接口进行功能扩展
 	    b) 框架内部几乎都是以接口方式进行编程，所有实体类的创建都在BootStrap类中，可通过继承BootStrap类做更深度的定制
-	    c) 框架本身只对logback,protobuff3,netty4有强依赖，其它依赖都是可选的, 都是可以替换的
+	    c) 框架本身只对logback,protobuff3,netty4,javassist有强依赖，其它依赖都是可选的, 都是可以替换的
 	
 # krpc协议
 
@@ -406,7 +406,7 @@
     jsonConverter json序列化使用的json框架，默认为 jackson
     routesFile 路由配置文件， 默认为 routes.xml，会自动搜索classpath下的routes.xml配置文件
     sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID
-    sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为/
+    sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录
     
     protoDir proto文件所在目录，默认为 proto, 会自动搜索classpath下的proto/子目录下的所有xxx.proto.pb文件
 
