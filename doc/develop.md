@@ -16,12 +16,21 @@
 		
 		  一个进程内通常启动一个app
 		  每个app内可以启动多个server,多个client,多个webserver
-		  每个app内可启动多个service, service可绑定到不同的server, 或者client(PUSH调用)，或者绑定到webserver
+		  每个app内可启动多个service, service可绑定到不同的server, 或者client(PUSH调用)，或者webserver
 		  每个app内可启动多个referer, referer可绑定到不同的client, 或者server(PUSH调用)
-		  service和referer都可以在method级别做一些配置，如重试策略，线程池，流控参数等
+		  service和referer都可以在method级别做一些配置
 		  每个app内可配置一个monitorservice做日志相关配置
 		  每个app内可配置多个注册与服务插件，可同时连接多个注册与发现服务
+		  
+		  框架内的client,server,webserver是重量级对象，因谨慎创建实例；
+		  框架内的service/referer是非常轻量的，在框架内部无对应实体，仅仅是一些配置值；
 
+	* 扩展机制
+	
+	    a) 使用预定义的spi接口进行功能扩展
+	    b) 框架内部几乎都是以接口方式进行编程，所有实体类的创建都在BootStrap类中，可通过继承BootStrap类做更深度的定制
+	    c) 框架本身只对logback,protobuff3,netty4有强依赖，其它依赖都是可选的
+	
 # krpc协议
 
   krpc协议是自定义的TCP长连接协议, 了解底层通讯协议有助于更好地理解krpc框架
