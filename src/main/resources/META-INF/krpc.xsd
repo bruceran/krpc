@@ -14,6 +14,8 @@
               <attribute name="mockFile" type="string" use="optional"/>
               <attribute name="errorMsgConverter" type="string" use="optional"/>
               <attribute name="flowControl" type="string" use="optional"/>
+              <attribute name="traceIdGenerator" type="string" use="optional"/>
+              <attribute name="sampleRate" type="string" use="optional"/>
 	    </complexType>    
     </element>
 

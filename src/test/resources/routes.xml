@@ -3,11 +3,11 @@
  
  	<import file="routes-b.xml"/>  
 
-	<plugin name="dummy" params="a=1;b=2"/>
+	<plugin name="logonly" params="a=1;b=2"/>
 	
     <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
  
-    <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" />  
+    <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" plugins="logONly"/>  
     <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
 
     <group   prefix="/abc"  methods="get,post" serviceId="100">  

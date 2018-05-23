@@ -61,7 +61,9 @@
       serviceId int32 服务号
       msgId int32 消息号
       sequence int32 包标识
-      traceId string 全链路跟踪标识，此字符串具有以下几个含义：全链路不变的traceId, spanId, parentSpanId
+      traceId string 全链路不变的traceId
+      spanId string 全链路跟踪span标识，格式为 parentSpanId:spanId(zipkin)风格 或者 0.1.1 风格(eagle)
+      sampled int32 是否采样 0=默认(是) 1=是 2=否
       peers string 网络包经过的所有节点
       retCode int32 错误码，仅用于响应包，某些情况下可以无包体，通过此字段确定错误码
       timeout int32 超时时间，客户端的超时时间可以传给服务端，服务端可以根据此时间快速丢弃队列中已过期未执行的消息

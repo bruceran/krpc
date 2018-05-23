@@ -163,7 +163,7 @@ class BaseParser<T> implements BeanDefinitionParser {
 class ApplicationConfigBeanParser extends BaseParser<ApplicationConfigBean> {
 	ApplicationConfigBeanParser() {
 		beanClass = ApplicationConfigBean.class;
-		attributes = new String[] {"name","errorMsgConverter","mockFile","flowControl"};
+		attributes = new String[] {"name","errorMsgConverter","mockFile","flowControl","traceIdGenerator","sampleRate"};
 	}
 }
 

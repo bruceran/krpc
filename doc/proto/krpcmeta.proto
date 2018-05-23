@@ -12,17 +12,18 @@ message RpcMeta {
     int32 serviceId = 2;
     int32 msgId = 3;
     int32 sequence = 4;
-    string traceId = 5; // only for request
-    int32 retCode = 6; // only for response
-    int32 timeout = 7;  // only for request
-    string peers = 8; // only for request
-    string attachment = 9; // only for request
-    int32 compress = 10; // for both req/res, 0=no compress, 1=gzip 2=snappy
+    int32 retCode = 5; // only for response
+    string traceId = 6; // only for request
+    string spanId = 7; // only for request two styles: parentSpanId:spanId or 0.1.1.1
+    int32 sampled = 8; // sample flag 0=default(yes) 1=yes 2=no, only for request
+    int32 timeout = 9;  // only for request
+    string peers = 10; // only for request
+    string attachment = 11; // only for request
+    int32 compress = 12; // for both req/res, 0=no compress, 1=gzip 2=snappy
 
 /*
     signature fields
     encrypt fields
-    sampleFlag
     stressFlag
     clientId
 */

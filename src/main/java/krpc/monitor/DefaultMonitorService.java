@@ -146,7 +146,19 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         }
 
     }
-    
+
+	@Override
+	public void webReqStart(WebClosure closure) {
+	}
+
+	@Override
+	public void reqStart(RpcClosure closure) {
+	}
+
+	@Override
+	public void callStart(RpcClosure closure) {
+	}
+	
     public void reqDone(final RpcClosure closure) {
     	
         try{
@@ -263,11 +275,6 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	RpcContextData ctx = closure.getCtx();
     	RpcMeta meta = ctx.getMeta();
     	
-    	int p = meta.getTraceId().indexOf(":");
-    	String traceId = p >= 0 ? meta.getTraceId().substring(0,p) : meta.getTraceId();
-    	if( traceId.isEmpty() ) traceId = "no_trace_id";
-    	String spanId = p >= 0 ? meta.getTraceId().substring(p+1) : "";
-    	
     	String timestamp =  logFormat.format( LocalDateTime.ofEpochSecond(ctx.getResponseTime()/1000,(int)((ctx.getResponseTime()%1000)*1000000),offset) ); 
     	b.append(timestamp);
     	b.append(sep);
@@ -275,9 +282,9 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	b.append(sep);
     	b.append(meta.getSequence());
     	b.append(sep);
-    	b.append(traceId);
+    	b.append(meta.getTraceId());
     	b.append(sep);
-    	b.append(spanId);
+    	b.append(meta.getSpanId());
     	b.append(sep);
     	b.append(meta.getServiceId());
     	b.append(sep);
@@ -305,12 +312,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	StringBuilder b = new StringBuilder();
     	RpcContextData ctx = closure.getCtx();
     	RpcMeta meta = ctx.getMeta();
-    	
-    	int p = meta.getTraceId().indexOf(":");
-    	String traceId = p >= 0 ? meta.getTraceId().substring(0,p) : meta.getTraceId();
-    	if( traceId.isEmpty() ) traceId = "no_trace_id";
-    	String spanId = p >= 0 ? meta.getTraceId().substring(p+1) : "";
-    	
+
     	String timestamp =  logFormat.format( LocalDateTime.ofEpochSecond(ctx.getResponseTime()/1000,(int)((ctx.getResponseTime()%1000)*1000000),offset) ); 
     	b.append(timestamp);
     	b.append(sep);
@@ -318,9 +320,9 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	b.append(sep);
     	b.append(meta.getSequence());
     	b.append(sep);
-    	b.append(traceId);
+    	b.append(meta.getTraceId());
     	b.append(sep);
-    	b.append(spanId);
+    	b.append(meta.getSpanId());
     	b.append(sep);
     	b.append(meta.getServiceId());
     	b.append(sep);
@@ -588,5 +590,6 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 	public void setServerAddr(String serverAddr) {
 		this.serverAddr = serverAddr;
 	}
+
 
 }

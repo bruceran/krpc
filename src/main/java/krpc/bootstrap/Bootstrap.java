@@ -67,7 +67,8 @@ import krpc.impl.RpcClient;
 import krpc.impl.DefaultRpcFutureFactory;
 import krpc.impl.RpcServer;
 import krpc.impl.DefaultServiceMetas;
-import krpc.impl.DefaultTraceIdGenerator;
+import krpc.impl.EagleTraceIdGenerator;
+import krpc.impl.ZipkinTraceIdGenerator;
 import krpc.impl.transport.NettyClient;
 import krpc.impl.transport.NettyServer;
 import krpc.impl.transport.DefaultRpcCodec;
@@ -171,7 +172,12 @@ public class Bootstrap {
 	}
 
 	public TraceIdGenerator newTraceIdGenerator() {
-		return new DefaultTraceIdGenerator();
+		if( appConfig.traceIdGenerator.equals("zipkin") )
+			return new ZipkinTraceIdGenerator();
+		else if( appConfig.traceIdGenerator.equals("eagle") )
+			return new EagleTraceIdGenerator();
+		else
+			throw new RuntimeException("unknown traceIdGenerator");
 	}
 
 	public RpcFutureFactory newRpcFutureFactory(ServiceMetas metas, int notifyThreads, int notifyMaxThreads,
@@ -638,6 +644,7 @@ public class Bootstrap {
 			WebServerConfig c = webServers.get(name);
 
 			WebServer server = newWebServer();
+			server.setSampleRate(appConfig.sampleRate);
 			server.setServiceMetas(app.serviceMetas);
 			server.setTraceIdGenerator(app.traceIdGenerator);
 			server.setFlowControl(app.flowControl);

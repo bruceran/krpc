@@ -92,7 +92,7 @@ public class RpcClientTest {
 		log.info("res14="+f14.getNow(null).getRetCode()+","+f14.getNow(null).getRetMsg());
 		log.info("res15="+f15.getNow(null).getRetCode()+","+f15.getNow(null).getRetMsg());
 		
-		for(int i=0;i<1000;++i) {
+		for(int i=0;i<5;++i) {
 			LoginReq reqx = b.build();
 			LoginRes resx = us.login(reqx);
 		}

@@ -167,12 +167,13 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		int sequence = connId == null ? 0 : nextSequence(connId);
 		RpcServerContextData svrCtx = RpcServerContext.get();
 		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(serviceId).setMsgId(msgId).setSequence(sequence);
-		builder.setTraceId(traceIdGenerator.nextId(svrCtx));
+		builder.setTraceId(traceIdGenerator.nextTraceId(svrCtx));
+		builder.setSpanId(traceIdGenerator.nextSpanId(svrCtx,false));
 		if( svrCtx != null ) {
 			builder.setPeers(svrCtx.getMeta().getPeers());
 			builder.setAttachment(svrCtx.getMeta().getAttachment());
 		} 
-
+		
 		String attachment = RpcClientContext.removeAttachment();
 		if( attachment != null)
 			builder.setAttachment(attachment);
@@ -251,8 +252,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			retryPool.execute( new Runnable() {
 				public void run() {
 					int newSequence = nextSequence(newConnId);
-					String newTraceId = traceIdGenerator.nextId(RpcServerContext.get());
-					RpcMeta newMeta = meta.toBuilder().setSequence(newSequence).setTraceId(newTraceId).build();
+					String newSpanId = traceIdGenerator.nextSpanId(RpcServerContext.get(),false);
+					RpcMeta newMeta = meta.toBuilder().setSequence(newSequence).setSpanId(newSpanId).build();
 					closure.getCtx().setConnId(newConnId);
 					closure.getCtx().setMeta(newMeta);
 					closure.asClientCtx().incRetryTimes();

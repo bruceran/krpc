@@ -6,6 +6,8 @@ public class ApplicationConfig  {
 	String errorMsgConverter = "file";
 	String flowControl = "";
 	String mockFile = "";
+	String traceIdGenerator = "zipkin"; // zipkin or eagle  // todo doc
+	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
 	
 	public ApplicationConfig() {
 	}
@@ -48,6 +50,23 @@ public class ApplicationConfig  {
 	public ApplicationConfig setErrorMsgConverter(String errorMsgConverter) {
 		this.errorMsgConverter = errorMsgConverter;
 		return this;
+	}
+
+	public String getTraceIdGenerator() {
+		return traceIdGenerator;
+	}
+
+	public ApplicationConfig setTraceIdGenerator(String traceIdGenerator) {
+		this.traceIdGenerator = traceIdGenerator;
+		return this;
+	}
+
+	public int getSampleRate() {
+		return sampleRate;
+	}
+
+	public void setSampleRate(int sampleRate) {
+		this.sampleRate = sampleRate;
 	}
 
 }

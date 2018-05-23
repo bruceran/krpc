@@ -65,6 +65,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	String sessionIdCookieName = DefaultSessionIdCookieName;
 	String sessionIdCookiePath = "";
+	int sampleRate = 1;
 
 	FlowControl flowControl;
 	ServiceMetas serviceMetas;
@@ -116,11 +117,11 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 		String traceId = getTraceId(req);
 		if (isEmpty(traceId)) {
-			traceId = traceIdGenerator.nextId(null);
-		} else {
-			traceId = traceId + ":1";
+			traceId = traceIdGenerator.nextTraceId(null);
 		}
-		builder.setTraceId(traceId);
+		String spanId = traceIdGenerator.nextSpanId(null,true);
+		boolean needSample = ( traceId.hashCode() % sampleRate ) == 0;
+		builder.setTraceId(traceId).setSpanId(spanId).setSampled(needSample?0:2);
 
 		String peers = "";
 		String xff = req.getXff();
@@ -956,5 +957,13 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void setSessionIdCookiePath(String sessionIdCookiePath) {
 		this.sessionIdCookiePath = sessionIdCookiePath;
+	}
+
+	public int getSampleRate() {
+		return sampleRate;
+	}
+
+	public void setSampleRate(int sampleRate) {
+		this.sampleRate = sampleRate;
 	}
 }
