@@ -711,19 +711,19 @@
 	
 	  异步实现方式：
 	
-    	    线程1：
+          线程1：
           public LoginRes login(LoginReq req) {
               RpcClosure closure = ServerContext.new(req); // RpcClosure 对象中有本地rpc调用的所有上下文信息以及req信息
               // 将此closure对象传递到其它线程中或加入队列, 如 queue.offer(closure);
               return null; // 告诉框架此接口将异步实现
           }
-    		
-    		  // closure 可以放心传递 closure, closure内仅仅包含一些普通的pojo对象
-    		
-    		  线程2：
-    		  // 其它线程获取到RpcClosure closure后
-    		  closure.recoverContext(); // 每次跨线程传递closure后必须调用此接口恢复rpc上下文以及全链路跟踪trace上下文
-    		  ... // 业务层处理
+          // closure 可以放心传递 closure, closure内仅仅包含一些普通的pojo对象
+          
+          
+          线程2：
+          // 其它线程获取到RpcClosure closure后
+          closure.recoverContext(); // 每次跨线程传递closure后必须调用此接口恢复rpc上下文以及全链路跟踪trace上下文
+          ... // 业务层处理
           log.info("login received, peers="+ctx.getMeta().getPeers());
           LoginRes res = LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
           closure.done(res); // 什么时候获得了响应就调用done(res)函数
@@ -733,32 +733,35 @@
 # 服务端推送
 
     服务端启动：
-		RpcApp app = new Bootstrap() 
-			.addService(UserService.class,impl)  // 正常的 service
-			.addReverseReferer("push",PushService.class) // 注意，这里加了referer
-			.build();
+    		RpcApp app = new Bootstrap() 
+    			.addService(UserService.class,impl)  // 正常的 service
+    			.addReverseReferer("push",PushService.class) // 注意，这里加了referer
+    			.build();
 		客户端启动：
-		RpcApp app = new Bootstrap() 
-				.addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
-				.addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
-				.build();
+    		RpcApp app = new Bootstrap() 
+    				.addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
+    				.addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
+    				.build();
+    				
+    				
 		服务端推送代码：
 		
-		线程1：		
-		RpcContextData ctx = ServerContext.get(); // 获取调用上下文，上下文中包含tcp连接标识connId
-		String connId = ctx.getConnId(); // connId可以任意传递，保存到缓存中或持久化到db中
-		
-		线程2：
-		// 从内存，缓存或db中获取到之前保存的connId
-		ClientContext.setConnId(connId); // 推送前需要调用此函数确定此消息是推送到那个连接上
-		PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
-		ps.push(req); // 完成推送
+    		线程1：		
+    		RpcContextData ctx = ServerContext.get(); // 获取调用上下文，上下文中包含tcp连接标识connId
+    		String connId = ctx.getConnId(); // connId可以任意传递，保存到缓存中或持久化到db中
+    		
+    		线程2：
+    		// 从内存，缓存或db中获取到之前保存的connId
+    		ClientContext.setConnId(connId); // 推送前需要调用此函数确定此消息是推送到那个连接上
+    		PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
+    		ps.push(req); // 完成推送
 				
 # 自定义插件如何获取到Spring容器
 
     krpc spi插件对象是由krpc框架创建和初始化的，krpc框架目前不支持自动注入spring里的组件，如果有必要，插件可以在init()方法中自己完成初始化
-    BeanFactory bf = krpc.rpc.bootstrap.spring.SpringBootstrap.instance.spring;
-    Ccc ooo = (Ccc)bf.getBean("xxx"); // 从spring中获取组件
+    
+      BeanFactory bf = krpc.rpc.bootstrap.spring.SpringBootstrap.instance.spring;
+      Ccc ooo = (Ccc)bf.getBean("xxx"); // 从spring中获取组件
 
 # 如何进行业务层打点  
 
@@ -778,7 +781,7 @@
        所有的Span组成一个树状结构
        可以使用startAsync开启一个新的Span但不作为当前Span
        
-       每个span上可以增加event, event有时间戳但无耗时信息
+       每个span上可以增加event, event有时间戳但无耗时信息, 异常也作为event
        每个span上可以增加tag, tag就是普通的key/value信息
               
     * 业务层因只应使用krpc.trace.Trace类和krpc.trace.Span接口来进行打点
