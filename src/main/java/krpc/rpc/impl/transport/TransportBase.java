@@ -202,6 +202,10 @@ public abstract class TransportBase extends ChannelDuplexHandler {
 		Message res = serviceMetas.generateRes(meta.getServiceId(),meta.getMsgId(),retCode);
 		RpcClosure closure = new RpcClosure(rpcCtx,req);
 		closure.done(res);
+
+		String status = retCode == 0 ? "SUCCESS" : "ERROR";
+		closure.asServerCtx().getTraceContext().serverSpanStopped(status);
+		
 		monitorService.reqDone(closure);
 	}
 	

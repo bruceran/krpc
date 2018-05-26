@@ -27,12 +27,12 @@ public class RpcServerTest {
 
 		RpcApp app = new Bootstrap() 
 			.addService(UserService.class,impl) 
-			.setTraceAdapter("skywalking")
+			//.setTraceAdapter("skywalking")
 			.build();
 		
 		app.initAndStart();
 		
-		Thread.sleep(120000);
+		Thread.sleep(1200000);
 
 		app.stopAndClose();
 		
@@ -75,6 +75,7 @@ class UserServiceImpl implements UserService {
 		try {
 			while( true ) {
 				RpcClosure c = queue.take();
+				c.recoverContext();
 				log.info("async updateProfile received req#"+i);
 				//try { Thread.sleep(3000); } catch(Exception e) {}
 				UpdateProfileRes res = UpdateProfileRes.newBuilder().setRetCode(-100002).build();

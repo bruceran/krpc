@@ -4,8 +4,13 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DefaultTraceContext implements TraceContext {
 
+	static Logger log = LoggerFactory.getLogger(DefaultTraceContext.class);
+	
 	private String traceId;
 	private String rootRpcId;
 	private String peers = "";
@@ -35,7 +40,7 @@ public class DefaultTraceContext implements TraceContext {
 		this.sampled = sampled;
 		String entryRpcId = Trace.getAdapter().newEntryRpcId(rootRpcId);
 		Span root = new DefaultSpan(this, entryRpcId, type, action, startMicros);
-		spans.push(root);
+		spans.addLast(root);
 	}
 
 	// for client
@@ -50,10 +55,10 @@ public class DefaultTraceContext implements TraceContext {
 		if( tail == null ) {
 			String childRpcId = Trace.getAdapter().newChildRpcId(rootRpcId,subCalls);
 			tail = new DefaultSpan(this, childRpcId, type, action,-1);
-			spans.push(tail);
+			spans.addLast(tail);
 		} else {
 			Span newChild = tail.newChild(type,action);
-			spans.push(newChild);
+			spans.addLast(newChild);
 		}
 	}
 	
@@ -69,15 +74,21 @@ public class DefaultTraceContext implements TraceContext {
 	}
 	
 	public void serverSpanStopped(String result) {
-		// todo
+
+		Span span = spans.peekFirst();
+		if( span != null ) {
+			span.stop(result);
+			if( !spans.isEmpty() ) {
+				spans.clear();
+				Trace.getAdapter().send(this, span); // todo maybe exist pending spans
+			}
+		}
 	}
 	
 	public void stopped(Span span) {
-		
-		// todo
-		
+
 		if( span == spans.peekLast() ) {
-			spans.pop();
+			spans.removeLast();
 			if( spans.isEmpty() ) {
 				Trace.getAdapter().send(this, span);
 				return;
@@ -85,6 +96,9 @@ public class DefaultTraceContext implements TraceContext {
 		} else {
 			if( span == spans.peekFirst() ) {
 				spans.clear();
+				Trace.getAdapter().send(this, span); // todo maybe exist pending spans
+				return;
+			} else if( spans.isEmpty() ) {
 				Trace.getAdapter().send(this, span); // todo maybe exist pending spans
 				return;
 			}

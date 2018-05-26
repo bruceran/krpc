@@ -26,6 +26,8 @@ dependencies {
 		compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
 		compile 'org.xerial.snappy:snappy-java:1.1.2.3'
+
+		compile 'redis.clients:jedis:2.9.0'
 		
 		testCompile 'junit:junit:4.12'
 }

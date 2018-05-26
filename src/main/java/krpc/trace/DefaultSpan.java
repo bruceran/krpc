@@ -43,6 +43,20 @@ public class DefaultSpan implements Span {
 		return child;
 	}
 
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append("rpcId=").append(rpcId).append(",");
+		b.append("type=").append(type).append(",");
+		b.append("action=").append(action).append(",");
+		b.append("startMicros=").append(startMicros).append(",");
+		b.append("timeUsedMicros=").append(timeUsedMicros).append(",");
+		b.append("status=").append(status).append(",");
+		b.append("remoteAddr=").append(remoteAddr).append(",");
+		b.append("tags=").append(tags).append(",");
+		b.append("events=").append(events).append(",");
+		return b.toString();
+	}
+	
     public long stop() {
     	return stop("SUCCESS");
     }

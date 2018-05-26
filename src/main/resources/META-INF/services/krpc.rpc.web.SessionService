@@ -1,2 +1,3 @@
 krpc.rpc.web.impl.MemorySessionService
+krpc.rpc.web.impl.JedisSessionService
 

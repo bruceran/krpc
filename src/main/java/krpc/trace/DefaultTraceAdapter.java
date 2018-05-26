@@ -1,11 +1,17 @@
 package krpc.trace;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DefaultTraceAdapter implements TraceAdapter {
 
+	static Logger log = LoggerFactory.getLogger(DefaultTraceAdapter.class);
+	
 	public DefaultTraceAdapter(Map<String,String> params) {
 	}
 	
@@ -14,6 +20,14 @@ public class DefaultTraceAdapter implements TraceAdapter {
 	public void close() {}
 	
 	public void send(TraceContext ctx, Span span) {
+		
+		log.info("root:"+span.toString());
+		List<Span> children = span.getChildren();
+		if( children != null ) {
+			for(Span child:children ) {
+				log.info("child:"+child.toString());
+			}
+		}
 	}
 	
 	public String newTraceId() {

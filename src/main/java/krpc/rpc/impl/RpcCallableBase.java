@@ -500,6 +500,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 	
 	void endReq(RpcClosure closure,int retCode) {
+		
+		String status = retCode == 0 ? "SUCCESS" : "ERROR";
+		closure.asServerCtx().getTraceContext().serverSpanStopped(status);
+		
 		if( monitorService == null ) return;
 		RpcMeta meta = closure.getCtx().getMeta();
 		Message res = serviceMetas.generateRes(meta.getServiceId(),meta.getMsgId(),retCode);
@@ -508,6 +512,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 
 	void endReq(RpcClosure closure) {
+		
+		String status = closure.getRetCode() == 0 ? "SUCCESS" : "ERROR";
+		closure.asServerCtx().getTraceContext().serverSpanStopped(status);
+		
 		if( monitorService == null ) return;
 		monitorService.reqDone(closure);
 	}

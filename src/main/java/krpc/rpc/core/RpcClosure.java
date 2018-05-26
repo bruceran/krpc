@@ -37,9 +37,6 @@ public class RpcClosure {
 			ServerContextData sctx = (ServerContextData)ctx;
 			if( sctx.cont != null )
 				sctx.cont.readyToContinue(this);
-			
-			String status = getRetCode() == 0 ? "SUCCESS" : "ERROR";
-			sctx.getTraceContext().serverSpanStopped(status);
 		}
 	}
 	

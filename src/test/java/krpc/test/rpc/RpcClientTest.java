@@ -28,7 +28,7 @@ public class RpcClientTest {
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
 				.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
 				.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
-				.setTraceAdapter("skywalking")
+				//.setTraceAdapter("skywalking")
 				.build();
 		
 		app.initAndStart();
@@ -105,14 +105,13 @@ public class RpcClientTest {
 							log.info("in listener, res2="+res2.getRetCode()+","+res2.getRetMsg() );
 						});
 		
-		
 		CompletableFuture<LoginRes> f8 = usa.login(req1);  // call async
 		CompletableFuture<LoginRes> f9 = usa.login(req2);  // call async
 		CompletableFuture<Void> f10 = f8.acceptEither(f9, (res1) -> {
 							log.info("in listener, res first="+res1.getRetCode()+","+res1.getRetMsg() );
 						});
 		
-		
+		/* */	
 		// user code end
 		
 		Thread.sleep(120000);

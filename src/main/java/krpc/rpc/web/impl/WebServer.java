@@ -703,6 +703,10 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		
 		WebClosure closure = new WebClosure(ctx,req,res);
 		ctx.end();
+		
+		String status = res.getRetCode() == 0 ? "SUCCESS" : "ERROR";
+		ctx.getTraceContext().serverSpanStopped(status);
+		
 		if( monitorService != null)
 			monitorService.webReqDone(closure);		
 	}
@@ -849,6 +853,10 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		httpTransport.send(ctx.getClientIp(), res);
 		WebClosure closure = new WebClosure(ctx,req,res);
 		ctx.end();
+		
+		String status = retCode == 0 ? "SUCCESS" : "ERROR";
+		ctx.getTraceContext().serverSpanStopped(status);
+		
 		if( monitorService != null)
 			monitorService.webReqDone(closure);
 	}
@@ -857,6 +865,10 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		DefaultWebRes res = generateError(req, retCode);
 		WebClosure closure = new WebClosure(ctx,req,res);
 		ctx.end();
+		
+		String status = retCode == 0 ? "SUCCESS" : "ERROR";
+		ctx.getTraceContext().serverSpanStopped(status);
+		
 		if( monitorService != null)
 			monitorService.webReqDone(closure);
 	}

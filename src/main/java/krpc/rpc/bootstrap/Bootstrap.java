@@ -659,6 +659,11 @@ public class Bootstrap {
 		for (String name : webServers.keySet()) {
 			WebServerConfig c = webServers.get(name);
 
+			SessionService ss = getSessionServiceObj(c.sessionService);
+			ss.config(parseParams(c.sessionService));
+			JsonConverter jc = getJsonConverterObj(c.jsonConverter);
+			jc.config(parseParams(c.jsonConverter));
+			
 			WebServer server = newWebServer();
 			server.setSampleRate(c.sampleRate);
 			server.setServiceMetas(app.serviceMetas);
@@ -667,8 +672,8 @@ public class Bootstrap {
 			server.setMonitorService(app.monitorService);
 			server.setRouteService(newRouteService(c));
 			server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
-			server.setSessionService(getSessionServiceObj(c.sessionService));
-			server.setJsonConverter(getJsonConverterObj(c.jsonConverter));
+			server.setSessionService(ss);
+			server.setJsonConverter(jc);
 			server.setSessionIdCookieName(c.sessionIdCookieName);
 			server.setSessionIdCookiePath(c.sessionIdCookiePath);
 

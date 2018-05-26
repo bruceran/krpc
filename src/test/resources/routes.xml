@@ -7,7 +7,7 @@
 	
     <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
  
-    <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" plugins="logONly"/>  
+    <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" sessionMode="2" />  
     <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
 
     <group   prefix="/abc"  methods="get,post" serviceId="100">  

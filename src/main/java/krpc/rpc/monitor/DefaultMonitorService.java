@@ -147,18 +147,6 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     }
 
-	@Override
-	public void webReqStart(WebClosure closure) {
-	}
-
-	@Override
-	public void reqStart(RpcClosure closure) {
-	}
-
-	@Override
-	public void callStart(RpcClosure closure) {
-	}
-	
     public void reqDone(final RpcClosure closure) {
     	
         try{
