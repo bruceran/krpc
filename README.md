@@ -33,10 +33,10 @@
 	  和spring框架集成(java config方式)
 	  和spring框架集成(schema方式)
 	  和spring框架集成(spring boot方式)
-
-	  配置参数详解
-	  routes.xml配置
-	  HTTP通用网关参数映射
+    
+    配置参数详解
+    routes.xml配置
+    HTTP通用网关参数映射
     RPC调用超时配置
     客户端异步调用
     服务端异步实现

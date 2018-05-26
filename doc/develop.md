@@ -13,42 +13,42 @@
       网络层数据传输               <----  正向或逆向调用  ---->    网络层数据传输
 	
       概念：
-            rpc app              每个使用krpc的应用都认为是一个app, 每个app具有一个名称，用于服务注册和发现以及调用链跟踪
-            rpc server           提供krpc协议服务的server，需要绑定物理端口，接收客户端连接
-            rpc webserver        提供http协议服务的webserver，需要绑定物理端口，接收客户端连接
-            rpc client           访问krpc协议的客户端, 和rpc server之间建立长连接
-            rpc service          对应一个proto里的service或者一个java接口的实现
-            rpc referer          对应一个proto里的service或者一个java接口的动态代理
-            rpc registry         注册与服务发现组件
-            rpc monitor          监控服务
-		
-		  一个进程内通常启动一个app
-		  每个app内可以启动多个server,多个client,多个webserver
-		  每个app内可启动多个service, service可绑定到server/webserver(常规) 或者client(PUSH调用)
-		  每个app内可启动多个referer, referer可绑定到client(常规)或者server(PUSH调用)
-		  每个service或referer都可以在method级别做更多配置
-		  webserver,server,client,service,referer之间可通过灵活简洁的组合提供不同的服务：
-		  
-		         常规组合 client + referer -> server + service
-		         PUSH推送 client + service -> server + referer
-		         同时启动TCP端口和HTTP端口  server + webserver + service
-		         HTTP网关(需java类)  webserver + client + referer + protoc生成的java类
-		         HTTP网关(无需java类)  webserver + client + referer + protoc生成的.proto.pb文件
-		         只对外提供HTTP服务不访问后台服务  webserver + service  如上传或测试
-		         纯静态页面HTTP网关  webserver
-		         
-		  每个app内可配置一个monitorservice做日志相关配置
-		  简洁的TRACE接口, 仅需调整一个配置就可对接不同的全链路跟踪系统(APM系统)
-		  每个app内可配置多个注册与服务插件，每个service可同时连接多个注册与发现服务
-		  
-		  框架内的client,server,webserver是重量级对象，因谨慎创建实例；
-		  框架内的service/referer是非常轻量的，在框架内部无对应实体，仅仅是一些配置值；
-		  启动时生成的动态代理是非常轻量的，仅仅是一行转发代码到RpcClient
-		  对Netty4的封装是只做了最轻量的封装，减少不必要的层次
-		  客户端的异步调用返回jdk 8的CompleatableFuture<T>, 可以用简单的代码实现各种异步：并行调用，灵活组合多个回调,只投递不关心响应；
-		  服务端的异步实现非常简洁
-		  逆向调用(PUSH)和正向调用一样简洁
-		  强大的HTTP通用网关
+        rpc app              每个使用krpc的应用都认为是一个app, 每个app具有一个名称，用于服务注册和发现以及调用链跟踪
+        rpc server           提供krpc协议服务的server，需要绑定物理端口，接收客户端连接
+        rpc webserver        提供http协议服务的webserver，需要绑定物理端口，接收客户端连接
+        rpc client           访问krpc协议的客户端, 和rpc server之间建立长连接
+        rpc service          对应一个proto里的service或者一个java接口的实现
+        rpc referer          对应一个proto里的service或者一个java接口的动态代理
+        rpc registry         注册与服务发现组件
+        rpc monitor          监控服务
+        
+        一个进程内通常启动一个app
+        每个app内可以启动多个server,多个client,多个webserver
+        每个app内可启动多个service, service可绑定到server/webserver(常规) 或者client(PUSH调用)
+        每个app内可启动多个referer, referer可绑定到client(常规)或者server(PUSH调用)
+        每个service或referer都可以在method级别做更多配置
+        webserver,server,client,service,referer之间可通过灵活简洁的组合提供不同的服务：
+        
+             常规组合 client + referer -> server + service
+             PUSH推送 client + service -> server + referer
+             同时启动TCP端口和HTTP端口  server + webserver + service
+             HTTP网关(需java类)  webserver + client + referer + protoc生成的java类
+             HTTP网关(无需java类)  webserver + client + referer + protoc生成的.proto.pb文件
+             只对外提供HTTP服务不访问后台服务  webserver + service  如上传或测试
+             纯静态页面HTTP网关  webserver
+             
+        每个app内可配置一个monitorservice做日志相关配置
+        洁的TRACE接口, 仅需调整一个配置就可对接不同的全链路跟踪系统(APM系统)
+        每个app内可配置多个注册与服务插件，每个service可同时连接多个注册与发现服务
+        
+        框架内的client,server,webserver是重量级对象，因谨慎创建实例；
+        框架内的service/referer是非常轻量的，在框架内部无对应实体，仅仅是一些配置值；
+        启动时生成的动态代理是非常轻量的，仅仅是一行转发代码到RpcClient
+        对Netty4的封装是只做了最轻量的封装，减少不必要的层次
+        客户端的异步调用返回jdk 8的CompleatableFuture<T>, 可以用简单的代码实现各种异步：并行调用，灵活组合多个回调,只投递不关心响应；
+        服务端的异步实现非常简洁
+        逆向调用(PUSH)和正向调用一样简洁
+        大的HTTP通用网关
 
 	* 强大的扩展机制
 	
@@ -82,7 +82,7 @@
       sequence int32 包标识
       traceId string 全链路跟踪标识, 不同的全链路跟踪系统格式不一样
       rpcId string 全链路跟踪RPCID, 不同的全链路跟踪系统格式不一样
-      sampled int32 是否采样 0=默认(是) 1=是 2=否
+      sampled int32 是否采样 0=默认(是) 1=强制,忽略存储级配置 2=否
       peers string 网络包经过的所有节点的ip:port
       apps string 网络包经过的所有节点的app name
       retCode int32 错误码，仅用于响应包，某些情况下可以无包体，通过此字段确定错误码
@@ -206,33 +206,33 @@
   		-100002=用户不存在
 
   * 框架内部使用的错误码, 具体含义参考 krpc.rpc.core.RetCodes.java 类 和 krpc.rpc.web.RetCodes.java 类 
-  
-      static public final int RPC_TIMEOUT = -450;  
-      static public final int NO_CONNECTION = -451;
-      static public final int SEND_FAILED = -452;  
-      static public final int CONNECTION_BROKEN = -453;
-      static public final int USER_CANCEL = -454;
-      static public final int EXEC_EXCEPTION = -455;
-      static public final int REFERER_NOT_ALLOWED = -456;
-      static public final int ENCODE_REQ_ERROR = -457;
-      static public final int DECODE_RES_ERROR = -458;
-      static public final int BUSINESS_ERROR = -500;
-      static public final int SERVER_SHUTDOWN = -503;
-      static public final int QUEUE_FULL = -550;
-      static public final int QUEUE_TIMEOUT = -551;
-      static public final int DECODE_REQ_ERROR = -552;
-      static public final int ENCODE_RES_ERROR = -553;
-      static public final int NOT_FOUND = -554;
-      static public final int FLOW_LIMIT = -555;
-      static public final int SERVICE_NOT_ALLOWED = -556;
-      static public final int SERVER_CONNECTION_BROKEN = -557;
-      static public final int HTTP_NOT_FOUND = -404;  
-      static public final int HTTP_METHOD_NOT_ALLOWED = -405;  
-      static public final int HTTP_NO_LOGIN = -560;  
-      static public final int HTTP_NO_SESSIONSERVICE = -561;  
-      static public final int HTTP_CLIENT_NOT_FOUND = -562;  
-      
-      业务层无需判断具体错误码值，只需判断是否为0来确定是否成功
+        
+        static public final int RPC_TIMEOUT = -450;  
+        static public final int NO_CONNECTION = -451;
+        static public final int SEND_FAILED = -452;  
+        static public final int CONNECTION_BROKEN = -453;
+        static public final int USER_CANCEL = -454;
+        static public final int EXEC_EXCEPTION = -455;
+        static public final int REFERER_NOT_ALLOWED = -456;
+        static public final int ENCODE_REQ_ERROR = -457;
+        static public final int DECODE_RES_ERROR = -458;
+        static public final int BUSINESS_ERROR = -500;
+        static public final int SERVER_SHUTDOWN = -503;
+        static public final int QUEUE_FULL = -550;
+        static public final int QUEUE_TIMEOUT = -551;
+        static public final int DECODE_REQ_ERROR = -552;
+        static public final int ENCODE_RES_ERROR = -553;
+        static public final int NOT_FOUND = -554;
+        static public final int FLOW_LIMIT = -555;
+        static public final int SERVICE_NOT_ALLOWED = -556;
+        static public final int SERVER_CONNECTION_BROKEN = -557;
+        static public final int HTTP_NOT_FOUND = -404;  
+        static public final int HTTP_METHOD_NOT_ALLOWED = -405;  
+        static public final int HTTP_NO_LOGIN = -560;  
+        static public final int HTTP_NO_SESSIONSERVICE = -561;  
+        static public final int HTTP_CLIENT_NOT_FOUND = -562;  
+        
+        业务层无需判断具体错误码值，只需判断是否为0来确定是否成功
 	 	  	  
 # 如何启动krpc, 以下展示不用spring框架下如何启动krpc。
 

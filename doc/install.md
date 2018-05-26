@@ -36,30 +36,30 @@
 
 # 框架目录结构
 
-	README.md 本文件
-	LICENSE  许可证
-	build.gradle gradle配置文件
-	src/ 所有源码
-	  main/
-	    java/
-	      krpc/
-	        common/ trace,redis,rpc 组件共同依赖的文件，只有非常少的几个接口和类
-	        trace/  和rpc框架完全独立的调用链跟踪的trace框架, 可对接主流的zipkin,skywalking,cat等APM系统
-	        redis/  和rpc框架完全独立的redis客户端, 基于nio和redis的pipeline, future使用java 8的CompleableFuture
-	        rpc/    krpc框架本身
-	    resources/
-	      META-INF/
-	        services/ 框架支持的SPI接口
-	        spring.schemas  spring.handlers  krpc.xsd   spring自定义schema所需文件
-	  test/
-	doc/ 文档目录
-	doc/proto/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件    
-	dist/
-  dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
-	dist/gradle-3.3-all.zip gradle工具，方便下载
-	dist/tools protoc工具
+    README.md 本文件
+    LICENSE  许可证
+    build.gradle gradle配置文件
+    src/ 所有源码
+      main/
+        java/
+          krpc/
+            common/ trace,redis,rpc 组件共同依赖的文件，只有非常少的几个接口和类
+            trace/  和rpc框架完全独立的调用链跟踪的trace框架, 可对接主流的zipkin,skywalking,cat等APM系统
+            redis/  和rpc框架完全独立的redis客户端, 基于nio和redis的pipeline, future使用java 8的CompleableFuture
+            rpc/    krpc框架本身
+        resources/
+          META-INF/
+            services/ 框架支持的SPI接口
+            spring.schemas  spring.handlers  krpc.xsd   spring自定义schema所需文件
+      test/
+    doc/ 文档目录
+    doc/proto/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件    
+    dist/
+    dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
+    dist/gradle-3.3-all.zip gradle工具，方便下载
+    dist/tools protoc工具
 	
-	将源码下载到本地后运行 gradle build 若无错误则表示编译成功
+    将源码下载到本地后运行 gradle build 若无错误则表示编译成功
 
 # 框架外部依赖说明
 
