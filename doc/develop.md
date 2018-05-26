@@ -724,6 +724,7 @@
           // 其它线程获取到RpcClosure closure后
           closure.recoverContext(); // 每次跨线程传递closure后必须调用此接口恢复rpc上下文以及全链路跟踪trace上下文
           ... // 业务层处理
+          LoginReq req = (LoginReq)closure.getReq(); // 获取入参
           log.info("login received, peers="+ctx.getMeta().getPeers());
           LoginRes res = LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
           closure.done(res); // 什么时候获得了响应就调用done(res)函数
