@@ -734,18 +734,21 @@
 # 服务端推送
 
     服务端启动：
+    
     		RpcApp app = new Bootstrap() 
     			.addService(UserService.class,impl)  // 正常的 service
     			.addReverseReferer("push",PushService.class) // 注意，这里加了referer
     			.build();
-		客户端启动：
+    			
+    客户端启动：
+		
     		RpcApp app = new Bootstrap() 
     				.addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
     				.addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
     				.build();
     				
     				
-		服务端推送代码：
+    服务端推送代码：
 		
     		线程1：		
     		RpcContextData ctx = ServerContext.get(); // 获取调用上下文，上下文中包含tcp连接标识connId
@@ -785,7 +788,7 @@
        每个span上可以增加event, event有时间戳但无耗时信息, 异常也作为event
        每个span上可以增加tag, tag就是普通的key/value信息
               
-    * 业务层因只应使用krpc.trace.Trace类和krpc.trace.Span接口来进行打点
+    * 业务层因只应使用krpc.trace.Trace静态类和krpc.trace.Span接口来进行打点
     
     * Trace类 此类都是静态方法，常用方法如下：
     
