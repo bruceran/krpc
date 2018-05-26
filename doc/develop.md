@@ -234,8 +234,9 @@
         
         业务层无需判断具体错误码值，只需判断是否为0来确定是否成功
 	 	  	  
-# 如何启动krpc, 以下展示不用spring框架下如何启动krpc。
+# 如何启动krpc
 
+  * 以下展示不用spring框架下如何启动krpc
   * 参考: src/test/java/krpc/test/rpc
 		
 		import krpc.rpc.bootstrap.*;
@@ -633,7 +634,7 @@
 
 # RPC调用超时配置
 
-  * 所有的RPC调用都有3000秒的默认超时时间, 可通过3种方式修改超时时间
+  * 所有的RPC调用都有3000毫秒的默认超时时间, 可通过3种方式修改超时时间
   
   * 修改referer级别配置, 指定服务级别的超时时间
   
@@ -643,14 +644,14 @@
   
       在rpc调用前，增加一行代码：ClientContext.setTimeout(milliseconds); 
       
-      ClientContext.setTimeout(1000); // 为下一个rpc调用设置超时时间为1秒, 每次都必须设置, rpc调用后就会清除此设置
+      ClientContext.setTimeout(1000); // 为下一个rpc调用设置超时时间为1秒, 每次都必须设置, rpc调用一发起就会清除此值
       LoginRes res = us.login(req); // 同步调用
   
 # 客户端异步调用
         
         每个服务接口都有同步和异步两种形式, 如
-            UserService.java接口
-            UserServiceAsync 异步接口, 异步接口的方法返回的是CompletableFuture<?>
+            UserService.java  同步接口
+            UserServiceAsync.java 异步接口, 异步接口的方法返回的是CompletableFuture<?>
           
         在客户端可以同时使用同步代理和异步代理 (启动方式不同获取动态代理方式也不同)
         获取到异步代理后，可以自由使用返回的future, 如：
@@ -699,36 +700,36 @@
 
      以 UserService的LoginRes login(LoginReq req) 接口为示例：
      
-     同步实现方式或异步方式只能选择其一。
+     服务端同步实现方式或异步方式只能选择其一。
      
      同步实现方式：
 
-      public LoginRes login(LoginReq req) {
-          log.info("login received, peers="+ctx.getMeta().getPeers());
-          return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build(); // 处理完直接返回
-      }
+          public LoginRes login(LoginReq req) {
+              log.info("login received, peers="+ctx.getMeta().getPeers());
+              return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build(); // 处理完直接返回
+          }
 	
 	  异步实现方式：
 	
-	    线程1：
-      public LoginRes login(LoginReq req) {
-          RpcClosure closure = ServerContext.new(req); // RpcClosure 对象中有本地rpc调用的所有上下文信息以及req信息
-          // 将此closure对象传递到其它线程中或加入队列, 如 queue.offer(closure);
-          return null; // 告诉框架此接口将异步实现
-      }
-		
-		  // closure 可以放心传递 closure, closure内仅仅包含一些普通的pojo对象
-		
-		  线程2：
-		  // 其它线程获取到RpcClosure closure后
-		  closure.recoverContext(); // 每次跨线程传递closure后必须调用此接口恢复rpc上下文以及全链路跟踪trace上下文
-		  ... // 业务层处理
-      log.info("login received, peers="+ctx.getMeta().getPeers());
-      LoginRes res = LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
-      closure.done(res); // 什么时候获得了响应就调用done(res)函数
-      
-      closure对象可以在线程间不断传递，没有限制
-            
+    	    线程1：
+          public LoginRes login(LoginReq req) {
+              RpcClosure closure = ServerContext.new(req); // RpcClosure 对象中有本地rpc调用的所有上下文信息以及req信息
+              // 将此closure对象传递到其它线程中或加入队列, 如 queue.offer(closure);
+              return null; // 告诉框架此接口将异步实现
+          }
+    		
+    		  // closure 可以放心传递 closure, closure内仅仅包含一些普通的pojo对象
+    		
+    		  线程2：
+    		  // 其它线程获取到RpcClosure closure后
+    		  closure.recoverContext(); // 每次跨线程传递closure后必须调用此接口恢复rpc上下文以及全链路跟踪trace上下文
+    		  ... // 业务层处理
+          log.info("login received, peers="+ctx.getMeta().getPeers());
+          LoginRes res = LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
+          closure.done(res); // 什么时候获得了响应就调用done(res)函数
+          
+          closure对象可以在线程间不断传递，没有限制
+                
 # 服务端推送
 
     服务端启动：
