@@ -9,9 +9,8 @@ import com.xxx.userservice.proto.Order;
 import com.xxx.userservice.proto.OrderItem;
 import com.xxx.userservice.proto.OrderItemAttr;
 
-import krpc.monitor.JacksonLogFormatter;
-//import krpc.monitor.PbTextLogFormatter;
-import krpc.monitor.SimpleLogFormatter;
+import krpc.rpc.monitor.JacksonLogFormatter;
+import krpc.rpc.monitor.SimpleLogFormatter;
 
 public class TextFormatTest {
 

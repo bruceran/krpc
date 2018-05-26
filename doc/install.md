@@ -40,16 +40,28 @@
 	LICENSE  许可证
 	build.gradle gradle配置文件
 	src/ 所有源码
+	  main/
+	    java/
+	      krpc/
+	        common/ trace,redis,rpc 组件共同依赖的文件，只有非常少的几个接口和类
+	        trace/  和rpc框架完全独立的调用链跟踪的trace框架, 可对接主流的zipkin,skywalking,cat等APM系统
+	        redis/  和rpc框架完全独立的redis客户端, 基于nio和redis的pipeline, future使用java 8的CompleableFuture
+	        rpc/    krpc框架本身
+	    resources/
+	      META-INF/
+	        services/ 框架支持的SPI接口
+	        spring.schemas  spring.handlers  krpc.xsd   spring自定义schema所需文件
+	  test/
 	doc/ 文档目录
-	doc/proto  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件    
+	doc/proto/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件    
 	dist/
+  dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
 	dist/gradle-3.3-all.zip gradle工具，方便下载
 	dist/tools protoc工具
-  dist/lib 编译后输出的krpc框架的jar文件, 此框架仅此一个文件
 	
-	将源码下载到本地后运行 gradle build若无错误则表示编译成功
+	将源码下载到本地后运行 gradle build 若无错误则表示编译成功
 
-# 框架依赖说明
+# 框架外部依赖说明
 
   依赖项参见 build.gradle
   
@@ -80,7 +92,29 @@
 			compile 'org.springframework:spring-core:4.1.6.RELEASE'
 			compile 'org.springframework:spring-beans:4.1.6.RELEASE'
 			compile 'org.springframework:spring-context:4.1.6.RELEASE'		
+    
+# 框架包依赖关系
 
+  * krpc.common 通用接口，所有模块依赖此包
+  * krpc.trace 全链路跟踪API, 目前krpc.rpc模块依赖此模块
+  * krpc.redis redis实现, 目前krpc.rpc模块依赖此模块
+  * krpc.rpc rpc框架本身
+  
+  * krpc.rpc.core.proto krpc协议头的proto生成的类文件
+  * krpc.rpc.core krpc框架核心接口和类，依赖krpc.rpc.core.proto, 此模块大部分为接口, 所有其它模块都强依赖此包
+  * krpc.rpc.util 框架内的辅助类
+  * krpc.rpc.impl 实现krpc.rpc.core中的rpclient,rpcserver等核心功能
+  * krpc.rpc.impl.transport 实现krpc.rpc.core中的网络层，codec等
+  * krpc.rpc.cluster  krpc.rpc.core中的ClusterManager接口实现, 暴露loadbalance插件
+  * krpc.rpc.cluster.lb   krpc.rpc.cluster中的LoadBalance接口实现
+  * krpc.rpc.registry   krpc.rpc.core中的RegistryManager, Registry接口实现
+  * krpc.rpc.web krpc框架HTTP核心接口和类,此模块大部分为接口
+  * krpc.rpc.web.impl HTTP核心功能实现
+  * krpc.rpc.monitor  krpc.rpc.core中的MonitorService接口实现
+  
+  * krpc.rpc.bootstrap 启动包，依赖所有上述包, 程序启动关闭只需依赖此包; 系统支持的所有配置参数可通过浏览此包下的XxxConfig类快速查看
+  * krpc.rpc.bootstrap.spring Spring下的启动包，依赖所有上述包
+  
 # PROTOC工具安装及使用
 
   * 必须使用定制的protoc-3.5.1.exe文件来生成service接口，标准的protoc-3.5.1.exe根据service定义生成的java接口不能满足要求
@@ -92,4 +126,3 @@
   * 生成的java文件放在target子目录下，同时会在proto文件相同目录生成一个时间戳完全一致的 yourprotofile.proto.pb (此文件只用于动态http网关，一般不用)
   
   * bin目录下附带了一个简单的 test.proto, 可进入此目录，输入krpc.bat test.proto查看示例输出文件
-  

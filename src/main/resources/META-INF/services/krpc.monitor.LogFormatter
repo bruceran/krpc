@@ -1,3 +1,0 @@
-krpc.monitor.SimpleLogFormatter
-krpc.monitor.JacksonLogFormatter
-krpc.monitor.PbTextLogFormatter

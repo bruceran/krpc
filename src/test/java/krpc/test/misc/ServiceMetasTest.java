@@ -14,13 +14,13 @@ import com.xxx.userservice.proto.UserServiceAsync;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import krpc.core.ReflectionUtils;
-import krpc.core.RpcData;
-import krpc.core.proto.RpcMeta;
-import krpc.impl.DefaultProxyGenerator;
-import krpc.impl.RpcClient;
-import krpc.impl.DefaultServiceMetas;
-import krpc.impl.transport.DefaultRpcCodec;
+import krpc.rpc.core.ReflectionUtils;
+import krpc.rpc.core.RpcData;
+import krpc.rpc.core.proto.RpcMeta;
+import krpc.rpc.impl.DefaultProxyGenerator;
+import krpc.rpc.impl.DefaultServiceMetas;
+import krpc.rpc.impl.RpcClient;
+import krpc.rpc.impl.transport.DefaultRpcCodec;
 
 class UserServiceImpl implements UserService {
 	public LoginRes login(LoginReq req) {

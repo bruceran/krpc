@@ -19,11 +19,11 @@
 			接口形式：每个请求一个入参，一个响应； scalabpe实践中最好的接口形式; 感觉也是goole内部的标准接口形式
 			错误码还是异常: 错误码； scalabpe实践总结出的最好的编码方式, 使用异常会污染客户端代码; rpc调用出错是正常现象，不是异常;
 			通过服务号和消息号来定位服务：想法来自scalabpe里的avenue协议
-			通用的http网关：想法来自scalabpe, 和zuul不谋而合
+			通用的http网关：想法来自scalabpe, 和zuul不谋而合, 超越zuul
 
     独创之处：
 		  
-			客户端异步调用以及异步调用组合: 使用java 8的CompletableFuture, 比其他rpc框架都好
+			客户端异步调用以及异步调用组合: 使用java 8的CompletableFuture, 灵活性比其他rpc框架都好
 			服务端异步实现：比其他框架的实现都好
 			PUSH调用：比其他框架的实现都好
 			HTTP通用网关：通用，可扩展，轻量, 不用容器；比其他框架的实现都好

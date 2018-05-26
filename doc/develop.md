@@ -12,21 +12,40 @@
 	    -------------------------------------------------------------------------
       网络层数据传输               <----  正向或逆向调用  ---->    网络层数据传输
 	
-	* 强大的功能
+      概念：
+            rpc app              每个使用krpc的应用都认为是一个app, 每个app具有一个名称，用于服务注册和发现以及调用链跟踪
+            rpc server           提供krpc协议服务的server，需要绑定物理端口，接收客户端连接
+            rpc webserver        提供http协议服务的webserver，需要绑定物理端口，接收客户端连接
+            rpc client           访问krpc协议的客户端, 和rpc server之间建立长连接
+            rpc service          对应一个proto里的service或者一个java接口的实现
+            rpc referer          对应一个proto里的service或者一个java接口的动态代理
+            rpc registry         注册与服务发现组件
+            rpc monitor          监控服务
 		
 		  一个进程内通常启动一个app
 		  每个app内可以启动多个server,多个client,多个webserver
-		  每个app内可启动多个service, service可绑定到不同的server, 或者client(PUSH调用)，或者webserver
-		  每个app内可启动多个referer, referer可绑定到不同的client, 或者server(PUSH调用)
+		  每个app内可启动多个service, service可绑定到server/webserver(常规) 或者client(PUSH调用)
+		  每个app内可启动多个referer, referer可绑定到client(常规)或者server(PUSH调用)
 		  每个service或referer都可以在method级别做更多配置
+		  webserver,server,client,service,referer之间可通过灵活简洁的组合提供不同的服务：
+		  
+		         常规组合 client + referer -> server + service
+		         PUSH推送 client + service -> server + referer
+		         同时启动TCP端口和HTTP端口  server + webserver + service
+		         HTTP网关(需java类)  webserver + client + referer + protoc生成的java类
+		         HTTP网关(无需java类)  webserver + client + referer + protoc生成的.proto.pb文件
+		         只对外提供HTTP服务不访问后台服务  webserver + service  如上传或测试
+		         纯静态页面HTTP网关  webserver
+		         
 		  每个app内可配置一个monitorservice做日志相关配置
-		  每个app内可配置多个注册与服务插件，可同时连接多个注册与发现服务
+		  简洁的TRACE接口, 仅需调整一个配置就可对接不同的全链路跟踪系统(APM系统)
+		  每个app内可配置多个注册与服务插件，每个service可同时连接多个注册与发现服务
 		  
 		  框架内的client,server,webserver是重量级对象，因谨慎创建实例；
 		  框架内的service/referer是非常轻量的，在框架内部无对应实体，仅仅是一些配置值；
-		  启动时生成的动态代理也是非常轻量的，就是一行转发代码到RpcClient
+		  启动时生成的动态代理是非常轻量的，仅仅是一行转发代码到RpcClient
 		  对Netty4的封装是只做了最轻量的封装，减少不必要的层次
-		  客户端的异步调用返回jdk 1.8的CompleatableFuture<T>, 可以用简单的代码实现各种异步：并行调用，灵活组合多个回调,只投递不关心响应；
+		  客户端的异步调用返回jdk 8的CompleatableFuture<T>, 可以用简单的代码实现各种异步：并行调用，灵活组合多个回调,只投递不关心响应；
 		  服务端的异步实现非常简洁
 		  逆向调用(PUSH)和正向调用一样简洁
 		  强大的HTTP通用网关
@@ -61,10 +80,11 @@
       serviceId int32 服务号
       msgId int32 消息号
       sequence int32 包标识
-      traceId string 全链路不变的traceId
-      spanId string 全链路跟踪span标识，格式为 parentSpanId:spanId(zipkin)风格 或者 0.1.1 风格(eagle)
+      traceId string 全链路跟踪标识, 不同的全链路跟踪系统格式不一样
+      rpcId string 全链路跟踪RPCID, 不同的全链路跟踪系统格式不一样
       sampled int32 是否采样 0=默认(是) 1=是 2=否
-      peers string 网络包经过的所有节点
+      peers string 网络包经过的所有节点的ip:port
+      apps string 网络包经过的所有节点的app name
       retCode int32 错误码，仅用于响应包，某些情况下可以无包体，通过此字段确定错误码
       timeout int32 超时时间，客户端的超时时间可以传给服务端，服务端可以根据此时间快速丢弃队列中已过期未执行的消息
       compress int32 包体是否做了压缩以及压缩方式  0=不压缩 1=zlib 2=snappy
@@ -124,7 +144,7 @@
   
       syntax="proto3";  // 必须使用protobuffer 3版本
       
-      import "krpcext.proto"; // 此文件中包含了所有krpc在标准protobuffer上做的扩展定义
+      import "krpcext.proto"; // 此文件中包含了所有krpc在标准protobuffer上做的扩展定义, 增加了krpc.serviceId 和krpc.msgId两个扩展
       
       option java_multiple_files=true; // 保证生成的java类无嵌套，简化代码
       
@@ -134,7 +154,7 @@
 	
 	生成的接口：
 	
-      同步接口形式如下；(客户端和服务端通用)
+      同步接口形式如下；(客户端和服务端通用, 服务端仅需实现这接口)
 	
         package com.xxx.userservice.proto;
         
@@ -148,7 +168,7 @@
             static final public int updateProfileMsgId = 2;
         }
         
-      异步接口形式如下；(仅用于客户端)
+      异步接口形式如下；(仅用于客户端调用调用)
         
         package com.xxx.userservice.proto;
         
@@ -168,7 +188,7 @@
     * 若不想复制源码只想引用jar包也可拷贝jar包到项目依赖位置（本地目录或maven仓库） (目前暂不支持)
     * 对http通用网关动态调用接口，需要用到生成的 xxx.proto.pb 文件
 
-# 约定
+# 服务号和错误码约定
 
   * 所有业务层服务号从100开始
   
@@ -184,12 +204,41 @@
       
     	-100001=参数不正确
   		-100002=用户不存在
-	  	  
+
+  * 框架内部使用的错误码, 具体含义参考 krpc.rpc.core.RetCodes.java 类 和 krpc.rpc.web.RetCodes.java 类 
+  
+      static public final int RPC_TIMEOUT = -450;  
+      static public final int NO_CONNECTION = -451;
+      static public final int SEND_FAILED = -452;  
+      static public final int CONNECTION_BROKEN = -453;
+      static public final int USER_CANCEL = -454;
+      static public final int EXEC_EXCEPTION = -455;
+      static public final int REFERER_NOT_ALLOWED = -456;
+      static public final int ENCODE_REQ_ERROR = -457;
+      static public final int DECODE_RES_ERROR = -458;
+      static public final int BUSINESS_ERROR = -500;
+      static public final int SERVER_SHUTDOWN = -503;
+      static public final int QUEUE_FULL = -550;
+      static public final int QUEUE_TIMEOUT = -551;
+      static public final int DECODE_REQ_ERROR = -552;
+      static public final int ENCODE_RES_ERROR = -553;
+      static public final int NOT_FOUND = -554;
+      static public final int FLOW_LIMIT = -555;
+      static public final int SERVICE_NOT_ALLOWED = -556;
+      static public final int SERVER_CONNECTION_BROKEN = -557;
+      static public final int HTTP_NOT_FOUND = -404;  
+      static public final int HTTP_METHOD_NOT_ALLOWED = -405;  
+      static public final int HTTP_NO_LOGIN = -560;  
+      static public final int HTTP_NO_SESSIONSERVICE = -561;  
+      static public final int HTTP_CLIENT_NOT_FOUND = -562;  
+      
+      业务层无需判断具体错误码值，只需判断是否为0来确定是否成功
+	 	  	  
 # 如何启动krpc, 以下展示不用spring框架下如何启动krpc。
 
-  * 参考: src/test/java/krpc/test/call
+  * 参考: src/test/java/krpc/test/rpc
 		
-		import krpc.bootstrap.*;
+		import krpc.rpc.bootstrap.*;
 
   * 启动服务端：
 			
@@ -260,7 +309,7 @@
           curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/x-www-form-urlencoded" --data "userName=a&password=b"
           curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/json" --data '{"userName":"a","password":"b"}'
           		  
-  * 启动HTTP通用网关(静态方式), 要求网关中classpath中有protoc生成的jar包依赖
+  * 启动HTTP通用网关(静态方式), 要求集成protoc生成的源码或jar包
 		
         RpcApp app = new Bootstrap()
           .addWebServer(8888)  // 相比普通的客户端多出来的一行
@@ -268,7 +317,7 @@
           .addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
           .build().initAndStart();
 
-  * 启动HTTP通用网关(动态方式), 网关中不用jar包，只用生成的userservice.proto.pb文件
+  * 启动HTTP通用网关(动态方式), 网关中不用集成protoc生成的源码或jar包，只用生成的userservice.proto.pb文件
   		
         RpcApp app = new Bootstrap()
           .addWebServer(8888) 
@@ -277,7 +326,7 @@
 
 # 和spring框架集成(java config方式)
 		
-  * 服务端参考；src/test/java/krpc/test/javaconfig/server
+  * 服务端参考；src/test/java/krpc/test/rpc/javaconfig/server
 		
         服务端： 实现userservice接口：
         
@@ -289,7 +338,7 @@
         服务端： 在java config文件里启动krpc：
       
         @Configuration
-        @ComponentScan(basePackages = "krpc.test.javaconfig.server" }) // 扫描此目录下的所有bean去获取UserService实例
+        @ComponentScan(basePackages = "krpc.test.rpc.javaconfig.server" }) // 扫描此目录下的所有bean去获取UserService实例
         public class MyServerJavaConfig   {
         
           @Bean(destroyMethod = "stopAndClose")
@@ -303,7 +352,7 @@
           ... // 其它bean
         }
 
-  * 客户端参考: src/test/java/krpc/test/javaconfig/client
+  * 客户端参考: src/test/java/krpc/test/rpc/javaconfig/client
       
         客户端： 在java config文件里启动krpc：
       
@@ -330,7 +379,7 @@
     		
 # 和spring框架集成(schema方式)
 
-  服务端参考；src/test/java/krpc/test/schema
+  服务端参考；src/test/java/krpc/test/rpc/schema
   
     spring-schema-server.xml
     spring-schema-client.xml
@@ -350,6 +399,7 @@
     name 应用名，用在上报给注册与发现服务时使用, 默认为default_app
     mockFile 开发阶段可通过此文件来对service做mock, 暂未实现
     errorMsgConverter 错误码错误消息转换文件，默认为classpath下的error.properties
+    traceAdapter 调用链跟踪系统标识，目前支持default (只打日志，不上报), skywalking, zipkin(暂未实现), cat(暂未实现)
     flowControl 流量控制策略，默认不启用, 可配置为 memory 或 redis (暂未实现)
     
 ## registry
@@ -413,6 +463,7 @@
     sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录
     
     protoDir proto文件所在目录，默认为 proto, 会自动搜索classpath下的proto/子目录下的所有xxx.proto.pb文件
+    sampleRate 全链路跟踪采样率, 实际比率为 1/sampleRate, 默认为1
 
 ## service
 
@@ -579,4 +630,223 @@
           常规情况下后端服务不用去存储会话信息，也不用关心sessionId; 如果有特殊需求，后端也可以根据sessionId做自己的存储策略
         
         以上处理完毕后将剩余消息转换成json并输出, 如需控制输出格式或内容，可通过插件进行定制
+
+# RPC调用超时配置
+
+  * 所有的RPC调用都有3000秒的默认超时时间, 可通过3种方式修改超时时间
+  
+  * 修改referer级别配置, 指定服务级别的超时时间
+  
+  * 修改method级别配置, 指定消息级别的超时时间
+  
+  * 编程方式 
+  
+      在rpc调用前，增加一行代码：ClientContext.setTimeout(milliseconds); 
+      
+      ClientContext.setTimeout(1000); // 为下一个rpc调用设置超时时间为1秒, 每次都必须设置, rpc调用后就会清除此设置
+      LoginRes res = us.login(req); // 同步调用
+  
+# 客户端异步调用
+        
+        每个服务接口都有同步和异步两种形式, 如
+            UserService.java接口
+            UserServiceAsync 异步接口, 异步接口的方法返回的是CompletableFuture<?>
+          
+        在客户端可以同时使用同步代理和异步代理 (启动方式不同获取动态代理方式也不同)
+        获取到异步代理后，可以自由使用返回的future, 如：
+        
+        UserServiceAsync usa = app.getReferer("usa");
+        
+        1) 同时发出多个异步请求，等待所有返回
+
+            CompletableFuture<LoginRes> f11 = usa.login(req1);
+            CompletableFuture<LoginRes> f12 = usa.login(req2);
+            f11.get();
+            f12.get();
+        
+        2) 不阻塞，而是在future上设置回调函数
+            
+            CompletableFuture<LoginRes> f2 = usa.login(req); 
+            f2.thenAccept( (res0) -> {
+                log.info("in listener, resa="+res0.getRetCode()+","+res0.getRetMsg() );
+            }
+                        
+        3) 发出请求后就不管了
+        
+            usa.login(req1);
+
+        4) 同时发出多个请求，但只设置一个回调函数
+
+              CompletableFuture<LoginRes> f5 = usa.login(req1);  // call async
+              CompletableFuture<LoginRes> f6 = usa.login(req2);  // call async
+              CompletableFuture<Void> f7 = f5.thenAcceptBoth(f6, (res1,res2) -> {
+                  log.info("in listener, res1="+res1.getRetCode()+","+res1.getRetMsg() );
+                  log.info("in listener, res2="+res2.getRetCode()+","+res2.getRetMsg() );
+              });
+						
+        5) 同时发出多个异步请求，等待最快的一个返回
+        
+              CompletableFuture<LoginRes> f9 = usa.login(req2);  // call async
+              CompletableFuture<Void> f10 = f8.acceptEither(f9, (res1) -> {
+                  log.info("in listener, res first="+res1.getRetCode()+","+res1.getRetMsg() );
+              });
+
+        6) ...
+        
+        总之，可以充分享受java 8里姗姗来迟的CompletableFuture带来的异步编程体验
+        
+# 服务端异步实现
+
+     以 UserService的LoginRes login(LoginReq req) 接口为示例：
+     
+     同步实现方式或异步方式只能选择其一。
+     
+     同步实现方式：
+
+      public LoginRes login(LoginReq req) {
+          log.info("login received, peers="+ctx.getMeta().getPeers());
+          return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build(); // 处理完直接返回
+      }
+	
+	  异步实现方式：
+	
+	    线程1：
+      public LoginRes login(LoginReq req) {
+          RpcClosure closure = ServerContext.new(req); // RpcClosure 对象中有本地rpc调用的所有上下文信息以及req信息
+          // 将此closure对象传递到其它线程中或加入队列, 如 queue.offer(closure);
+          return null; // 告诉框架此接口将异步实现
+      }
+		
+		  // closure 可以放心传递 closure, closure内仅仅包含一些普通的pojo对象
+		
+		  线程2：
+		  // 其它线程获取到RpcClosure closure后
+		  closure.recoverContext(); // 每次跨线程传递closure后必须调用此接口恢复rpc上下文以及全链路跟踪trace上下文
+		  ... // 业务层处理
+      log.info("login received, peers="+ctx.getMeta().getPeers());
+      LoginRes res = LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
+      closure.done(res); // 什么时候获得了响应就调用done(res)函数
+      
+      closure对象可以在线程间不断传递，没有限制
+            
+# 服务端推送
+
+    服务端启动：
+		RpcApp app = new Bootstrap() 
+			.addService(UserService.class,impl)  // 正常的 service
+			.addReverseReferer("push",PushService.class) // 注意，这里加了referer
+			.build();
+		客户端启动：
+		RpcApp app = new Bootstrap() 
+				.addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
+				.addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
+				.build();
+		服务端推送代码：
+		
+		线程1：		
+		RpcContextData ctx = ServerContext.get(); // 获取调用上下文，上下文中包含tcp连接标识connId
+		String connId = ctx.getConnId(); // connId可以任意传递，保存到缓存中或持久化到db中
+		
+		线程2：
+		// 从内存，缓存或db中获取到之前保存的connId
+		ClientContext.setConnId(connId); // 推送前需要调用此函数确定此消息是推送到那个连接上
+		PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
+		ps.push(req); // 完成推送
+				
+# 自定义插件如何获取到Spring容器
+
+    krpc spi插件对象是由krpc框架创建和初始化的，krpc框架目前不支持自动注入spring里的组件，如果有必要，插件可以在init()方法中自己完成初始化
+    BeanFactory bf = krpc.rpc.bootstrap.spring.SpringBootstrap.instance.spring;
+    Ccc ooo = (Ccc)bf.getBean("xxx"); // 从spring中获取组件
+
+# 如何进行业务层打点  
+
+    * 通过application配置参数 traceAdapter 来配置使用的全链路跟踪系统
+
+        配置示例："traceAdapter"="skywalking:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
     
+    * 打点范围
+    
+        一般情况下业务层不需自己打点, 如数据库访问，缓存访问, 外部http调用这类由trace框架统一解决
+        业务层只应该对一些特殊代码段打点，记录一些信息，在框架尚未解决的外部IO打点也可临时手工打点
+        所有打点的信息都可以在全链路跟踪系统里查询到
+
+     * 模型
+    
+       每次start开启一个新的Span并作为当前Span, 后续所有操作都针对该Span，直到stop, 每个span都有时间戳和耗时
+       所有的Span组成一个树状结构
+       可以使用startAsync开启一个新的Span但不作为当前Span
+       
+       每个span上可以增加event, event有时间戳但无耗时信息
+       每个span上可以增加tag, tag就是普通的key/value信息
+              
+    * 业务层因只应使用krpc.trace.Trace类和krpc.trace.Span接口来进行打点
+    
+    * Trace类 此类都是静态方法，常用方法如下：
+    
+        void start(String type,String action) 可以嵌套，每次start后Span入栈，stop后出栈，后续所有操作都针对栈顶对象 
+        long stop()
+        long stop(boolean ok)
+        long stop(String status)
+        void logEvent(String type,String name)
+        void logEvent(String type,String name,String result,String data)
+        void logException(Throwable c)
+        void logException(String message, Throwable c)
+        void tag(String key,String value)
+        void setRemoteAddr(String addr)
+        
+        Span startAsync(String type,String action)  异步调用，Span不入栈，后续用Span接口对该Span进行操作
+        
+     * Span接口 常用方法   
+     
+        long stop()
+        long stop(boolean ok)
+        long stop(String status)
+        void logEvent(String type,String name)
+        void logEvent(String type,String name,String result,String data)
+        void logException(Throwable c)
+        void logException(String message, Throwable c)
+        void tag(String key,String value)
+        void setRemoteAddr(String addr)
+
+     * start/stop 配对
+     
+       如果start/stop之间可能抛出异常，应该如下:
+       
+       Trace.start(...)
+       try {
+         ...
+       } finally {
+         Trace.stop(...)
+       }
+
+     * type 参数规范 (暂定)
+     
+        DB 访问db
+        REDIS 访问redis
+        HTTP 访问http服务
+     
+     * status 参数规范 (暂定)     
+     
+        SUCCESS 成功
+        ERROR 失败
+      
+     * 线程间Trace上下文传递
+     
+          跨线程Trace上下文如果不做处理，可能会造成调用链混乱，不会影响正常业务逻辑，但会造成全链路跟踪系统里的数据不正确
+          
+          在krpc框架中已经对Trace上下文做了集成处理  
+          
+              所有框架发起的调用，无需再手工设置trace上下文 
+              业务层自己实现的线程, 只要调用过 closure.recoverContext(); Trace上下文就已经设置好了
+              
+          未使用krpc closure的情况 (比如一个后台服务，未使用krpc框架)
+          
+              线程1：调用Trace.currentContext() 获取当前trace上下文, 可以随意传递到其他线程
+              线程2：调用Trace.setCurrentContext(ctx) 恢复trace上下文     
+              
+     * 进程间Trace上下文传递
+     
+         krpc框架已做了处理，业务层代码无需关心
+         
+

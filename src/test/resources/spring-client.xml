@@ -7,14 +7,14 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
  ">
 
-	<bean id="app" class="krpc.bootstrap.spring.ApplicationConfigBean">
+	<bean id="app" class="krpc.rpc.bootstrap.spring.ApplicationConfigBean">
 		<property name="name" value="testapp"/>
 	</bean>
 	
-	<bean  class="krpc.bootstrap.spring.ClientConfigBean">
+	<bean  class="krpc.rpc.bootstrap.spring.ClientConfigBean">
 	</bean>
 		
-	<bean id="userService" class="krpc.bootstrap.spring.RefererConfigBean">
+	<bean id="userService" class="krpc.rpc.bootstrap.spring.RefererConfigBean">
 		<property name="interfaceName" value="com.xxx.userservice.proto.UserService"/>
 	</bean>
 

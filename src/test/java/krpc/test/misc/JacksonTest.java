@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import krpc.web.impl.JacksonJsonConverter;
+
+import krpc.rpc.web.impl.JacksonJsonConverter;
 
 public class JacksonTest {
 

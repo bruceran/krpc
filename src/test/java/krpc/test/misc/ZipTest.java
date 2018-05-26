@@ -2,8 +2,9 @@ package krpc.test.misc;
 
 import org.junit.Assert;
 import org.junit.Test;
-import krpc.util.SnappyTool;
-import krpc.util.ZlibTool;
+
+import krpc.rpc.util.SnappyTool;
+import krpc.rpc.util.ZlibTool;
 
 public class ZipTest {
 

@@ -11,11 +11,10 @@
 	    <complexType>
               <attribute name="id" type="string" use="optional"/>
               <attribute name="name" type="string" use="optional"/>
+              <attribute name="traceAdapter" type="string" use="optional"/>
               <attribute name="mockFile" type="string" use="optional"/>
               <attribute name="errorMsgConverter" type="string" use="optional"/>
               <attribute name="flowControl" type="string" use="optional"/>
-              <attribute name="traceIdGenerator" type="string" use="optional"/>
-              <attribute name="sampleRate" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
@@ -82,6 +81,7 @@
               <attribute name="sessionIdCookieName" type="string" use="optional"/>
               <attribute name="sessionIdCookiePath" type="string" use="optional"/>
               <attribute name="protoDir" type="string" use="optional"/>
+              <attribute name="sampleRate" type="string" use="optional"/>
 	    </complexType>    
     </element>
     

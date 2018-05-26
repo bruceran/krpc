@@ -1,0 +1,4 @@
+krpc.rpc.cluster.lb.RRLoadBalance
+krpc.rpc.cluster.lb.RandomLoadBalance
+krpc.rpc.cluster.lb.HashLoadBalance
+krpc.rpc.cluster.lb.ResponseTimeLoadBalance

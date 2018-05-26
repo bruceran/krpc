@@ -7,9 +7,9 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
  ">
 
-	<bean id="userService" class=" krpc.test.xml.UserServiceImpl"/>
+	<bean id="userService" class=" krpc.test.rpc.xml.UserServiceImpl"/>
 
-	<bean class="krpc.bootstrap.spring.ServiceConfigBean">
+	<bean class="krpc.rpc.bootstrap.spring.ServiceConfigBean">
 		<property name="interfaceName" value="com.xxx.userservice.proto.UserService"/>
 		<property name="impl" ref="userService"/>
 	</bean>

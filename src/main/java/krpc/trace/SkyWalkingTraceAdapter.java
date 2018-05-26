@@ -1,0 +1,52 @@
+package krpc.trace;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class SkyWalkingTraceAdapter implements TraceAdapter {
+
+	private ThreadLocalRandom t = ThreadLocalRandom.current();
+	
+	private long applicationId = 0; // got from skywalking server
+	private String applicationInstanceUuid = uuid();
+	private long applicationInstanceId = 0; // got from skywalking server
+	
+	public SkyWalkingTraceAdapter(Map<String,String> params) {
+		// todo
+	}
+
+	public void init() {}
+	
+	public void close() {}
+	
+	public void send(TraceContext ctx, Span span) {
+		// todo
+	}
+
+	public String newTraceId() {
+		String part2 = Long.toHexString(Thread.currentThread().getId());
+		String part3 = Long.toHexString(t.nextLong());
+		return applicationInstanceId + "." + part2 + "." +  part3; // same as newEntryRpcId but no suffix ':0'
+	}
+	
+	public String newZeroRpcId(boolean isServer) {
+		return newTraceId() + ":0";
+	}
+	
+	public String newEntryRpcId(String parentRpcId) {
+		return newTraceId() + ":0";
+	}
+	
+	public String newChildRpcId(String parentRpcId,AtomicInteger subCalls) {
+		int p = parentRpcId.indexOf(":");
+		return parentRpcId.substring(0,p)+":"+subCalls.incrementAndGet(); // just increment span number
+	}
+	
+	String uuid() {
+		String s = UUID.randomUUID().toString();
+	    return s.replaceAll("-", "");		
+	}
+	
+} 

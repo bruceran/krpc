@@ -2,9 +2,10 @@ package krpc.test.misc;
 
 import org.junit.Test;
 
-import krpc.web.Route;
-import krpc.web.WebUrl;
-import krpc.web.impl.DefaultRouteService;
+import krpc.rpc.web.Route;
+import krpc.rpc.web.WebUrl;
+import krpc.rpc.web.impl.DefaultRouteService;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

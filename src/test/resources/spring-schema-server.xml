@@ -10,7 +10,7 @@
        http://krpc.org/schema/krpc
        http://krpc.org/schema/krpc.xsd ">
 
-	<bean id="userService" class=" krpc.test.schema.UserServiceImpl"/>
+	<bean id="userService" class=" krpc.test.rpc.schema.UserServiceImpl"/>
 	
 
 	<krpc:application name="testapp" mockFile="abc" flowControl="memory"/>

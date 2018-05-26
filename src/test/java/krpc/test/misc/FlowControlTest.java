@@ -2,7 +2,7 @@ package krpc.test.misc;
 
 import org.junit.Test;
 
-import krpc.impl.MemoryFlowControl;
+import krpc.rpc.impl.MemoryFlowControl;
 
 
 public class FlowControlTest {

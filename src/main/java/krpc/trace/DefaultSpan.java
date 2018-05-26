@@ -1,0 +1,137 @@
+package krpc.trace;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class DefaultSpan implements Span {
+
+	private TraceContext ctx;
+	private String rpcId;
+	private String type;
+	private String action;
+	long startMicros;
+	long timeUsedMicros;
+	String status = "unset";
+	String remoteAddr;
+	Map<String,String> tags;
+	List<Event> events = null;
+	List<Span> children = null;
+	AtomicInteger subCalls = null;
+	
+	AtomicInteger completed = new AtomicInteger(0); // 0=pending 1=stopped
+	
+	DefaultSpan(TraceContext ctx, String rpcId, String type,String action,long startMicros) {
+		this.ctx = ctx;
+		this.rpcId = rpcId;
+		this.type = type;
+		this.action = action;
+		if( startMicros <= 0 ) this.startMicros = System.nanoTime()/1000;
+		else this.startMicros = startMicros;
+	}
+	
+	public Span newChild(String type,String action) {
+		if( subCalls == null ) subCalls = new AtomicInteger();
+		String childRpcId = Trace.getAdapter().newChildRpcId(rpcId,subCalls);
+		Span child = new DefaultSpan(ctx, childRpcId, type, action,-1);
+		if( children == null ) children = new ArrayList<>();
+		children.add(child);		
+		return child;
+	}
+
+    public long stop() {
+    	return stop("SUCCESS");
+    }
+    
+    public long stop(boolean ok) {
+    	return stop(ok?"SUCCESS":"ERROR");
+    }
+    
+	public long stop(String status) {
+		if( !completed.compareAndSet(0, 1) ) {
+			return 0;
+		}
+		this.status = status;
+		timeUsedMicros = System.nanoTime()/1000 - startMicros;
+		ctx.stopped(this);
+		return getTimeUsedMicros();
+	}
+	
+	public void logEvent(String type,String action,String status,String data) {
+		if( events == null ) events = new ArrayList<>();
+		Event e = new Event(type,action,status,data);
+		events.add(e);
+	}
+	
+	public void logException(Throwable cause) {
+		logException(null,cause);	
+	}
+	
+	public void logException(String message, Throwable cause) {
+		if( events == null ) events = new ArrayList<>();
+		StringWriter sw = new StringWriter(1024);
+		if (message != null) {
+			sw.write(message);
+			sw.write(' ');
+		}
+		cause.printStackTrace(new PrintWriter(sw));
+		logEvent("EXCEPTION",cause.getClass().getName(),"ERROR",sw.toString());	
+	}
+
+	public void tag(String key,String value) {
+		if( tags == null ) tags = new HashMap<>();
+		tags.put(key, value);
+	}
+
+	public void setRemoteAddr(String addr) {
+		this.remoteAddr = addr;
+	}
+	
+	public AtomicInteger getCompleted() {
+		return completed;
+	}
+
+	public String getRpcId() {
+		return rpcId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public List<Span> getChildren() {
+		return children;
+	}
+
+	public long getStartMicros() {
+		return startMicros;
+	}
+
+	public long getTimeUsedMicros() {
+		return timeUsedMicros;
+	}
+
+	public Map<String, String> getTags() {
+		return tags;
+	}
+
+	public String getRemoteAddr() {
+		return remoteAddr;
+	}
+}

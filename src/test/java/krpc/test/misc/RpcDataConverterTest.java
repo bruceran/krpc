@@ -11,14 +11,15 @@ import com.xxx.httptest.proto.HttpTestRes;
 import com.xxx.httptest.proto.Session;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
-import krpc.core.ServiceMetas;
-import krpc.core.proto.RpcMeta;
-import krpc.impl.DefaultServiceMetas;
-import krpc.web.DefaultWebReq;
-import krpc.web.DefaultWebRes;
-import krpc.web.Route;
-import krpc.web.WebContextData;
-import krpc.web.impl.DefaultRpcDataConverter;
+import krpc.rpc.core.ServiceMetas;
+import krpc.rpc.core.proto.RpcMeta;
+import krpc.rpc.impl.DefaultServiceMetas;
+import krpc.rpc.web.DefaultWebReq;
+import krpc.rpc.web.DefaultWebRes;
+import krpc.rpc.web.Route;
+import krpc.rpc.web.WebContextData;
+import krpc.rpc.web.impl.DefaultRpcDataConverter;
+import krpc.trace.Trace;
 
 public class RpcDataConverterTest {
 
@@ -34,7 +35,8 @@ public class RpcDataConverterTest {
 		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(500).setMsgId(1).setSequence(1);
 		RpcMeta meta = builder.build();
 		Route route = new Route(500,1).setSessionMode(2);
-		WebContextData ctx = new WebContextData("1.2.3.4:1100",meta,route);
+		Trace.start("test", "test");
+		WebContextData ctx = new WebContextData("1.2.3.4:1100",meta,route,Trace.currentContext());
 
 		if( true ) {
 			Session s1 = Session.newBuilder().setLoginFlag("1").setUserId("abc").setMobile("156189").build();

@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders;
-import krpc.core.Plugin;
-import krpc.util.TypeSafe;
+import krpc.rpc.core.Plugin;
+import krpc.rpc.util.TypeSafe;
 
 public class SandboxTest {
 

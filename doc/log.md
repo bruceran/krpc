@@ -4,14 +4,14 @@
     可通过logback.xml配置调整生成的日志
     
     日志文件共4种：
-      作为rpcserver收到的日志，输出在req.log日志文件中
-      作为rpcclient发出的调用日志，输出在call.log日志文件中
-      作为webserver收到的日志，输出在web.log日志文件中
+      作为rpcserver收到的日志，输出在server.log日志文件中
+      作为webserver收到的日志，输出在webserver.log日志文件中
+      作为rpcclient发出的调用日志，输出在client.log日志文件中
       每分钟输出一次3类日志的统计，输出在stats.log日志文件中
 
 # 日志文件格式
 
-## req.log/call.log/web.log 日志格式目前是统一的:
+## server.log/webserver.log/client.log 日志格式目前是统一的:
 
     文件分割符为: 一个逗号3个空格
 
@@ -33,8 +33,8 @@
         TIMESTAMP  消息的处理结束时间戳
         CONN_ID  连接标识, 包含对端IP+对端端口+连接ID
         SEQUENCE 消息号，用于客户端服务端收发包时排查问题
-        TRACE_ID 全链路跟踪标识
-        SPAN_INFO 全链路跟踪所需的parent spanid, spanid
+        TRACE_ID 全链路跟踪标识, 不同的全链路跟踪系统格式不一样
+        SPAN_INFO 全链路跟踪RPCID, 不同的全链路跟踪系统格式不一样
         SERVICE_ID  服务号
         MSG_ID   消息号
         SERVICENAME 服务名+消息名
@@ -78,11 +78,15 @@
 # 日志输出控制
 
     可在logback.xml配置按服务级别来控制是输出该消息的日志到文件中
-        <logger name="krpc.reqlog.xxx" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
+        <logger name="krpc.serverlog.xxx" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
+        <logger name="krpc.webserverlog.xxx" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
+        <logger name="krpc.clientlog.xxx" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
         xxx指服务号，对不想输出日志的服务可调整level为warn即可关闭该日志
         
     可在logback.xml配置按消息级别来控制是输出该消息的日志到文件中
-        <logger name="krpc.reqlog.xxx" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
+        <logger name="krpc.serverlog.xxx.yyy" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
+        <logger name="krpc.webserverlog.xxx.yyy" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
+        <logger name="krpc.clientlog.xxx.yyy" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
         xxx指服务号, yyy指消息号，对不想输出日志的服务可调整level为warn即可关闭该日志
     
     
