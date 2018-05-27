@@ -29,10 +29,21 @@
 
 # 和其它框架的简单比较
 
-
 | feature | krpc | dubbo/dubbox |  spring cloud | motan | scalabpe | grpc | tars | venus  | 
 | ------- | ---- | ------------ |  ------------ | ----- | -------- | ---- | ---- | ------ | 
-| 服务申明方式 | proto文件 | java接口，入参可多个 | 无，任意 | 同dubbo | 服务描述文件,泛化服务 | proto文件 |   idl文件 | java接口，入参可多个 |
+| 服务申明方式 | proto文件 | java接口 | 无，任意 | java接口 | 泛化的服务描述文件 | proto文件 | idl文件 | java接口 |
+| 是否要预生成代码  | 需要 | 不需要 | 不需要 | 不需要 | 不需要 | 需要 | 需要 | 不需要 |      
+| 入参可否多个 | 单一 | 可多个 | 可多个 | 可多个 | 单一 | 单一 |  单一 | 可多个 |
 | 序列化  | pb3  | hessian2 (json,kryo,java,pb等) | json | 同dubbo | tlv | pb3 | tlv | json,bson |
-      
+| 传输层协议  | krpc  | 建议dubbo | http | 建议motan2 | avenue | http2 | ? | venus |      
+| 传输层  | netty4  | netty4/netty3/mina/grizzly | rest template, feign | netty4,netty3 | netty3 | netty4 | ? | 自研框架 |      
+| 服务端异步  | 支持,简洁  | 不支持 | 不支持 | 不支持 | 全异步 | 不支持 | 不支持 | 不支持 |      
+| 客户端异步  | 支持,java 8 future  | 回调 | 不支持 | 回调 | 全异步 | 回调 | 回调 | 回调 |      
+| PUSH  | 支持,简洁 | 支持，但配置复杂 | 不支持 | 不支持 | 支持 | 支持，接口复杂 | 支持，但配置极复杂 | 不支持 |      
+| 是否需要web容器  | 不需要 | 不需要 | 需要 | 不需要 | 不需要 | 不需要 | ? | 需要 |      
+| 消息定位  | 服务号+消息号 | 服务名+消息名,对名称改变敏感 | url | 服务名+消息名,对名称改变敏感 | 服务号+消息号 | 服务名+消息名 | ? | 服务名+消息名 |      
+| 长连接  | 是 | 是 | 否 | 是 | 是 | 是 | 是 | 是 |      
+| 自带http网关  | 是 | dubbo无，dubbox有 | zuul | 无，需开发 | 是 | 否 | 否 | 支持http,需web容器，作为通用网关还不够 |      
+| http网关定义方式  | routes配置 | java接口上加注解 | zuul | 无 | routes配置 | 无 | 无 | java接口上加注解 |      
+| 错误码还是异常  | 有错误码规范 | 异常 | 无 | 异常 | 有错误码规范 | 无 | 无 | 异常 |      
 
