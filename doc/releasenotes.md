@@ -29,24 +29,26 @@
 
 # 和其它框架的简单比较
 
-| feature | krpc | dubbo dubbox |  spring cloud | motan | scalabpe | grpc | tars(腾讯) | venus  | 
+| feature | krpc | dubbo dubbox |  spring cloud | motan | scalabpe | grpc | tars | venus  | 
 | ------- | ---- | ------------ |  ------------ | ----- | -------- | ---- | ---------- | ------ | 
-| 服务契约 | proto文件 | java接口 | 无 | java接口 | 服务描述文件 | proto文件 | idl文件 | java接口 + 注解(貌似不可缺少) |
-| 是否要预生成代码  | 需要, 生成的接口和普通接口一样 | 不需要 | 不需要 | 不需要 | 不需要 | 需要 生成的java接口太丑 简单的同步功能也需要一个异步形式的复杂接口 | 需要, 生成的java接口客户端和服务端不一致太丑, idl编译插件必须用maven插件，使用不方便 | 不需要 |      
+| 服务契约 | proto文件 | java接口 | 无 | java接口 | 服务描述文件 | proto文件 | idl文件 | java接口 + 一大堆注解(貌似不可缺少) |
+| 是否要预生成代码  | 需要, 生成的接口和普通接口一样 | 不需要 | 不需要 | 不需要 | 不需要 | 需要 生成的java接口不够简洁 简单的同步功能也需要一个异步形式的复杂接口 | 需要, 生成的java接口客户端和服务端不一致, idl编译插件必须用maven插件，使用不方便 | 不需要 |      
 | 入参可否多个 | 单一,proto风格 | 可多个 | 可多个 | 可多个 | 单一 | 单一,proto风格 |  单一 | 可多个 |
 | 序列化  | pb3  | hessian2 (json,kryo,java,pb等) | json | 同dubbo | tlv | pb3 | tlv | json,bson |
-| 传输层协议  | krpc  | 建议dubbo | http | 建议motan2 | avenue | http2 | ? | venus |      
-| 传输层  | netty4  | netty4 netty3 mina grizzly | rest template, feign | netty4,netty3 | netty3 | netty4 | 自研框架 | 自研框架 |      
-| 服务端异步实现  | 支持,简洁  | 不支持 | 不支持 | 不支持 | 全异步 | 不支持 | 不支持 | 不支持 |      
-| 客户端异步调用  | 支持,java 8 future,极其强大  | 回调 | 不支持 | 回调 | 全异步 | 回调 | 回调,接口太丑,有基础性的设计缺陷 | 回调 |      
+| 传输层协议  | krpc  | dubbo | http | motan2 | avenue | http2, 协议很重 | ? | venus, 协议不够简洁 |      
+| 传输层  | netty4  | netty4 netty3 mina grizzly | rest template, feign | netty4,netty3 | netty3 | netty4 | 自研nio框架 | 自研nio框架 |      
+| 服务端异步实现  | 支持,简洁  | 不支持 | 不支持 | 不支持 | 全异步 | 不支持 | 不支持 | 回调方式, 接口定义方式有点奇怪，客户端要异步回调貌似要看服务端是否提供异步回调实现 |      
+| 客户端异步调用  | 支持,java 8 future,极其强大  | 回调 | 不支持 | 自定义future | 全异步 | 回调 | 回调, 回调接口不友好 | 回调 |      
 | PUSH调用  | 支持,简洁 | 支持，但配置复杂 | 不支持 | 不支持 | 支持 | 支持，接口复杂 | 等于不支持 | 不支持 |      
-| 是否需要web容器  | 不需要 | 不需要 | 需要 | 不需要 | 不需要 | 不需要 | 不需要 | 不需要 |      
+| RPC是否需要web容器  | 不需要 | 不需要 | 需要 | 不需要 | 不需要 | 不需要 | 不需要 | 不需要 |      
 | 消息定位  | 服务号+消息号 | 服务名+消息名,对名称改变敏感 | url | 服务名+消息名,对名称改变敏感 | 服务号+消息号 | 服务名+消息名,对名称改变敏感 | ? | 服务名+消息名,对名称改变敏感 |      
 | 长连接  | 是 | 是 | 否 | 是 | 是 | 是 | 是 | 是 |      
-| 提供http功能  | 是 | dubbo无，dubbox有 | 天生 | 无 | 是 | 天生 | 否 | 支持http |      
-| http接口定义方式  | routes配置 | java接口上加注解 | - | 无 | routes配置 | - | 无 | java接口上加注解,需web容器 |      
-| 可否作为通用网关  | 是 | 否 | zuul | 否 | 是 | 否 | 否 | 否 |      
+| 提供http功能  | 是 | dubbo无，dubbox有 | 天生 | 无 | 是 | 天生 | 否 | 是 |      
+| http接口定义方式  | routes配置文件 | java接口上加注解 | - | java接口上加注解,实现复杂，需web容器 | routes配置文件 | - | 无 | 需web容器 |      
+| 可否作为通用网关  | 是 | 否 | zuul组件 | 否 | 是 | 否 | 否 | 否 |      
 | 错误码风格还是异常风格  | 强制统一的错误码机制 | 异常 | 无 | 异常 | 强制统一的错误码机制 | 无 | 无 | 异常 |      
-| 框架启动配置方式  | 类dubbo | 简洁 | 无 | 类dubbo | xml文件 | ? | 较老 | ? |      
-| 一句话点评(个人观点)  | 简单强大现代 | 强大 历史负担太重 难以做出大的变革 | 内网用短连接通讯不够好 | 内部实现不行 | 完全不同的开发方式,java界接受度较低 | http2用在内网通讯太重 | 外围做的好，内核没做好 | 过时的框架 |      
+| 框架启动配置方式  | 类dubbo | 简洁 | 无 | 类dubbo | 自有的xml格式文件 | ? | 风格较老 | 自有的xml配置格式 |      
+| 注册与发现服务  | consul,etcd,zookeeper | zookeeper,redis,broadcast | consul,eureka | zookeeper,consul | etcd | ? | 自研 | ? |      
+| 监控及APM系统对接  | skywalking,zipkin,cat | 自带监控，主流APM都支持 | 主流APM都支持 | 自带监控 | 无 | 主流APM都支持 | 自研 | 自研 |        
+| 一句话点评(个人观点)  | 简洁强大现代 | 强大 历史负担太重 难以做出大的变革 | 内网用短连接通讯不够好 | 简洁，但内部实现代码不够好 | 完全不同的开发方式,java界接受度较低 | http2用在内网通讯太重, 另外接口形式不好 | 配套齐全，但设计上过时了且有明显的不足 | 设计上过时了且有明显的不足, 对标是的上一代的web service服务 |      
 
