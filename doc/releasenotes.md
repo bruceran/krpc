@@ -30,7 +30,7 @@
 # 和其它框架的简单比较
 
     主要是比较核心功能，而不是外围集成的各系统
- 
+<font size="7> 
     
 | feature | krpc | dubbo dubbox |  spring cloud | motan | scalabpe | grpc | tars | venus  | 
 | ------- | ---- | ------------ |  ------------ | ----- | -------- | ---- | ---------- | ------ | 
@@ -54,5 +54,5 @@
 | 注册与发现服务  | consul,etcd,zookeeper | zookeeper,redis,broadcast | consul,eureka | zookeeper,consul | etcd | ? | 自研 | ? |      
 | 监控及APM系统对接  | skywalking,zipkin,cat | 自带监控，主流APM都支持 | 主流APM都支持 | 自带监控 | 无 | 主流APM都支持 | 自研 | 自研 |        
 | 一句话点评(个人观点)  | 简洁强大现代 | 强大 历史负担太重 难以做出大的变革 | 内网用短连接通讯不够好 | 简洁，但内部实现代码不够好 | 完全不同的开发方式,java界接受度较低 | http2用在内网通讯太重, 另外接口形式不好 | 配套齐全，异步接口设计上有明显的缺陷 | 设计上过时了且有明显的不足, 对标是的上一代的web service服务 |      
-    <font size=7 >     
-  </font>
+  
+</font>
