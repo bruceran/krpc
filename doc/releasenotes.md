@@ -30,9 +30,9 @@
 # 和其它框架的简单比较
 
 
-| feature | krpc | dubbo/dubbox |  spring cloud | motan | scalabpe | grpc | tars | venus | 
-| ------- | ---- | --------- |   ------------- |  ----- |  ------  | ---- |  ---- |  -------   | ----- | 
+| feature | krpc | dubbo/dubbox |  spring cloud | motan | scalabpe | grpc | tars | venus  | 
+| ------- | ---- | ------------ |  ------------ | ----- | -------- | ---- | ---- | ------ | 
 | 服务申明方式 | proto文件 | java接口，入参可多个 | 无，任意 | 同dubbo | 服务描述文件,泛化服务 | proto文件 |   idl文件 | java接口，入参可多个 |
-| 序列化  | pb3  | 
-| 对象== | == | eq 一般不用 |         
+| 序列化  | pb3  | hessian2 (json,kryo,java,pb等) | json | 同dubbo | tlv | pb3 | tlv | json,bson |
+      
 
