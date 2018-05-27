@@ -30,7 +30,7 @@
 # 和其它框架的简单比较
 
     主要是比较核心功能，而不是外围集成的各系统
-<font size="7> 
+<font size=4> 
     
 | feature | krpc | dubbo dubbox |  spring cloud | motan | scalabpe | grpc | tars | venus  | 
 | ------- | ---- | ------------ |  ------------ | ----- | -------- | ---- | ---------- | ------ | 
