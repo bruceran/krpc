@@ -32,7 +32,7 @@
 | feature | krpc | dubbo dubbox |  spring cloud | motan | scalabpe | grpc | tars(腾讯) | venus  | 
 | ------- | ---- | ------------ |  ------------ | ----- | -------- | ---- | ---------- | ------ | 
 | 服务契约 | proto文件 | java接口 | 无 | java接口 | 服务描述文件 | proto文件 | idl文件 | java接口 + 注解(貌似不可缺少) |
-| 是否要预生成代码  | 需要, 生成的接口和普通接口一样 | 不需要 | 不需要 | 不需要 | 不需要 | 需要, 生成的java接口太丑 | 需要, 生成的java接口客户端和服务端不一致太丑, idl编译插件必须用maven插件，使用不方便 | 不需要 |      
+| 是否要预生成代码  | 需要, 生成的接口和普通接口一样 | 不需要 | 不需要 | 不需要 | 不需要 | 需要 生成的java接口太丑 简单的同步功能也需要一个异步形式的复杂接口 | 需要, 生成的java接口客户端和服务端不一致太丑, idl编译插件必须用maven插件，使用不方便 | 不需要 |      
 | 入参可否多个 | 单一,proto风格 | 可多个 | 可多个 | 可多个 | 单一 | 单一,proto风格 |  单一 | 可多个 |
 | 序列化  | pb3  | hessian2 (json,kryo,java,pb等) | json | 同dubbo | tlv | pb3 | tlv | json,bson |
 | 传输层协议  | krpc  | 建议dubbo | http | 建议motan2 | avenue | http2 | ? | venus |      
