@@ -113,7 +113,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 						// pipeline.addLast("uploader2", new HttpFileUploadAggregator2(uploadDir, maxUploadLength)) // todo
 						pipeline.addLast("aggregator", new HttpObjectAggregator(maxContentLength));
 			            pipeline.addLast("chunkedWriter", new ChunkedWriteHandler());
-			            pipeline.addLast("compressor", new HttpContentCompressor());					
+			            //pipeline.addLast("compressor", new HttpContentCompressor());					
 						pipeline.addLast("timeout", new IdleStateHandler(0, 0, idleSeconds));
 						pipeline.addLast("handler", NettyHttpServer.this);
 					}
