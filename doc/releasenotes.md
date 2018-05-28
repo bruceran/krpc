@@ -75,5 +75,8 @@
   
           CPU占用：49%
           
-      对比结果：在这种场景下krpc的tps比venus略低；krpc连接资源比venus占用少
+      对比结果：
+      
+         1) 此场景下krpc的tps比venus略低；krpc连接资源比venus占用少
+         2) 此场景下性能差异主要集中在http服务而不是后端服务
       
