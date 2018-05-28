@@ -29,8 +29,6 @@
 
 # 和其它框架的简单比较
 
-## 主要是比较核心功能，而不是外围集成的各系统
-
 | feature | krpc | venus | dubbo dubbox |  spring cloud | motan | scalabpe | grpc | tars  | 
 | ------- | ---- | ----- | ------------ |  ------------ | ----- | -------- | ---- | ---------- | 
 | 服务契约 | proto文件 | java接口 + 一大堆注解(貌似不可缺少) |java接口 | 无 | java接口 | 服务描述文件 | proto文件 | idl文件 | 
@@ -38,8 +36,8 @@
 | 入参可否多个 | 单一,proto风格 | 可多个 | 可多个 | 可多个 | 可多个 | 单一 | 单一,proto风格 |  可多个 | 
 | 序列化  | pb3  |  json,bson |hessian2 (json,kryo,java,pb等) | json | hession2,pb等 | tlv | pb3 | ? |
 | 传输层协议  | krpc  | venus, 协议不够简洁 |   dubbo | http | motan2 | avenue | http2, 协议很重 | ? |    
-| 传输层  | netty4  | 自研nio框架 | netty4 netty3 mina grizzly | rest template, feign | netty4,netty3 | netty3 | netty4 | 自研nio框架 |      
-| 服务端异步实现  | 支持,简洁  | 只能回调方式 | 不支持 | 不支持 | 全异步 | 不支持 | 支持 | 只能回调方式 |      
+| 传输层  | netty4  | 自研nio框架, 扩展性不如netty4 | netty4 netty3 mina grizzly | rest template, feign | netty4,netty3 | netty3 | netty4 | 自研nio框架 |      
+| 服务端异步实现  | 支持,简洁强大  | 只能回调方式 | 不支持 | 不支持 | 全异步 | 不支持 | 支持 | 只能回调方式 |      
 | 客户端异步调用  | 支持,java 8 future,极其强大  | 回调 | java 5的future(功能有限)，或回调方式(需服务端显式支持) | 不支持 | 自定义future | 全异步 | 回调 | 回调, 回调接口太不友好 |      
 | PUSH调用  | 支持,简洁 | 不支持 | 不支持 | 不支持 | 不支持 | 支持 | 支持，接口复杂 | 极其复杂难用 |      
 | RPC是否需要web容器  | 不需要 | 不需要 |   不需要 | 需要 | 不需要 | 不需要 | 不需要 | 不需要 |    
@@ -54,7 +52,7 @@
 | 监控及APM系统对接  | skywalking,zipkin,cat | 自研 |  自带监控，主流APM都支持 | 主流APM都支持 | 自带监控 | 无 | 主流APM都支持 | 自研 |       
 | 一句话点评(个人观点)  | 简洁强大现代 | 实测性能非常好，但设计思想上过时了 |  强大 历史负担太重 难以做出大的变革 | 内网用短连接通讯不够好 | 简洁，但内部实现代码不够好 | 完全不同的开发方式,java界接受度较低 | http2用在内网通讯太重, 另外接口形式不好 | 配套齐全，异步接口设计上有明显的缺陷 |     
 
-## krpc 和 venux的性能测试对比
+# krpc 和 venux 的性能测试对比
 
       环境: 腾讯云主机，双核，8G内存
       部署模式：对外HTTP服务 + 长连接 + 后台服务
@@ -77,5 +75,5 @@
   
           CPU占用：49%
           
-      对比结果：krpc在这种场景下tps略低一点点；连接资源占用少
+      对比结果：krpc在这种场景下tps比venus略低一点点；krpc连接资源比venus占用少
       
