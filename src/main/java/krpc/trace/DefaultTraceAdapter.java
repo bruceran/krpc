@@ -20,7 +20,7 @@ public class DefaultTraceAdapter implements TraceAdapter {
 	public void close() {}
 	
 	public void send(TraceContext ctx, Span span) {
-		
+		/*
 		log.info("root:"+span.toString());
 		List<Span> children = span.getChildren();
 		if( children != null ) {
@@ -28,6 +28,7 @@ public class DefaultTraceAdapter implements TraceAdapter {
 				log.info("child:"+child.toString());
 			}
 		}
+		*/
 	}
 	
 	public String newTraceId() {

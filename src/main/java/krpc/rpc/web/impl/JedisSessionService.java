@@ -87,7 +87,7 @@ public class JedisSessionService implements SessionService, InitClose {
 		if(!clusterMode) {
 	        Jedis jedis = null;  
 	        try {  
-	            jedis = getJedis();  
+	            jedis = jedisPool.getResource();  
 	            Map<String,String> v = jedis.hgetAll(key);
 	            values.putAll(v);
 	            Trace.stop(true);
@@ -126,7 +126,7 @@ public class JedisSessionService implements SessionService, InitClose {
 		if(!clusterMode) {
 	        Jedis jedis = null;  
 	        try {  
-	            jedis = getJedis();  
+	            jedis = jedisPool.getResource();  
 	            jedis.hmset(key, values);
 	            jedis.expire(key, expireSeconds);
 	            Trace.stop(true);
@@ -165,7 +165,7 @@ public class JedisSessionService implements SessionService, InitClose {
 		if(!clusterMode) {
 	        Jedis jedis = null;  
 	        try {  
-	            jedis = getJedis();  
+	            jedis = jedisPool.getResource();  
 	            jedis.del(key);  
 	            Trace.stop(true);
 	        } catch (Exception e) {  
@@ -192,14 +192,6 @@ public class JedisSessionService implements SessionService, InitClose {
 			cont.readyToContinue(0);
 		}
 		
-	}
-	
-	Jedis getJedis() {
-		if(!clusterMode) {
-			return jedisPool.getResource();  
-		} else {
-			return null;
-		}
 	}
 	
 	String key(String sessionId) {

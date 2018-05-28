@@ -182,6 +182,13 @@ public class DefaultRpcCodec implements RpcCodec {
 		}
 	}
 
+	public int getSize(RpcData data) {
+		int bodyBytesLen = data.getBody() == null ? 0 : data.getBody().getSerializedSize();
+		int metaBytesLen = data.getMeta().getSerializedSize();
+		int len = 8 + metaBytesLen + bodyBytesLen;
+		return len;
+	}
+	
 	public void encode(RpcData data, ByteBuf bb) {
 
 		int bodyBytesLen = data.getBody() == null ? 0 : data.getBody().getSerializedSize();

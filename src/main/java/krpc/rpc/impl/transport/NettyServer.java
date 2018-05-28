@@ -44,7 +44,8 @@ public class NettyServer extends TransportBase implements Transport,InitClose,St
 	int maxPackageSize = 1000000;
 	int maxConns = 500000;
 	int workerThreads = 0;
-
+	int backlog = 300;
+	
 	NamedThreadFactory bossThreadFactory = new NamedThreadFactory("svr_boss");
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("svr_work");
 
@@ -81,6 +82,7 @@ public class NettyServer extends TransportBase implements Transport,InitClose,St
 						pipeline.addLast("handler", NettyServer.this);
 					}
 				});
+		serverBootstrap.option(ChannelOption.SO_BACKLOG, backlog);		
 		serverBootstrap.option(ChannelOption.SO_REUSEADDR, true);
 		serverBootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 		serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -240,6 +242,14 @@ public class NettyServer extends TransportBase implements Transport,InitClose,St
 
 	public void setWorkerThreads(int workerThreads) {
 		this.workerThreads = workerThreads;
+	}
+
+	public int getBacklog() {
+		return backlog;
+	}
+
+	public void setBacklog(int backlog) {
+		this.backlog = backlog;
 	}
 
 }

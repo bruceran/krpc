@@ -597,7 +597,7 @@ public class Bootstrap {
 				DataManager di = newDataManager(server);
 				server.setDataManager(di);
 
-				if (c.notifyThreads <= 0)
+				if (c.notifyThreads == 0)
 					c.notifyThreads = processors;
 				RpcFutureFactory ff = newRpcFutureFactory(app.serviceMetas, c.notifyThreads, c.notifyMaxThreads,
 						c.notifyQueueSize);
@@ -629,7 +629,7 @@ public class Bootstrap {
 			DataManager di = newDataManager(client);
 			client.setDataManager(di);
 
-			if (c.notifyThreads <= 0)
+			if (c.notifyThreads == 0)
 				c.notifyThreads = processors;
 			RpcFutureFactory ff = newRpcFutureFactory(app.serviceMetas, c.notifyThreads, c.notifyMaxThreads,
 					c.notifyQueueSize);

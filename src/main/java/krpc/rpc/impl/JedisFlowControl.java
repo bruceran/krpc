@@ -2,37 +2,121 @@ package krpc.rpc.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import krpc.common.InitClose;
 import krpc.rpc.core.Continue;
 import krpc.rpc.core.FlowControl;
+import krpc.rpc.core.Plugin;
+import krpc.rpc.util.NamedThreadFactory;
+import krpc.rpc.web.impl.JedisSessionService;
+import krpc.trace.Trace;
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
+import redis.clients.jedis.JedisPool;
 
-public class JedisFlowControl implements FlowControl {
+public class JedisFlowControl implements FlowControl,InitClose {
+	
+	static Logger log = LoggerFactory.getLogger(JedisFlowControl.class);
+	
+	private JedisPool jedisPool;
+	private JedisCluster jedisCluster;
+	
+	private boolean clusterMode = false;
+	private String addrs;
+	
+	private String keyPrefix = "FC_";
+		
+	HashMap<Integer,List<StatItem>> serviceStats = new HashMap<>();
+	HashMap<String,List<StatItem>> msgStats = new HashMap<>();
+	
+	int threads = 1;
+	int maxThreads = 0;
+	int queueSize = 10000;
+	
+	NamedThreadFactory threadFactory = new NamedThreadFactory("jedisflowcontrol_threads");
+	ThreadPoolExecutor pool = null;
 	
 	static class StatItem {
 		int seconds;
 		int limit;
-		long curTime;
-		int curValue;
-		
+
 		StatItem(int seconds,int limit) {
 			this.seconds = seconds;
 			this.limit = limit;
 		}
-		
-		synchronized boolean update(long now) {
-			long time = (now / seconds) * seconds;
-			if( time > curTime ) {
-				curTime = time;
-				curValue = 0;
-			}
-			curValue++;
-			return curValue > limit;
-		}
+	}
+
+	public void config(String paramsStr) {
+		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);			
+		String s = params.get("clusterMode");
+		if ( s != null && !s.isEmpty() )
+			clusterMode = Boolean.parseBoolean(s);				
+		s = params.get("addrs");
+		if ( s != null && !s.isEmpty() )
+			addrs = s;				
+		s = params.get("keyPrefix");
+		if ( s != null && !s.isEmpty() )
+			keyPrefix = s;				
+		s = params.get("threads");
+		if ( s != null && !s.isEmpty() )
+			threads = Integer.parseInt(s);			
+		s = params.get("maxThreads");
+		if ( s != null && !s.isEmpty() )
+			maxThreads = Integer.parseInt(s);			
+		s = params.get("queueSize");
+		if ( s != null && !s.isEmpty() )
+			queueSize = Integer.parseInt(s);			
 	}
 	
-	HashMap<Integer,List<StatItem>> serviceStats = new HashMap<>();
-	HashMap<String,List<StatItem>> msgStats = new HashMap<>();
+	public void init() {
+		if(!clusterMode) {
+			String[] ss = addrs.split(":");
+			jedisPool = new JedisPool(ss[0],Integer.parseInt(ss[1]));
+		} else {
+			Set<HostAndPort> hosts = new HashSet<>();
+			String[] ss =  addrs.split(",");
+			for(String s : ss ) {
+				String[] tt = s.split(":");
+				hosts.add(new HostAndPort(tt[0],Integer.parseInt(tt[1])));
+			}
+			try {
+				jedisCluster = new JedisCluster(hosts);
+			} catch(Exception e) {
+				throw new RuntimeException("cannot init jedis cluster",e);
+			}
+		}
+    	if( maxThreads > threads )
+    		pool = new ThreadPoolExecutor(threads, maxThreads, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize),threadFactory);
+    	else
+    		pool = new ThreadPoolExecutor(threads, threads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize),threadFactory);
+		
+	}
+
+	public void close() {
+		
+		pool.shutdown();
+		
+		if(!clusterMode) {
+			jedisPool.close();
+		} else {
+			try {
+				jedisCluster.close();
+			} catch(Exception e) {
+				log.error("close cluster exception, e="+e.getMessage());
+			}
+		}
+	}
 
 	public void addLimit(int serviceId,int seconds,int limit) {
     	List<StatItem> list = serviceStats.get(serviceId);
@@ -66,23 +150,73 @@ public class JedisFlowControl implements FlowControl {
     boolean updateServiceStats(int serviceId,long now) {
     	List<StatItem> list = serviceStats.get(serviceId);
     	if( list == null ) return false;
-    	return updateStats(list,now);
+    	return updateStats(String.valueOf(serviceId),list,now);
     }
 
     boolean updateMsgStats(int serviceId,int msgId,long now) {
     	String key = serviceId + "." + msgId;
     	List<StatItem> list = msgStats.get(key);
     	if( list == null ) return false;
-    	return updateStats(list,now);
+    	return updateStats(key,list,now);
     }
     
-    boolean updateStats(List<StatItem> stats,long now) {
+    boolean updateStats(String key, List<StatItem> stats,long now) {
+    	
+    	Map<String,String> values = hgetall(key);
+    	if( values == null || values.size() == 0 ) return false; // ignore error
+    	
     	boolean failed = false;
     	for(StatItem stat: stats) {
-    		if( stat.update(now) ) failed = true;
+    		
+    		long time = (now / stat.seconds ) * stat.seconds;
+    		String stat_key = stat.seconds + "_" + time;
+    		if( values.containsKey(stat_key) ) {
+    			int curValue = Integer.parseInt( values.get(stat_key) );
+    			if( curValue > stat.limit ) failed = true;
+    		}
+    		
+    		// todo 
+
     	}
     	return failed;
     }
+    
+    Map<String,String> hgetall(String key) {
+		key = keyPrefix + key;
+		
+		Trace.start("REDIS", "hgetall");
+		
+		if(!clusterMode) {
+	        Jedis jedis = null;  
+	        try {  
+	            jedis = jedisPool.getResource();  
+	            Map<String,String> v = jedis.hgetAll(key);
+	            Trace.stop(true);
+	            return v;
+	        } catch (Exception e) {  
+	            log.error("cannot load key, key="+key);
+	            Trace.stop(false);
+	            return null;
+	        } finally {  
+	        	try {
+	        		if( jedis != null )
+	        			jedis.close();
+	        	} catch(Exception e) {
+	        	}
+	        }  
+		} else {
+			try {  
+	            Map<String,String> v = jedisCluster.hgetAll(key);
+	            Trace.stop(true);
+	            return v;
+			} catch (Exception e) {  
+	            log.error("cannot load key, key="+key);
+	            Trace.stop(false);
+	            return null;
+	        }
+		}
+
+	}    
     
 }
 

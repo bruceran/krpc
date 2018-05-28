@@ -41,12 +41,18 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
 			return super.complete(m);
 		}
 		try {
-			factory.notifyPool.execute( new Runnable() {
-				public void run() {
-					Trace.setCurrentContext(DefaultRpcFuture.this.traceContext);
-					DefaultRpcFuture.super.complete(m);
-				}
-			});
+			
+			if( factory.notifyPool != null ) {
+				factory.notifyPool.execute( new Runnable() {
+					public void run() {
+						Trace.setCurrentContext(DefaultRpcFuture.this.traceContext);
+						DefaultRpcFuture.super.complete(m);
+					}
+				});
+			} else {
+				Trace.setCurrentContext(DefaultRpcFuture.this.traceContext);
+				DefaultRpcFuture.super.complete(m);
+			}
 			return true;
 		} catch(Exception e) {
 			log.error("queue is full for notify pool");

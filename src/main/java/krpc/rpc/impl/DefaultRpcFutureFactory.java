@@ -30,11 +30,13 @@ public class DefaultRpcFutureFactory implements RpcFutureFactory,InitClose {
 	
 	public void init() {
 		log.info("notifyPool inited");
-		if( notifyMaxThreads > notifyThreads ) 
-			notifyPool = new ThreadPoolExecutor(notifyThreads, notifyMaxThreads, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(notifyQueueSize),threadFactory1);
-		else
-			notifyPool = new ThreadPoolExecutor(notifyThreads, notifyThreads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(notifyQueueSize),threadFactory1);
-        notifyPool.prestartAllCoreThreads();
+		if( notifyThreads >= 0 ) {
+			if( notifyMaxThreads > notifyThreads ) 
+				notifyPool = new ThreadPoolExecutor(notifyThreads, notifyMaxThreads, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(notifyQueueSize),threadFactory1);
+			else
+				notifyPool = new ThreadPoolExecutor(notifyThreads, notifyThreads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(notifyQueueSize),threadFactory1);
+	        notifyPool.prestartAllCoreThreads();
+		}
 	}
 	
 	public void close() {

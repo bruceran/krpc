@@ -11,7 +11,7 @@ public class ServerConfig  {
 	int maxConns = 500000;
 	int ioThreads = 0;	// auto
 	
-	int notifyThreads = 0; // // for reverse call, future listener, 0=auto
+	int notifyThreads = -1; // // for reverse call, future listener, 0=auto -1=no threads
 	int notifyMaxThreads = 0;
 	int notifyQueueSize = 10000;	
 	

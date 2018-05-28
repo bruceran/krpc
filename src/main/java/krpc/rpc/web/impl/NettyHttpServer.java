@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelFutureListener;
@@ -51,6 +52,7 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.common.InitClose;
+import krpc.rpc.core.RpcData;
 import krpc.rpc.core.StartStop;
 import krpc.rpc.util.NamedThreadFactory;
 import krpc.rpc.web.DefaultWebReq;
@@ -71,6 +73,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 	int maxContentLength = 1000000;
 	int maxConns = 500000;
 	int workerThreads = 0;
+	int backlog = 300;
 
 	NamedThreadFactory bossThreadFactory = new NamedThreadFactory("web_boss");
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("web_work");
@@ -116,6 +119,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 					}
 				});
 		serverBootstrap.option(ChannelOption.SO_REUSEADDR, true);
+		serverBootstrap.option(ChannelOption.SO_BACKLOG, backlog);
 		serverBootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 		serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 		// serverBootstrap.childOption(ChannelOption.SO_RCVBUF, 65536);
@@ -343,7 +347,11 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		DefaultFullHttpResponse res = null;
 
 		if( data.getContent() != null && !data.getContent().isEmpty() ) {
-			ByteBuf bb = ctx.alloc().buffer();
+			
+			int size = ByteBufUtil.utf8MaxBytes(data.getContent());
+        	ByteBuf bb = ctx.alloc().buffer(size);
+// System.out.println("http bb="+bb.getClass().getName());    // io.netty.buffer.PooledUnsafeDirectByteBuf  
+
 			bb.writeCharSequence(data.getContent(), Charset.forName(data.getCharSet()));
 			int len = bb.readableBytes();
 			if( data.isHeadMethod()) {
@@ -493,6 +501,14 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 
 	public void setCallback(HttpTransportCallback callback) {
 		this.callback = callback;
+	}
+
+	public int getBacklog() {
+		return backlog;
+	}
+
+	public void setBacklog(int backlog) {
+		this.backlog = backlog;
 	}
 
 }

@@ -14,4 +14,5 @@ public interface RpcCodec {
 	void getReqHeartBeat(ByteBuf bb); // bb parameter is to use netty4's pooled buffer
 	void getResHeartBeat(ByteBuf bb); // bb parameter is to use netty4's pooled buffer
 	
+	int getSize(RpcData data);
 }

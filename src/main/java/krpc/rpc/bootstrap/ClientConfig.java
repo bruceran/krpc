@@ -14,7 +14,7 @@ public class ClientConfig  {
 
 	String loadBalance = "rr"; // can be random, rr, ...
 	
-	int notifyThreads = 0; // for future listener, 0=auto
+	int notifyThreads = 0; // for future listener, 0=auto -1=no threads
 	int notifyMaxThreads = 0;
 	int notifyQueueSize = 10000;
 	

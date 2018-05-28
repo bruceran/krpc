@@ -83,8 +83,11 @@ public abstract class TransportBase extends ChannelDuplexHandler {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
     	if( msg instanceof RpcData ) {
-        	ByteBuf out = ctx.alloc().buffer();
-        	codec.encode((RpcData)msg, out);
+    		RpcData data = (RpcData)msg;
+    		int size = codec.getSize(data);
+        	ByteBuf out = ctx.alloc().buffer(size);
+	
+        	codec.encode(data, out);
             ctx.writeAndFlush(out, promise);
     	} else {
     		super.write(ctx, msg, promise);
