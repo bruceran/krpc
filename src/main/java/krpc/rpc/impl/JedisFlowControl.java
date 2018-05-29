@@ -18,7 +18,6 @@ import krpc.rpc.core.Continue;
 import krpc.rpc.core.FlowControl;
 import krpc.rpc.core.Plugin;
 import krpc.rpc.util.NamedThreadFactory;
-import krpc.rpc.web.impl.JedisSessionService;
 import krpc.trace.Trace;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
@@ -33,6 +32,8 @@ public class JedisFlowControl implements FlowControl,InitClose {
 	private JedisCluster jedisCluster;
 	
 	private boolean clusterMode = false;
+	private boolean syncUpdate = false;
+		
 	private String addrs;
 	
 	private String keyPrefix = "FC_";
@@ -76,7 +77,10 @@ public class JedisFlowControl implements FlowControl,InitClose {
 			maxThreads = Integer.parseInt(s);			
 		s = params.get("queueSize");
 		if ( s != null && !s.isEmpty() )
-			queueSize = Integer.parseInt(s);			
+			queueSize = Integer.parseInt(s);		
+		s = params.get("syncUpdate");
+		if ( s != null && !s.isEmpty() )
+			syncUpdate = Boolean.parseBoolean(s);		
 	}
 	
 	public void init() {
@@ -161,25 +165,132 @@ public class JedisFlowControl implements FlowControl,InitClose {
     }
     
     boolean updateStats(String key, List<StatItem> stats,long now) {
-    	
+
     	Map<String,String> values = hgetall(key);
-    	if( values == null || values.size() == 0 ) return false; // ignore error
+    	if( values == null ) return false; // something wrong in jedis
+
+    	List<String> incFieldsList = new ArrayList<>();
+    	List<String> removeFieldsList = new ArrayList<>();
     	
     	boolean failed = false;
-    	for(StatItem stat: stats) {
-    		
-    		long time = (now / stat.seconds ) * stat.seconds;
-    		String stat_key = stat.seconds + "_" + time;
-    		if( values.containsKey(stat_key) ) {
-    			int curValue = Integer.parseInt( values.get(stat_key) );
-    			if( curValue > stat.limit ) failed = true;
+    	if( values.size() > 0 ) {
+        	for(StatItem stat: stats) {
+        		long time = (now / stat.seconds ) * stat.seconds;
+        		String prefix = stat.seconds + "_";
+        		
+        		String stat_field =  prefix + time;
+        		if( values.containsKey(stat_field) ) {
+        			int curValue = Integer.parseInt( values.get(stat_field) );
+        			if( curValue >= stat.limit ) failed = true;
+        		} 
+        		incFieldsList.add(stat_field);
+        		
+            	for(Map.Entry<String,String> entry:values.entrySet()) {
+            		String field = entry.getKey();
+            		if( field.startsWith(prefix) ) {
+                		long t = Long.parseLong( field.substring(prefix.length()) );
+            			if( t < time ) {
+            				removeFieldsList.add(field);
+            			}
+            		}
+            	}
+        	}
+    	} else {
+    		for(StatItem stat: stats) {
+        		long time = (now / stat.seconds ) * stat.seconds;
+        		String prefix = stat.seconds + "_";
+        		String stat_field =  prefix + time;
+        		incFieldsList.add(stat_field);
     		}
-    		
-    		// todo 
-
     	}
+
+    	if( syncUpdate ) {
+    		doUpdate(key,incFieldsList,removeFieldsList);
+    	} else {
+    		try {
+	    		pool.execute( new Runnable() {
+	    			public void run() {
+	    				doUpdate(key,incFieldsList,removeFieldsList);
+	    			}
+	    		});
+    		} catch(Exception e) {
+    			log.error("redis update pool is full");
+    		}
+    	}
+
     	return failed;
     }
+    
+    void doUpdate(String key,List<String> incFieldsList,List<String> removeFieldsList) {
+
+    	Trace.start("REDIS", "update_and_delete");
+    	
+    	if( incFieldsList.size() > 0 ) {
+    		hincrby(key,incFieldsList);
+    	}
+    	if( removeFieldsList.size() > 0 ) {
+    		del(key,removeFieldsList);
+    	}
+    	
+        Trace.stop(true);    	
+    }
+    
+    void hincrby(String key,List<String> fields) {
+		key = keyPrefix + key;
+
+		if(!clusterMode) {
+	        Jedis jedis = null;  
+	        try {  
+	            jedis = jedisPool.getResource();  
+	            for(String field:fields)
+	            	jedis.hincrBy(key,field,1);
+	        } catch (Exception e) {  
+	            log.error("cannot hincrby key, key="+key);
+	        } finally {  
+	        	try {
+	        		if( jedis != null )
+	        			jedis.close();
+	        	} catch(Exception e) {
+	        	}
+	        }  
+		} else {
+			try {  
+	            for(String field:fields)
+	            	jedisCluster.hincrBy(key,field,1);				
+			} catch (Exception e) {  
+	            log.error("cannot hincrby key, key="+key);
+	        }
+		}
+	}    
+
+    
+    void del(String key,List<String> fields) {
+		key = keyPrefix + key;
+
+		if(!clusterMode) {
+	        Jedis jedis = null;  
+	        try {  
+	            jedis = jedisPool.getResource();  
+	            for(String field:fields)
+	            	jedis.hdel(key,field);
+	        } catch (Exception e) {  
+	            log.error("cannot hdel key, key="+key);
+	        } finally {  
+	        	try {
+	        		if( jedis != null )
+	        			jedis.close();
+	        	} catch(Exception e) {
+	        	}
+	        }  
+		} else {
+			try {  
+	            for(String field:fields)
+	            	jedisCluster.hdel(key,field);				
+			} catch (Exception e) {  
+	            log.error("cannot hdel key, key="+key);
+	        }
+		}
+	}    
     
     Map<String,String> hgetall(String key) {
 		key = keyPrefix + key;

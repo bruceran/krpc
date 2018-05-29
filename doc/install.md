@@ -88,6 +88,9 @@
 		网络包压缩；默认为不压缩, 除非配置使用snappy压缩才会用到以下依赖
 			compile 'org.xerial.snappy:snappy-java:1.1.2.3'
 		
+		如果要使用jedis版本的流控服务或http会话服务需要用到jedis
+      compile 'redis.clients:jedis:2.9.0'
+				
 		SPRING框架依赖；若使用krpc schema支持需用到以下依赖
 			compile 'org.springframework:spring-core:4.1.6.RELEASE'
 			compile 'org.springframework:spring-beans:4.1.6.RELEASE'

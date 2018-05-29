@@ -912,21 +912,21 @@ public class Bootstrap {
         	log.info("no dynamic proto resource loaded from "+proto);
         	return null;
         }
-        
+
         String classResourcePath = classResourceURL.getPath(); 
         if (classResourceURL.getProtocol().equals("file")) { 
-        	
-            String classesDirPath = classResourcePath.substring(classResourcePath.indexOf("/") + 1);  
+
+            String classesDirPath = classResourcePath.substring(classResourcePath.indexOf("/"));
             File classesDir = new File(classesDirPath); 
-            File[] files = classesDir.listFiles();  
-            for (File file : files) { 
-                String resourceName = file.getAbsolutePath();  
-                resourceName = resourceName.substring(classesDirPath.length());  
-                resourceName = resourceName.replace("//", "/");  
-                if (!file.isDirectory() && resourceName.endsWith(".proto.pb")) {  
-                    l.add(resourceName);  
+            File[] files = classesDir.listFiles();
+            if( files != null ) {
+                for (File file : files) { 
+                    String resourceName = file.getName();  
+                    if (!file.isDirectory() && resourceName.endsWith(".proto.pb")) {  
+                        l.add(resourceName);  
+                    } 
                 } 
-            } 
+            }
             
         } else if (classResourceURL.getProtocol().equals("jar")) {
  

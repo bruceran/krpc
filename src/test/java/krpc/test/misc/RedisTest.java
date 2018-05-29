@@ -9,7 +9,7 @@ import krpc.rpc.web.impl.JedisSessionService;
 
 public class RedisTest {
 
-	@Test
+	//@Test
 	public void test1() throws Exception {
 		
 		JedisSessionService s = new JedisSessionService();
@@ -44,34 +44,6 @@ public class RedisTest {
 		System.out.println(v2);		
 	}
 
-
-	@Test
-	public void test2() throws Exception {
-		
-		JedisSessionService s = new JedisSessionService();
-		s.config("addrs=127.0.0.1:6379;clusterMode=true");
-		s.init();
-		
-		Map<String,String> values  = new HashMap<>();
-		values.put("a", "1");
-		values.put("b", "2");
-		String sessionId = "12345";
-		s.update(sessionId,values,null);
-
-		Map<String,String> values2  = new HashMap<>();
-		values2.put("c", "3");
-		s.update(sessionId,values2,null);
-		
-		Map<String,String> v = new HashMap<>();
-		s.load(sessionId, v, null);
-		System.out.println(v);
-		
-		s.remove(sessionId, null);
-		
-		Map<String,String> v2 = new HashMap<>();
-		s.load(sessionId, v2, null);
-		System.out.println(v2);		
-	}	
 
 }
 
