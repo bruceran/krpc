@@ -50,6 +50,7 @@
               <attribute name="id" type="string" use="optional"/>
               <attribute name="port" type="string" use="optional"/>
               <attribute name="host" type="string" use="optional"/>
+              <attribute name="backlog" type="string" use="optional"/>
               <attribute name="idleSeconds" type="string" use="optional"/>
               <attribute name="maxPackageSize" type="string" use="optional"/>
               <attribute name="maxConns" type="string" use="optional"/>
@@ -68,6 +69,7 @@
               <attribute name="id" type="string" use="optional"/>
               <attribute name="port" type="string" use="optional"/>
               <attribute name="host" type="string" use="optional"/>
+              <attribute name="backlog" type="string" use="optional"/>
               <attribute name="idleSeconds" type="string" use="optional"/>
               <attribute name="maxContentLength" type="string" use="optional"/>
               <attribute name="maxConns" type="string" use="optional"/>

@@ -65,7 +65,7 @@ public class RpcDataConverterTest {
 			
 			DefaultWebReq req = new DefaultWebReq().setVersion(HttpVersion.HTTP_1_1).setMethod(HttpMethod.GET);
 			req.setHost("www.baidu.com").setPath("/test").setQueryString("a=1&b=2").setContentType("application/json").setContent("{}");
-			req.addCookie("JSESSIONId","test1").addCookie("TNK","cc");
+			req.setHeader("cookie","JSESSIONId=test1;TNK=cddddc");
 			req.setHeader("host","www.baidu.com");
 			req.addParameter("orderId","123").addParameter("quantity1",121).addParameter("quantity2",122);
 			req.addParameter("quantity3",123).addParameter("quantity4",124).addParameter("price1",100.1).addParameter("price2",100.2);

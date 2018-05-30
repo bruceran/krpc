@@ -8,6 +8,7 @@ public class WebServerConfig  {
 	
 	int port = 8600;
 	String host = "*";
+	int backlog = 128;
 	int idleSeconds = 60;
 	int maxContentLength = 1000000;
 	int maxConns = 500000;
@@ -27,7 +28,7 @@ public class WebServerConfig  {
 	String sessionIdCookiePath = "";
 
 	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
-		
+	
 	public WebServerConfig() {
 	}
 	
@@ -173,5 +174,13 @@ public class WebServerConfig  {
 
 	public void setSampleRate(int sampleRate) {
 		this.sampleRate = sampleRate;
+	}
+
+	public int getBacklog() {
+		return backlog;
+	}
+
+	public void setBacklog(int backlog) {
+		this.backlog = backlog;
 	}	
 }

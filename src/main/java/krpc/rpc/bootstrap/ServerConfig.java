@@ -6,6 +6,7 @@ public class ServerConfig  {
 	
 	int port = 5600;
 	String host = "*";
+	int backlog = 128;
 	int idleSeconds = 180;
 	int maxPackageSize = 1000000;
 	int maxConns = 500000;
@@ -120,5 +121,13 @@ public class ServerConfig  {
 	public ServerConfig setMaxThreads(int maxThreads) {
 		this.maxThreads = maxThreads;
 		return this;
+	}
+
+	public int getBacklog() {
+		return backlog;
+	}
+
+	public void setBacklog(int backlog) {
+		this.backlog = backlog;
 	}	
 }

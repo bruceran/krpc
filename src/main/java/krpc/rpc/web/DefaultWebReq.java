@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import krpc.rpc.util.TypeSafe;
 
 public class DefaultWebReq implements WebReq {
@@ -184,24 +187,24 @@ public class DefaultWebReq implements WebReq {
 		return v;
 	}
 
-	public DefaultWebReq addCookie(String name,String value) {
-		if( cookies == null ) cookies = new HashMap<String,String>();
-		cookies.put(name, value);
-		return this;
-	}
-
 	public String getCookie(String name) {
-		if( cookies == null ) return null;
+		if( cookies == null ) cookies = decodeCookie();
 		return cookies.get(name);
 	}
-
-	public Map<String, String> getCookies() {
-		return cookies;
-	}
-
-	public DefaultWebReq setCookies(Map<String, String> cookies) {
-		this.cookies = cookies;
-		return this;
+    
+	HashMap<String,String> decodeCookie() {
+		String cookie = getHeader("cookie");
+		if (cookie != null && !cookie.isEmpty() ) {
+			Set<Cookie> decoded = ServerCookieDecoder.STRICT.decode(cookie);
+	        if (decoded != null && decoded.size() > 0 ) {
+	    		HashMap<String,String> m = new HashMap<String,String>();
+	            for(Cookie c: decoded) {
+	           		m.put(c.name(), c.value());
+	            }
+	            return m;
+	        }
+	    }
+		return new HashMap<String,String>();
 	}
 
 	public HttpVersion getVersion() {

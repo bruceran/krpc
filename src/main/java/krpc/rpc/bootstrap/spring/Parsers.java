@@ -180,7 +180,7 @@ class ClientConfigBeanParser extends BaseParser<ClientConfigBean> {
 class ServerConfigBeanParser extends BaseParser<ServerConfigBean> {
 	ServerConfigBeanParser() {
 		beanClass = ServerConfigBean.class;
-		attributes = new String[] {"port","host","idleSeconds",
+		attributes = new String[] {"port","host","backlog","idleSeconds",
 				"maxPackageSize","maxConns","ioThreads",
 				"notifyThreads","notifyMaxThreads","notifyQueueSize","threads","maxThreads","queueSize",
 				};
@@ -190,7 +190,7 @@ class ServerConfigBeanParser extends BaseParser<ServerConfigBean> {
 class WebServerConfigBeanParser extends BaseParser<WebServerConfigBean> {
 	WebServerConfigBeanParser() {
 		beanClass = WebServerConfigBean.class;
-		attributes = new String[] {"port","host","idleSeconds",
+		attributes = new String[] {"port","host","backlog","idleSeconds",
 				"maxContentLength","maxConns","ioThreads",
 				"threads","maxThreads","queueSize",
 				"jsonConverter","sessionService","routesFile",

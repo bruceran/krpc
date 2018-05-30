@@ -24,7 +24,6 @@ public class FlowControlTest {
 		
 	}
 	
-	@Test
 	public void test2() throws Exception {
 		
 		System.out.println("jedis testing ...");

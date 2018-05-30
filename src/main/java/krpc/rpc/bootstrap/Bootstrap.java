@@ -577,6 +577,7 @@ public class Bootstrap {
 			ns.setCodec(app.codec);
 			ns.setServiceMetas(app.serviceMetas);
 			ns.setHost(c.host);
+			ns.setBacklog(c.backlog);
 			ns.setIdleSeconds(c.idleSeconds);
 			ns.setMaxPackageSize(c.maxPackageSize);
 			ns.setMaxConns(c.maxConns);
@@ -681,6 +682,7 @@ public class Bootstrap {
 			ns.setPort(c.port);
 			ns.setCallback(server);
 			ns.setHost(c.host);
+			ns.setBacklog(c.backlog);
 			ns.setIdleSeconds(c.idleSeconds);
 			ns.setMaxContentLength(c.maxContentLength);
 			ns.setMaxConns(c.maxConns);

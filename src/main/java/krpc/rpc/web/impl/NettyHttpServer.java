@@ -52,7 +52,6 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.common.InitClose;
-import krpc.rpc.core.RpcData;
 import krpc.rpc.core.StartStop;
 import krpc.rpc.util.NamedThreadFactory;
 import krpc.rpc.web.DefaultWebReq;
@@ -113,7 +112,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 						// pipeline.addLast("uploader2", new HttpFileUploadAggregator2(uploadDir, maxUploadLength)) // todo
 						pipeline.addLast("aggregator", new HttpObjectAggregator(maxContentLength));
 			            pipeline.addLast("chunkedWriter", new ChunkedWriteHandler());
-			            //pipeline.addLast("compressor", new HttpContentCompressor());					
+			            pipeline.addLast("compressor", new HttpContentCompressor());					
 						pipeline.addLast("timeout", new IdleStateHandler(0, 0, idleSeconds));
 						pipeline.addLast("handler", NettyHttpServer.this);
 					}
@@ -297,7 +296,6 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		req.setQueryString(queryString);
 		
 		req.setHeaders(data.headers());
-		req.setCookies(decodeCookie(data));
 	
 		ByteBuf bb = data.content();
 		if( bb != null ) {
@@ -393,21 +391,6 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
         response.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, len);
         ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
-    
-	HashMap<String,String> decodeCookie(FullHttpRequest data) {
-		String cookie = data.headers().get(HttpHeaderNames.COOKIE);
-		if (cookie != null && !cookie.isEmpty() ) {
-			Set<Cookie> decoded = ServerCookieDecoder.STRICT.decode(cookie);
-	        if (decoded != null && decoded.size() > 0 ) {
-	    		HashMap<String,String> cookies = new HashMap<String,String>();
-	            for(Cookie c: decoded) {
-	           		cookies.put(c.name(), c.value());
-	            }
-	            return cookies;
-	        }
-	    }
-		return null;
-	}
 
 	void debugLog(String msg) {
 		if( log.isDebugEnabled())

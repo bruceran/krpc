@@ -150,6 +150,8 @@
       
       option java_generic_services=true; // 来根据service定义生成java接口, 否则只会生成输入输出类
 
+  * 不建议使用pb3里的新特性：Any和OneOf
+  
   * 使用krpc.bat  xxx.proto 文件来生成该文件的服务描述文件
 	
 	生成的接口：
@@ -190,11 +192,11 @@
 
 # 服务号和错误码约定
 
-  * 所有业务层服务号从100开始
+  * 所有业务层服务号使用3位数或4位数，建议使用4位数以便以后更容易空战，从1000开始
   
   * 所有消息号从1开始
   
-  * 业务层错误码格式建议为： -xxxyyy,  xxx为服务号 yyy为具体错误码，不同服务的错误码不同，如-100001 
+  * 业务层错误码格式建议为： -xxxxyyy,  xxxx为服务号 yyy为具体错误码，不同服务的错误码不同，如-1000001 
   
   * krpc框架内部的错误码为-zzz 只有3位数，和业务层错误码很容易区分
   
@@ -202,8 +204,8 @@
   
       error.properties 格式如下：
       
-    	-100001=参数不正确
-  		-100002=用户不存在
+    	-1000001=参数不正确
+  		-1000002=用户不存在
 
   * 框架内部使用的错误码, 具体含义参考 krpc.rpc.core.RetCodes.java 类 和 krpc.rpc.web.RetCodes.java 类 
         
@@ -430,6 +432,7 @@
     id 名称 不填则会自动生成
     port  绑定的端口，默认为 5600
     host  绑定的IP, 默认为*， 绑定所有IP
+    backlog 监听队列backlog数量 默认128
     idleSeconds 允许的最大读写超时时间，秒，默认为180
     maxPackageSize 最大包长，字节， 默认为 1000000
     maxConns 服务端允许的同时的客户端连接数，默认为500000
@@ -446,6 +449,7 @@
     id 名称 不填则会自动生成
     port  绑定的端口，默认为 8600
     host  绑定的IP, 默认为*， 绑定所有IP
+    backlog 监听队列backlog数量 默认128
     idleSeconds  允许的最大读写超时时间，秒，默认为60
     maxContentLength 最大包长，字节， 默认为 1000000 (文件上传会有单独的配置参数控制大小)
     maxConns 服务端允许的同时的客户端连接数，默认为500000
@@ -713,7 +717,7 @@
 	
           线程1：
           public LoginRes login(LoginReq req) {
-              RpcClosure closure = ServerContext.new(req); // RpcClosure 对象中有本地rpc调用的所有上下文信息以及req信息
+              RpcClosure closure = ServerContext.closure(req); // RpcClosure 对象中有本地rpc调用的所有上下文信息以及req信息
               // 将此closure对象传递到其它线程中或加入队列, 如 queue.offer(closure);
               return null; // 告诉框架此接口将异步实现
           }

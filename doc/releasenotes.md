@@ -50,33 +50,4 @@
 | 框架启动配置方式  |  简洁，类dubbo | 自有xml配置格式 | 简洁 | 无 | 简洁，类dubbo | 自有xml格式文件 | ? | 多种 |   
 | 注册与发现服务  | consul,etcd,zookeeper | ? | zookeeper,redis,broadcast | consul,eureka | zookeeper,consul | etcd | ? | 自研 |      
 | 监控及APM系统对接  | skywalking,zipkin,cat | 自研 |  自带监控，主流APM都支持dubbo | 主流APM都支持 | 自带监控 | 无 | 主流APM都支持 | 自研 |       
-| 一句话点评(个人观点)  | 简洁强大现代 | 实测性能非常好，但设计思想上落伍了 | 强大 历史负担太重 难以做出大的变革 | 内网用短连接通讯不够好 | 简洁，但内部实现代码不够好 | 完全不同的开发方式,java界接受度较低 | http2用在内网通讯太重, 另外接口形式不好 | 配套齐全，异步接口设计上有明显的缺陷 |     
-
-# krpc 和 venux 的性能测试对比
-
-      环境: 腾讯云主机，双核，8G内存
-      部署模式：对外HTTP服务 + 长连接 + 后台服务
-      部署配置：venus 配置100个长连接    krpc配置1个长连接, 两个系统的日志全部关闭，输入输出的字节数基本一样
-      测试工具：apache ab 工具
-              
-      venus测试：
-      
-          ab -n 500000 -c 100 -k     Requests per second:    16648.01
-          ab -n 500000 -c 200 -k     Requests per second:    17346.52
-          ab -n 500000 -c 500 -k     Requests per second:    17277.18      
-  
-          CPU占用：47%
-          
-      krpc 测试：
-      
-          ab -n 500000 -c 100 -k     Requests per second:    16531.67
-          ab -n 500000 -c 200 -k     Requests per second:    16802.41
-          ab -n 500000 -c 500 -k     Requests per second:    16403.80     
-  
-          CPU占用：49%
-          
-      对比结果：
-      
-         1) 此场景下krpc的tps比venus略低；krpc连接资源比venus占用少
-         2) 此场景下性能差异主要集中在http服务而不是后端服务
-      
+| 一句话点评(个人观点)  | 简洁强大现代 | 实测性能非常好，但设计思想上落伍很多了 | 强大 历史负担太重 难以做出大的变革 | 内网用短连接通讯不够好 | 简洁，但内部实现代码不够好 | 完全不同的开发方式,java界接受度较低 | http2用在内网通讯太重, 另外接口形式不好 | 配套齐全，异步接口设计上有明显的缺陷 |     

@@ -67,7 +67,7 @@ class UserServiceImpl2 implements UserService {
 	
 	public UpdateProfileRes updateProfile(UpdateProfileReq req) {
 		i++;
-		RpcClosure u = ServerContext.newClosure(req); // !!! you can pass this object anywhere
+		RpcClosure u = ServerContext.closure(req); // !!! you can pass this object anywhere
 		queue.offer(u);
 		return null;
 	}

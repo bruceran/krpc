@@ -21,7 +21,7 @@ public class ServerContext {
         tlData.remove();
     }    
     
-    public static RpcClosure newClosure(Message req) {
+    public static RpcClosure closure(Message req) {
     	return new RpcClosure(tlData.get(),req);
     }
 }
