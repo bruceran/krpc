@@ -121,8 +121,12 @@
 # PROTOC工具安装及使用
 
   * 必须使用定制的protoc-3.5.1.exe文件来生成service接口，标准的protoc-3.5.1.exe根据service定义生成的java接口不能满足要求
+
+  * dist/tool 目录下包含文件 changed_code.zip，此文件包括修改后的源文件以及git diff内容，复制4个文件到 /src/google/protobuf/compiler/java 再运行pb的make程序就可以编译出定制版本的protoc可执行程序
+
+  * 修改点： 1) 生成的接口形式（同步接口和异步接口） 2) 输入输出类，对string类型的入参允许 null, null参数不报异常而是设置为默认值
   
-  * 将本项目的dist/tool 目录加入path环境变量, 输入命令：protoc-3.5.1.exe --version  看到有输出 "libprotoc 3.5.1" 字样表示成功
+  * 将本项目的 dist/tool 目录加入path环境变量, 输入命令：protoc-3.5.1.exe --version  看到有输出 "libprotoc 3.5.1" 字样表示成功
   
   * 编译proto文件的命令： krpc.bat  yourprotofile.proto  此脚本每次只能处理一个文件
   
