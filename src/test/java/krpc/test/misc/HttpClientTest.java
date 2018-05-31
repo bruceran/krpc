@@ -1,5 +1,7 @@
 package krpc.test.misc;
 
+import java.net.URL;
+
 import org.junit.Test;
 
 import krpc.httpclient.DefaultHttpClient;
@@ -8,7 +10,7 @@ import krpc.httpclient.HttpClientRes;
 
 public class HttpClientTest {
 
-	@Test
+	//@Test
 	public void test1() throws Exception {
 		
 		DefaultHttpClient c = new DefaultHttpClient();

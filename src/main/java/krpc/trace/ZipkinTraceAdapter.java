@@ -34,20 +34,7 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 
 	NamedThreadFactory threadFactory = new NamedThreadFactory("zipkin_report");
 	ThreadPoolExecutor pool;
-	
-	static class SendInfo {
-		TraceContext ctx;
-		Span span;
-		SendInfo(TraceContext ctx, Span span) {
-			this.ctx = ctx;
-			this.span = span;
-		}
-	}
 
-	boolean isEmpty(String s) {
-		return s == null || s.isEmpty();
-	}
-	
 	public ZipkinTraceAdapter(Map<String,String> params) {
 
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -354,4 +341,8 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 		return s.substring(0,16);
 	}
 
+	boolean isEmpty(String s) {
+		return s == null || s.isEmpty();
+	}
+	
 } 
