@@ -123,6 +123,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		String action = serviceMetas.getName(r.getServiceId(), r.getMsgId());
 		Trace.startServer(traceId,"","","",sampled,"HTTPSERVER",action);
 		TraceContext tctx = Trace.currentContext();
+		Trace.setRemoteAddr(getRemoteAddr(connId));
 		Span span = tctx.currentSpan();
 		
 		builder.setTraceId(traceId).setRpcId(span.getRpcId()).setSampled(sampled);
@@ -141,7 +142,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 
 		builder.setPeers(peers);
-		builder.setApps("httpclient");
+		builder.setApps("client");
 		
 		String clientTraceId = getClientTraceId(req);
 		if( !isEmpty(clientTraceId) ) {

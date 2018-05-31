@@ -11,6 +11,7 @@ public interface TraceContext {
 	public int getSampled();
 	public long getRequestTimeMicros();
 	public long getStartMicros();
+	public String getRemoteAppName();
 	
 	public void stopped(Span span); // a span ended
 	public void serverSpanStopped(String result); // the server span ended

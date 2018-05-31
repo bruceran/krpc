@@ -28,7 +28,8 @@ public class RpcClientTest {
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
 				.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
 				.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
-				//.setTraceAdapter("skywalking")
+				//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+				.setName("usa")
 				.build();
 		
 		app.initAndStart();
@@ -43,7 +44,7 @@ public class RpcClientTest {
 		LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
 		LoginRes res = us.login(req);
 		log.info("res="+res.getRetCode()+","+res.getRetMsg());
-
+/*
 		//Thread.sleep(2000);
 		
 		UpdateProfileReq ureq = UpdateProfileReq.newBuilder().build();
@@ -111,9 +112,9 @@ public class RpcClientTest {
 							log.info("in listener, res first="+res1.getRetCode()+","+res1.getRetMsg() );
 						});
 		
-		/* */	
+
 		// user code end
-		
+*/		
 		Thread.sleep(120000);
 		
 		app.stopAndClose();

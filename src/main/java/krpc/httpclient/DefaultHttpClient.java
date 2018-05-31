@@ -48,6 +48,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	
 	int maxContentLength = 1000000;
 	int workerThreads = 1;
+	// todo keepalive, connection pool, ssl
 
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("httpclient");
 	EventLoopGroup workerGroup;
@@ -173,7 +174,8 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
     	res.setHttpCode(data.status().code());
 		res.setHeaders(data.headers());
 		String contentType = stripContentType( data.headers().get(HttpHeaderNames.CONTENT_TYPE) );
-		res.setContentType(contentType);
+		if( contentType != null )
+			res.setContentType(contentType);
 		ByteBuf bb = data.content();
 		if( bb != null ) {
 			String content = bb.toString(Charset.forName("utf-8"));
@@ -218,14 +220,14 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		String connId = getConnId(ctx.channel());
-		log.info("http connection started, connId={}", connId);
+		//String connId = getConnId(ctx.channel());
+		//log.info("http connection started, connId={}", connId);
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		String connId = getConnId(ctx.channel());
-		log.info("http connection ended, connId={}", connId);
+		//String connId = getConnId(ctx.channel());
+		//log.info("http connection ended, connId={}", connId);
 	}
 
 	@Override
@@ -249,6 +251,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	}
 	
     String stripContentType(String contentType) {
+    	if( contentType == null ) return null;
     	int p = contentType.indexOf(";");
     	if( p >= 0 ) return contentType.substring(0,p).trim();
     	return contentType;

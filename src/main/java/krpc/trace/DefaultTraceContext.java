@@ -105,6 +105,20 @@ public class DefaultTraceContext implements TraceContext {
 		}
 	}
 	
+	public String getRemoteAddr() {
+		if( isEmpty(peers) ) return "0.0.0.0:0";
+		int p = peers.lastIndexOf(",");
+		if( p >= 0 ) return peers.substring(p+1);
+		return peers;
+	}
+	
+	public String getRemoteAppName() {
+		if( isEmpty(apps) ) return "client";
+		int p = apps.lastIndexOf(",");
+		if( p >= 0 ) return apps.substring(p+1);
+		return apps;
+	}
+	
 	public Span currentSpan() {
 		Span tail = spans.peekLast();
 		return tail;

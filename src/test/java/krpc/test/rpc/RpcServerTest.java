@@ -16,6 +16,7 @@ import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.ServerContext;
+import krpc.trace.Trace;
 
 public class RpcServerTest {
 
@@ -27,7 +28,8 @@ public class RpcServerTest {
 
 		RpcApp app = new Bootstrap() 
 			.addService(UserService.class,impl) 
-			//.setTraceAdapter("skywalking")
+			//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+			.setName("uss")
 			.build();
 		
 		app.initAndStart();
@@ -37,9 +39,7 @@ public class RpcServerTest {
 		app.stopAndClose();
 		
 		impl.t.interrupt();
-		
 	}	
-		
 }
 
 class UserServiceImpl implements UserService {
@@ -58,6 +58,19 @@ class UserServiceImpl implements UserService {
 	public LoginRes login(LoginReq req) {
 		
 		RpcContextData ctx = ServerContext.get();
+
+		Trace.start("DB", "queryUser");
+		try { Thread.sleep(100); } catch(Exception e) {}
+		Trace.logEvent("find a user", "hi");
+		Trace.tag("secret", "xxx");
+		Trace.stop();
+		
+		Trace.start("REDIS", "set");
+		try { Thread.sleep(100); } catch(Exception e) {}
+		Trace.setRemoteAddr("10.1.2.198:8909");
+		Trace.tag("userId", "mmm");
+		Trace.tag("userName", "nnn");
+		Trace.stop();
 		
 		log.info("login received, peers="+ctx.getMeta().getPeers());
 		i++;

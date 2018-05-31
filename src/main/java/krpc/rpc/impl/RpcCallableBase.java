@@ -168,9 +168,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		String action = serviceMetas.getName(serviceId, msgId);
 		Span span = Trace.startAsync("RPCCLIENT", action);
 		TraceContext tctx = Trace.currentContext();
-		
 		String connId = nextConnId(serviceId,msgId,req,null); // may be null
 		int sequence = connId == null ? 0 : nextSequence(connId);
+
+		span.setRemoteAddr(getAddr(connId));
 		
 		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(serviceId).setMsgId(msgId).setSequence(sequence);
 		builder.setTraceId(tctx.getTraceId());
@@ -272,6 +273,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			final String f_excludeConnIds = excludeConnIds;
 			retryPool.execute( new Runnable() {
 				public void run() {
+					
 					int newSequence = nextSequence(newConnId);
 					// todo use a new rpcId ?
 					RpcMeta newMeta = meta.toBuilder().setSequence(newSequence).build();
@@ -279,6 +281,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 					closure.getCtx().setMeta(newMeta);
 					closure.asClientCtx().incRetryTimes();
 					closure.asClientCtx().setRetriedConnIds(f_excludeConnIds);
+					closure.asClientCtx().getSpan().setRemoteAddr(getAddr(newConnId));
 					
 					sendCall(closure, closure.asClientCtx().getRetryTimes() < retryCount); // recursive call sendClosure
 				}
@@ -330,6 +333,11 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		endCall(closure,res);
 	}
 
+	public String getAddr(String connId) {
+		int p = connId.lastIndexOf(":");
+		return connId.substring(0, p);
+	}
+
 	public void receive(String connId,RpcData data) {
 
 		if( isRequest(data.getMeta() )) {
@@ -338,6 +346,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			String action = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
 			Trace.startServer(meta.getTraceId(), meta.getRpcId(),meta.getPeers(),meta.getApps(),meta.getSampled(), "RPCSERVER", action);
 			addAttachementToTrace(meta.getAttachment());
+			Trace.setRemoteAddr(getAddr(connId));
 			ServerContextData ctx = new ServerContextData(connId,data.getMeta(),Trace.currentContext());
 			ServerContext.set(ctx);
 			

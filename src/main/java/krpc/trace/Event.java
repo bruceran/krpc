@@ -16,6 +16,12 @@ public class Event {
 		this.data = data;
 	}
 
+	public String toAnnotationString() {
+		String s = type + ":" + action + ":" + status;
+		if( data != null) s += ":" + data;
+		return s;
+	}
+	
 	public String getType() {
 		return type;
 	}
