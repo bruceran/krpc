@@ -7,10 +7,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.Message;
 
+import krpc.common.JacksonJsonConverter;
+import krpc.common.JsonConverter;
 import krpc.rpc.util.MessageToMap;
 import krpc.rpc.web.WebMessage;
 
@@ -18,11 +18,10 @@ public class JacksonLogFormatter extends BaseFormatter  {
 	
 	static Logger log = LoggerFactory.getLogger(JacksonLogFormatter.class);
 
-	ObjectMapper mapper = new ObjectMapper();
+	JsonConverter jsonConverter = new JacksonJsonConverter();
 
 	public void config(String paramsStr) {
 		configInner(paramsStr);
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 	}
 
     public String toLogStr(boolean isServerLog, Message body) {
@@ -30,7 +29,7 @@ public class JacksonLogFormatter extends BaseFormatter  {
     		Map<String,Object> allLog = new HashMap<>();
     		MessageToMap.parseMessage(body, allLog, printDefault, maxRepeatedSizeToLog);
     		adjustLog(allLog);
-  	  	    return mapper.writeValueAsString(allLog);
+  	  	    return jsonConverter.toJson(allLog);
     	} catch(Exception e) {
     		log.error("toLogStr exception, e="+e.getMessage(),e);
     		return "";
@@ -41,7 +40,7 @@ public class JacksonLogFormatter extends BaseFormatter  {
 		try {
 			Map<String,Object> allLog = getLogData(isServerLog,body,maxRepeatedSizeToLog);
 	  	    adjustLog(allLog);
-	  	    return mapper.writeValueAsString(allLog);
+	  	    return jsonConverter.toJson(allLog);
 	  	} catch(Exception e) {
 	  		log.error("toLogStr exception, e="+e.getMessage());
 	  		return "";

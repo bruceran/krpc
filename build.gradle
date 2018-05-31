@@ -18,15 +18,14 @@ dependencies {
 		compile 'com.google.protobuf:protobuf-java:3.5.1'
 		compile 'io.netty:netty-all:4.1.16.Final'
 		compile 'javassist:javassist:3.12.1.GA'
+		compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
+	    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'		
 		
 		compile 'org.springframework:spring-core:4.1.6.RELEASE'
 		compile 'org.springframework:spring-beans:4.1.6.RELEASE'
 		compile 'org.springframework:spring-context:4.1.6.RELEASE'
-		
-		compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
-		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
 		compile 'org.xerial.snappy:snappy-java:1.1.2.3'
-
 		compile 'redis.clients:jedis:2.9.0'
 		
 		testCompile 'junit:junit:4.12'

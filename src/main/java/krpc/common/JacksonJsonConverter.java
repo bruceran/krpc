@@ -1,4 +1,4 @@
-package krpc.rpc.web.impl;
+package krpc.common;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import krpc.rpc.web.JsonConverter;
-
 public class JacksonJsonConverter implements JsonConverter {
 
 	static Logger log = LoggerFactory.getLogger(JacksonJsonConverter.class);
@@ -19,6 +17,15 @@ public class JacksonJsonConverter implements JsonConverter {
     
     public JacksonJsonConverter() {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
+    
+    public String toJson(Object o) {
+        try {
+            return mapper.writeValueAsString(o);
+        } catch (Exception e) {
+        	log.error("json convert exception",e);
+            return null;
+        }    	
     }
     
     @SuppressWarnings("unchecked")

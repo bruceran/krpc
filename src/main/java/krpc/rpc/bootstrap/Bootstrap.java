@@ -38,6 +38,8 @@ import com.google.protobuf.Descriptors.ServiceDescriptor;
 import com.google.protobuf.UnknownFieldSet.Field;
 
 import krpc.KrpcExt;
+import krpc.common.JacksonJsonConverter;
+import krpc.common.JsonConverter;
 import krpc.rpc.cluster.DefaultClusterManager;
 import krpc.rpc.cluster.LoadBalance;
 import krpc.rpc.core.ClusterManager;
@@ -72,7 +74,6 @@ import krpc.rpc.impl.transport.NettyServer;
 import krpc.rpc.monitor.DefaultMonitorService;
 import krpc.rpc.monitor.LogFormatter;
 import krpc.rpc.registry.DefaultRegistryManager;
-import krpc.rpc.web.JsonConverter;
 import krpc.rpc.web.Route;
 import krpc.rpc.web.RouteService;
 import krpc.rpc.web.RpcDataConverter;
@@ -118,7 +119,6 @@ public class Bootstrap {
 	HashMap<String, FlowControl> flowControlTypes = new HashMap<>();
 	HashMap<String, ErrorMsgConverter> errorMsgConverterTypes = new HashMap<>();
 	HashMap<String, LogFormatter> logFormatterTypes = new HashMap<>();
-	HashMap<String, JsonConverter> jsonConverterTypes = new HashMap<>();
 	HashMap<String, SessionService> sessionServiceTypes = new HashMap<>();
 	HashMap<String, WebPlugin> webPluginTypes = new HashMap<>();
 
@@ -173,7 +173,11 @@ public class Bootstrap {
 	public NettyClient newNettyClient() {
 		return new NettyClient();
 	}
-
+	
+	public JsonConverter newJsonConverter() {
+		return new JacksonJsonConverter();
+	}
+	
 	public RpcFutureFactory newRpcFutureFactory(ServiceMetas metas, int notifyThreads, int notifyMaxThreads,
 			int notifyQueueSize) {
 		DefaultRpcFutureFactory ff = new DefaultRpcFutureFactory();
@@ -248,7 +252,6 @@ public class Bootstrap {
 		loadSpi(ErrorMsgConverter.class, errorMsgConverterTypes, "ErrorMsgConverter");
 		loadSpi(LogFormatter.class, logFormatterTypes, "LogFormatter");
 		loadSpi(SessionService.class, sessionServiceTypes, "SessionService");
-		loadSpi(JsonConverter.class, jsonConverterTypes, "JsonConverter");
 		loadSpi(WebPlugin.class, webPluginTypes, "WebPlugin");
 	}
 
@@ -331,10 +334,6 @@ public class Bootstrap {
 
 			if (getSessionServiceObj(c.sessionService) == null)
 				throw new RuntimeException(String.format("unknown session service %s", c.sessionService));
-
-			if (!isEmpty(c.jsonConverter) && getJsonConverterObj(c.jsonConverter) == null) {
-				throw new RuntimeException("json converter not registered");
-			}
 
 			webServers.put(c.id, c);
 			// lastWebServer = c;
@@ -524,6 +523,7 @@ public class Bootstrap {
 		RpcApp app = newRpcApp();
 		app.name = appConfig.name;
 		
+		app.jsonConverter = newJsonConverter();
 		TraceAdapter traceAdapter = newTraceAdapter();
 		Trace.setAdapter(traceAdapter);
 		app.traceAdapter = traceAdapter;
@@ -662,9 +662,6 @@ public class Bootstrap {
 
 			SessionService ss = getSessionServiceObj(c.sessionService);
 			ss.config(parseParams(c.sessionService));
-			JsonConverter jc = getJsonConverterObj(c.jsonConverter);
-			jc.config(parseParams(c.jsonConverter));
-			
 			WebServer server = newWebServer();
 			server.setSampleRate(c.sampleRate);
 			server.setServiceMetas(app.serviceMetas);
@@ -674,7 +671,7 @@ public class Bootstrap {
 			server.setRouteService(newRouteService(c));
 			server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
 			server.setSessionService(ss);
-			server.setJsonConverter(jc);
+			server.setJsonConverter(app.jsonConverter);
 			server.setSessionIdCookieName(c.sessionIdCookieName);
 			server.setSessionIdCookiePath(c.sessionIdCookiePath);
 
@@ -1071,14 +1068,6 @@ public class Bootstrap {
 		if (fc == null)
 			return null;
 		return fc;
-	}
-
-	JsonConverter getJsonConverterObj(String type) {
-		type = parseType(type);
-		JsonConverter jc = jsonConverterTypes.get(type);
-		if (jc == null)
-			return null;
-		return jc;
 	}
 
 	SessionService getSessionServiceObj(String type) {

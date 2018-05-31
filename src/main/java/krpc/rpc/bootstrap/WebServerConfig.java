@@ -15,8 +15,7 @@ public class WebServerConfig  {
 	int ioThreads = 0;	// auto
 
 	String sessionService = "memory";
-	String jsonConverter = "jackson";
-	
+
 	int threads = 0; // workthreads, 0=auto -1=no workthreads,use iothreads n=workthreads
 	int maxThreads = 0;
 	int queueSize = 10000;
@@ -120,15 +119,6 @@ public class WebServerConfig  {
 
 	public WebServerConfig setSessionService(String sessionService) {
 		this.sessionService = sessionService;
-		return this;
-	}
-
-	public String getJsonConverter() {
-		return jsonConverter;
-	}
-
-	public WebServerConfig setJsonConverter(String jsonConverter) {
-		this.jsonConverter = jsonConverter;
 		return this;
 	}
 

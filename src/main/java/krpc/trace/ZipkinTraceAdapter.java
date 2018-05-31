@@ -12,9 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import krpc.common.JacksonJsonConverter;
+import krpc.common.JsonConverter;
 import krpc.common.NamedThreadFactory;
 import krpc.httpclient.DefaultHttpClient;
 import krpc.httpclient.HttpClientReq;
@@ -30,14 +29,12 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 	int retryCount = 3;
 	int retryInterval = 1000;
 	
-	ObjectMapper mapper = new ObjectMapper();
+	JsonConverter jsonConverter;
 
 	NamedThreadFactory threadFactory = new NamedThreadFactory("zipkin_report");
 	ThreadPoolExecutor pool;
 
 	public ZipkinTraceAdapter(Map<String,String> params) {
-
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
 		postUrl = "http://"+params.get("server")+"/api/v2/spans";
 		
@@ -52,6 +49,7 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 	}
 	
 	public void init() {
+		if( jsonConverter == null ) jsonConverter = new JacksonJsonConverter();
 		hc = new DefaultHttpClient();
 		hc.init();
 		pool = new ThreadPoolExecutor(1,1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize),threadFactory);
@@ -228,7 +226,7 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 
 	void report(TraceContext ctx, Span span) {
 		List<ZipkinSpan> list = convert(ctx,span);
-		String json = toJson(list);
+		String json = jsonConverter.toJson(list);
 		HttpClientReq req = new HttpClientReq("POST",postUrl).setContent(json);
 		int i=0;
 		while(i<retryCount) {
@@ -304,15 +302,6 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 			}
 		}
 	}
-	
-    public String toJson(List<ZipkinSpan> list) {
-        try {
-            return mapper.writeValueAsString(list);
-        } catch (Exception e) {
-        	log.error("json convert exception",e);
-            return null;
-        }
-    }
 
 	public String newTraceId() {
 		String s = UUID.randomUUID().toString();
@@ -343,6 +332,14 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 
 	boolean isEmpty(String s) {
 		return s == null || s.isEmpty();
+	}
+
+	public JsonConverter getJsonConverter() {
+		return jsonConverter;
+	}
+
+	public void setJsonConverter(JsonConverter jsonConverter) {
+		this.jsonConverter = jsonConverter;
 	}
 	
 } 

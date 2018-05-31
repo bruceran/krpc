@@ -1,4 +1,4 @@
-package krpc.rpc.web;
+package krpc.common;
 
 import java.util.Map;
 
@@ -9,4 +9,5 @@ public interface JsonConverter extends Plugin {
     Map<String,Object> toMap(String s);
     String fromMap(Map<String,Object> map);
     
+    String toJson(Object o);
 }

@@ -193,7 +193,7 @@ class WebServerConfigBeanParser extends BaseParser<WebServerConfigBean> {
 		attributes = new String[] {"port","host","backlog","idleSeconds",
 				"maxContentLength","maxConns","ioThreads",
 				"threads","maxThreads","queueSize",
-				"jsonConverter","sessionService","routesFile",
+				"sessionService","routesFile",
 				"sessionIdCookieName","sessionIdCookiePath","protoDir","sampleRate"};
 	}
 }

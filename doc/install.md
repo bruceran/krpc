@@ -43,9 +43,10 @@
       main/
         java/
           krpc/
-            common/ trace,redis,rpc 组件共同依赖的文件，只有非常少的几个接口和类
+            common/ trace,httpclient,redis,rpc 组件共同依赖的文件，只有非常少的几个接口和类
             trace/  和rpc框架完全独立的调用链跟踪的trace框架, 可对接主流的zipkin,skywalking,cat等APM系统
-            redis/  和rpc框架完全独立的redis客户端, 基于nio和redis的pipeline, future使用java 8的CompleableFuture
+            httpclient/  和rpc框架完全独立的http客户端
+            redis/  和rpc框架完全独立的redis客户端
             rpc/    krpc框架本身
         resources/
           META-INF/
@@ -67,24 +68,26 @@
   
 	强依赖：缺少以下依赖框架无法编译和运行
   
+    日志框架: 默认是使用logback框架
 		compile 'org.slf4j:slf4j-api:1.7.22'  -- logback
 		compile 'ch.qos.logback:logback-core:1.2.1'   -- logback
 		compile 'ch.qos.logback:logback-classic:1.2.1'  -- logback
 		
-		框架自身的log框架是logback, 若应用程序使用了其它日志框架，可自行加入以下jar包透明地转换到logback, 统一使用logback来做日志
+		若应用程序使用了其它日志框架，可自行加入以下jar包透明地转换到logback, 统一使用logback来做日志
 		jcl-over-slf4j-1.6.6.jar   -- java common logging --> logback
 		log4j-over-slf4j-1.6.6.jar   -- log4j -> logback
 		
 		compile 'com.google.protobuf:protobuf-java:3.5.1'   -- protobuff 支持
 		compile 'io.netty:netty-all:4.1.16.Final'     -- netty 4
 		compile 'javassist:javassist:3.12.1.GA'    -- 字节码生成
+
+		json框架: 默认是使用jackson框架
+			compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
+			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
+      compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
 	
 	可选依赖：
 	
-		HTTP网关的json转换功能: 默认插件是jackson插件, 需要以下2个依赖; 如果服务只启动tcp功能，未启动http网关，则不用以下依赖
-			compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
-			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-
 		网络包压缩；默认为不压缩, 除非配置使用snappy压缩才会用到以下依赖
 			compile 'org.xerial.snappy:snappy-java:1.1.2.3'
 		
@@ -98,9 +101,10 @@
     
 # 框架包依赖关系
 
-  * krpc.common 通用接口，所有模块依赖此包
+  * krpc.common 通用接口和实现类，所有模块依赖此包
   * krpc.trace 全链路跟踪API, 目前krpc.rpc模块依赖此模块
-  * krpc.redis redis实现, 目前krpc.rpc模块依赖此模块
+  * krpc.httpclient 基于netty4的http client
+  * krpc.redis 基于netty4的redis client
   * krpc.rpc rpc框架本身
   
   * krpc.rpc.core.proto krpc协议头的proto生成的类文件

@@ -462,7 +462,6 @@
     queueSize 同上，线程池中固定队列大小，默认为10000
          
     sessionService  会话服务插件, 支持 memory,redis(暂未实现), 默认为memory
-    jsonConverter json序列化使用的json框架，默认为 jackson
     routesFile 路由配置文件， 默认为 routes.xml，会自动搜索classpath下的routes.xml配置文件
     sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID
     sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录

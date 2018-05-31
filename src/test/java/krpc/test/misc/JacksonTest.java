@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import krpc.rpc.web.impl.JacksonJsonConverter;
+import krpc.common.JacksonJsonConverter;
 
 public class JacksonTest {
 

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import krpc.common.InitClose;
+import krpc.common.JacksonJsonConverter;
 import krpc.rpc.core.Continue;
 import krpc.rpc.web.AsyncPostParsePlugin;
 import krpc.rpc.web.AsyncPostSessionPlugin;
