@@ -41,12 +41,12 @@ import krpc.rpc.core.StartStop;
 import krpc.rpc.core.Transport;
 import krpc.rpc.core.TransportCallback;
 import krpc.rpc.core.proto.RpcMeta;
-import krpc.rpc.util.NamedThreadFactory;
 import krpc.trace.TraceContext;
 import krpc.trace.Span;
 import krpc.trace.Trace;
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
+import krpc.common.NamedThreadFactory;
 
 public abstract class RpcCallableBase implements TransportCallback, DataManagerCallback, RpcCallable, Continue<RpcClosure>, InitClose, StartStop {
 	

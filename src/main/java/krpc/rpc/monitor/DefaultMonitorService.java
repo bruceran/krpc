@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
+import krpc.common.NamedThreadFactory;
 import krpc.rpc.core.MonitorService;
 import krpc.rpc.core.RetCodes;
 import krpc.rpc.core.RpcClosure;
@@ -32,7 +33,6 @@ import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.monitor.proto.ReportRpcStatReq;
 import krpc.rpc.monitor.proto.RpcStat;
 import krpc.rpc.util.IpUtils;
-import krpc.rpc.util.NamedThreadFactory;
 import krpc.rpc.web.WebClosure;
 import krpc.rpc.web.WebMonitorService;
 

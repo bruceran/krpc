@@ -26,12 +26,12 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.common.InitClose;
+import krpc.common.NamedThreadFactory;
 import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.StartStop;
 import krpc.rpc.core.Transport;
 import krpc.rpc.core.TransportCallback;
-import krpc.rpc.util.NamedThreadFactory;
 
 @Sharable
 public class NettyServer extends TransportBase implements Transport,InitClose,StartStop {

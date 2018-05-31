@@ -6,8 +6,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import krpc.common.InitClose;
+import krpc.common.NamedThreadFactory;
 import krpc.rpc.core.ExecutorManager;
-import krpc.rpc.util.NamedThreadFactory;
 
 public class DefaultExecutorManager implements ExecutorManager, InitClose {
 	

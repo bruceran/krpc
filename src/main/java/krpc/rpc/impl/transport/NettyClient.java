@@ -38,8 +38,8 @@ import krpc.rpc.core.StartStop;
 import krpc.rpc.core.Transport;
 import krpc.rpc.core.TransportCallback;
 import krpc.rpc.core.TransportChannel;
-import krpc.rpc.util.NamedThreadFactory;
 import krpc.common.InitClose;
+import krpc.common.NamedThreadFactory;
 
 @Sharable
 public class NettyClient extends TransportBase implements Transport, TransportChannel,InitClose,StartStop {

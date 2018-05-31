@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.Message;
 
 import krpc.common.InitClose;
+import krpc.common.NamedThreadFactory;
 import krpc.rpc.core.RpcFutureFactory;
 import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.util.NamedThreadFactory;
 import krpc.trace.TraceContext;
 
 public class DefaultRpcFutureFactory implements RpcFutureFactory,InitClose {

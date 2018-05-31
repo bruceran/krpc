@@ -14,10 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import krpc.common.InitClose;
+import krpc.common.NamedThreadFactory;
 import krpc.rpc.core.Continue;
 import krpc.rpc.core.FlowControl;
 import krpc.rpc.core.Plugin;
-import krpc.rpc.util.NamedThreadFactory;
 import krpc.trace.Trace;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;

@@ -2,8 +2,7 @@ package krpc.rpc.web.impl;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Set;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,7 +41,6 @@ import io.netty.handler.codec.http.HttpServerExpectContinueHandler;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.cookie.Cookie;
-import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleState;
@@ -52,8 +50,8 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.common.InitClose;
+import krpc.common.NamedThreadFactory;
 import krpc.rpc.core.StartStop;
-import krpc.rpc.util.NamedThreadFactory;
 import krpc.rpc.web.DefaultWebReq;
 import krpc.rpc.web.DefaultWebRes;
 import krpc.rpc.web.HttpTransport;

@@ -1,4 +1,4 @@
-package krpc.rpc.util;
+package krpc.common;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ThreadFactory;
