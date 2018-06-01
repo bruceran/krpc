@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import krpc.common.Json;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
+import krpc.rpc.core.Plugin;
 
 public class ConsulRegistry extends AbstractHttpRegistry {
 
@@ -23,6 +24,8 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 	String degisterUrl;
 	String discoverUrl;
 
+	int ttl = 90;
+	
 	HashSet<String> registeredServiceNames = new HashSet<>();
 	
     public void init() {
@@ -33,6 +36,14 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 		super.init();
     }	
     
+	public void config(String paramsStr) {
+		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
+		String s = params.get("ttl");
+		if( !isEmpty(s) ) ttl = Integer.parseInt(s);	
+		
+		super.config(params);
+	}
+
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
 
@@ -63,8 +74,8 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 		HashMap<String,Object> check = new HashMap<>();
 		check.put("Name", "check "+serviceName);
 		check.put("Status", "passing");
-		check.put("DeregisterCriticalServiceAfter", "1m");
-		check.put("TTL", "15s");
+		check.put("DeregisterCriticalServiceAfter", "3m");
+		check.put("TTL", ttl+"s");
 		m.put("Check", check);
 		
 		String json = Json.toJson(m);

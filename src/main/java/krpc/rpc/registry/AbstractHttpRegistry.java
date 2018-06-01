@@ -19,7 +19,11 @@ abstract public class AbstractHttpRegistry implements Registry,InitClose {
 	public void config(String paramsStr) {
 
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		
+		config(params);
+	}
+
+	public void config(Map<String,String> params) {
+
 		instanceId = params.get("instanceId");
 		addrs = params.get("addrs");
 		
@@ -29,7 +33,7 @@ abstract public class AbstractHttpRegistry implements Registry,InitClose {
 		s = params.get("enableDiscover");
 		if( !isEmpty(s) ) enableDiscover = Boolean.parseBoolean(s);	
 	}
-
+	
     public void init() {
 		hc = new DefaultHttpClient();
 		hc.init();

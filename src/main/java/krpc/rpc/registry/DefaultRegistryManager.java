@@ -23,7 +23,6 @@ import krpc.rpc.core.RegistryManagerCallback;
 import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.StartStop;
 
-
 public class DefaultRegistryManager implements RegistryManager,InitClose,StartStop {
 	
 	static Logger log = LoggerFactory.getLogger(DefaultRegistryManager.class);
@@ -40,7 +39,7 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 	Map<String,String> localData = new HashMap<>();
 	
 	private int startInterval = 1000;
-	private int repeatInterval = 5000;
+	private int checkInterval = 30000; // todo doc
 	
 	ServiceMetas serviceMetas;
 
@@ -109,7 +108,7 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
             public void run() {
             	heartBeat();
             }
-        },  startInterval, repeatInterval );				
+        },  startInterval, checkInterval );				
     }
     
     public void stop() {
@@ -269,6 +268,14 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 			this.registryName = registryName;
 			this.group = group;
 		}
+	}
+
+	public int getCheckInterval() {
+		return checkInterval;
+	}
+
+	public void setCheckInterval(int checkInterval) {
+		this.checkInterval = checkInterval;
 	}
 
 }
