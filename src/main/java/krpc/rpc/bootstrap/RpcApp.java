@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
-import krpc.common.JsonConverter;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.FlowControl;
 import krpc.rpc.core.MockService;
@@ -23,7 +22,8 @@ import krpc.trace.TraceAdapter;
 public class RpcApp implements InitClose,StartStop {
 
 	String name;
-
+	String instanceId;
+	
 	ServiceMetas serviceMetas;
 	RpcCodec codec;
 	ProxyGenerator proxyGenerator;
@@ -33,7 +33,6 @@ public class RpcApp implements InitClose,StartStop {
 	WebMonitorService monitorService;
 	RegistryManager registryManager;
 	TraceAdapter traceAdapter;
-	JsonConverter jsonConverter;
 	
 	HashMap<String,RpcServer> servers = new HashMap<>();
 	HashMap<String,WebServer> webServers = new HashMap<>();
@@ -88,7 +87,6 @@ public class RpcApp implements InitClose,StartStop {
 	
 	void initInner() {
 		
-		resources.add(jsonConverter);
 		resources.add(serviceMetas);
 		resources.add(codec);
 		resources.add(proxyGenerator);
@@ -112,7 +110,7 @@ public class RpcApp implements InitClose,StartStop {
 			resources.add(webServer);
 		}		
 	}
-	
+
 	public void init() {
 		initInner();
 		InitCloseUtils.init(resources);

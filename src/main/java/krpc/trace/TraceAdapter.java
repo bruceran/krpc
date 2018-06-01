@@ -5,10 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import krpc.common.InitClose;
 
 public interface TraceAdapter extends InitClose {
-	
-	public void init();
-	public void close();
-	
+
 	public String newTraceId();
 	public String newZeroRpcId(boolean isServer); // start point of rpcId
 	public String newEntryRpcId(String parentRpcId);

@@ -9,16 +9,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.Message;
 
-import krpc.common.JacksonJsonConverter;
-import krpc.common.JsonConverter;
+import krpc.common.Json;
 import krpc.rpc.util.MessageToMap;
 import krpc.rpc.web.WebMessage;
 
-public class JacksonLogFormatter extends BaseFormatter  {
+public class JacksonLogFormatter extends AbstractLogFormatter  {
 	
 	static Logger log = LoggerFactory.getLogger(JacksonLogFormatter.class);
-
-	JsonConverter jsonConverter = new JacksonJsonConverter();
 
 	public void config(String paramsStr) {
 		configInner(paramsStr);
@@ -29,7 +26,7 @@ public class JacksonLogFormatter extends BaseFormatter  {
     		Map<String,Object> allLog = new HashMap<>();
     		MessageToMap.parseMessage(body, allLog, printDefault, maxRepeatedSizeToLog);
     		adjustLog(allLog);
-  	  	    return jsonConverter.toJson(allLog);
+  	  	    return Json.toJson(allLog);
     	} catch(Exception e) {
     		log.error("toLogStr exception, e="+e.getMessage(),e);
     		return "";
@@ -40,7 +37,7 @@ public class JacksonLogFormatter extends BaseFormatter  {
 		try {
 			Map<String,Object> allLog = getLogData(isServerLog,body,maxRepeatedSizeToLog);
 	  	    adjustLog(allLog);
-	  	    return jsonConverter.toJson(allLog);
+	  	    return Json.toJson(allLog);
 	  	} catch(Exception e) {
 	  		log.error("toLogStr exception, e="+e.getMessage());
 	  		return "";

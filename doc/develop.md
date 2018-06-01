@@ -402,14 +402,17 @@
     name 应用名，用在上报给注册与发现服务时使用, 默认为default_app
     mockFile 开发阶段可通过此文件来对service做mock, 暂未实现
     errorMsgConverter 错误码错误消息转换文件，默认为classpath下的error.properties
-    traceAdapter 调用链跟踪系统标识，目前支持default (只打日志，不上报), skywalking, zipkin(暂未实现), cat(暂未实现)
-    flowControl 流量控制策略，默认不启用, 可配置为 memory 或 redis (暂未实现)
+    traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, skywalking(暂未实现), cat(暂未实现)
+    flowControl 流量控制策略，默认不启用, 可配置为  memory 或  jedis
+    dataDir 数据文件保存目录，默认为当前目录
     
 ## registry
 
     id 名称, 必须填写
-    type 注册与发现服务的类型, 会支持几种常见的: zookeeper, etcd, consul, 暂未实现
-    address 注册与发现服务连接地址
+    type 注册与发现服务的类型, 会支持几种常见的: consul, etcd(暂未实现), zookeeper(暂未实现)
+    addrs 注册与发现服务连接地址
+    enableRegist 是否进行注册，默认 true
+    enableDiscover 是否进行发现，默认 true
 
 ## client
  
@@ -461,7 +464,7 @@
     maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
          
-    sessionService  会话服务插件, 支持 memory,redis(暂未实现), 默认为memory
+    sessionService  会话服务插件, 支持 memory,jedis, 默认为memory
     routesFile 路由配置文件， 默认为 routes.xml，会自动搜索classpath下的routes.xml配置文件
     sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID
     sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录

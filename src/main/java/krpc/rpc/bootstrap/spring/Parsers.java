@@ -163,7 +163,7 @@ class BaseParser<T> implements BeanDefinitionParser {
 class ApplicationConfigBeanParser extends BaseParser<ApplicationConfigBean> {
 	ApplicationConfigBeanParser() {
 		beanClass = ApplicationConfigBean.class;
-		attributes = new String[] {"name","errorMsgConverter","mockFile","flowControl","traceAdapter"};
+		attributes = new String[] {"name","errorMsgConverter","mockFile","flowControl","traceAdapter","dataDir"};
 	}
 }
 
@@ -201,7 +201,7 @@ class WebServerConfigBeanParser extends BaseParser<WebServerConfigBean> {
 class RegistryConfigBeanParser extends BaseParser<RegistryConfigBean> {
 	RegistryConfigBeanParser() {
 		beanClass = RegistryConfigBean.class;
-		attributes = new String[] {"type","addrs"};
+		attributes = new String[] {"type","addrs","enableRegist","enableDiscover"};
 	}
 }
 

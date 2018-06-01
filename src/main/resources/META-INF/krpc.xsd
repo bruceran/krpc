@@ -15,6 +15,7 @@
               <attribute name="mockFile" type="string" use="optional"/>
               <attribute name="errorMsgConverter" type="string" use="optional"/>
               <attribute name="flowControl" type="string" use="optional"/>
+              <attribute name="dataDir" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
@@ -23,6 +24,8 @@
               <attribute name="id" type="string" use="optional"/>
               <attribute name="type" type="string" use="optional"/>
               <attribute name="addrs" type="string" use="optional"/>
+              <attribute name="enableRegist" type="string" use="optional"/>
+              <attribute name="enableDiscover" type="string" use="optional"/>
 	    </complexType>    
     </element>
     

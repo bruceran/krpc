@@ -18,7 +18,7 @@ import krpc.rpc.web.WebMessage;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 
-public class PbTextLogFormatter extends BaseFormatter {
+public class PbTextLogFormatter extends AbstractLogFormatter {
 
 	static Logger log = LoggerFactory.getLogger(PbTextLogFormatter.class);
 	

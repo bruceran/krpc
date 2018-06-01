@@ -7,7 +7,8 @@ public class RegistryConfig  {
 	String type; // typeName(etcd,zookeeper,...), must be registered in Bootstrap.registryTypes
 	String addrs;
 
-	// todo enableRegist, enableDiscover, checkAliveOnStart
+	boolean enableRegist = true;
+	boolean enableDiscover = true;
 	
 	public RegistryConfig() {
 	}
@@ -40,6 +41,24 @@ public class RegistryConfig  {
 
 	public RegistryConfig setAddrs(String addrs) {
 		this.addrs = addrs;
+		return this;
+	}
+
+	public boolean isEnableRegist() {
+		return enableRegist;
+	}
+
+	public RegistryConfig setEnableRegist(boolean enableRegist) {
+		this.enableRegist = enableRegist;
+		return this;
+	}
+
+	public boolean isEnableDiscover() {
+		return enableDiscover;
+	}
+
+	public RegistryConfig setEnableDiscover(boolean enableDiscover) {
+		this.enableDiscover = enableDiscover;
 		return this;
 	}
 	

@@ -22,7 +22,7 @@ import com.google.protobuf.Message;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
-import krpc.common.JsonConverter;
+import krpc.common.Json;
 import krpc.rpc.core.Continue;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.ExecutorManager;
@@ -78,7 +78,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	SessionService sessionService;
 	RpcDataConverter rpcDataConverter;
 	ExecutorManager executorManager;
-	JsonConverter jsonConverter;
 	WebMonitorService monitorService;
 
 	AtomicInteger seq = new AtomicInteger(0);
@@ -93,7 +92,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		resources.add(sessionService);
 		resources.add(rpcDataConverter);
 		resources.add(executorManager);
-		resources.add(jsonConverter);
 
 		InitCloseUtils.init(resources);
 	}
@@ -741,7 +739,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	void parseJsonContent(DefaultWebReq req) {
 		String contentType = req.getContentType();
 		if (!isEmpty(contentType) && contentType.equals(MIMETYPE_JSON)) {
-			Map<String, Object> map = jsonConverter.toMap(req.getContent());
+			Map<String, Object> map = Json.toMap(req.getContent());
 			if (map != null) {
 				req.getParameters().putAll(map);
 			}
@@ -813,7 +811,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	void renderToJson(WebContextData ctx, DefaultWebReq req, DefaultWebRes res) {
 		res.setContentType(MIMETYPE_JSON);
-		res.setContent(jsonConverter.fromMap(res.getResults()));
+		res.setContent(Json.toJson(res.getResults()));
 	}
 
 	public void connected(String connId, String localAddr) {
@@ -961,14 +959,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void setErrorMsgConverter(ErrorMsgConverter errorMsgConverter) {
 		this.errorMsgConverter = errorMsgConverter;
-	}
-
-	public JsonConverter getJsonConverter() {
-		return jsonConverter;
-	}
-
-	public void setJsonConverter(JsonConverter jsonConverter) {
-		this.jsonConverter = jsonConverter;
 	}
 
 	public RouteService getRouteService() {

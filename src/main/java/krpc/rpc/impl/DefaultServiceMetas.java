@@ -25,6 +25,7 @@ public class DefaultServiceMetas implements ServiceMetas {
 	HashMap<String,Class<?>> resClsMap = new HashMap<String,Class<?>>();
 	HashMap<String,Method> reqParserMap = new HashMap<String,Method>();
 	HashMap<String,Method> resParserMap = new HashMap<String,Method>();
+	HashMap<Integer,String> serviceNames = new HashMap<Integer,String>();
 	HashMap<String,String> msgNames = new HashMap<String,String>();
 	HashMap<String,RpcCallable> callableMap = new HashMap<String,RpcCallable>();
 	HashMap<String,Descriptor> reqDescMap = new HashMap<String,Descriptor>();
@@ -59,6 +60,9 @@ public class DefaultServiceMetas implements ServiceMetas {
 		return resParserMap.get(serviceId+"."+msgId);
 	}
 
+	public String getServiceName(int serviceId) {
+		return serviceNames.get(serviceId);  
+	}
 	public String getName(int serviceId,int msgId) {
 		return msgNames.get(serviceId+"."+msgId);
 	}
@@ -115,7 +119,8 @@ public class DefaultServiceMetas implements ServiceMetas {
 				resClsMap.put(serviceId+"."+msgId, resCls);
 				reqParserMap.put(serviceId+"."+msgId, reqParser);
 				resParserMap.put(serviceId+"."+msgId, resParser);	
-				msgNames.put(serviceId+"."+msgId, serviceName+"."+msgName);
+				serviceNames.put(serviceId, serviceName.toLowerCase());
+				msgNames.put(serviceId+"."+msgId, (serviceName+"."+msgName).toLowerCase());
 			}
 		}
 	}
@@ -146,7 +151,8 @@ public class DefaultServiceMetas implements ServiceMetas {
 				resClsMap.putIfAbsent(serviceId+"."+msgId, resCls);
 				reqParserMap.putIfAbsent(serviceId+"."+msgId, reqParser);
 				resParserMap.putIfAbsent(serviceId+"."+msgId, resParser);
-				msgNames.putIfAbsent(serviceId+"."+msgId, serviceName+"."+msgName);
+				serviceNames.putIfAbsent(serviceId, serviceName.toLowerCase());
+				msgNames.putIfAbsent(serviceId+"."+msgId, (serviceName+"."+msgName).toLowerCase());
 			}
 		}
 	}

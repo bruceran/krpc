@@ -8,6 +8,8 @@ public class ApplicationConfig  {
 	String errorMsgConverter = "file";
 	String flowControl = "";
 	String mockFile = "";
+	
+	String dataDir = ".";
 
 	public ApplicationConfig() {
 	}
@@ -58,6 +60,15 @@ public class ApplicationConfig  {
 
 	public ApplicationConfig setTraceAdapter(String traceAdapter) {
 		this.traceAdapter = traceAdapter;
+		return this;
+	}
+
+	public String getDataDir() {
+		return dataDir;
+	}
+
+	public ApplicationConfig setDataDir(String dataDir) {
+		this.dataDir = dataDir;
 		return this;
 	}
 

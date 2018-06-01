@@ -15,6 +15,7 @@ import com.xxx.userservice.proto.UserServiceAsync;
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.ClientConfig;
 import krpc.rpc.bootstrap.MonitorConfig;
+import krpc.rpc.bootstrap.RegistryConfig;
 import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.core.ClientContext;
 public class RpcClientTest {

@@ -1,9 +1,13 @@
-package krpc.trace;
+package krpc.trace.adapter;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import krpc.trace.Span;
+import krpc.trace.TraceAdapter;
+import krpc.trace.TraceContext;
 
 public class SkyWalkingTraceAdapter implements TraceAdapter {
 

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import krpc.common.InitClose;
-import krpc.common.JacksonJsonConverter;
+import krpc.common.Json;
 import krpc.rpc.core.Continue;
 import krpc.rpc.web.AsyncPostParsePlugin;
 import krpc.rpc.web.AsyncPostSessionPlugin;
@@ -27,8 +27,7 @@ public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugi
 		PostRenderPlugin, PostParsePlugin, ParserPlugin, AsyncPostSessionPlugin, AsyncPostParsePlugin,InitClose {
 
 	static Logger log = LoggerFactory.getLogger(LogOnlyWebPlugin.class);
-	
-	JacksonJsonConverter c = new JacksonJsonConverter();
+
 	Timer t = new Timer();
 	
 	public void init() {
@@ -97,7 +96,7 @@ public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugi
 	@Override
 	public void render(WebContextData ctx, WebReq req, WebRes res) {
 		res.setContentType("application/json");
-		res.setContent(c.fromMap(res.getResults()));
+		res.setContent(Json.toJson(res.getResults()));
 		log.info("render called");
 	}
 }

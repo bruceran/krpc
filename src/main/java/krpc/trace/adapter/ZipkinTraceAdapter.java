@@ -1,4 +1,4 @@
-package krpc.trace;
+package krpc.trace.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,25 +12,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import krpc.common.JacksonJsonConverter;
-import krpc.common.JsonConverter;
+import krpc.common.Json;
 import krpc.common.NamedThreadFactory;
 import krpc.httpclient.DefaultHttpClient;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
+import krpc.trace.Event;
+import krpc.trace.Span;
+import krpc.trace.Trace;
+import krpc.trace.TraceAdapter;
+import krpc.trace.TraceContext;
 
 public class ZipkinTraceAdapter implements TraceAdapter {
 
 	static Logger log = LoggerFactory.getLogger(ZipkinTraceAdapter.class);
 	
-	DefaultHttpClient hc;
 	String postUrl;
 	int queueSize = 10000;
 	int retryCount = 3;
 	int retryInterval = 1000;
-	
-	JsonConverter jsonConverter;
 
+	DefaultHttpClient hc;
 	NamedThreadFactory threadFactory = new NamedThreadFactory("zipkin_report");
 	ThreadPoolExecutor pool;
 
@@ -49,7 +51,6 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 	}
 	
 	public void init() {
-		if( jsonConverter == null ) jsonConverter = new JacksonJsonConverter();
 		hc = new DefaultHttpClient();
 		hc.init();
 		pool = new ThreadPoolExecutor(1,1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize),threadFactory);
@@ -226,7 +227,7 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 
 	void report(TraceContext ctx, Span span) {
 		List<ZipkinSpan> list = convert(ctx,span);
-		String json = jsonConverter.toJson(list);
+		String json = Json.toJson(list);
 		HttpClientReq req = new HttpClientReq("POST",postUrl).setContent(json);
 		int i=0;
 		while(i<retryCount) {
@@ -332,14 +333,6 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 
 	boolean isEmpty(String s) {
 		return s == null || s.isEmpty();
-	}
-
-	public JsonConverter getJsonConverter() {
-		return jsonConverter;
-	}
-
-	public void setJsonConverter(JsonConverter jsonConverter) {
-		this.jsonConverter = jsonConverter;
 	}
 	
 } 

@@ -17,7 +17,7 @@ import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.util.MessageToMap;
 import krpc.rpc.web.WebMessage;
 
-public class SimpleLogFormatter extends BaseFormatter  {
+public class SimpleLogFormatter extends AbstractLogFormatter  {
 
 	static Logger log = LoggerFactory.getLogger(SimpleLogFormatter.class);
 

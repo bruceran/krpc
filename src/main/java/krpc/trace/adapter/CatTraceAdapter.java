@@ -1,7 +1,11 @@
-package krpc.trace;
+package krpc.trace.adapter;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import krpc.trace.Span;
+import krpc.trace.TraceAdapter;
+import krpc.trace.TraceContext;
 
 // todo
 public class CatTraceAdapter implements TraceAdapter {

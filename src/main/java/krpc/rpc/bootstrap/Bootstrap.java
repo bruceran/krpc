@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -38,8 +39,6 @@ import com.google.protobuf.Descriptors.ServiceDescriptor;
 import com.google.protobuf.UnknownFieldSet.Field;
 
 import krpc.KrpcExt;
-import krpc.common.JacksonJsonConverter;
-import krpc.common.JsonConverter;
 import krpc.rpc.cluster.DefaultClusterManager;
 import krpc.rpc.cluster.LoadBalance;
 import krpc.rpc.core.ClusterManager;
@@ -74,6 +73,7 @@ import krpc.rpc.impl.transport.NettyServer;
 import krpc.rpc.monitor.DefaultMonitorService;
 import krpc.rpc.monitor.LogFormatter;
 import krpc.rpc.registry.DefaultRegistryManager;
+import krpc.rpc.util.IpUtils;
 import krpc.rpc.web.Route;
 import krpc.rpc.web.RouteService;
 import krpc.rpc.web.RpcDataConverter;
@@ -86,12 +86,12 @@ import krpc.rpc.web.impl.DefaultRouteService;
 import krpc.rpc.web.impl.DefaultRpcDataConverter;
 import krpc.rpc.web.impl.NettyHttpServer;
 import krpc.rpc.web.impl.WebServer;
-import krpc.trace.CatTraceAdapter;
 import krpc.trace.DefaultTraceAdapter;
-import krpc.trace.SkyWalkingTraceAdapter;
 import krpc.trace.Trace;
 import krpc.trace.TraceAdapter;
-import krpc.trace.ZipkinTraceAdapter;
+import krpc.trace.adapter.CatTraceAdapter;
+import krpc.trace.adapter.SkyWalkingTraceAdapter;
+import krpc.trace.adapter.ZipkinTraceAdapter;
 
 public class Bootstrap {
 
@@ -174,10 +174,6 @@ public class Bootstrap {
 		return new NettyClient();
 	}
 	
-	public JsonConverter newJsonConverter() {
-		return new JacksonJsonConverter();
-	}
-	
 	public RpcFutureFactory newRpcFutureFactory(ServiceMetas metas, int notifyThreads, int notifyMaxThreads,
 			int notifyQueueSize) {
 		DefaultRpcFutureFactory ff = new DefaultRpcFutureFactory();
@@ -187,8 +183,10 @@ public class Bootstrap {
 		return ff;
 	}
 
-	public RegistryManager newRegistryManager() {
-		return new DefaultRegistryManager();
+	public RegistryManager newRegistryManager(ServiceMetas serviceMetas,String tempDir) {
+		DefaultRegistryManager m = new DefaultRegistryManager(tempDir);
+		m.setServiceMetas(serviceMetas);
+		return m;
 	}
 
 	public ClusterManager newClusterManager(TransportChannel transportChannel, ClientConfig c) {
@@ -408,7 +406,7 @@ public class Bootstrap {
 				}
 			}
 			if (isEmpty(c.group)) {
-				c.group = "*";
+				c.group = "default";
 			}
 
 			for (MethodConfig mc : c.getMethods()) {
@@ -499,7 +497,7 @@ public class Bootstrap {
 				}
 
 				if (isEmpty(c.group)) {
-					c.group = "*";
+					c.group = "default";
 				}
 			}
 
@@ -517,13 +515,17 @@ public class Bootstrap {
 		}
 
 	}
-
+	
 	private RpcApp doBuild() {
 
 		RpcApp app = newRpcApp();
 		app.name = appConfig.name;
+		app.instanceId = UUID.randomUUID().toString().replaceAll("-", "");
 		
-		app.jsonConverter = newJsonConverter();
+		if( isEmpty(appConfig.dataDir) ) {
+			appConfig.dataDir = ".";
+		}
+
 		TraceAdapter traceAdapter = newTraceAdapter();
 		Trace.setAdapter(traceAdapter);
 		app.traceAdapter = traceAdapter;
@@ -531,7 +533,7 @@ public class Bootstrap {
 		app.serviceMetas = newServiceMetas();
 		app.codec = newRpcCodec(app.serviceMetas);
 		app.proxyGenerator = newProxyGenerator();
-		app.registryManager = newRegistryManager();
+		app.registryManager = newRegistryManager(app.serviceMetas,appConfig.dataDir);
 		app.monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig);
 
 		if (!isEmpty(appConfig.flowControl)) {
@@ -557,7 +559,7 @@ public class Bootstrap {
 			RegistryConfig c = registries.get(name);
 			Registry impl = getRegistryObj(c.type);
 			String params = parseParams(c.type);
-			params += "appName="+appConfig.name+";addrs="+c.addrs;
+			params += "instanceId="+app.instanceId+";addrs="+c.addrs+";enableRegist="+c.enableRegist+";enableDiscover="+c.enableDiscover;
 			impl.config(params);
 			app.registryManager.addRegistry(c.id, impl);
 		}
@@ -671,7 +673,6 @@ public class Bootstrap {
 			server.setRouteService(newRouteService(c));
 			server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
 			server.setSessionService(ss);
-			server.setJsonConverter(app.jsonConverter);
 			server.setSessionIdCookieName(c.sessionIdCookieName);
 			server.setSessionIdCookiePath(c.sessionIdCookiePath);
 
@@ -708,6 +709,7 @@ public class Bootstrap {
 			ExecutorManager em = null;
 			RpcCallableBase callable = null;
 			boolean bindToHttp = false;
+			String addr = null;
 			if (c.reverse) {
 				callable = app.clients.get(c.transport);
 				callable.addAllowedService(serviceId);
@@ -717,18 +719,22 @@ public class Bootstrap {
 				if (callable != null) {
 					callable.addAllowedService(serviceId);
 					em = callable.getExecutorManager();
+					ServerConfig sc = servers.get(c.transport);
+					addr = IpUtils.localIp()+":"+sc.port;
 				} else {
 					WebServer webServer = app.webServers.get(c.transport);
 					em = webServer.getExecutorManager();
 					bindToHttp = true;
+					WebServerConfig wsc = webServers.get(c.transport);
+					addr = IpUtils.localIp()+":"+wsc.port;
 				}
 			}
 			app.serviceMetas.addService(cls, c.impl, callable);
 
-			if (!isEmpty(c.registryNames) && !bindToHttp) { // todo
+			if ( !isEmpty(c.registryNames) && addr != null) {
 				String[] ss = c.registryNames.split(",");
 				for (String s : ss)
-					app.registryManager.register(serviceId, s, c.group); // todo  port 
+					app.registryManager.register(serviceId, s, c.group,addr);
 			}
 
 			if (c.threads >= 0) {

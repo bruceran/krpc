@@ -1,15 +1,17 @@
 package krpc.rpc.registry;
 
-import krpc.rpc.core.Registry;
+public class EtcdRegistry extends AbstractHttpRegistry {
 
-public class EtcdRegistry implements Registry {
-
-	public EtcdRegistry() {
-		
+	
+	public void register(int serviceId,String serviceName,String group,String addr) {
+		if( !enableRegist ) return;
 	}
-
-	public void config(String paramsStr) {
-		
+	public void deregister(int serviceId,String serviceName,String group) {
+		if( !enableRegist ) return;
+	}	
+	public String discover(int serviceId,String serviceName,String group) {	
+		if( !enableDiscover ) return null;
+		return "127.0.0.1:5600";
 	}
 }
 

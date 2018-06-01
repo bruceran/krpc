@@ -7,7 +7,7 @@ public class Trace {
 
 	private static Logger log = LoggerFactory.getLogger(Trace.class);
 	private static String appName = "unknown";
-	private static TraceAdapter adapter = new DefaultTraceAdapter(null);
+	private static TraceAdapter adapter = new DefaultTraceAdapter();
 	private static TraceContextFactory factory = new DefaultTraceContextFactory();
 	private static ThreadLocal<TraceContext> tlContext = new ThreadLocal<TraceContext>();
 	

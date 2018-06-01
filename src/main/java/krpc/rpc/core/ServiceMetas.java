@@ -17,6 +17,7 @@ public interface ServiceMetas {
     Method findReqParser(int serviceId,int msgId);
     Method findResParser(int serviceId,int msgId);
 
+    String getServiceName(int serviceId);
 	String getName(int serviceId,int msgId);
 	RpcCallable findCallable(String implClsName);
     

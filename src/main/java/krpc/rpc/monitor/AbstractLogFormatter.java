@@ -12,7 +12,7 @@ import krpc.rpc.web.DefaultWebRes;
 import krpc.rpc.web.WebConstants;
 import krpc.rpc.web.WebMessage;
 
-abstract class BaseFormatter implements LogFormatter {
+abstract class AbstractLogFormatter implements LogFormatter {
 
 	String maskFields;
 	int maxRepeatedSizeToLog = 1;
