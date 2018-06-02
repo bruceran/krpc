@@ -39,7 +39,7 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 	Map<String,String> localData = new HashMap<>();
 	
 	private int startInterval = 1000;
-	private int checkInterval = 30000; // todo doc
+	private int checkInterval = 1000;
 	
 	ServiceMetas serviceMetas;
 
@@ -143,16 +143,26 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 
     void heartBeat() {
     	register();
+    	
     	boolean changed = discover();
     	if( changed ) {
     		notifyAddrChanged();
     		saveToLocal();
     	}
+    	
+    	
     }
     
     void register() {
+    	long now = System.currentTimeMillis();
     	for(RegisterItem item:registerItems) {
+    		
     		Registry r = registries.get(item.registryName);
+    		int seconds = r.getCheckIntervalSeconds();
+    		if( now - item.lastRegist < seconds * 1000 ) continue;
+    		
+    		item.lastRegist = System.currentTimeMillis();
+    		
     		String serviceName = serviceMetas.getServiceName(item.serviceId);
     		r.register(item.serviceId, serviceName, item.group, item.addr);
     	}
@@ -167,9 +177,18 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
     }
     
     boolean discover() {
+    	
+    	long now = System.currentTimeMillis();
+    	
     	boolean changed = false;
     	for(DiscoverItem item:discoverItems) {
+    		
     		Registry r = registries.get(item.registryName);
+    		int seconds = r.getCheckIntervalSeconds();
+    		if( now - item.lastDiscover  < seconds * 1000 ) continue;
+    		
+    		item.lastDiscover = now;
+    		
     		String serviceName = serviceMetas.getServiceName(item.serviceId);
     		String addr = r.discover(item.serviceId, serviceName, item.group);
     		if( addr != null ) { // null is failed, not null is success
@@ -249,7 +268,8 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 		String registryName;
 		String group;
 		String addr;
-		
+		long lastRegist = 0;
+
 		RegisterItem(int serviceId,String registryName,String group,String addr) {
 			this.serviceId = serviceId;
 			this.registryName = registryName;
@@ -262,6 +282,7 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 		int serviceId;
 		String registryName;
 		String group;
+		long lastDiscover = 0;
 		
 		DiscoverItem(int serviceId,String registryName,String group) {
 			this.serviceId = serviceId;

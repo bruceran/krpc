@@ -409,10 +409,13 @@
 ## registry
 
     id 名称, 必须填写
-    type 注册与发现服务的类型, 会支持几种常见的: consul, etcd(暂未实现), zookeeper(暂未实现)
+    type 注册与发现服务的类型, 会支持几种常见的: consul, etcd, zookeeper(暂未实现)
     addrs 注册与发现服务连接地址
     enableRegist 是否进行注册，默认 true
     enableDiscover 是否进行发现，默认 true
+    params 注册与发现服务附加参数，格式为 k=v;k=v;..., 目前支持的key如下：
+	    ttlSeconds 多长时间超时，默认 90秒, 适用于 consul, etcd 
+    	pingSeconds 多长时间和注册与发现服务做心跳，默认15秒, 适用于 consul, etcd
 
 ## client
  

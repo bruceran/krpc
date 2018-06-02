@@ -10,6 +10,8 @@ public class RegistryConfig  {
 	boolean enableRegist = true;
 	boolean enableDiscover = true;
 	
+	String params;
+
 	public RegistryConfig() {
 	}
 
@@ -59,6 +61,15 @@ public class RegistryConfig  {
 
 	public RegistryConfig setEnableDiscover(boolean enableDiscover) {
 		this.enableDiscover = enableDiscover;
+		return this;
+	}
+
+	public String getParams() {
+		return params;
+	}
+
+	public RegistryConfig setParams(String params) {
+		this.params = params;
 		return this;
 	}
 	

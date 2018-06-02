@@ -19,44 +19,52 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 
 	static Logger log = LoggerFactory.getLogger(ConsulRegistry.class);
 	
-	String registerUrl;
-	String keepAliveUrl;
-	String degisterUrl;
-	String discoverUrl;
+	String registerUrlTemplate;
+	String keepAliveUrlTemplate;
+	String degisterUrlTemplate;
+	String discoverUrlTemplate;
 
 	int ttl = 90;
+	int interval = 15;
 	
 	HashSet<String> registeredServiceNames = new HashSet<>();
 	
     public void init() {
-    	registerUrl = "http://"+addrs+"/v1/agent/service/register";
-    	keepAliveUrl = "http://"+addrs+"/v1/agent/check/pass/service:%s";
-    	degisterUrl = "http://"+addrs+"/v1/agent/service/deregister";
-    	discoverUrl = "http://"+addrs+"/v1/health/service/%s?passing";
+    	registerUrlTemplate = "http://%s/v1/agent/service/register";
+    	keepAliveUrlTemplate = "http://%s/v1/agent/check/pass/service:%s";
+    	degisterUrlTemplate = "http://%s/v1/agent/service/deregister";
+    	discoverUrlTemplate = "http://%s/v1/health/service/%s?passing";
 		super.init();
     }	
-    
+
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		String s = params.get("ttl");
+		String s = params.get("ttlSeconds");
 		if( !isEmpty(s) ) ttl = Integer.parseInt(s);	
+		s = params.get("pingSeconds");
+		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
 		
 		super.config(params);
 	}
-
+    
+    public int getCheckIntervalSeconds() {
+    	return interval;
+    }
+    
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
-
+	
 		if( registeredServiceNames.contains(serviceName) ) {
-			String url = String.format(keepAliveUrl, serviceName);
+			String url = String.format(keepAliveUrlTemplate, addr(), serviceName);
 			HttpClientReq req = new HttpClientReq("PUT",url);
 
 			HttpClientRes res = hc.call(req);
 			if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
 				log.error("cannot call keep alive url service "+serviceName);
-			} else {
-				registeredServiceNames.remove(serviceName);
-			}
+				nextAddr();
+				return;
+			} 
+			registeredServiceNames.remove(serviceName);
 			return;
 		}
 		
@@ -79,11 +87,13 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 		m.put("Check", check);
 		
 		String json = Json.toJson(m);
-		HttpClientReq req = new HttpClientReq("PUT",registerUrl).setContent(json);
+		String url = String.format(registerUrlTemplate, addr());
+		HttpClientReq req = new HttpClientReq("PUT",url).setContent(json);
 
 		HttpClientRes res = hc.call(req);
 		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
 			log.error("cannot register service "+serviceName+", content="+res.getContent());
+			nextAddr();
 			return;
 		} 
 		
@@ -93,11 +103,13 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 	public void deregister(int serviceId,String serviceName,String group) {
 		if( !enableRegist ) return;
 		
-		String url = degisterUrl + "/" + serviceName;
+		String url = String.format(degisterUrlTemplate, addr()) + "/" + serviceName;
 		HttpClientReq req = new HttpClientReq("PUT",url);
 		HttpClientRes res = hc.call(req);
 		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
 			log.error("cannot deregister service "+serviceName+", content="+res.getContent());
+			nextAddr();
+			return;
 		}
 		
 		registeredServiceNames.remove(serviceName);
@@ -106,17 +118,22 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 	@SuppressWarnings("unchecked")
 	public String discover(int serviceId,String serviceName,String group) {	
 		if( !enableDiscover ) return null;
-		String url = String.format(discoverUrl, serviceName);
+		
+		String url = String.format(discoverUrlTemplate, addr(), serviceName);
 		HttpClientReq req = new HttpClientReq("GET",url);
 		HttpClientRes res = hc.call(req);
 		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
 			log.error("cannot discover service "+serviceName);
+			nextAddr();
 			return null;
 		}
 		
 		String json = res.getContent();
 		List<Object> list = Json.toList(json);
-		if( list == null ) return null;
+		if( list == null ) {
+			nextAddr();
+			return null;
+		}
 		
 		TreeMap<String,String> set = new TreeMap<>();
 		for(Object o:list) {

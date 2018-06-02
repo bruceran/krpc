@@ -201,7 +201,7 @@ class WebServerConfigBeanParser extends BaseParser<WebServerConfigBean> {
 class RegistryConfigBeanParser extends BaseParser<RegistryConfigBean> {
 	RegistryConfigBeanParser() {
 		beanClass = RegistryConfigBean.class;
-		attributes = new String[] {"type","addrs","enableRegist","enableDiscover"};
+		attributes = new String[] {"type","addrs","enableRegist","enableDiscover","params"};
 	}
 }
 

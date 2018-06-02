@@ -7,7 +7,11 @@ public class ZooKeeperRegistry implements Registry {
 	public void config(String paramsStr) {
 		
 	}
-
+    
+    public int getCheckIntervalSeconds() {
+    	return 1;
+    }
+    
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		
 	}

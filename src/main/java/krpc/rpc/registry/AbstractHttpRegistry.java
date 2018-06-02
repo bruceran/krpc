@@ -10,7 +10,9 @@ import krpc.rpc.core.Registry;
 abstract public class AbstractHttpRegistry implements Registry,InitClose {
 
 	String instanceId;
-	String addrs;
+	private String addrs;
+	String[] addrArray;
+	int addrIndex = 0;
 	boolean enableRegist = true;
 	boolean enableDiscover = true;
 	
@@ -26,12 +28,21 @@ abstract public class AbstractHttpRegistry implements Registry,InitClose {
 
 		instanceId = params.get("instanceId");
 		addrs = params.get("addrs");
+		addrArray = addrs.split(",");
 		
 		String s = params.get("enableRegist");
 		if( !isEmpty(s) ) enableRegist = Boolean.parseBoolean(s);	
 
 		s = params.get("enableDiscover");
 		if( !isEmpty(s) ) enableDiscover = Boolean.parseBoolean(s);	
+	}
+	
+	public String addr() {
+		return addrArray[addrIndex];
+	}	
+	public void nextAddr() {
+		addrIndex++;
+		if( addrIndex >= addrArray.length ) addrIndex = 0;
 	}
 	
     public void init() {

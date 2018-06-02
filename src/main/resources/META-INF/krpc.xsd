@@ -26,6 +26,7 @@
               <attribute name="addrs" type="string" use="optional"/>
               <attribute name="enableRegist" type="string" use="optional"/>
               <attribute name="enableDiscover" type="string" use="optional"/>
+              <attribute name="params" type="string" use="optional"/>
 	    </complexType>    
     </element>
     

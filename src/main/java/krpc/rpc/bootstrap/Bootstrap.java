@@ -560,6 +560,8 @@ public class Bootstrap {
 			Registry impl = getRegistryObj(c.type);
 			String params = parseParams(c.type);
 			params += "instanceId="+app.instanceId+";addrs="+c.addrs+";enableRegist="+c.enableRegist+";enableDiscover="+c.enableDiscover;
+			if(!isEmpty(c.params))
+				params += ";" + c.params;
 			impl.config(params);
 			app.registryManager.addRegistry(c.id, impl);
 		}
@@ -708,7 +710,6 @@ public class Bootstrap {
 
 			ExecutorManager em = null;
 			RpcCallableBase callable = null;
-			boolean bindToHttp = false;
 			String addr = null;
 			if (c.reverse) {
 				callable = app.clients.get(c.transport);
@@ -724,9 +725,8 @@ public class Bootstrap {
 				} else {
 					WebServer webServer = app.webServers.get(c.transport);
 					em = webServer.getExecutorManager();
-					bindToHttp = true;
-					WebServerConfig wsc = webServers.get(c.transport);
-					addr = IpUtils.localIp()+":"+wsc.port;
+					// WebServerConfig wsc = webServers.get(c.transport); // todo register web service
+					// addr = IpUtils.localIp()+":"+wsc.port;
 				}
 			}
 			app.serviceMetas.addService(cls, c.impl, callable);

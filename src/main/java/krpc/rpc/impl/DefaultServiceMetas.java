@@ -184,6 +184,7 @@ public class DefaultServiceMetas implements ServiceMetas {
 	public void addDynamic(int serviceId,int msgId, Descriptor reqDesc, Descriptor resDesc, String serviceName,String msgName) {
 		reqDescMap.put(serviceId+"."+msgId, reqDesc);
 		resDescMap.put(serviceId+"."+msgId, resDesc);
+		serviceNames.put(serviceId, serviceName.toLowerCase());
 		msgNames.put(serviceId+"."+msgId, serviceName+"."+msgName);
 	}
 	

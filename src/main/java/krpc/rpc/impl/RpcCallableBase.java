@@ -206,7 +206,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			builder.setTimeout(getTimeout(serviceId, msgId));
 		
 		RpcMeta meta = builder.build();
-		ClientContextData ctx = new ClientContextData(connId == null ? "no_connection" : connId,meta, tctx, span);
+		ClientContextData ctx = new ClientContextData(connId == null ? "no_connection:0:0" : connId,meta, tctx, span);
 		CompletableFuture<Message> future = futureFactory.newFuture(meta.getServiceId(),meta.getMsgId(),isAsync,ctx.getTraceContext());
 		ctx.setFuture(future);
 		ClientContext.set(ctx); // user code can call RpcClientContext.get() to obtain call information
@@ -334,7 +334,9 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 
 	public String getAddr(String connId) {
+		if( connId == null ) return "no_connection:0:0";
 		int p = connId.lastIndexOf(":");
+		if( p < 0 ) return connId;
 		return connId.substring(0, p);
 	}
 
