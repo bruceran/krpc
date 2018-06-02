@@ -22,6 +22,7 @@ public class DefaultTraceAdapter implements TraceAdapter {
 	public void close() {}
 	
 	public void send(TraceContext ctx, Span span) {
+		// do nothing
 	}
 	
 	public String newTraceId() {

@@ -237,7 +237,7 @@ class MethodConfigBeanParser extends BaseParser<MethodConfig> {
 class MonitorConfigBeanParser extends BaseParser<MonitorConfig> {
 	MonitorConfigBeanParser() {
 		beanClass = MonitorConfig.class;
-		attributes = new String[] {"maskFields","maxRepeatedSizeToLog","logThreads","logQueueSize","logFormatter","serverAddr","printDefault"};
+		attributes = new String[] {"accessLog","maskFields","maxRepeatedSizeToLog","logThreads","logQueueSize","logFormatter","serverAddr","printDefault"};
 		hasId = false;
 	}
 }

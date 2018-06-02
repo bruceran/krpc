@@ -75,6 +75,14 @@ public class DefaultSpan implements Span {
 		return getTimeUsedMicros();
 	}
 	
+	public void stopAsyncIfNeeded() {
+		if( !completed.compareAndSet(0, 2) ) {
+			return;
+		}
+		this.status = "ASYNC";
+		timeUsedMicros = System.nanoTime()/1000 - startMicros;
+	}
+	
 	public void logEvent(String type,String action,String status,String data) {
 		if( events == null ) events = new ArrayList<>();
 		Event e = new Event(type,action,status,data);

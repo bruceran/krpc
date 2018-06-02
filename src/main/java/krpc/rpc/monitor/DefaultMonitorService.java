@@ -48,6 +48,8 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     int logThreads = 1;
     int logQueueSize = 10000;
+    boolean accessLog = true;
+    
     LogFormatter logFormatter = new SimpleLogFormatter();
     ThreadPoolExecutor logPool;
     ConcurrentHashMap<String,Logger> serverLogMap = new ConcurrentHashMap<String,Logger>();
@@ -92,9 +94,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	resources.add(monitorClient);
     	InitCloseUtils.init(resources);
     	
-        ThreadFactory logThreadFactory = new NamedThreadFactory("asynclog");
-        logPool = new ThreadPoolExecutor(logThreads, logThreads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(logQueueSize),logThreadFactory);
-        logPool.prestartAllCoreThreads();
+    	if( accessLog ) {
+            ThreadFactory logThreadFactory = new NamedThreadFactory("asynclog");
+            logPool = new ThreadPoolExecutor(logThreads, logThreads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(logQueueSize),logThreadFactory);
+            logPool.prestartAllCoreThreads();
+    	}
         
         ThreadFactory statsThreadFactory = new NamedThreadFactory("asyncstats");
         statsPool = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(statsQueueSize),statsThreadFactory);
@@ -108,7 +112,9 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 	    timer.cancel();
 	
 	    statsPool.shutdown();
-	    logPool.shutdown();
+	    if( logPool != null ) {
+		    logPool.shutdown();
+	    }
 	
     	InitCloseUtils.close(resources);
 	    
@@ -117,20 +123,22 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     public void webReqDone(WebClosure closure) {
 
-        try{
-            logPool.execute( new Runnable() {
-                public void run() {
-                    try {
-                    	doLog(true,closure);
-                    } catch(Exception e) {
-                        log.error("asynclog exception",e);
+    	if( accessLog ) {
+            try{
+                logPool.execute( new Runnable() {
+                    public void run() {
+                        try {
+                        	doLog(true,closure);
+                        } catch(Exception e) {
+                            log.error("asynclog exception",e);
+                        }
                     }
-                }
-            });
-        } catch(RejectedExecutionException e) {
-        	log.error("asynclog queue is full");
-        }
-        
+                });
+            } catch(RejectedExecutionException e) {
+            	log.error("asynclog queue is full");
+            }
+    	}
+
         try{
         	statsPool.execute( new Runnable() {
                 public void run() {
@@ -149,20 +157,22 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     public void reqDone(final RpcClosure closure) {
     	
-        try{
-            logPool.execute( new Runnable() {
-                public void run() {
-                    try {
-                    	doLog(true,closure);
-                    } catch(Exception e) {
-                        log.error("asynclog exception",e);
-                    }
-                }
-            });
-        } catch(RejectedExecutionException e) {
-        	log.error("asynclog queue is full");
-        }
-        
+    	if( accessLog ) {
+	        try{
+	            logPool.execute( new Runnable() {
+	                public void run() {
+	                    try {
+	                    	doLog(true,closure);
+	                    } catch(Exception e) {
+	                        log.error("asynclog exception",e);
+	                    }
+	                }
+	            });
+	        } catch(RejectedExecutionException e) {
+	        	log.error("asynclog queue is full");
+	        }
+    	}
+    	
         try{
         	statsPool.execute( new Runnable() {
                 public void run() {
@@ -180,20 +190,23 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     }
     
     public void callDone(RpcClosure closure) {
-        try{
-            logPool.execute( new Runnable() {
-                public void run() {
-                    try {
-                    	doLog(false,closure);
-                    } catch(Exception e) {
-                        log.error("asynclog log exception",e);
-                    }
-                }
-            });
-        } catch(RejectedExecutionException e) {
-        	log.error("asynclog queue is full");
-        }    
-        
+    	
+    	if( accessLog ) {
+	        try{
+	            logPool.execute( new Runnable() {
+	                public void run() {
+	                    try {
+	                    	doLog(false,closure);
+	                    } catch(Exception e) {
+	                        log.error("asynclog log exception",e);
+	                    }
+	                }
+	            });
+	        } catch(RejectedExecutionException e) {
+	        	log.error("asynclog queue is full");
+	        }    
+    	}
+    	
         try{
         	statsPool.execute( new Runnable() {
                 public void run() {
@@ -428,9 +441,17 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 		}
     }
 
+    String typeToName(int logType) {
+    	switch(logType) {
+	    	case 1: return "serverstats";
+	    	case 2: return "clientstats";
+	    	case 3: return "webserverstats";
+    		default: return "unknownstats";
+    	}
+    }
     void doStats(WebClosure closure) {
     	RpcMeta meta = closure.getCtx().getMeta();
-    	String key = "webstats:"+meta.getServiceId()+":"+meta.getMsgId();
+    	String key = typeToName(3)+":"+meta.getServiceId()+":"+meta.getMsgId();
     	StatItem item = stats.get(key);
     	if( item == null ) {
     		item = new StatItem(meta.getServiceId(),meta.getMsgId(),3);
@@ -441,7 +462,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     
     void doStats(int logType, RpcClosure closure) {
     	RpcMeta meta = closure.getCtx().getMeta();
-    	String key = (logType == 1?"reqstats":"callstats")+":"+meta.getServiceId()+":"+meta.getMsgId();
+    	String key = typeToName(logType)+":"+meta.getServiceId()+":"+meta.getMsgId();
     	StatItem item = stats.get(key);
     	if( item == null ) {
     		item = new StatItem(meta.getServiceId(),meta.getMsgId(),logType);
@@ -479,7 +500,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	
     	b.append(timestamp);
     	b.append(sep);
-    	b.append( stat.getType() == 1 ? "reqstats" : stat.getType() == 2 ? "callstats" : "webstats" );
+    	b.append( typeToName(stat.getType()));
     	b.append(sep);
     	b.append(stat.getServiceId());
     	b.append(sep);
@@ -579,6 +600,14 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
 	public void setServerAddr(String serverAddr) {
 		this.serverAddr = serverAddr;
+	}
+
+	public boolean isAccessLog() {
+		return accessLog;
+	}
+
+	public void setAccessLog(boolean accessLog) {
+		this.accessLog = accessLog;
 	}
 
 

@@ -2,12 +2,15 @@ package krpc.rpc.bootstrap;
 
 public class MonitorConfig  {
 
+	boolean accessLog = true;
+	
     int logThreads = 1;
     int logQueueSize = 10000;
     String logFormatter = "simple";
 	String maskFields;
 	int maxRepeatedSizeToLog = 1;
 	boolean printDefault = false;
+
     String serverAddr;
     
 	public int getLogThreads() {
@@ -58,6 +61,13 @@ public class MonitorConfig  {
 	}
 	public MonitorConfig setMaxRepeatedSizeToLog(int maxRepeatedSizeToLog) {
 		this.maxRepeatedSizeToLog = maxRepeatedSizeToLog;
+		return this;
+	}
+	public boolean isAccessLog() {
+		return accessLog;
+	}
+	public MonitorConfig setAccessLog(boolean accessLog) {
+		this.accessLog = accessLog;
 		return this;
 	}
 

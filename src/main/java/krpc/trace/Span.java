@@ -2,7 +2,6 @@ package krpc.trace;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public interface Span {
 
@@ -16,8 +15,6 @@ public interface Span {
 	public void tag(String key,String value);
 	public void setRemoteAddr(String addr);
 
-	public AtomicInteger getCompleted();
-	
 	public String getRpcId();
 	public String getType();
 	public String getAction();
@@ -27,6 +24,6 @@ public interface Span {
 	public String getRemoteAddr();
 	public Map<String,String> getTags();
 	public List<Event> getEvents();
-	public List<Span> getChildren();
+	public List<Span> getChildren(); 
 	
 }

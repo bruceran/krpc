@@ -457,6 +457,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         } catch(Exception e) {  
         	sendErrorResponse(ctx,data.getBody(),RetCodes.BUSINESS_ERROR);
         	log.error("callService exception",e);
+        	Trace.logException(e);
         	return;
         }   
 	}

@@ -80,7 +80,7 @@ public class DefaultTraceContext implements TraceContext {
 			span.stop(result);
 			if( !spans.isEmpty() ) {
 				spans.clear();
-				Trace.getAdapter().send(this, span); // todo maybe exist pending spans
+				sendToTrace(span);
 			}
 		}
 	}
@@ -96,15 +96,29 @@ public class DefaultTraceContext implements TraceContext {
 		} else {
 			if( span == spans.peekFirst() ) {
 				spans.clear();
-				Trace.getAdapter().send(this, span); // todo maybe exist pending spans
+				sendToTrace(span);
 				return;
 			} else if( spans.isEmpty() ) {
-				Trace.getAdapter().send(this, span); // todo maybe exist pending spans
+				sendToTrace(span);
 				return;
 			}
 		}
 	}
 	
+	private void sendToTrace(Span span) {
+		stopAsync(span);
+		Trace.getAdapter().send(this, span);
+	}
+	
+	private void stopAsync(Span span) {
+		((DefaultSpan)span).stopAsyncIfNeeded();
+		if( span.getChildren() != null ) {
+			for(Span child:span.getChildren()) {
+				((DefaultSpan)child).stopAsyncIfNeeded(); 
+			}
+		}		
+	}
+
 	public String getRemoteAddr() {
 		if( isEmpty(peers) ) return "0.0.0.0:0";
 		int p = peers.lastIndexOf(",");

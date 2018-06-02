@@ -529,6 +529,7 @@
     
 ## monitor
  
+    accessLog 是否打印访问日志, 默认为true
     maskFields 日志里要屏蔽的字段，屏蔽后输出***代替原来的值
     maxRepeatedSizeToLog 对repeated参数, 输出前n项，否则日志会太大，默认为1
     logFormatter 日志格式，可选 simple, jackson， 默认为simple

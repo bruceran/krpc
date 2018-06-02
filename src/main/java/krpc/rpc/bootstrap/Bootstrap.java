@@ -201,6 +201,7 @@ public class Bootstrap {
 
 		m.setLogThreads(c.logThreads);
 		m.setLogQueueSize(c.logQueueSize);
+		m.setAccessLog(c.accessLog);
 
 		LogFormatter lf = getLogFormatterObj(monitorConfig.logFormatter);
 		String params = parseParams(monitorConfig.logFormatter);

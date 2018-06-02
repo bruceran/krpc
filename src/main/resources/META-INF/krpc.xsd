@@ -146,6 +146,7 @@
 
     <element name="monitor">
 	    <complexType>
+              <attribute name="accessLog" type="string" use="optional"/>
               <attribute name="logThreads" type="string" use="optional"/>
               <attribute name="logQueueSize" type="string" use="optional"/>
               <attribute name="logFormatter" type="string" use="optional"/>

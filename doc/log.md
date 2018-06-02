@@ -77,6 +77,8 @@
 
 # 日志输出控制
 
+	可通过monitor配置里的accessLog参数调整整体access日志开关
+
     可在logback.xml配置按服务级别来控制是输出该消息的日志到文件中
         <logger name="krpc.serverlog.xxx" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
         <logger name="krpc.webserverlog.xxx" level="warn" additivity="false"><appender-ref ref="REQLOG" /></logger>
