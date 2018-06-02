@@ -58,7 +58,12 @@
     dist/
     dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
     dist/gradle-3.3-all.zip gradle工具，方便下载
-    dist/tools protoc工具
+    dist/tools/ protoc工具
+                 changed_code.zip 修改后的源码文件以及diff文件, 原始文件位置：/src/google/protobuf/compiler/java
+                 test.proto 用来测试工具的proto文件
+    			 win/ windows版本下的工具
+    			 linux/ lilux版本下的工具
+    			 mac/ mac版本下的工具
 	
     将源码下载到本地后运行 gradle build 若无错误则表示编译成功
 
