@@ -17,9 +17,12 @@
 	
 		在命令行下运行java -version, 若配置正确会显示版本信息
 
-# 安装gradle 3.3
+# 安装gradle 3.3 以上
+
+  下载地址: https://gradle.org/releases/
 
 	框架本身的编译使用gradle 3.3或以上版本; 默认配置文件里会用到阿里云仓库 
+	如果要在spring boot 2.x下使用，需安装gradle 4.x版本，建议总是安装最新版本 的 gradle 
 
 	* 下载 
 
@@ -62,7 +65,6 @@
     		boot2/  使用spring boot 2.x的示例, 注意： 此工程要求gradle 4.x (spring boot 2.x的最低要求)才能编译运行
     dist/
     dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
-    dist/gradle-3.3-all.zip gradle工具，方便下载
     dist/tools/ protoc工具
                  changed_code.zip 修改后的源码文件以及diff文件, 原始文件位置：/src/google/protobuf/compiler/java
                  test.proto 用来测试工具的proto文件
