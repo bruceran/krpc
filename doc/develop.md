@@ -391,8 +391,25 @@
 
 # 和spring框架集成(spring boot方式)
   
-  暂不支持
-		
+  参考；doc/samples/boot1
+  
+    仅需要使用 配置文件 application.yaml 或等价的 application.properties 就可完成krpc的初始化, 无需写代码或xml文件。
+    
+    需要将 krpc.enabled 设置为 true 才会开启krpc的自动配置功能
+    
+    以krpc前缀的配置项的含义同 schema 方式的配置项, 对应关系如下：
+        krpc.application 对应 krpc:application
+    	krpc.monitor 对应 krpc:monitor
+    	krpc.registry 和 krpc.registries 对应 krpc:registry, 当只有一个registry项时可使用 registry, 多个时使用registries
+    	krpc.server 和 krpc.servers 对应 krpc:server, 当只有一个server项时可使用 server, 多个时使用servers
+    	krpc.webServer 和 krpc.webServers 对应 krpc:webServer, 当只有一个webServer项时可使用 webServer, 多个时使用webServers
+    	krpc.client 和 krpc.clients 对应 krpc:client, 当只有一个client项时使用 client, 多个时使用clients
+    	krpc.service 和 krpc.services 对应 krpc:service, 当只有一个service项时可使用 service, 多个时使用services
+    	krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个referer项时可使用 referer, 多个时使用referers
+    	
+	 spring boot 特有开关：
+	     krpc.autoStart 是否在初始化后自动调用start打开对外的服务接口, 默认为true; 应用程序可设置为false, 然后自行调用rpcApp.start()方法打开对外的端口
+	     	
 # 配置参数详解				  
 
 	可打开 src/main/resources/krpc.xsd 了解框架支持哪些配置参数, 每个参数的具体含义如下：
