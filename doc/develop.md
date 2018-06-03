@@ -382,7 +382,7 @@
     		
 # 和spring框架集成(schema方式)
 
-  服务端参考：src/test/java/krpc/test/rpc/schema
+  参考：src/test/java/krpc/test/rpc/schema
   
     spring-schema-server.xml
     spring-schema-client.xml
@@ -396,6 +396,7 @@
     需要将 krpc.enabled 设置为 true 才会开启krpc的自动配置功能
     
     以krpc前缀的配置项的含义同 schema 方式的配置项, 对应关系如下：
+    
 			krpc.application 对应 krpc:application
 			krpc.monitor 对应 krpc:monitor
 			krpc.registry 和 krpc.registries 对应 krpc:registry, 当只有一个registry项时可使用 registry, 多个时使用registries
@@ -406,6 +407,7 @@
 			krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个referer项时可使用 referer, 多个时使用referers
 
 	 spring boot 特有开关：
+	 
             krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 应用程序可设置为false, 然后自行调用rpcApp.start()方法打开对外的端口
 	     	
 # 配置参数详解				  
