@@ -9,10 +9,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnJava;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnJava.JavaVersion;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +28,6 @@ import krpc.rpc.bootstrap.spring.SpringBootstrap;
 
 @Configuration
 @EnableConfigurationProperties(BootProperties.class)
-@ConditionalOnJava(JavaVersion.EIGHT)
 @ConditionalOnClass(Bootstrap.class) 
 @ConditionalOnProperty  ( prefix = "krpc", value = "enabled", matchIfMissing = false )
 public class AutoConfiguration  {

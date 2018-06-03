@@ -389,7 +389,7 @@
 
 # 和spring框架集成(spring boot方式)
   
-  参考：doc/samples/boot1
+  参考：doc/samples/boot1 (spring boot 1.x下)  和  doc/samples/bootx (spring boot x.x下)
   
     仅需要使用 配置文件 application.yaml 或等价的 application.properties 就可完成krpc的初始化, 无需写代码或xml文件。
     
