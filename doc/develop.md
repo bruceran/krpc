@@ -406,7 +406,7 @@
 			krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个referer项时可使用 referer, 多个时使用referers
 
 	 spring boot 特有开关：
-            krpc.autoStart 是否在初始化后自动调用start打开对外的服务接口, 默认为true; 应用程序可设置为false, 然后自行调用rpcApp.start()方法打开对外的端口
+            krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 应用程序可设置为false, 然后自行调用rpcApp.start()方法打开对外的端口
 	     	
 # 配置参数详解				  
 
@@ -429,8 +429,8 @@
     enableRegist 是否进行注册，默认 true
     enableDiscover 是否进行发现，默认 true
     params 注册与发现服务附加参数，格式为 k=v;k=v;..., 目前支持的key如下：
-	    ttlSeconds 多长时间超时，默认 90秒, 适用于 consul, etcd 
-    	pingSeconds 多长时间和注册与发现服务做心跳，默认15秒, 适用于 consul, etcd
+        ttlSeconds 多长时间超时，默认 90秒, 适用于 consul, etcd 
+        pingSeconds 多长时间和注册与发现服务做心跳，默认15秒, 适用于 consul, etcd
 
 ## client
  
