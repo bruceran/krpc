@@ -16,6 +16,18 @@ public class SpringBootstrap {
 	Bootstrap bootstrap = new Bootstrap(); // todo can be customized
 	RpcApp rpcApp = null;
 	
+	public Bootstrap getBootstrap() {
+		return bootstrap;
+	}
+
+	public RpcApp getRpcApp() {
+		return rpcApp;
+	}
+	
+	public void setRpcApp(RpcApp rpcApp) {
+		this.rpcApp = rpcApp;
+	}
+	
     public void build() {
     	if( !inited ) {
         	rpcApp = bootstrap.build();
@@ -39,6 +51,6 @@ public class SpringBootstrap {
 			bootstrap = new Bootstrap();
 		}
 	}
-    
+
 }
 

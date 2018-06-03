@@ -224,7 +224,7 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 	    		localData.put(entry.getKey(),entry.getValue().toString());
 	    	}
     	} catch(Exception e) {
-    		log.error("cannot load from file, path="+path);
+    		// log.info("cannot load from file, path="+path);
     	}    	
 		
     	for(DiscoverItem item:discoverItems) {

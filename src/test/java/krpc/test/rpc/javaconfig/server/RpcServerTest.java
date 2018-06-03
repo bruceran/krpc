@@ -12,7 +12,7 @@ public class RpcServerTest {
 		
 	    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyServerJavaConfig.class);
 
-		Thread.sleep(15000);
+		Thread.sleep(150000);
 
 		context.close();
         ((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();		

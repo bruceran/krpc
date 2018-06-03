@@ -1,12 +1,18 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'krpc'
 version = '0.1.0'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+jar.baseName = 'krpctest'
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
 dependencies {
+
 		compile 'org.slf4j:slf4j-api:1.7.22'
 		compile 'ch.qos.logback:logback-core:1.2.1'
 		compile 'ch.qos.logback:logback-classic:1.2.1'
@@ -15,20 +21,12 @@ dependencies {
 		compile 'javassist:javassist:3.12.1.GA'
 		compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'		
-		
-		compile 'org.springframework:spring-core:4.3.17.RELEASE'
-		compile 'org.springframework:spring-beans:4.3.17.RELEASE'
-		compile 'org.springframework:spring-context:4.3.17.RELEASE'
-		
-		compile 'org.springframework.boot:spring-boot-autoconfigure:1.5.13.RELEASE'
-		
-		compile 'org.xerial.snappy:snappy-java:1.1.2.3'
-		compile 'redis.clients:jedis:2.9.0'
-		
-		testCompile 'junit:junit:4.12'
+        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'				
+
+		 compile files('../../../dist/krpc-0.1.0.jar')  // to krpc root dir
 }
 
 repositories {
      maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 }
+

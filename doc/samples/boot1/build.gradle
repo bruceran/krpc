@@ -1,0 +1,37 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.13.RELEASE'
+	}
+	repositories {
+    	maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+group = 'com.krpc'
+version = '0.0.1'
+sourceCompatibility = 1.8
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter')
+	
+	compile 'com.google.protobuf:protobuf-java:3.5.1'
+	compile 'io.netty:netty-all:4.1.16.Final'
+	compile 'javassist:javassist:3.12.1.GA'
+	
+	compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
+    		
+	compile files('../../../dist/krpc-0.1.0.jar')  // a local dir
+}
+
+repositories {
+     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+}

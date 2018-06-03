@@ -434,7 +434,7 @@ public class Bootstrap {
 				if (ReflectionUtils.getClass(c.interfaceName) == null)
 					throw new RuntimeException(String.format("referer interface %s must be specified", c.interfaceName));
 				if (isEmpty(c.id))
-					c.id = c.interfaceName;
+					c.id = generateBeanName(c.interfaceName);
 			} else { // dynamic message
 				if (isEmpty(c.id))
 					c.id = "referer"+c.serviceId;
@@ -516,7 +516,7 @@ public class Bootstrap {
 		}
 
 	}
-	
+
 	private RpcApp doBuild() {
 
 		RpcApp app = newRpcApp();
@@ -1445,7 +1445,14 @@ public class Bootstrap {
 	boolean checkExist(String dir) {
 		return Files.exists(Paths.get(dir));
 	}
-
+	
+	String generateBeanName(String interfaceName) {
+		int p = interfaceName.lastIndexOf(".");
+		String name = interfaceName.substring(p+1);
+		name = name.substring(0,1).toLowerCase()+name.substring(1);
+		return name;
+	}
+	
 	String sanitizePath(String path) {
 		if (!path.startsWith("/"))
 			path = "/" + path;
@@ -1600,6 +1607,14 @@ public class Bootstrap {
 		return this;
 	}
 
+	public Bootstrap addReferer(String interfaceName, String direct) {
+		RefererConfig c = new RefererConfig();
+		c.interfaceName = interfaceName;
+		c.direct = direct;
+		refererList.add(c);
+		return this;
+	}
+	
 	public Bootstrap addReferer(String name, String interfaceName, String direct) {
 		RefererConfig c = new RefererConfig();
 		c.id = name;
@@ -1613,6 +1628,14 @@ public class Bootstrap {
 		RefererConfig c = new RefererConfig();
 		c.id = name;
 		c.serviceId = serviceId;
+		c.direct = direct;
+		refererList.add(c);
+		return this;
+	}
+	
+	public Bootstrap addReferer(Class<?> intf, String direct) {
+		RefererConfig c = new RefererConfig();
+		c.interfaceName = intf.getName();
 		c.direct = direct;
 		refererList.add(c);
 		return this;
@@ -1674,5 +1697,61 @@ public class Bootstrap {
 	public Bootstrap setMonitorConfig(MonitorConfig monitorConfig) {
 		this.monitorConfig = monitorConfig;
 		return this;
+	}
+
+	public List<RegistryConfig> getRegistryList() {
+		return registryList;
+	}
+
+	public void setRegistryList(List<RegistryConfig> registryList) {
+		this.registryList = registryList;
+	}
+
+	public List<ServerConfig> getServerList() {
+		return serverList;
+	}
+
+	public void setServerList(List<ServerConfig> serverList) {
+		this.serverList = serverList;
+	}
+
+	public List<ClientConfig> getClientList() {
+		return clientList;
+	}
+
+	public void setClientList(List<ClientConfig> clientList) {
+		this.clientList = clientList;
+	}
+
+	public List<ServiceConfig> getServiceList() {
+		return serviceList;
+	}
+
+	public void setServiceList(List<ServiceConfig> serviceList) {
+		this.serviceList = serviceList;
+	}
+
+	public List<RefererConfig> getRefererList() {
+		return refererList;
+	}
+
+	public void setRefererList(List<RefererConfig> refererList) {
+		this.refererList = refererList;
+	}
+
+	public List<WebServerConfig> getWebServerList() {
+		return webServerList;
+	}
+
+	public void setWebServerList(List<WebServerConfig> webServerList) {
+		this.webServerList = webServerList;
+	}
+
+	public ApplicationConfig getAppConfig() {
+		return appConfig;
+	}
+
+	public MonitorConfig getMonitorConfig() {
+		return monitorConfig;
 	}
 }
