@@ -54,7 +54,11 @@
             spring.schemas  spring.handlers  krpc.xsd   spring自定义schema所需文件
       test/
     doc/ 文档目录
-    doc/proto/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件    
+    doc/
+    	proto/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件  
+    	samples/  示例代码目录
+    		sample1/ 不使用spring的示例
+    		boot1/  使用spring boot的示例  
     dist/
     dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
     dist/gradle-3.3-all.zip gradle工具，方便下载

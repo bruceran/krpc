@@ -8,7 +8,6 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnJava;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,7 +16,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnJava.JavaVe
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 
 import krpc.rpc.bootstrap.Bootstrap;
@@ -35,7 +33,6 @@ import krpc.rpc.bootstrap.spring.SpringBootstrap;
 @ConditionalOnJava(JavaVersion.EIGHT)
 @ConditionalOnClass(Bootstrap.class) 
 @ConditionalOnProperty  ( prefix = "krpc", value = "enabled", matchIfMissing = false )
-@AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
 public class AutoConfiguration  {
 
 	static Logger log = LoggerFactory.getLogger(AutoConfiguration.class);
