@@ -82,32 +82,57 @@ public class AutoConfiguration  {
     			bootstrap.addClient(c);
     	}
 
+    	String profile = environment.getProperty("spring.profiles.active");
+    	
     	if( bootProperties.service != null ) {
     		ServiceConfig c = bootProperties.service;
-			if( c.getImpl() == null || isEmpty(c.getImpl().toString()) ) throw new RuntimeException("impl not defined for service "+c.getInterfaceName());
-			String beanName = c.getImpl().toString();
-			Object bean = beanFactory.getBean(beanName);
-			if( bean == null ) throw new RuntimeException("beanName not found: "+beanName);
+
+			String impl = c.getImpl() == null ? null : c.getImpl().toString()  ;
+			Object bean = loadBean(impl,c.getInterfaceName(),beanFactory);
+			if( bean == null ) throw new RuntimeException("bean not found for service "+ c.getInterfaceName() );
 			c.setImpl(bean);
+			
+			String group = c.getGroup();
+	    	if( group == null || group.isEmpty()) {
+	    		c.setGroup(profile);
+	    	}
+	    	
     		bootstrap.addService(c);
     	}    	
     	if( bootProperties.services != null ) {
     		for(ServiceConfig c: bootProperties.services) {
-    			if( c.getImpl() == null || isEmpty(c.getImpl().toString()) ) throw new RuntimeException("impl not defined for service "+c.getInterfaceName());
-    			String beanName = c.getImpl().toString();
-    			Object bean = beanFactory.getBean(beanName);
-    			if( bean == null ) throw new RuntimeException("beanName not found: "+beanName);
+    			String impl = c.getImpl() == null ? null : c.getImpl().toString()  ;
+    			Object bean = loadBean(impl,c.getInterfaceName(),beanFactory);
+    			if( bean == null ) throw new RuntimeException("bean not found for service "+ c.getInterfaceName() );
     			c.setImpl(bean);
+    			
+    			String group = c.getGroup();
+    	    	if( group == null || group.isEmpty()) {
+    	    		c.setGroup(profile);
+    	    	}
+    	    	
     			bootstrap.addService(c);
     		}
     	}
     	
     	if( bootProperties.referer != null ) {
     		RefererConfig c = bootProperties.referer;
+    		
+			String group = c.getGroup();
+	    	if( group == null || group.isEmpty()) {
+	    		c.setGroup(profile);
+	    	}
+	    	
     		bootstrap.addReferer(c);
     	}    	
     	if( bootProperties.referers != null ) {
     		for(RefererConfig c: bootProperties.referers) {
+    			
+    			String group = c.getGroup();
+    	    	if( group == null || group.isEmpty()) {
+    	    		c.setGroup(profile);
+    	    	}
+    	    	
     			bootstrap.addReferer(c);
     		}
     	}
@@ -132,6 +157,31 @@ public class AutoConfiguration  {
 		return app;
     }
 
+    Object loadBean(String impl, String interfaceName,BeanFactory beanFactory) {
+    	if( interfaceName == null ) return null;
+    	
+    	String beanName;
+		if( impl != null && !impl.isEmpty()) {
+			beanName = impl;
+		} else {
+			int p = interfaceName.lastIndexOf(".");
+			if( p < 0 ) return null;
+			String name = interfaceName.substring(p+1);
+			beanName = name.substring(0,1).toLowerCase()+name.substring(1);
+		}
+		try {
+			Object o = beanFactory.getBean(beanName);
+			return o; 
+		} catch(Exception e1) {
+			try {
+				Object o = beanFactory.getBean(Class.forName(interfaceName));
+				return o;
+			} catch(Exception e2) {
+				return null;
+			}
+		}
+	}
+    
     boolean isEmpty(String s) {
     	return s == null || s.isEmpty();
     }

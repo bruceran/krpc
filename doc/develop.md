@@ -495,8 +495,8 @@
 ## service
 
     id 名称 不填则会自动生成
-    interfaceName 接口名
-    impl 实现类的bean name ref
+    interfaceName 接口名, 必填
+    impl 实现类的bean name, 如果在spring容器中，则可为空，自动根据interfaceName查找对应的bean
     transport 引用的server或webserver或client的id, 如果reverse=false, 则对应server或webserver的id; 如果reverse=true, 则对应client的id;
     reverse 正向调用还是逆向调用, 值为 true 或 false, 默认为 false
     registryNames 注册与发现服务名, 可填多个，用逗号隔开, 引用的是 registry的id
@@ -511,7 +511,7 @@
 ## referer
 
     id 名称 不填则会自动生成
-    interfaceName 接口名
+    interfaceName 接口名, ，不可和serviceId同时使用
     serviceId 服务号 (http动态网关无接口类，根据服务号来配置)，不可和interfaceName同时使用
     transport  引用的client或server的id, 如果reverse=false, 则对应client的id; 如果reverse=true, 则对应server的id;
     reverse 正向调用还是逆向调用, 值为 true 或 false, 默认为 false

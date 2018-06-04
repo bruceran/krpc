@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
+import org.springframework.core.env.Environment;
 
 import krpc.rpc.bootstrap.ServiceConfig;
 
@@ -23,9 +24,47 @@ public class ServiceConfigBean extends ServiceConfig implements InitializingBean
     }
     
     public void afterPropertiesSet() throws Exception {
+    	
+    	String group = getGroup();
+    	if( group == null || group.isEmpty()) {
+    		Environment environment = (Environment)SpringBootstrap.instance.spring.getBean("environment");
+    		group = environment.getProperty("spring.profiles.active");
+    		setGroup(group);
+    	}
+    	
+    	String impl = this.getImpl() == null ? null : this.getImpl().toString()  ;
+		Object bean = loadBean(impl,this.getInterfaceName(),SpringBootstrap.instance.spring);
+		if( bean == null ) throw new RuntimeException("bean not found for service "+ this.getInterfaceName() );
+		this.setImpl(bean);
+		
         SpringBootstrap.instance.bootstrap.addService(this);
     }
 	
+    Object loadBean(String impl, String interfaceName,BeanFactory beanFactory) {
+    	if( interfaceName == null ) return null;
+    	
+    	String beanName;
+		if( impl != null && !impl.isEmpty()) {
+			beanName = impl;
+		} else {
+			int p = interfaceName.lastIndexOf(".");
+			if( p < 0 ) return null;
+			String name = interfaceName.substring(p+1);
+			beanName = name.substring(0,1).toLowerCase()+name.substring(1);
+		}
+		try {
+			Object o = beanFactory.getBean(beanName);
+			return o; 
+		} catch(Exception e1) {
+			try {
+				Object o = beanFactory.getBean(Class.forName(interfaceName));
+				return o;
+			} catch(Exception e2) {
+				return null;
+			}
+		}
+	}
+    
     public void onApplicationEvent(ApplicationEvent event) {
     	if( event instanceof ContextRefreshedEvent ) {
         	SpringBootstrap.instance.build();

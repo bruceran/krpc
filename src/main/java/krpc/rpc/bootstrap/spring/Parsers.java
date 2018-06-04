@@ -34,7 +34,6 @@ class BaseParser<T> implements BeanDefinitionParser {
     Class<T> beanClass;
     
     String[] attributes;
-    String[] refs;    
     boolean hasMethods = false;
     boolean hasId = true;
     
@@ -57,12 +56,13 @@ class BaseParser<T> implements BeanDefinitionParser {
                 	bd.getPropertyValues().addPropertyValue(name, value);
             }        	
         }
-        
+        /*
         if( refs != null ) {
             for(String name:refs) {
             	parseReference(name,root,parserContext,bd);
             }        	
         }
+        */
 
         if( hasMethods ) 
         	parseMethod(root,parserContext,bd);
@@ -126,6 +126,7 @@ class BaseParser<T> implements BeanDefinitionParser {
 		 }	
     }
     
+    /*
     void parseReference(String key, Element element, ParserContext parserContext, RootBeanDefinition bd) {
     	try {
 	    	String refName = element.getAttribute(key);
@@ -143,6 +144,7 @@ class BaseParser<T> implements BeanDefinitionParser {
     		throw new RuntimeException(e);
     	}
     }
+    */
     
 	String parseId(Element element, ParserContext parserContext, RootBeanDefinition bd) {
 		String id = element.getAttribute("id");
@@ -208,9 +210,9 @@ class RegistryConfigBeanParser extends BaseParser<RegistryConfigBean> {
 class ServiceConfigBeanParser extends BaseParser<ServiceConfigBean> {
 	ServiceConfigBeanParser() {
 		beanClass = ServiceConfigBean.class;
-		attributes = new String[] { "interfaceName","transport","reverse",
+		attributes = new String[] { "interfaceName","impl","transport","reverse",
 				"registryNames","group","threads","maxThreads","queueSize","flowControl"};
-		refs = new String[] { "impl" };
+		// refs = new String[] { "impl" };
 		hasMethods = true;
 	}
 	

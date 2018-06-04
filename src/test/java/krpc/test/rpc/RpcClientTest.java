@@ -116,9 +116,11 @@ public class RpcClientTest {
 
 		// user code end
 */		
-		Thread.sleep(120000);
+		Thread.sleep(3000);
 		
 		app.stopAndClose();
+		
+		((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();	
 	}	
 	
 		

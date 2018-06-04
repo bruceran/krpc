@@ -13,6 +13,7 @@ public class HttpClientReq {
 	private String contentType = "application/json";
 	private String content;
 	private Map<String,String> headers;
+	private boolean gzip;
 	
 	private URL urlObj = null;
 	
@@ -89,6 +90,15 @@ public class HttpClientReq {
 
 	public HttpClientReq setContentType(String contentType) {
 		this.contentType = contentType;
+		return this;
+	}
+
+	public boolean isGzip() {
+		return gzip;
+	}
+
+	public HttpClientReq setGzip(boolean gzip) {
+		this.gzip = gzip;
 		return this;
 	}
 	

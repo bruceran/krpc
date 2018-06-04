@@ -28,9 +28,10 @@ public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugi
 
 	static Logger log = LoggerFactory.getLogger(LogOnlyWebPlugin.class);
 
-	Timer t = new Timer();
+	Timer t;
 	
 	public void init() {
+		 t = new Timer();
 		log.info("init called");
 	}
 	public void close() {

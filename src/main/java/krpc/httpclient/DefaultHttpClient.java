@@ -48,7 +48,8 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	
 	int maxContentLength = 1000000;
 	int workerThreads = 1;
-	// todo keepalive, connection pool, ssl
+	
+	// todo keepalive, connection pool, https,  gzip
 
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("httpclient");
 	EventLoopGroup workerGroup;

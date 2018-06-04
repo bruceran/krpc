@@ -4,8 +4,7 @@ spring:
 krpc:
     enabled: true
 #    service:
-#          interfaceName: com.xxx.userservice.proto.UserService
-#          impl: userService
+#        interfaceName: com.xxx.userservice.proto.UserService
 #    referer:
 #        interfaceName: com.xxx.pushservice.proto.PushService
 #        direct: 127.0.0.1:5600

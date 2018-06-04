@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
+import org.springframework.core.env.Environment;
 
 import krpc.rpc.bootstrap.RefererConfig;
 
@@ -23,6 +24,12 @@ public class RefererConfigBean<T> extends RefererConfig  implements FactoryBean<
     }
     
     public void afterPropertiesSet() throws Exception {
+    	String group = getGroup();
+    	if( group == null || group.isEmpty()) {
+    		Environment environment = (Environment)SpringBootstrap.instance.spring.getBean("environment");
+    		group = environment.getProperty("spring.profiles.active");
+    		setGroup(group);
+    	}    	
         SpringBootstrap.instance.bootstrap.addReferer(this);
     }
 

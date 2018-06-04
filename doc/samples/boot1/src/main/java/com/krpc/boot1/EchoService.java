@@ -1,8 +1,8 @@
 package com.krpc.boot1;
  
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.xxx.pushservice.proto.PushService;
@@ -11,10 +11,10 @@ import com.xxx.userservice.proto.UserService;
 @Component
 public class EchoService  {
 
-	@Resource(name="userService")
+	@Autowired
 	UserService userService;
 	
-	@Resource(name="pushService")
+	@Autowired
 	PushService pushService;
 	
 	@PostConstruct

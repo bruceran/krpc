@@ -11,10 +11,10 @@
        http://krpc.org/schema/krpc.xsd ">
 
 	<krpc:application id="app" name="app" />
-
+<!--  
 	<krpc:registry type="etcd" addrs="1.1.1.1:1111" />
- 
-	<krpc:client/>
+  -->
+  
 	
 	<krpc:referer id="userService" interfaceName="com.xxx.userservice.proto.UserService"/>
  

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +53,7 @@ public class ConsulRegistry extends AbstractHttpRegistry {
     
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
+		if( hc == null ) return;
 	
 		if( registeredServiceNames.contains(serviceName) ) {
 			String url = String.format(keepAliveUrlTemplate, addr(), serviceName);
@@ -102,6 +103,7 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 	
 	public void deregister(int serviceId,String serviceName,String group) {
 		if( !enableRegist ) return;
+		if( hc == null ) return;
 		
 		String url = String.format(degisterUrlTemplate, addr()) + "/" + serviceName;
 		HttpClientReq req = new HttpClientReq("PUT",url);
@@ -118,6 +120,7 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 	@SuppressWarnings("unchecked")
 	public String discover(int serviceId,String serviceName,String group) {	
 		if( !enableDiscover ) return null;
+		if( hc == null ) return null;
 		
 		String url = String.format(discoverUrlTemplate, addr(), serviceName);
 		HttpClientReq req = new HttpClientReq("GET",url);
@@ -135,7 +138,7 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 			return null;
 		}
 		
-		TreeMap<String,String> set = new TreeMap<>();
+		TreeSet<String> set = new TreeSet<>();
 		for(Object o:list) {
 			Map<String,Object> m = (Map<String,Object>)o;
 			Map<String,Object> service = (Map<String,Object>)m.get("Service");
@@ -143,13 +146,13 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 			if( !tags.contains(group) ) continue;
 			String address = (String)service.get("Address");
 			int port = (Integer)service.get("Port");
-			set.put(address+":"+port,"1");
+			set.add(address+":"+port);
 		}
 		
 		StringBuilder b = new StringBuilder();
-		for(Map.Entry<String, String> entry: set.entrySet()) {
+		for(String key: set) {
 			if( b.length() > 0 ) b.append(",");
-			b.append(entry.getKey());
+			b.append(key);
 		}
 		String s = b.toString();
 		return s;

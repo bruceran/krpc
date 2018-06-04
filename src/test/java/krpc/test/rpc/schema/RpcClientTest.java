@@ -29,7 +29,7 @@ public class RpcClientTest {
 
 		// user code end
 		
-		Thread.sleep(15000);
+		Thread.sleep(3000);
  
 		context.close();
         ((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();		

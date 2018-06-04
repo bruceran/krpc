@@ -88,7 +88,7 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 		
 		loadFromLocal();
     	
-		timer = new Timer();
+
     }
     
     public void start() {
@@ -104,16 +104,23 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
     		saveToLocal();
     	}		
 		
-    	timer.schedule( new TimerTask() {
-            public void run() {
-            	heartBeat();
-            }
-        },  startInterval, checkInterval );				
+    	if( registries.size() > 0 ) {
+    		timer = new Timer();
+        	timer.schedule( new TimerTask() {
+                public void run() {
+                	heartBeat();
+                }
+            },  startInterval, checkInterval );	    		
+    	}    	
+			
     }
     
     public void stop() {
     	
-    	timer.cancel();
+    	if( timer != null ) {
+        	timer.cancel();
+        	timer = null;
+    	}
     	
 		unregister();
 
@@ -124,6 +131,10 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
     
     public void close() {
 
+    	if( timer != null ) {
+    		stop();
+    	}
+    	
 		for(Registry r:registries.values()) {
 			InitCloseUtils.close(r);
 		}		    	

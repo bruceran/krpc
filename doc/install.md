@@ -54,7 +54,8 @@
         resources/
           META-INF/
             services/ 框架支持的SPI接口
-            spring.schemas  spring.handlers  krpc.xsd   spring自定义schema所需文件
+            spring.schemas  spring.handlers  krpc.xsd      spring自定义schema所需文件
+            spring.factories             spring boot 所需文件
       test/
     doc/ 文档目录
     doc/

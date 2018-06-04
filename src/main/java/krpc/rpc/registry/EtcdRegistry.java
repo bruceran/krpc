@@ -2,7 +2,7 @@ package krpc.rpc.registry;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +41,7 @@ public class EtcdRegistry extends AbstractHttpRegistry {
     
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
+		if( hc == null ) return;
 
 		String basePath = String.format(basePathTemplate, addr());
 		String url = basePath +"/"+group+"/"+serviceName+"/"+instanceId +"?ttl="+ttl;		
@@ -67,6 +68,9 @@ public class EtcdRegistry extends AbstractHttpRegistry {
 	}
 	
 	public void deregister(int serviceId,String serviceName,String group) {
+		if( !enableRegist ) return;
+		if( hc == null ) return;
+		
 		String basePath = String.format(basePathTemplate, addr());
 		String url = basePath +"/"+group+"/"+serviceName+"/"+instanceId;		
 		HttpClientReq req = new HttpClientReq("DELETE",url);
@@ -93,6 +97,7 @@ public class EtcdRegistry extends AbstractHttpRegistry {
 	@SuppressWarnings("rawtypes")
 	public String discover(int serviceId,String serviceName,String group) {	
 		if( !enableDiscover ) return null;
+		if( hc == null ) return null;
 
 		String basePath = String.format(basePathTemplate, addr());
 		String url = basePath +"/"+group+"/"+serviceName;		
@@ -117,7 +122,7 @@ public class EtcdRegistry extends AbstractHttpRegistry {
         	return null;
         }
         
-        TreeMap<String,String> set = new TreeMap<>();
+        TreeSet<String> set = new TreeSet<>();
         
         Map node = (Map)m.get("node");
         if( node == null || node.size() == 0 ) return "";
@@ -128,15 +133,15 @@ public class EtcdRegistry extends AbstractHttpRegistry {
         	if( o instanceof Map ) {
         		Map mm = (Map)o;
             	if(mm != null) {
-            		set.put((String)mm.get("value"),"1");
+            		set.add((String)mm.get("value"));
             	}
         	}
         }
         
 		StringBuilder b = new StringBuilder();
-		for(Map.Entry<String, String> entry: set.entrySet()) {
+		for(String key: set ) {
 			if( b.length() > 0 ) b.append(",");
-			b.append(entry.getKey());
+			b.append(key);
 		}
 		String s = b.toString();
 		return s;        

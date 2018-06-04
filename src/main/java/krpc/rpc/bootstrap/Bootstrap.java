@@ -302,6 +302,8 @@ public class Bootstrap {
 		// WebServerConfig lastWebServer = null;
 		ClientConfig lastClient = null;
 
+		String defaultRegistry  = null;
+		
 		for (RegistryConfig c : registryList) {
 			if (getRegistryObj(c.type) == null)
 				throw new RuntimeException(String.format("unknown registry type %s", c.type));
@@ -315,6 +317,7 @@ public class Bootstrap {
 				throw new RuntimeException(String.format("registry id %s duplicated", c.id));
 			registries.put(c.id, c);
 		}
+		if( defaultRegistry == null && registryList.size() == 1 ) defaultRegistry = registryList.get(0).type;
 
 		for (ServerConfig c : serverList) {
 			if (isEmpty(c.id))
@@ -383,9 +386,7 @@ public class Bootstrap {
 
 				if (!servers.containsKey(c.transport)) {
 
-					if (!webServers.containsKey(c.transport)) { // don't create
-																// tcp server if
-																// binds to http
+					if (!webServers.containsKey(c.transport)) { // don't create  tcp server if  binds to http
 						if (c.transport.equals("default") && servers.size() == 1) {
 							c.transport = lastServer.id;
 						} else if (c.transport.equals("default") && servers.size() == 0) {
@@ -404,6 +405,10 @@ public class Bootstrap {
 					if (!registries.containsKey(s)) {
 						throw new RuntimeException(String.format("service registry %s not found", s));
 					}
+				}
+			} else {
+				if( defaultRegistry != null ) {
+					c.registryNames = defaultRegistry;
 				}
 			}
 			if (isEmpty(c.group)) {
@@ -495,6 +500,10 @@ public class Bootstrap {
 				if (!isEmpty(c.registryName)) {
 					if (!registries.containsKey(c.registryName))
 						throw new RuntimeException(String.format("service registry %s not found", c.registryName));
+				} else {
+					if( defaultRegistry != null ) {
+						c.registryName = defaultRegistry;
+					}
 				}
 
 				if (isEmpty(c.group)) {
