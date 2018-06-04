@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'application'
 
 version = '0.1.0'
@@ -8,7 +9,9 @@ targetCompatibility = 1.8
 mainClassName = 'krpctest.main.RpcServerTest'
 
 dependencies {
+		compile 'krpc:krpc:0.1.0'		// must run "gradle install" or "gradle upload" first in krpc main project
 
+		/*	otherwise
 		compile 'org.slf4j:slf4j-api:1.7.22'
 		compile 'ch.qos.logback:logback-core:1.2.1'
 		compile 'ch.qos.logback:logback-classic:1.2.1'
@@ -17,12 +20,14 @@ dependencies {
 		compile 'javassist:javassist:3.12.1.GA'
 		compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'				
-
-		 compile files('../../../dist/krpc-0.1.0.jar')  // to krpc root dir
+        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'		
+				
+		compile files('../../../dist/krpc-0.1.0.jar')  // a local dir
+		*/
 }
 
 repositories {
+     mavenLocal()  
      maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 }
 

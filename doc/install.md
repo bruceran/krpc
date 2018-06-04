@@ -73,7 +73,11 @@
     			 linux/ lilux版本下的工具
     			 mac/ mac版本下的工具
 	
-    将源码下载到本地后运行 gradle build 若无错误则表示编译成功
+    将源码下载到本地后运行:
+    
+    > gradle build 若无错误则表示编译成功
+    > gradle install 将编译好后的jar包安装到本机的maven仓库
+    > gradle upload 将编译好后的jar包上传到自己搭建的maven仓库，需先设置好build.gradle文件里的用户名和密码才能上传成功
 
 # 框架外部依赖说明
 

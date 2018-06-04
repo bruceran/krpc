@@ -32,3 +32,17 @@ dependencies {
 repositories {
      maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 }
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "http://host:port/nexus/content/repositories/releases/") {
+                authentication(userName: "xxx", password: "xxx")
+            }
+            pom.version = "$version"
+            pom.artifactId = "krpc"
+            pom.groupId = "krpc"
+        }
+    }
+}
+
