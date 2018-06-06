@@ -30,7 +30,7 @@
 
 | feature | krpc | dubbo  |  spring cloud | motan | grpc | tars  | 
 | ------- | ---- | ------------ |  ------------ | ----- |  ---- | ---------- | 
-| 服务契约 | proto文件 | java接口, 可不用注解 | 无 | java接口 | proto文件 | idl文件 | 
+| 服务契约 | proto文件 | java接口, 可不用注解 | 外部swagger | java接口 | proto文件 | idl文件 | 
 | 是否要预生成代码  | 需要, 生成的接口和普通接口一样 |  不需要 | 不需要 | 不需要 | 需要 生成的java接口不够简洁 简单的同步功能也需要一个异步形式的复杂接口 | 需要, 生成的java接口客户端和服务端不一致, idl编译插件必须用maven插件，使用不方便 |     
 | 入参可否多个 | 单一,proto风格 | 可多个 | 可多个 | 可多个 | 单一,proto风格 |  可多个 | 
 | 序列化  | pb3  |   hessian2 (json,kryo,java,pb等) | json | hession2,pb等 | pb3 | ? |
