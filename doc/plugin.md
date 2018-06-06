@@ -31,15 +31,15 @@
 	   注册与发现插件  krpc.rpc.core.Registry接口
 		       用来自定义注册与发现机制
 		       框架自带了 consul, etcd, zookeeper, eureka 插件
+
+	   流量控制插件 krpc.rpc.core.FlowControl 接口
+		        用来自定义流控策略
+		        框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
 		       
 	   错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口
 		        用来自定义错误码错误消息转换方式
 		        框架自带了 file (基于文件error.properties) 插件
-		        
-	   流量控制插件 krpc.rpc.core.FlowControl接口
-		        用来自定义流控策略
-		        框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
-		        
+		        		        
 	   日志序列化插件  krpc.rpc.monitor.LogFormatter 接口
 		       可对 access log 里的请求和响应实现自己的序列化格式
 		       框架自带了 simple 和  jackson 插件
@@ -66,24 +66,24 @@
 
 	  一个普通的无会话无插件的请求处理流程会经过这样几个阶段：路由查找 -> 参数解析 ->  后台服务调用 ->  渲染   
 	
-	  每个HTTP网关插件就是一个接口，每个接口只有一个方法，可以在一个类中同时实现多个接口：
-	
-		  krpc.rpc.web.WebPlugin  SPI标记接口，所有HTTP网关插件需实现此标记接口才会被加载
-		
-		  krpc.rpc.web.PreParseWebPlugin  适用于参数解析前做签名校验，加解密等工作
-		  krpc.rpc.web.ParseWebPlugin 可自定义参数解析方式
-		  krpc.rpc.web.PostParseWebPlugin  适用于在对参数解析完毕后进一步处理，此接口为同步形式
-		  krpc.rpc.web.AsyncPostParseWebPlugin  适用于在对参数解析完毕后进一步处理，此接口为异步形式
-		  krpc.rpc.web.SessionService 会话信息的存储更新读取， 可同步或异步， 
-		                              框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
-		  krpc.rpc.web.PostSessionWebPlugin  适用于在获取到会话信息后做进一步处理，此接口为同步形式
-		  krpc.rpc.web.AsyncPostSessionWebPlugin  适用于在获取到会话信息后做进一步处理，此接口为异步形式
-		  krpc.rpc.web.PreRenderWebPlugin  适用于在渲染前调整map对象为符合要求的渲染数据格式
-		  krpc.rpc.web.RenderWebPlugin 可自定义渲染插件，框架默认只会渲染为json格式
-		  krpc.rpc.web.PostRenderWebPlugin  适用于在对参数解析完毕后进一步处理，如签名校验，加解密，此接口为同步形式
-		    
-
-
-
+	  HTTP网关插件共提供2个SPI扩展接口:
+	  
+	    1) krpc.rpc.web.SessionService 会话服务扩展接口, 用于会话信息的存储更新读取 
+		     框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件, 此插件的配置直接在WebServer的配置里进行配置
+	  
+	    2) krpc.rpc.web.WebPlugin  标记接口，所有HTTP网关插件必须实现此标记接口才会被加载
+	    
+    	      WebPlugin的实现类可以实现以下的扩展接口对请求处理流程进行扩展，可以在一个类中同时实现多个接口：
+    
+      		  krpc.rpc.web.PreParseWebPlugin  适用于参数解析前做签名校验，加解密等工作
+      		  krpc.rpc.web.ParseWebPlugin 可自定义非标准入参的参数解析方式
+      		  krpc.rpc.web.PostParseWebPlugin  适用于在对参数解析完毕后进一步处理，此接口为同步形式
+      		  krpc.rpc.web.AsyncPostParseWebPlugin  适用于在对参数解析完毕后进一步处理，此接口为异步形式
+      		  krpc.rpc.web.PostSessionWebPlugin  适用于在获取到会话信息后做进一步处理，此接口为同步形式
+      		  krpc.rpc.web.AsyncPostSessionWebPlugin  适用于在获取到会话信息后做进一步处理，此接口为异步形式
+      		  krpc.rpc.web.PreRenderWebPlugin  适用于在渲染前调整map对象为符合要求的渲染数据格式
+      		  krpc.rpc.web.RenderWebPlugin 可自定义非json输出的渲染插件，框架默认只会渲染为json格式
+      		  krpc.rpc.web.PostRenderWebPlugin  适用于在对参数解析完毕后进一步处理，如签名校验，加解密，此接口为同步形式
+      		    
 
 
