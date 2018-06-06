@@ -48,4 +48,3 @@
 | 错误码风格还是异常风格  | 统一错误码机制 | 异常 | ? | 异常 | 异常 | 
 | 注册与发现服务  | consul,etcd,zookeeper,eureka | zookeeper,redis,broadcast | consul,eureka | zookeeper,consul | ? |    
 | 监控及APM系统对接  | skywalking,zipkin,cat | 自带监控，主流APM都支持dubbo | 主流APM都支持 | 自带监控 | 主流APM都支持 |       
-| 一句话点评(个人观点)  | 简洁强大现代 | 强大 历史负担太重 难以做出大的变革 | 内网用短连接通讯不够好 | 简洁，但内部实现代码不够好 | http2用在内网通讯太重, 接口形式不友好 |    
