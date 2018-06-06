@@ -640,7 +640,8 @@
         按需映射，不关心的参数就不要在protobuffer消息里定义, 关心的参数按名称定义即可
         
         常规参数映射，按参数名映射到protobuffer消息里的参数名
-        session 里的信息 -> 按参数名映射到protobuffer消息里的参数名 (名称冲突则总是session里的优先, 客户端无法覆盖session参数)
+        session 里的信息 -> 按参数名映射到protobuffer消息里的参数名 
+                            (名称冲突则总是session里的优先, 客户端无法覆盖session参数)
         
         特殊参数映射，如果有需要，后端服务可以获取到http调用的所有细节, 一般建议不要去获取这些特殊信息
         
@@ -669,7 +670,8 @@
           如果成功完成登录，后端服务返回的session中应带 loginFlag=1, 以便框架在后续做登录检验；
           如 session 消息里带 loginFlag = 0 则会删除会话；否则将返回的session信息保存到会话上; 
           后续收到请求会自动将会话里的信息做登录验证，并把已登录信息转发给后端服务
-          常规情况下后端服务不用去存储会话信息，也不用关心sessionId; 如果有特殊需求，后端也可以根据sessionId做自己的存储策略
+          常规情况下后端服务不用去存储会话信息，也不用关心sessionId; 
+          如果有特殊需求，后端也可以根据sessionId做自己的存储策略
         
         以上处理完毕后将剩余消息转换成json并输出, 如需控制输出格式或内容，可通过插件进行定制
 
@@ -777,14 +779,14 @@
 
     服务端启动：
     
-  		RpcApp app = new Bootstrap() 
+        RpcApp app = new Bootstrap() 
         .addService(UserService.class,impl)  // 正常的 service
         .addReverseReferer("push",PushService.class) // 注意，这里加了referer
         .build();
     			
     客户端启动：
 		
-  		RpcApp app = new Bootstrap() 
+        RpcApp app = new Bootstrap() 
         .addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
         .addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
         .build();
