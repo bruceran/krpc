@@ -2,21 +2,21 @@
 # SPI 扩展机制
 
 	 krpc 使用java标准的spi机制来提供扩展点： 
-	   		通过在 META-INF/services/ 目录下创建以接口全限定名为名称的文件，并在文件中每行写入一个服务提供者的全限定名。
+	 通过在 META-INF/services/ 目录下创建以接口全限定名为名称的文件，并在文件中每行写入一个服务提供者的全限定名。
 	 
 	 krpc 框架内置的插件可查看 krpc jar包里的 META-INF/services/ 目录。
 
 # 插件加载和插件参数
 
 	   在krpc的配置里，凡是可配置插件的地方，可通过以下方式指定插件名（不区分大小写）：
-	          插件的前缀，如 rr
-	          插件的类名，如 RrLoadBalance
-	          插件的全限定类名，如 krpc.rpc.cluster.ll.RrLoadBalance
+	       插件的前缀，如 rr
+	       插件的类名，如 RRLoadBalance
+	       插件的全限定类名，如 krpc.rpc.cluster.ll.RrLoadBalance
 	
-	   krpc的每个spi插件都可实现一个config(String params)方法来获取外部参数，params参数格式由插件自己约定。
-	   
 	   在指定插件名的同时可以用以下方式传递参数给插件：
-	           插件名:插件参数     第一个冒号前的被认为是插件名，第一个冒号后的被认为是插件参数，透明地传到插件的config(params)方法
+	       插件名:插件参数, 第一个冒号前的被认为是插件名，第一个冒号后的被认为是插件参数，透明地传到插件的config方法
+	   krpc的每个SPI插件都可实现一个config(String params)方法来获取外部参数，params参数格式由插件自己约定。
+	   
 	    krpc默认的插件参数的风格是  k=v;k=v;...   以分号和等号做分隔符。  
 	    routes.xml 里的插件不支持  插件名:插件参数 方式来配置插件参数，而必须单独使用plugin来定义参数。
 	
@@ -24,7 +24,7 @@
 	   krpc所有插件的实现应该都是无状态的。
 	   krpc插件都是由框架创建的，暂不支持spring的属性注入，插件可在init方法里手工从spring获取bean完成初始化。
 	 
-	 loadbalance插件  krpc.rpc.cluster.LoadBalance接口
+	   loadbalance插件  krpc.rpc.cluster.LoadBalance接口
 		       实现自己的loadbalance策略
 		       框架自带了rr,random,response time 插件
 		       
