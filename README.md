@@ -14,7 +14,7 @@
 ## [Release Notes](doc/releasenotes.md) 
     
     版本变更说明
-    和其它框架的简单比较
+    和其它框架的基础特性比较
 
 ## [框架编译指南](doc/install.md) 
 

@@ -26,7 +26,7 @@
 			PUSH调用：比其他框架的实现都好
 			HTTP通用网关：通用，可扩展，轻量, 不用容器；比其他框架的实现都好
 
-# 和其它框架的简单比较
+# 和其它框架的基础特性比较
 
 | feature | krpc | dubbo  |  spring cloud | motan | grpc |  
 | ------- | ---- | ------------ |  ------------ | ----- |  ---- |  
@@ -36,13 +36,13 @@
 | 序列化  | pb3  |   hessian2,kryo,pb等 | json | hession2,pb等 | pb3 | 
 | 传输层协议  | krpc  | dubbo | http | motan2 | http2 |     
 | 传输层框架  | netty4  | netty4 netty3 mina grizzly | rest template, feign | netty4,netty3 | netty4 |    
-| 服务端异步实现  | 支持 | 不支持 | 支持 | 不支持 | 支持 |       
-| 客户端异步调用  | 支持,java 8 future  | java 5的future或回调 | 支持 | 自定义future | 回调 |       
+| 服务端异步实现  | 支持 | 不支持(回调不算) | 支持 | 不支持 | 支持 |       
+| 客户端异步调用  | java 8 CompletableFuture  | java 5的Future和回调 | 支持 | 自定义Future | 自定义Future和回调 |       
 | PUSH调用  | 支持 | 不支持 | 不支持 | 不支持 | 支持 |       
 | 是否需要web容器  | 不需要 |    不需要 | 需要 | 不需要 | 不需要 |     
 | 消息定位  | 服务号+消息号| 服务名+消息名 | url | 服务名+消息名 | 服务名+消息名 |  
+| 错误码还是异常风格  | 错误码,不抛出异常 | 异常 | 异常 | 异常 | 异常 | 
 | 长连接  | 是 | 是 | 否 | 是 | 是 | 是 |      
 | 提供http功能  | 是 |  dubbo无，dubbox有 | 天生 | 是 | 天生 |    
 | http接口定义方式  | routes配置文件 |  注解 | 注解 | 注解 | ? |      
-| 可否作为通用网关  | 是 |   否 | zuul组件 | 否 |  否 | 
-| 错误码还是异常风格  | 错误码 | 异常 | 异常 | 异常 | 异常 | 
+| 可否可作为通用网关  | 是 |   否 | zuul组件 | 否 |  否 | 
