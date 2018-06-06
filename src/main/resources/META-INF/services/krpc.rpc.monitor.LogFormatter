@@ -1,3 +1,2 @@
 krpc.rpc.monitor.SimpleLogFormatter
-krpc.rpc.monitor.JacksonLogFormatter
-krpc.rpc.monitor.PbTextLogFormatter
+krpc.rpc.monitor.JsonLogFormatter

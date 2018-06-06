@@ -4,11 +4,13 @@
     此框架使用java语言开发, 必须使用jdk 8才能使用此框架
     此框架可以用作后台服务开发，也可作为类似zuul的通用HTTP网关
     轻量，高性能，强大的扩展性
+    更多疑问请看  Q/A 杂谈 (doc/talk.md)  
 
 # 用户手册
 
 ## [Release Notes](doc/releasenotes.md) 
     
+    Q&A 杂谈
     版本变更说明
     和其它框架的简单比较
 

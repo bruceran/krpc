@@ -13,9 +13,9 @@ import krpc.common.Json;
 import krpc.rpc.util.MessageToMap;
 import krpc.rpc.web.WebMessage;
 
-public class JacksonLogFormatter extends AbstractLogFormatter  {
+public class JsonLogFormatter extends AbstractLogFormatter  {
 	
-	static Logger log = LoggerFactory.getLogger(JacksonLogFormatter.class);
+	static Logger log = LoggerFactory.getLogger(JsonLogFormatter.class);
 
 	public void config(String paramsStr) {
 		configInner(paramsStr);

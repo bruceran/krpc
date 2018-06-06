@@ -4,13 +4,12 @@
     初始版本
     提供基本的rpc功能和http通用网关功能
     
-
     取各种框架的精华:
 
 			日志： logback java界最好的日志框架，没有之一
 			网络层框架： netty4 java界最好的nio框架，没有之一
 			protobuff，最好的序列化方案，没有之一, 采用pb的想法来自百度的brpc
-			frame协议：krpc,  参考scalabpe的avenue协议以及百度brpc里的baidu_std协议
+			网络包协议：krpc,  参考scalabpe的avenue协议以及百度brpc里的baidu_std协议
 			插件加载机制：spi, scalabpe里使用了自定义的一种插件加载方式，spi的想法来自dubbo
 			动态代理机制：javasssist, 想法来自dubbo
 			和spring的schema集成方式: 想法来自dubbo

@@ -9,7 +9,7 @@ import com.xxx.userservice.proto.Order;
 import com.xxx.userservice.proto.OrderItem;
 import com.xxx.userservice.proto.OrderItemAttr;
 
-import krpc.rpc.monitor.JacksonLogFormatter;
+import krpc.rpc.monitor.JsonLogFormatter;
 import krpc.rpc.monitor.SimpleLogFormatter;
 
 public class TextFormatTest {
@@ -19,7 +19,7 @@ public class TextFormatTest {
  
 		SimpleLogFormatter f = new SimpleLogFormatter();
 		f.config("maxRepeatedSizeToLog=2");
-		JacksonLogFormatter f2 = new JacksonLogFormatter();
+		JsonLogFormatter f2 = new JsonLogFormatter();
 		f2.config("maxRepeatedSizeToLog=2");
 
 		Message m1 = LoginReq.newBuilder().setUserName("mike").setPassword("how ^ are you :").build();
