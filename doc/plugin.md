@@ -11,33 +11,33 @@
 	   在krpc的配置里，凡是可配置插件的地方，可通过以下方式指定插件名（不区分大小写）：
 	       插件的前缀，如 rr
 	       插件的类名，如 RRLoadBalance
-	       插件的全限定类名，如 krpc.rpc.cluster.ll.RrLoadBalance
+	       插件的全限定类名，如 krpc.rpc.cluster.lb.RrLoadBalance
 	
 	   在指定插件名的同时可以用以下方式传递参数给插件：
 	       插件名:插件参数, 第一个冒号前的被认为是插件名，第一个冒号后的被认为是插件参数，透明地传到插件的config方法
 	   krpc的每个SPI插件都可实现一个config(String params)方法来获取外部参数，params参数格式由插件自己约定。
 	   
-	    krpc默认的插件参数的风格是  k=v;k=v;...   以分号和等号做分隔符。  
-	    routes.xml 里的插件不支持  插件名:插件参数 方式来配置插件参数，而必须单独使用plugin来定义参数。
+	   krpc默认的插件参数的风格是  k=v;k=v;...   以分号和等号做分隔符。  
+	   routes.xml 里的插件不支持  插件名:插件参数 方式来配置插件参数，而必须单独使用plugin来定义参数。
 	
 	   krpc的插件可以通过实现InitClose接口来在服务启动关闭时做初始化和清理工作。
 	   krpc所有插件的实现应该都是无状态的。
 	   krpc插件都是由框架创建的，暂不支持spring的属性注入，插件可在init方法里手工从spring获取bean完成初始化。
 	 
 	   loadbalance插件  krpc.rpc.cluster.LoadBalance接口
-		       实现自己的loadbalance策略
-		       框架自带了rr,random,response time 插件
+		       用来自定义loadbalance策略
+		       框架自带了rr,random,hash,responsetime 插件
 		       
 	    注册与发现插件  krpc.rpc.core.Registry接口
-		       实现自己的注册与发现插件
-		       框架自带了 consul, etcd, zookeeper 插件
+		       用来自定义注册与发现机制
+		       框架自带了 consul, etcd, zookeeper, eureka 插件
 		       
 	    错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口
-		        实现自己的错误码错误消息转换插件
+		        用来自定义错误码错误消息转换方式
 		        框架自带了 file (基于文件error.properties) 插件
 		        
 	    流量控制插件 krpc.rpc.core.FlowControl接口
-		        可针对服务号，消息号实现自己的流控策略
+		        用来自定义流控策略
 		        框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
 		        
 	    日志序列化插件  krpc.rpc.monitor.LogFormatter 接口
@@ -53,16 +53,18 @@
 	            路由查找  根据url查找服务号消息号, 解析path中的变量
 	            流控   预留扩展点，可通过流控插件扩展， 可同步或异步
 	            参数解析前处理 预留扩展点，仅支持同步
-	            参数解析  此阶段将WebReq对象的queryString,content中的参数解析到parameters Map中，默认会解析form,json格式的参数，仅支持同步
+	            参数解析  此阶段将WebReq对象的queryString,content中的参数解析到parameters Map中，
+	                      默认会解析form,json格式的参数，仅支持同步
 	            参数解析后处理，预留扩展点， 可同步或异步
-	            会话加载  此阶段将会话信息加载到WebContext的session Map里，如果路由配置里请求需要会话，才会加载会话信息，可通过会话服务插件扩展， 可同步或异步
+	            会话加载  此阶段将会话信息加载到WebContext的session Map里，
+	                      如果路由配置里请求需要会话，才会加载会话信息，可通过会话服务插件扩展， 可同步或异步
 	            会话加载后处理，预留扩展点,  可同步或异步
 	            后台服务调用，此阶段会获取到WebRes对象
 	            渲染前处理  预留扩展点，仅支持同步
 	            渲染  此阶段将WebRes对象的 results Map转换为 content，默认渲染为json，可使用插件渲染为其它格式，仅支持同步
 	            渲染后处理  预留扩展点，仅支持同步
 
-	   一个普通的无会话无插件的请求处理流程会经过这样几个阶段：路由查找 -> 参数解析 ->  后台服务调用 ->  渲染   
+	  一个普通的无会话无插件的请求处理流程会经过这样几个阶段：路由查找 -> 参数解析 ->  后台服务调用 ->  渲染   
 	
 	  每个HTTP网关插件就是一个接口，每个接口只有一个方法，可以在一个类中同时实现多个接口：
 	
@@ -72,7 +74,8 @@
 		  krpc.rpc.web.ParseWebPlugin 可自定义参数解析方式
 		  krpc.rpc.web.PostParseWebPlugin  适用于在对参数解析完毕后进一步处理，此接口为同步形式
 		  krpc.rpc.web.AsyncPostParseWebPlugin  适用于在对参数解析完毕后进一步处理，此接口为异步形式
-		  krpc.rpc.web.SessionService 接口  会话信息的存储更新读取， 可同步或异步， 框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
+		  krpc.rpc.web.SessionService 会话信息的存储更新读取， 可同步或异步， 
+		                              框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
 		  krpc.rpc.web.PostSessionWebPlugin  适用于在获取到会话信息后做进一步处理，此接口为同步形式
 		  krpc.rpc.web.AsyncPostSessionWebPlugin  适用于在获取到会话信息后做进一步处理，此接口为异步形式
 		  krpc.rpc.web.PreRenderWebPlugin  适用于在渲染前调整map对象为符合要求的渲染数据格式
