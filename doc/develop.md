@@ -45,7 +45,7 @@
         框架内的service/referer是非常轻量的，在框架内部无对应实体，仅仅是一些配置值；
         启动时生成的动态代理是非常轻量的，仅仅是一行转发代码到RpcClient
         对Netty4的封装是只做了最轻量的封装，减少不必要的层次
-        客户端的异步调用返回jdk 8的CompleatableFuture<T>, 可以用简单的代码实现各种异步：并行调用，灵活组合多个回调,只投递不关心响应；
+        客户端的异步调用返回jdk 8的CompleatableFuture<T>, 可以用简单的代码实现各种异步：并行调用，灵活组合多个回调；
         服务端的异步实现非常简洁
         逆向调用(PUSH)和正向调用一样简洁
         大的HTTP通用网关
@@ -163,10 +163,10 @@
         public interface UserService {
             static final public int serviceId = 100;
         
-            com.xxx.userservice.proto.LoginRes login(com.xxx.userservice.proto.LoginReq req);
+            LoginRes login(LoginReq req);
             static final public int loginMsgId = 1;
         
-            com.xxx.userservice.proto.UpdateProfileRes updateProfile(com.xxx.userservice.proto.UpdateProfileReq req);
+            UpdateProfileRes updateProfile(UpdateProfileReq req);
             static final public int updateProfileMsgId = 2;
         }
         
@@ -177,10 +177,10 @@
         public interface UserServiceAsync {
             static final public int serviceId = 100;
         
-            java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.LoginRes> login(com.xxx.userservice.proto.LoginReq req);
+            CompletableFuture<LoginRes> login(LoginReq req);
             static final public int loginMsgId = 1;
         
-            java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.UpdateProfileRes> updateProfile(com.xxx.userservice.proto.UpdateProfileReq req);
+            CompletableFuture<UpdateProfileRes> updateProfile(UpdateProfileReq req);
             static final public int updateProfileMsgId = 2;
         }
 	
@@ -255,8 +255,8 @@
   * 启动客户端：
 			
         RpcApp app = new Bootstrap() 
-        	.addReferer("us",UserService.class,"127.0.0.1:5600")  // 增加referer, 如果打算使用同步调用需这一行
-        	.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") // 增加异步referer, 如果打算使用异步调用需这一行
+        	.addReferer("us",UserService.class,"127.0.0.1:5600")  // 如果打算使用同步调用需这一行
+        	.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") // 如果打算使用异步调用需这一行
         	.build().initAndStart();
   		
         UserService us = app.getReferer("us"); // 获取同步代理
@@ -309,8 +309,10 @@
   						
   		  按上述的routes.xml通过以下三种方式访问接口都可以：
           curl -i http://localhost:8888/user/test1?userName=a&password=b
-          curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/x-www-form-urlencoded" --data "userName=a&password=b"
-          curl -i -X POST http://localhost:8888/user/test1 -H "Content-Type: application/json" --data '{"userName":"a","password":"b"}'
+          curl -i -X POST http://localhost:8888/user/test1 
+               -H "Content-Type: application/x-www-form-urlencoded" --data "userName=a&password=b"
+          curl -i -X POST http://localhost:8888/user/test1 
+               -H "Content-Type: application/json" --data '{"userName":"a","password":"b"}'
           		  
   * 启动HTTP通用网关(静态方式), 要求集成protoc生成的源码或jar包
 		
@@ -341,7 +343,7 @@
         服务端： 在java config文件里启动krpc：
       
         @Configuration
-        @ComponentScan(basePackages = "krpc.test.rpc.javaconfig.server" }) // 扫描此目录下的所有bean去获取UserService实例
+        @ComponentScan(basePackages = "krpc.test.rpc.javaconfig.server" })
         public class MyServerJavaConfig   {
         
           @Bean(destroyMethod = "stopAndClose")
@@ -397,19 +399,20 @@
     
     以krpc前缀的配置项的含义同 schema 方式的配置项, 对应关系如下：
     
-			krpc.application 对应 krpc:application
-			krpc.monitor 对应 krpc:monitor
-			krpc.registry 和 krpc.registries 对应 krpc:registry, 当只有一个registry项时可使用 registry, 多个时使用registries
-			krpc.server 和 krpc.servers 对应 krpc:server, 当只有一个server项时可使用 server, 多个时使用servers
-			krpc.webServer 和 krpc.webServers 对应 krpc:webServer, 当只有一个webServer项时可使用 webServer, 多个时使用webServers
-			krpc.client 和 krpc.clients 对应 krpc:client, 当只有一个client项时使用 client, 多个时使用clients
-			krpc.service 和 krpc.services 对应 krpc:service, 当只有一个service项时可使用 service, 多个时使用services
-			krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个referer项时可使用 referer, 多个时使用referers
+		krpc.application 对应 krpc:application
+		krpc.monitor 对应 krpc:monitor
+		krpc.registry 和 krpc.registries 对应 krpc:registry, 当只有一个registry项时可使用 registry, 多个时使用registries
+		krpc.server 和 krpc.servers 对应 krpc:server, 当只有一个server项时可使用 server, 多个时使用servers
+		krpc.webServer 和 krpc.webServers 对应 krpc:webServer, 当只有一个webServer项时可使用 webServer, 多个时使用webServers
+		krpc.client 和 krpc.clients 对应 krpc:client, 当只有一个client项时使用 client, 多个时使用clients
+		krpc.service 和 krpc.services 对应 krpc:service, 当只有一个service项时可使用 service, 多个时使用services
+		krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个referer项时可使用 referer, 多个时使用referers
 
 	 spring boot 特有开关：
 	 
-            krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 应用程序可设置为false, 然后自行调用rpcApp.start()方法打开对外的端口
-	     	
+    krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 
+    应用程序可设置为false, 然后自行调用rpcApp.start()方法打开对外的端口
+
 # 配置参数详解				  
 
 	可打开 src/main/resources/krpc.xsd 了解框架支持哪些配置参数, 每个参数的具体含义如下：
@@ -446,7 +449,8 @@
     notifyThreads 当使用异步调用时，异步回调的线程池线程数量，默认为0，由系统自动分配
     notifyMaxThreads 同上，可配置一个大于notifyThreads的值，默认为0，也就是notifyMaxThreads=notifyThreads
     notifyQueueSize 同上，线程池中固定队列大小，默认为10000
-    threads 当使用PUSH调用时, client可以作为server, 此时收到的请求在此线程池中运行, 默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
+    threads 当使用PUSH调用时, client可以作为server, 此时收到的请求在此线程池中运行, 
+            默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
     maxThreads 同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
 	
@@ -460,10 +464,12 @@
     maxPackageSize 最大包长，字节， 默认为 1000000
     maxConns 服务端允许的同时的客户端连接数，默认为500000
     ioThreads netty4内部io读写线程，默认为0，由系统自动分配
-    notifyThreads  当使用PUSH调用时, server可以作为client, 这时若采用异步方式调用客户端，异步回调的线程池线程数量，默认为0，由系统自动分配
+    notifyThreads  当使用PUSH调用时, server可以作为client, 这时若采用异步方式调用客户端，
+                   异步回调的线程池线程数量，默认为0，由系统自动分配
     notifyMaxThreads 同上，可配置一个大于notifyThreads的值，默认为0，也就是notifyMaxThreads=notifyThreads
     notifyQueueSize 同上，线程池中固定队列大小，默认为10000
-    threads  服务端收到的请求在此线程池中运行, 默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
+    threads  服务端收到的请求在此线程池中运行, 默认为0由系统自动分配，
+             可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
     maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
 
@@ -477,10 +483,12 @@
     maxContentLength 最大包长，字节， 默认为 1000000 (文件上传会有单独的配置参数控制大小)
     maxConns 服务端允许的同时的客户端连接数，默认为500000
     ioThreads  netty4内部io读写线程，默认为0，由系统自动分配
-    notifyThreads  当使用PUSH调用时, server可以作为client, 这时若采用异步方式调用客户端，异步回调的线程池线程数量，默认为0，由系统自动分配
+    notifyThreads  当使用PUSH调用时, server可以作为client, 这时若采用异步方式调用客户端，
+                   异步回调的线程池线程数量，默认为0，由系统自动分配
     notifyMaxThreads 同上，可配置一个大于notifyThreads的值，默认为0，也就是notifyMaxThreads=notifyThreads
     notifyQueueSize 同上，线程池中固定队列大小，默认为10000
-    threads  服务端收到的请求在此线程池中运行, 默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
+    threads  服务端收到的请求在此线程池中运行, 默认为0由系统自动分配，
+             可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
     maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
          
@@ -497,14 +505,16 @@
     id 名称 不填则会自动生成
     interfaceName 接口名, 必填
     impl 实现类的bean name, 如果在spring容器中，则可为空，自动根据interfaceName查找对应的bean
-    transport 引用的server或webserver或client的id, 如果reverse=false, 则对应server或webserver的id; 如果reverse=true, 则对应client的id;
+    transport 引用的server或webserver或client的id, 如果reverse=false, 
+              则对应server或webserver的id; 如果reverse=true, 则对应client的id;
     reverse 正向调用还是逆向调用, 值为 true 或 false, 默认为 false
     registryNames 注册与发现服务名, 可填多个，用逗号隔开, 引用的是 registry的id
     group  注册与发现服务里的分组
     threads 服务级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
     maxThreads 服务级别的线程池配置参数, 含义同server
     queueSize 服务级别的线程池配置参数, 含义同server
-    flowControl 流量控制参数，前提要app级别开启了流量控制，格式为：seconds1=allowed1;seconds2=allowed2;... 示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
+    flowControl 流量控制参数，前提要app级别开启了流量控制，
+                格式为：seconds1=allowed1;seconds2=allowed2;... 示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
     
     每个service可配置0个或多个method在消息级别做配置
 
@@ -542,7 +552,8 @@
     threads 消息级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
     maxThreads 消息级别的线程池配置参数, 含义同server
     queueSize 消息级别的线程池配置参数, 含义同server
-    flowControl 消息控制参数，前提要app级别开启了流量控制，格式为：seconds1=allowed1;seconds2=allowed2;... 示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
+    flowControl 消息控制参数，前提要app级别开启了流量控制，格式为：seconds1=allowed1;seconds2=allowed2;... 
+                示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
     
 ## monitor
  
@@ -650,7 +661,8 @@
         httpCode 单值 -> 会转换为实际的http code, 不设置则默认为200
         httpContentType 单值 -> 会转换为实际的http header里的content-type
         headerXxx 单值 -> 会转换为http输出的 header     
-        cookieXxx 单值 -> 会转换为http输出的 cookie, cookie可带参数，格式为：值^key=value;key=value;...  key支持 domain,path,maxAge,httpOnly,secure,wrap    
+        cookieXxx 单值 -> 会转换为http输出的 cookie, cookie可带参数，格式为：值^key=value;key=value;...  
+                  key支持 domain,path,maxAge,httpOnly,secure,wrap    
         session 不能是单值，必须是消息(Map) -> 
           如果成功完成登录，后端服务返回的session中应带 loginFlag=1, 以便框架在后续做登录检验；
           如 session 消息里带 loginFlag = 0 则会删除会话；否则将返回的session信息保存到会话上; 
