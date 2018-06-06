@@ -32,19 +32,17 @@
 | ------- | ---- | ------------ |  ------------ | ----- |  ---- |  
 | 服务契约 | proto文件 | java接口 | 外部swagger | java接口 | proto文件 | 
 | 是否要预生成代码  | 需要 |  不需要 | 不需要 | 不需要 | 需要  |    
-| 入参可否多个 | 单一,proto风格 | 可多个 | 可多个 | 可多个 | 单一,proto风格 |  
+| 入参可否多个 | 单一入参对象 | 可多个 | 可多个 | 可多个 | 单一入参对象 |  
 | 序列化  | pb3  |   hessian2,kryo,pb等 | json | hession2,pb等 | pb3 | 
 | 传输层协议  | krpc  | dubbo | http | motan2 | http2 |     
-| 传输层  | netty4  | netty4 netty3 mina grizzly | rest template, feign | netty4,netty3 | netty4 |    
+| 传输层框架  | netty4  | netty4 netty3 mina grizzly | rest template, feign | netty4,netty3 | netty4 |    
 | 服务端异步实现  | 支持 | 不支持 | 支持 | 不支持 | 支持 |       
-| 客户端异步调用  | 支持,java 8 future  | java 5的future或回调 | 不支持 | 自定义future | 回调 |       
+| 客户端异步调用  | 支持,java 8 future  | java 5的future或回调 | 支持 | 自定义future | 回调 |       
 | PUSH调用  | 支持 | 不支持 | 不支持 | 不支持 | 支持 |       
-| RPC是否需要web容器  | 不需要 |    不需要 | 需要 | 不需要 | 不需要 |     
+| 是否需要web容器  | 不需要 |    不需要 | 需要 | 不需要 | 不需要 |     
 | 消息定位  | 服务号+消息号| 服务名+消息名 | url | 服务名+消息名 | 服务名+消息名 |  
 | 长连接  | 是 | 是 | 否 | 是 | 是 | 是 |      
-| 提供http功能  | 是 |  dubbo无，dubbox有 | 天生 | 是 | 天生 | 否 |     
-| http接口定义方式  | routes配置文件 |  注解 | 注解 | 注解 | - |      
+| 提供http功能  | 是 |  dubbo无，dubbox有 | 天生 | 是 | 天生 |    
+| http接口定义方式  | routes配置文件 |  注解 | 注解 | 注解 | ? |      
 | 可否作为通用网关  | 是 |   否 | zuul组件 | 否 |  否 | 
-| 错误码风格还是异常风格  | 统一错误码机制 | 异常 | ? | 异常 | 异常 | 
-| 注册与发现服务  | consul,etcd,zookeeper,eureka | zookeeper,redis,broadcast | consul,eureka | zookeeper,consul | ? |    
-| 监控及APM系统对接  | skywalking,zipkin,cat | 自带监控，主流APM都支持dubbo | 主流APM都支持 | 自带监控 | 主流APM都支持 |       
+| 错误码还是异常风格  | 错误码 | 异常 | 异常 | 异常 | 异常 | 
