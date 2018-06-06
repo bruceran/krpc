@@ -28,19 +28,19 @@
 		       用来自定义loadbalance策略
 		       框架自带了rr,random,hash,responsetime 插件
 		       
-	    注册与发现插件  krpc.rpc.core.Registry接口
+	   注册与发现插件  krpc.rpc.core.Registry接口
 		       用来自定义注册与发现机制
 		       框架自带了 consul, etcd, zookeeper, eureka 插件
 		       
-	    错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口
+	   错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口
 		        用来自定义错误码错误消息转换方式
 		        框架自带了 file (基于文件error.properties) 插件
 		        
-	    流量控制插件 krpc.rpc.core.FlowControl接口
+	   流量控制插件 krpc.rpc.core.FlowControl接口
 		        用来自定义流控策略
 		        框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
 		        
-	    日志序列化插件  krpc.rpc.monitor.LogFormatter 接口
+	   日志序列化插件  krpc.rpc.monitor.LogFormatter 接口
 		       可对 access log 里的请求和响应实现自己的序列化格式
 		       框架自带了 simple 和  jackson 插件
 
