@@ -56,9 +56,9 @@
 	    b) 框架内部几乎都是以接口方式进行编程，所有实体类的创建都在BootStrap类中，可通过继承BootStrap类做更深度的定制
 	    c) 框架本身只对logback,protobuff3,netty4,javassist有强依赖，其它依赖都是可选的, 都是可以替换的
 	
-# krpc协议
+# krpc网络包协议
 
-  krpc协议是自定义的TCP长连接协议, 了解底层通讯协议有助于更好地理解krpc框架
+  krpc网络包协议是自定义的TCP长连接协议, 了解底层通讯协议有助于更好地理解krpc框架
 	
   每个网络包分为3部分：8字节的固定头部+protobuff形式的扩展包头+protobuff形式的包体(包体可选)
     
@@ -401,17 +401,16 @@
     
 		krpc.application 对应 krpc:application
 		krpc.monitor 对应 krpc:monitor
-		krpc.registry 和 krpc.registries 对应 krpc:registry, 当只有一个registry项时可使用 registry, 多个时使用registries
-		krpc.server 和 krpc.servers 对应 krpc:server, 当只有一个server项时可使用 server, 多个时使用servers
-		krpc.webServer 和 krpc.webServers 对应 krpc:webServer, 当只有一个webServer项时可使用 webServer, 多个时使用webServers
-		krpc.client 和 krpc.clients 对应 krpc:client, 当只有一个client项时使用 client, 多个时使用clients
-		krpc.service 和 krpc.services 对应 krpc:service, 当只有一个service项时可使用 service, 多个时使用services
-		krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个referer项时可使用 referer, 多个时使用referers
+		krpc.registry 和 krpc.registries 对应 krpc:registry, 当只有一个时使用 registry, 多个时使用registries
+		krpc.server 和 krpc.servers 对应 krpc:server, 当只有一个时使用使用 server, 多个时使用servers
+		krpc.webServer 和 krpc.webServers 对应 krpc:webServer, 当只有一个时使用 webServer, 多个时使用webServers
+		krpc.client 和 krpc.clients 对应 krpc:client, 当只有一个时使用 client, 多个时使用clients
+		krpc.service 和 krpc.services 对应 krpc:service, 当只有一个时使用 service, 多个时使用services
+		krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个时使用 referer, 多个时使用referers
 
 	 spring boot 特有开关：
 	 
-    krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 
-    应用程序可设置为false, 然后自行调用rpcApp.start()方法打开对外的端口
+    krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 可设置为false,然后调用rpcApp.start()方法打开对外的端口
 
 # 配置参数详解				  
 
@@ -582,7 +581,8 @@
           
           <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
           
-          <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" plugins="dummy" sessionMode="0"/>  
+          <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" 
+               plugins="dummy" sessionMode="0"/>  
           <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
           
           <group   prefix="/abc"  methods="get,post" serviceId="100">  
@@ -617,7 +617,8 @@
         
         hosts 允许的域名，*表示不限制，默认为*
         prefix 若配置了此值，则所有路径为 prefix + path, 默认为空
-        methods 访问方法，支持get,post,head,put,delete, 默认为get,post; 如果post body是json格式，默认也会直接做解析，无需额外配置
+        methods 访问方法，支持get,post,head,put,delete, 默认为get,post; 
+                如果post body是json格式，默认也会直接做解析，无需额外配置
         serviceId path对应的服务号
         plugins 用来配置插件名，允许多个，用逗号隔开
         sessionMode 会话模式 0=不需要会话 1=只需要会话ID 2=有会话则把会话信息传给后端，但不强制登录 2=必须要登录, 默认为0
@@ -651,7 +652,8 @@
             http query string -> httpQueryString 值为uri后?号以后的值
             http content-type -> httpContentType header里的content-type值, 去除;号以后的附加参数
             http content -> httpContent 值为http的content
-            http header -> headerXxx 映射到protobuffer消息里以header开头的参数名, 需做名称转换，如 User-Agent，在pb里必须定义为headerUserAgent
+            http header -> headerXxx 映射到protobuffer消息里以header开头的参数名, 需做名称转换，
+                                     如 User-Agent，在pb里必须定义为headerUserAgent
             http cookie -> cookieXxx 映射到protobuffer消息里以cookie开头的参数名, xxx和cookie名严格保持一致，区分大小写
             
       响应映射规则：
@@ -745,14 +747,15 @@
 
           public LoginRes login(LoginReq req) {
               log.info("login received, peers="+ctx.getMeta().getPeers());
-              return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build(); // 处理完直接返回
+              return LoginRes.newBuilder().setRetCode(0)
+                     .setRetMsg("hello, friend. receive req#"+i).build(); // 处理完直接返回
           }
 	
 	  异步实现方式：
 	
           线程1：
           public LoginRes login(LoginReq req) {
-              RpcClosure closure = ServerContext.closure(req); // RpcClosure 对象中有本地rpc调用的所有上下文信息以及req信息
+              RpcClosure closure = ServerContext.closure(req); // closure 对象中有调用的所有上下文信息以及req信息
               // 将此closure对象传递到其它线程中或加入队列, 如 queue.offer(closure);
               return null; // 告诉框架此接口将异步实现
           }
@@ -774,19 +777,18 @@
 
     服务端启动：
     
-    		RpcApp app = new Bootstrap() 
-    			.addService(UserService.class,impl)  // 正常的 service
-    			.addReverseReferer("push",PushService.class) // 注意，这里加了referer
-    			.build();
+  		RpcApp app = new Bootstrap() 
+  			.addService(UserService.class,impl)  // 正常的 service
+  			.addReverseReferer("push",PushService.class) // 注意，这里加了referer
+  			.build();
     			
     客户端启动：
 		
-    		RpcApp app = new Bootstrap() 
-    				.addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
-    				.addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
-    				.build();
-    				
-    				
+  		RpcApp app = new Bootstrap() 
+  				.addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
+  				.addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
+  				.build();
+
     服务端推送代码：
 		
     		线程1：		
@@ -801,7 +803,8 @@
 				
 # 自定义插件如何获取到Spring容器
 
-    krpc spi插件对象是由krpc框架创建和初始化的，krpc框架目前不支持自动注入spring里的组件，如果有必要，插件可以在init()方法中自己完成初始化
+    krpc spi插件对象是由krpc框架创建和初始化的，krpc框架目前不支持自动注入spring里的组件，
+    如果有必要，插件可以在init()方法中自己完成初始化
     
       BeanFactory bf = krpc.rpc.bootstrap.spring.SpringBootstrap.instance.spring;
       Ccc ooo = (Ccc)bf.getBean("xxx"); // 从spring中获取组件
