@@ -391,7 +391,7 @@
 
 # 和spring框架集成(spring boot方式)
   
-  参考：doc/samples/boot1 (spring boot 1.x下)  和  doc/samples/bootx (spring boot x.x下)
+  参考：doc/samples/boot1 (spring boot 1.x下)  和  doc/samples/boot2 (spring boot 2.x下)
   
     仅需要使用 配置文件 application.yaml 或等价的 application.properties 就可完成krpc的初始化, 无需写代码或xml文件。
     
@@ -633,7 +633,7 @@
       webserver框架会自动将http里的http元信息，header,cookie,session,入参等映射到protobuff请求消息；
       webserver框架也会自动将protobuff响应消息映射到http里的http元信息,header,cookie,操作session, 输出内容等；
       通过以上的机制，webserver可以承担一个通用网关的功能，业务开发无需在http层再做开发，只需开发后台服务;
-      webserver提供强大的扩展机制，业务可根据自己的需要开发必要的插件来实现一些特殊功能：比如特定的签名校验方法，特殊的内容输出等
+      webserver提供强大的扩展机制，业务可根据自己的需要开发必要的插件来实现一些特殊功能
       
       请求映射规则：
       
@@ -778,28 +778,28 @@
     服务端启动：
     
   		RpcApp app = new Bootstrap() 
-  			.addService(UserService.class,impl)  // 正常的 service
-  			.addReverseReferer("push",PushService.class) // 注意，这里加了referer
-  			.build();
+        .addService(UserService.class,impl)  // 正常的 service
+        .addReverseReferer("push",PushService.class) // 注意，这里加了referer
+        .build();
     			
     客户端启动：
 		
   		RpcApp app = new Bootstrap() 
-  				.addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
-  				.addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
-  				.build();
+        .addReferer("us",UserService.class,"127.0.0.1:5600") // 正常的referer
+        .addReverseService(PushService.class,impl)  // 注意，这里加了service, 需在客户端定义PushService的实现类
+        .build();
 
     服务端推送代码：
 		
-    		线程1：		
-    		RpcContextData ctx = ServerContext.get(); // 获取调用上下文，上下文中包含tcp连接标识connId
-    		String connId = ctx.getConnId(); // connId可以任意传递，保存到缓存中或持久化到db中
-    		
-    		线程2：
-    		// 从内存，缓存或db中获取到之前保存的connId
-    		ClientContext.setConnId(connId); // 推送前需要调用此函数确定此消息是推送到那个连接上
-    		PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
-    		ps.push(req); // 完成推送
+      线程1：		
+      RpcContextData ctx = ServerContext.get(); // 获取调用上下文，上下文中包含tcp连接标识connId
+      String connId = ctx.getConnId(); // connId可以任意传递，保存到缓存中或持久化到db中
+      
+      线程2：
+      // 从内存，缓存或db中获取到之前保存的connId
+      ClientContext.setConnId(connId); // 推送前需要调用此函数确定此消息是推送到那个连接上
+      PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
+      ps.push(req); // 完成推送
 				
 # 自定义插件如何获取到Spring容器
 
