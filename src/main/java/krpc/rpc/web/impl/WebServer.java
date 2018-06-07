@@ -48,7 +48,7 @@ import krpc.rpc.web.PostSessionPlugin;
 import krpc.rpc.web.PreParsePlugin;
 import krpc.rpc.web.PreRenderPlugin;
 import krpc.rpc.web.RenderPlugin;
-import krpc.rpc.web.RetCodes;
+import krpc.common.RetCodes;
 import krpc.rpc.web.Route;
 import krpc.rpc.web.RouteService;
 import krpc.rpc.web.RpcDataConverter;

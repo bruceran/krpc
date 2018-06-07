@@ -58,12 +58,13 @@
             spring.factories             spring boot 所需文件
       test/
     doc/ 文档目录
-    doc/
-    	proto/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件  
+    misc/  杂项
+    	protos/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件  
     	samples/  示例代码目录
     		sample1/ 不使用spring的示例
     		boot1/  使用spring boot 1.x的示例  
     		boot2/  使用spring boot 2.x的示例, 注意： 此工程要求gradle 4.x (spring boot 2.x的最低要求)才能编译运行
+    	starters/ spring boot starter
     dist/
     dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
     dist/tools/ protoc工具

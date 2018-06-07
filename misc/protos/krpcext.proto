@@ -1,0 +1,21 @@
+syntax="proto3";
+
+package krpc;
+
+import "descriptor.proto";
+extend google.protobuf.ServiceOptions {  int32 serviceId = 50001;   }  
+extend google.protobuf.MethodOptions {  int32 msgId = 50002;  }  
+
+message Validate {
+    bool  required = 1; // not empty string
+    string match = 2; // regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+    string values = 3; // enums
+    string length = 4; // value or min#max or min# or #max for string,number,repeated
+    string range = 5; // value or min#max or min# or #max for number only
+    string srange = 6; // like range but for compare by string  
+};
+
+extend google.protobuf.FieldOptions {  Validate vld = 50003;  }  
+
+option java_package="krpc";
+option java_outer_classname="KrpcExt";

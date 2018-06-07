@@ -6,9 +6,7 @@ import java.util.HashMap;
 import org.junit.Test;
 
 import com.google.protobuf.Message;
-import com.xxx.httptest.proto.HttpTestReq;
-import com.xxx.httptest.proto.HttpTestRes;
-import com.xxx.httptest.proto.Session;
+import com.xxx.userservice.proto.*;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
 import krpc.rpc.core.ServiceMetas;

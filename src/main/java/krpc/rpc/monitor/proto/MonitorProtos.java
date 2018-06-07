@@ -45,11 +45,11 @@ public final class MonitorProtos {
       "\n\010timeUsed\030\010 \003(\005\"Y\n\020ReportRpcStatReq\022\021\n\t" +
       "timestamp\030\001 \001(\003\022\014\n\004host\030\002 \001(\t\022\013\n\003app\030\003 \001" +
       "(\t\022\027\n\005stats\030\004 \003(\0132\010.RpcStat\"#\n\020ReportRpc" +
-      "StatRes\022\017\n\007retCode\030\001 \001(\0052Q\n\016MonitorServi" +
-      "ce\022:\n\rreportRpcStat\022\021.ReportRpcStatReq\032\021" +
-      ".ReportRpcStatRes\"\003\320>\001\032\003\310>\002B,\n\026krpc.rpc." +
-      "monitor.protoB\rMonitorProtosP\001\210\001\001b\006proto" +
-      "3"
+      "StatRes\022\017\n\007retCode\030\001 \001(\0052S\n\016MonitorServi" +
+      "ce\022;\n\rreportRpcStat\022\021.ReportRpcStatReq\032\021" +
+      ".ReportRpcStatRes\"\004\220\265\030\001\032\004\210\265\030\002B,\n\026krpc.rp" +
+      "c.monitor.protoB\rMonitorProtosP\001\210\001\001b\006pro" +
+      "to3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

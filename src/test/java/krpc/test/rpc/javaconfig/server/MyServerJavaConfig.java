@@ -6,8 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.ComponentScan.Filter;
 
-import com.xxx.pushservice.proto.PushService;
-import com.xxx.userservice.proto.UserService;
+import com.xxx.userservice.proto.*;
 
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.RpcApp;

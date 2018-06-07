@@ -3,13 +3,8 @@ package krpc.test.rpc.reversecall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xxx.pushservice.proto.PushReq;
-import com.xxx.pushservice.proto.PushService;
-import com.xxx.userservice.proto.LoginReq;
-import com.xxx.userservice.proto.LoginRes;
-import com.xxx.userservice.proto.UpdateProfileReq;
-import com.xxx.userservice.proto.UpdateProfileRes;
-import com.xxx.userservice.proto.UserService;
+import com.xxx.userservice.proto.*;
+ 
 
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.RpcApp;

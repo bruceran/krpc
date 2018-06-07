@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.Message;
 
-import krpc.rpc.core.RetCodes;
+import krpc.common.RetCodes;
 import krpc.trace.Trace;
 import krpc.trace.TraceContext;
 

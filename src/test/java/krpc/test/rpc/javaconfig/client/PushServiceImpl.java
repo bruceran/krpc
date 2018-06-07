@@ -3,10 +3,8 @@ package krpc.test.rpc.javaconfig.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import com.xxx.pushservice.proto.PushReq;
-import com.xxx.pushservice.proto.PushRes;
-import com.xxx.pushservice.proto.PushService;
+ 
+import com.xxx.userservice.proto.*;
 
 @Component("pushService")
 class PushServiceImpl implements PushService {

@@ -27,7 +27,6 @@ import krpc.rpc.core.FlowControl;
 import krpc.rpc.core.MockService;
 import krpc.rpc.core.MonitorService;
 import krpc.rpc.core.ReflectionUtils;
-import krpc.rpc.core.RetCodes;
 import krpc.rpc.core.RpcCallable;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.RpcContextData;
@@ -47,6 +46,7 @@ import krpc.trace.Trace;
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
 import krpc.common.NamedThreadFactory;
+import krpc.common.RetCodes;
 
 public abstract class RpcCallableBase implements TransportCallback, DataManagerCallback, RpcCallable, Continue<RpcClosure>, InitClose, StartStop {
 	

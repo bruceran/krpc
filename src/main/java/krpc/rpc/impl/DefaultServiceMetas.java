@@ -6,8 +6,8 @@ import java.util.HashMap;
 import com.google.protobuf.Message;
 import com.google.protobuf.Descriptors.Descriptor;
 
+import krpc.common.RetCodes;
 import krpc.rpc.core.ReflectionUtils;
-import krpc.rpc.core.RetCodes;
 import krpc.rpc.core.RpcCallable;
 import krpc.rpc.core.RpcException;
 import krpc.rpc.core.ServiceMetas;

@@ -7,13 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import com.xxx.pushservice.proto.PushReq;
-import com.xxx.pushservice.proto.PushService;
-import com.xxx.userservice.proto.LoginReq;
-import com.xxx.userservice.proto.LoginRes;
-import com.xxx.userservice.proto.UpdateProfileReq;
-import com.xxx.userservice.proto.UpdateProfileRes;
-import com.xxx.userservice.proto.UserService;
+import com.xxx.userservice.proto.*;
 
 import krpc.rpc.core.ClientContext;
 import krpc.rpc.core.RpcContextData;

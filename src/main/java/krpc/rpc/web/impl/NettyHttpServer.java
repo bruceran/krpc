@@ -56,7 +56,7 @@ import krpc.rpc.web.DefaultWebReq;
 import krpc.rpc.web.DefaultWebRes;
 import krpc.rpc.web.HttpTransport;
 import krpc.rpc.web.HttpTransportCallback;
-import krpc.rpc.web.RetCodes;
+import krpc.common.RetCodes;
 import krpc.rpc.web.WebConstants;
 
 @Sharable

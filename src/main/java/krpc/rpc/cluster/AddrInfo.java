@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import krpc.rpc.core.RetCodes;
+import krpc.common.RetCodes;
 
 public class AddrInfo implements Addr {
 	
