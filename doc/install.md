@@ -86,7 +86,7 @@
   
 	强依赖：缺少以下依赖框架无法编译和运行
   
-    日志框架: 默认是使用logback框架
+        日志框架: 默认是使用logback框架
 		compile 'org.slf4j:slf4j-api:1.7.22'  -- logback
 		compile 'ch.qos.logback:logback-core:1.2.1'   -- logback
 		compile 'ch.qos.logback:logback-classic:1.2.1'  -- logback
@@ -100,8 +100,8 @@
 		compile 'javassist:javassist:3.12.1.GA'    -- 字节码生成
 
 		json框架: 默认是使用jackson框架
-			compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
-			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
+            compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
+            compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
             compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
 	
 	可选依赖：
@@ -117,8 +117,8 @@
 			compile 'org.springframework:spring-beans:4.1.6.RELEASE'
 			compile 'org.springframework:spring-context:4.1.6.RELEASE'		
         
-        SPRING BOOT依赖；若使用spring boot启动需用到以下依赖
-        	compile 'org.springframework.boot:spring-boot-autoconfigure:1.5.13.RELEASE'
+		SPRING BOOT依赖；若使用spring boot启动需用到以下依赖
+			compile 'org.springframework.boot:spring-boot-autoconfigure:1.5.13.RELEASE'
         
 # 框架包依赖关系
 
