@@ -54,7 +54,7 @@
 	
 	    a) 使用预定义的spi接口进行功能扩展
 	    b) 框架内部几乎都是以接口方式进行编程，所有实体类的创建都在BootStrap类中，可通过继承BootStrap类做更深度的定制
-	    c) 框架本身只对logback,protobuff3,netty4,javassist有强依赖，其它依赖都是可选的, 都是可以替换的
+	    c) 框架本身只对logback,protobuff3,netty4,javassist,jackson有强依赖，其它依赖都是可选的, 都是可以替换的
 	
 # krpc网络包协议
 
@@ -207,32 +207,7 @@
     	-1000001=参数不正确
   		-1000002=用户不存在
 
-  * 框架内部使用的错误码, 具体含义参考 krpc.rpc.core.RetCodes.java 类 和 krpc.rpc.web.RetCodes.java 类 
-        
-        static public final int RPC_TIMEOUT = -450;  
-        static public final int NO_CONNECTION = -451;
-        static public final int SEND_FAILED = -452;  
-        static public final int CONNECTION_BROKEN = -453;
-        static public final int USER_CANCEL = -454;
-        static public final int EXEC_EXCEPTION = -455;
-        static public final int REFERER_NOT_ALLOWED = -456;
-        static public final int ENCODE_REQ_ERROR = -457;
-        static public final int DECODE_RES_ERROR = -458;
-        static public final int BUSINESS_ERROR = -500;
-        static public final int SERVER_SHUTDOWN = -503;
-        static public final int QUEUE_FULL = -550;
-        static public final int QUEUE_TIMEOUT = -551;
-        static public final int DECODE_REQ_ERROR = -552;
-        static public final int ENCODE_RES_ERROR = -553;
-        static public final int NOT_FOUND = -554;
-        static public final int FLOW_LIMIT = -555;
-        static public final int SERVICE_NOT_ALLOWED = -556;
-        static public final int SERVER_CONNECTION_BROKEN = -557;
-        static public final int HTTP_NOT_FOUND = -404;  
-        static public final int HTTP_METHOD_NOT_ALLOWED = -405;  
-        static public final int HTTP_NO_LOGIN = -560;  
-        static public final int HTTP_NO_SESSIONSERVICE = -561;  
-        static public final int HTTP_CLIENT_NOT_FOUND = -562;  
+  * 框架内部使用的错误码, 具体含义参考 krpc.rpc.common.RetCodes.java 类 
         
         业务层无需判断具体错误码值，只需判断是否为0来确定是否成功
 	 	  	  
@@ -803,13 +778,11 @@
       PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
       ps.push(req); // 完成推送
 				
-# 自定义插件如何获取到Spring容器
+# 自定义SPI插件如何获取到Spring容器
 
-    krpc spi插件对象是由krpc框架创建和初始化的，krpc框架目前不支持自动注入spring里的组件，
-    如果有必要，插件可以在init()方法中自己完成初始化
-    
       BeanFactory bf = krpc.rpc.bootstrap.spring.SpringBootstrap.instance.spring;
-      Ccc ooo = (Ccc)bf.getBean("xxx"); // 从spring中获取组件
+      
+      注意：框架支持直接将spring bean作为插件，通常没必要手工去获取spring容器对象
 
 # 如何进行业务层打点  
 
@@ -901,4 +874,52 @@
      
          krpc框架已做了处理，业务层代码无需关心
          
+# 参数验证
 
+	* 框架支持直接在proto文件中定义参数验证规则，简化程序中的程式化代码
+	* 框架只会对请求对象进行参数验证，对结果对象不做验证
+	* 参数验证的编写语法为protobuffer的标准语法, 示例：
+	
+		string s1 = 1  [  (krpc.vld).required = true  ] ;
+		string s2 = 2  [  (krpc.vld).match="date" ] ;	
+	    string s3 = 3  [  (krpc.vld).match="a.*c" ] ;			
+		string s4 = 4  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
+		repeated string s5 = 5  [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
+		
+		一个field多个规则的时候protobuffer允许用两种等价形式编写规则：
+		
+			[  (krpc.vld).arrlen = "1,-", (krpc.vld).values = "111,222" ];
+		    [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
+		
+    * 支持的验证规则
+    	
+    	required 非空字符串, 适用于字符串
+    	match 字符串必须符合某个规则, 适用于字符串和数值，转换为字符串后再匹配
+    			int 必须是java int
+    			long 必须是java long
+    			double 必须是java double
+    			date 必须是 2011-01-01 这种日期格式
+    			timestamp  必须是 2011-01-01 12:12:11 这种时间戳格式
+    			email 必须是电子邮件
+    			其他  则认为是正则表达式
+    	 values 用逗号隔开的多个枚举值, 适用于字符串和数值
+    	 length 字符串长度, 适用于字符串和数值，转换为字符串后获取长度再比较
+    	 	n  n个字符
+    	 	n,m  仅n到m个字符
+    	 	n,-  最少n个字符
+    	 	-,n  最大为n个字符
+    	 nrange 数值范围, 适用于字符串和数值，转换为数值后比较大小
+    	 	n  min,max都为n
+    	 	min,max 范围为min到max
+    	 	min,-  最少min
+    	 	-,max  最大max
+    	 srange 字符串范围, 适用于字符串和数值，转换为字符串后比较大小
+    	 	min,max 字符串范围为min到max
+    	 arrlen 数组长度范围, 仅适用于repeated field
+    	 	n  min,max都为n
+    	 	min,max 范围为min到max
+    	 	min,-  最少min
+    	 	-,max  最大max
+
+	 * 支持的验证规则目前不提供扩展机制
+	 

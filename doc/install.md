@@ -102,7 +102,7 @@
 		json框架: 默认是使用jackson框架
 			compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
 			compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-      compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
+            compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
 	
 	可选依赖：
 	
@@ -110,13 +110,16 @@
 			compile 'org.xerial.snappy:snappy-java:1.1.2.3'
 		
 		如果要使用jedis版本的流控服务或http会话服务需要用到jedis
-      compile 'redis.clients:jedis:2.9.0'
+            compile 'redis.clients:jedis:2.9.0'
 				
 		SPRING框架依赖；若使用krpc schema支持需用到以下依赖
 			compile 'org.springframework:spring-core:4.1.6.RELEASE'
 			compile 'org.springframework:spring-beans:4.1.6.RELEASE'
 			compile 'org.springframework:spring-context:4.1.6.RELEASE'		
-    
+        
+        SPRING BOOT依赖；若使用spring boot启动需用到以下依赖
+        	compile 'org.springframework.boot:spring-boot-autoconfigure:1.5.13.RELEASE'
+        
 # 框架包依赖关系
 
   * krpc.common 通用接口和实现类，所有模块依赖此包

@@ -13,6 +13,7 @@ import krpc.rpc.core.RegistryManager;
 import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.StartStop;
+import krpc.rpc.core.Validator;
 import krpc.rpc.impl.RpcClient;
 import krpc.rpc.impl.RpcServer;
 import krpc.rpc.web.WebMonitorService;
@@ -33,6 +34,7 @@ public class RpcApp implements InitClose,StartStop {
 	WebMonitorService monitorService;
 	RegistryManager registryManager;
 	TraceAdapter traceAdapter;
+	Validator validator;
 	
 	HashMap<String,RpcServer> servers = new HashMap<>();
 	HashMap<String,WebServer> webServers = new HashMap<>();
@@ -95,6 +97,7 @@ public class RpcApp implements InitClose,StartStop {
 		resources.add(monitorService);
 		resources.add(mockService);
 		resources.add(traceAdapter);
+		resources.add(validator);
 
 		for(RpcClient client:clients.values()) {
 			resources.add(client);

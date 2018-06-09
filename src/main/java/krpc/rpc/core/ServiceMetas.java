@@ -22,6 +22,7 @@ public interface ServiceMetas {
 	RpcCallable findCallable(String implClsName);
     
     Message generateRes(int serviceId,int msgId, int retCode);
+    Message generateRes(int serviceId,int msgId, int retCode,String retMsg);
     
 	void addService(Class<?> intf, Object impl,RpcCallable callable);
 	void addReferer(Class<?> intf, Object impl,RpcCallable callable);

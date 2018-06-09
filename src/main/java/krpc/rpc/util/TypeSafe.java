@@ -16,6 +16,10 @@ public class TypeSafe {
 	}
 
 	public static int anyToInt(Object v) {
+		return anyToInt(v,0);
+	}
+	
+	public static int anyToInt(Object v,int defaultValue) {
 		if(v == null) return 0;
 		if( v instanceof Integer) {
 			return (Integer)v;
@@ -26,12 +30,19 @@ public class TypeSafe {
 		try {
 			return Integer.parseInt(v.toString());
 		} catch(Exception e) {
-			return 0;
+			return defaultValue;
 		}    	
 	}  
 	
 	public static long anyToLong(Object v) {
+		return anyToLong(v,0);
+	}
+	
+	public static long anyToLong(Object v,long defaultValue) {
 		if(v == null) return 0;
+		if( v instanceof Integer) {
+			return (Integer)v;
+		}
 		if( v instanceof Long) {
 			return (Long)v;
 		}
@@ -41,7 +52,7 @@ public class TypeSafe {
 		try {
 			return Long.parseLong(v.toString());
 		} catch(Exception e) {
-			return 0;
+			return defaultValue;
 		}    	
 	}  
 	

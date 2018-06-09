@@ -8,11 +8,12 @@ extend google.protobuf.MethodOptions {  int32 msgId = 50002;  }
 
 message Validate {
     bool  required = 1; // not empty string
-    string match = 2; // regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+    string match = 2; // regex or special value: int,long,double,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
     string values = 3; // enums
-    string length = 4; // value or min#max or min# or #max for string,number,repeated
-    string range = 5; // value or min#max or min# or #max for number only
-    string srange = 6; // like range but for compare by string  
+    string length = 4; // value or min,max or min,- or -,max for string,number
+    string nrange = 5; // value or min,max or min,- or -,max for number only
+    string srange = 6; // like nrange but for compare by string  
+    string arrlen = 7; // length for repeated field
 };
 
 extend google.protobuf.FieldOptions {  Validate vld = 50003;  }  

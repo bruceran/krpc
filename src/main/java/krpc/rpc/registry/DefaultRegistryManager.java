@@ -35,7 +35,7 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
 	List<DiscoverItem> discoverItems = new ArrayList<DiscoverItem>();
 	
 	private String dataDir;
-	private String localFile = "krpc.registry.local";
+	private String localFile = "registry.cache";
 	Map<String,String> localData = new HashMap<>();
 	
 	private int startInterval = 1000;

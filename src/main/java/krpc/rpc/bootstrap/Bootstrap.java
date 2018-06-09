@@ -57,6 +57,7 @@ import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.RpcFutureFactory;
 import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.TransportChannel;
+import krpc.rpc.core.Validator;
 import krpc.rpc.core.proto.RpcMetas;
 import krpc.rpc.impl.DefaultDataManager;
 import krpc.rpc.impl.DefaultExecutorManager;
@@ -64,6 +65,7 @@ import krpc.rpc.impl.DefaultMockService;
 import krpc.rpc.impl.DefaultProxyGenerator;
 import krpc.rpc.impl.DefaultRpcFutureFactory;
 import krpc.rpc.impl.DefaultServiceMetas;
+import krpc.rpc.impl.DefaultValidator;
 import krpc.rpc.impl.RpcCallableBase;
 import krpc.rpc.impl.RpcClient;
 import krpc.rpc.impl.RpcServer;
@@ -133,9 +135,15 @@ public class Bootstrap {
 		return new RpcApp();
 	}
 
-	public ServiceMetas newServiceMetas() {
-		return new DefaultServiceMetas();
+	public ServiceMetas newServiceMetas(Validator v) {
+		DefaultServiceMetas s = new DefaultServiceMetas();
+		s.setValidator(v);
+	    return s;
 	}
+
+	public Validator newValidator() {
+		return new DefaultValidator();
+	}	
 
 	public RpcCodec newRpcCodec(ServiceMetas serviceMetas) {
 		DefaultRpcCodec o = new DefaultRpcCodec(serviceMetas);
@@ -540,7 +548,8 @@ public class Bootstrap {
 		Trace.setAdapter(traceAdapter);
 		app.traceAdapter = traceAdapter;
 				
-		app.serviceMetas = newServiceMetas();
+		app.validator = newValidator();
+		app.serviceMetas = newServiceMetas(app.validator);
 		app.codec = newRpcCodec(app.serviceMetas);
 		app.proxyGenerator = newProxyGenerator();
 		app.registryManager = newRegistryManager(app.serviceMetas,appConfig.dataDir);
@@ -584,6 +593,7 @@ public class Bootstrap {
 			server.setFlowControl(app.flowControl);
 			server.setErrorMsgConverter(app.errorMsgConverter);
 			server.setMonitorService(app.monitorService);
+			server.setValidator(app.validator);
 
 			NettyServer ns = newNettyServer();
 			ns.setPort(c.port);
@@ -628,6 +638,7 @@ public class Bootstrap {
 			RpcClient client = newRpcClient();
 			client.setServiceMetas(app.serviceMetas);
 			client.setMockService(app.mockService);
+			client.setValidator(app.validator);
 
 			NettyClient nc = newNettyClient();
 			nc.setCallback(client);
@@ -687,6 +698,7 @@ public class Bootstrap {
 			server.setSessionService(ss);
 			server.setSessionIdCookieName(c.sessionIdCookieName);
 			server.setSessionIdCookiePath(c.sessionIdCookiePath);
+			server.setValidator(app.validator);
 
 			NettyHttpServer ns = newNettyHttpServer();
 			ns.setPort(c.port);

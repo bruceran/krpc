@@ -32,6 +32,7 @@ import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.ServerContext;
 import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.StartStop;
+import krpc.rpc.core.Validator;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.util.TypeSafe;
 import krpc.rpc.util.TypeSafeMap;
@@ -77,6 +78,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	HttpTransport httpTransport;
 	SessionService sessionService;
 	RpcDataConverter rpcDataConverter;
+	Validator validator;
 	ExecutorManager executorManager;
 	WebMonitorService monitorService;
 
@@ -170,7 +172,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			}
 			*/
 
-			DefaultWebRes res = generateError(req, RetCodes.HTTP_NOT_FOUND, 404);
+			DefaultWebRes res = generateError(req, RetCodes.HTTP_NOT_FOUND, 404,null);
 			httpTransport.send(connId, res);
 
 			return;
@@ -573,6 +575,15 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			return null;
 		}
 
+		if( validator != null ) {
+			String result = validator.validate(data);
+			if( result != null ) {
+				String retMsg = RetCodes.retCodeText(RetCodes.VALIDATE_ERROR) + result;
+				sendErrorResponse(ctx, req, RetCodes.VALIDATE_ERROR,retMsg);
+				return null;
+			}
+		}
+		
 		Message res = (Message) method.invoke(object, new Object[] { data });
 		return res;
 	}
@@ -849,7 +860,11 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	}
 
 	void sendErrorResponse(WebContextData ctx, DefaultWebReq req, int retCode) {
-		DefaultWebRes res = generateError(req, retCode);
+		sendErrorResponse(ctx,req,retCode,null);
+	}
+	
+	void sendErrorResponse(WebContextData ctx, DefaultWebReq req, int retCode,String retMsg) {
+		DefaultWebRes res = generateError(req, retCode, 200, retMsg);
 		httpTransport.send(ctx.getClientIp(), res);
 		WebClosure closure = new WebClosure(ctx,req,res);
 		ctx.end();
@@ -874,13 +889,14 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	}
 	
 	DefaultWebRes generateError(DefaultWebReq req, int retCode) {
-		return generateError(req, retCode, 200);
+		return generateError(req, retCode, 200, null);
 	}
 
-	DefaultWebRes generateError(DefaultWebReq req, int retCode, int httpCode) {
+	DefaultWebRes generateError(DefaultWebReq req, int retCode, int httpCode,String retMsg) {
 		DefaultWebRes res = new DefaultWebRes(req, httpCode);
 		res.setContentType(MIMETYPE_JSON);
-		String content = String.format(ContentFormat, retCode, RetCodes.retCodeText(retCode));
+		if(  retMsg == null ) retMsg =  RetCodes.retCodeText(retCode) ;
+		String content = String.format(ContentFormat, retCode, retMsg );
 		res.setContent(content);
 		return res;
 	}
@@ -1000,5 +1016,13 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void setSampleRate(int sampleRate) {
 		this.sampleRate = sampleRate;
+	}
+
+	public Validator getValidator() {
+		return validator;
+	}
+
+	public void setValidator(Validator validator) {
+		this.validator = validator;
 	}
 }

@@ -36,11 +36,43 @@ service UserService {
 	rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)   { option (krpc.msgId) = 2; };
 }
 
-message ValidateTestReq {
-	string userId = 1 [  (krpc.vld).required = true,  (krpc.vld).values = "1,2,3"  ] ;
-	string mobile = 2  [  (krpc.vld) = {required : true , range :"22"} ] ;
-	int32 i = 3;
+
+message ValidateSub {
+	string s1 = 11  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
+	string s2 = 14  [  (krpc.vld) = {srange :"mmm"} ] ;
+	int32 i1 = 15  [  (krpc.vld) = {nrange :"20,50"} ] ;
+	string i2 = 16  [  (krpc.vld) = {nrange :"20,-"} ] ;
+	int32 i3 = 17  [  (krpc.vld) = {nrange :"-,50"} ] ;
+	string i4 = 18  [  (krpc.vld) = {nrange :"21"} ] ;
 }
+
+message ValidateTestReq {
+	string userId = 1 [  (krpc.vld).required = true  ] ;
+	string s1 = 11  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
+	string s2 = 14  [  (krpc.vld) = {srange :"mmm"} ] ;
+	int32 i1 = 15  [  (krpc.vld) = {nrange :"20,50"} ] ;
+	string i2 = 16  [  (krpc.vld) = {nrange :"20,-"} ] ;
+	int32 i3 = 17  [  (krpc.vld) = {nrange :"-,50"} ] ;
+	string i4 = 18  [  (krpc.vld) = {nrange :"21"} ] ;
+	ValidateSub m = 8;
+	string s5 = 21  [  (krpc.vld) = { values :"aaa,bbb,ccc"} ] ;	
+	string s6 = 22  [  (krpc.vld) = { length :"4,8"} ] ;
+	int32 i5 = 23  [  (krpc.vld) = { length :"4,8"} ] ;
+	repeated string s7 = 24  [  (krpc.vld) = { arrlen :"2,8"} ];
+	string s31 = 31  [  (krpc.vld).match="int" ] ;
+	string s32 = 32  [  (krpc.vld).match="double" ] ;	
+	string s33 = 33  [  (krpc.vld).match="long" ] ;	
+	string s34 = 34  [  (krpc.vld).match="email" ] ;	
+	string s35 = 35  [  (krpc.vld).match="date" ] ;	
+	string s36 = 36  [  (krpc.vld).match="timestamp" ] ;	
+	string s37 = 37  [  (krpc.vld).match="19[0-9]+m" ] ;		
+	string s38 = 38  [  (krpc.vld).match="a.*c" ] ;	
+	string s39 = 39  [  (krpc.vld).match="^a.*c$" ] ;	
+	repeated ValidateSub k = 40  [  (krpc.vld) = { arrlen :"2,8"} ];
+	
+	repeated string s41 = 41  [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
+}
+
  message ValidateTestRes {
 	int32 retCode = 1;
 }

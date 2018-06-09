@@ -24,6 +24,7 @@ public class RetCodes {
 	 static public final int FLOW_LIMIT = -555;
 	 static public final int SERVICE_NOT_ALLOWED = -556;
 	 static public final int SERVER_CONNECTION_BROKEN = -557; // just for server log, not returned to client
+	 static public final int VALIDATE_ERROR = -558;
 	 
 	 // http client side
 	 static public final int HTTP_NOT_FOUND = -404;  
@@ -38,7 +39,7 @@ public class RetCodes {
 	 }
 	 
 	 static public boolean hasExecuted(int retCode) {
-		 return retCode == BUSINESS_ERROR || retCode <= -600;
+		 return retCode == BUSINESS_ERROR  || retCode  == VALIDATE_ERROR || retCode <= -600;
 	 }
 
 	 static public boolean canSafeRetry(int retCode) {
@@ -72,6 +73,8 @@ public class RetCodes {
 		 	case ENCODE_RES_ERROR: return "encode res error";
 		 	case NOT_FOUND: return "service or method not found";
 		 	case SERVICE_NOT_ALLOWED: return "serviceId is not allowed";
+		 	case VALIDATE_ERROR: return "validate error: ";
+		 	
 		 	
 		 	case HTTP_NOT_FOUND: return "not found";
 		 	case HTTP_METHOD_NOT_ALLOWED: return "method not allowed";

@@ -68,7 +68,7 @@ public final class KrpcExt {
 
     /**
      * <pre>
-     * value or min#max or min# or #max for string,number,repeated
+     * value or min#max or min# or #max for string,number
      * </pre>
      *
      * <code>string length = 4;</code>
@@ -76,7 +76,7 @@ public final class KrpcExt {
     java.lang.String getLength();
     /**
      * <pre>
-     * value or min#max or min# or #max for string,number,repeated
+     * value or min#max or min# or #max for string,number
      * </pre>
      *
      * <code>string length = 4;</code>
@@ -89,18 +89,18 @@ public final class KrpcExt {
      * value or min#max or min# or #max for number only
      * </pre>
      *
-     * <code>string range = 5;</code>
+     * <code>string nrange = 5;</code>
      */
-    java.lang.String getRange();
+    java.lang.String getNrange();
     /**
      * <pre>
      * value or min#max or min# or #max for number only
      * </pre>
      *
-     * <code>string range = 5;</code>
+     * <code>string nrange = 5;</code>
      */
     com.google.protobuf.ByteString
-        getRangeBytes();
+        getNrangeBytes();
 
     /**
      * <pre>
@@ -119,6 +119,24 @@ public final class KrpcExt {
      */
     com.google.protobuf.ByteString
         getSrangeBytes();
+
+    /**
+     * <pre>
+     * length for repeated field
+     * </pre>
+     *
+     * <code>string arrlen = 7;</code>
+     */
+    java.lang.String getArrlen();
+    /**
+     * <pre>
+     * length for repeated field
+     * </pre>
+     *
+     * <code>string arrlen = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getArrlenBytes();
   }
   /**
    * Protobuf type {@code krpc.Validate}
@@ -137,8 +155,9 @@ public final class KrpcExt {
       match_ = "";
       values_ = "";
       length_ = "";
-      range_ = "";
+      nrange_ = "";
       srange_ = "";
+      arrlen_ = "";
     }
 
     @java.lang.Override
@@ -191,13 +210,19 @@ public final class KrpcExt {
             case 42: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              range_ = s;
+              nrange_ = s;
               break;
             }
             case 50: {
               java.lang.String s = input.readStringRequireUtf8();
 
               srange_ = s;
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              arrlen_ = s;
               break;
             }
             default: {
@@ -333,7 +358,7 @@ public final class KrpcExt {
     private volatile java.lang.Object length_;
     /**
      * <pre>
-     * value or min#max or min# or #max for string,number,repeated
+     * value or min#max or min# or #max for string,number
      * </pre>
      *
      * <code>string length = 4;</code>
@@ -352,7 +377,7 @@ public final class KrpcExt {
     }
     /**
      * <pre>
-     * value or min#max or min# or #max for string,number,repeated
+     * value or min#max or min# or #max for string,number
      * </pre>
      *
      * <code>string length = 4;</code>
@@ -371,24 +396,24 @@ public final class KrpcExt {
       }
     }
 
-    public static final int RANGE_FIELD_NUMBER = 5;
-    private volatile java.lang.Object range_;
+    public static final int NRANGE_FIELD_NUMBER = 5;
+    private volatile java.lang.Object nrange_;
     /**
      * <pre>
      * value or min#max or min# or #max for number only
      * </pre>
      *
-     * <code>string range = 5;</code>
+     * <code>string nrange = 5;</code>
      */
-    public java.lang.String getRange() {
-      java.lang.Object ref = range_;
+    public java.lang.String getNrange() {
+      java.lang.Object ref = nrange_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        range_ = s;
+        nrange_ = s;
         return s;
       }
     }
@@ -397,16 +422,16 @@ public final class KrpcExt {
      * value or min#max or min# or #max for number only
      * </pre>
      *
-     * <code>string range = 5;</code>
+     * <code>string nrange = 5;</code>
      */
     public com.google.protobuf.ByteString
-        getRangeBytes() {
-      java.lang.Object ref = range_;
+        getNrangeBytes() {
+      java.lang.Object ref = nrange_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        range_ = b;
+        nrange_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -455,6 +480,48 @@ public final class KrpcExt {
       }
     }
 
+    public static final int ARRLEN_FIELD_NUMBER = 7;
+    private volatile java.lang.Object arrlen_;
+    /**
+     * <pre>
+     * length for repeated field
+     * </pre>
+     *
+     * <code>string arrlen = 7;</code>
+     */
+    public java.lang.String getArrlen() {
+      java.lang.Object ref = arrlen_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        arrlen_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * length for repeated field
+     * </pre>
+     *
+     * <code>string arrlen = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getArrlenBytes() {
+      java.lang.Object ref = arrlen_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        arrlen_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -481,11 +548,14 @@ public final class KrpcExt {
       if (!getLengthBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, length_);
       }
-      if (!getRangeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, range_);
+      if (!getNrangeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, nrange_);
       }
       if (!getSrangeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, srange_);
+      }
+      if (!getArrlenBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, arrlen_);
       }
       unknownFields.writeTo(output);
     }
@@ -509,11 +579,14 @@ public final class KrpcExt {
       if (!getLengthBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, length_);
       }
-      if (!getRangeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, range_);
+      if (!getNrangeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, nrange_);
       }
       if (!getSrangeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, srange_);
+      }
+      if (!getArrlenBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, arrlen_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -539,10 +612,12 @@ public final class KrpcExt {
           .equals(other.getValues());
       result = result && getLength()
           .equals(other.getLength());
-      result = result && getRange()
-          .equals(other.getRange());
+      result = result && getNrange()
+          .equals(other.getNrange());
       result = result && getSrange()
           .equals(other.getSrange());
+      result = result && getArrlen()
+          .equals(other.getArrlen());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -563,10 +638,12 @@ public final class KrpcExt {
       hash = (53 * hash) + getValues().hashCode();
       hash = (37 * hash) + LENGTH_FIELD_NUMBER;
       hash = (53 * hash) + getLength().hashCode();
-      hash = (37 * hash) + RANGE_FIELD_NUMBER;
-      hash = (53 * hash) + getRange().hashCode();
+      hash = (37 * hash) + NRANGE_FIELD_NUMBER;
+      hash = (53 * hash) + getNrange().hashCode();
       hash = (37 * hash) + SRANGE_FIELD_NUMBER;
       hash = (53 * hash) + getSrange().hashCode();
+      hash = (37 * hash) + ARRLEN_FIELD_NUMBER;
+      hash = (53 * hash) + getArrlen().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -708,9 +785,11 @@ public final class KrpcExt {
 
         length_ = "";
 
-        range_ = "";
+        nrange_ = "";
 
         srange_ = "";
+
+        arrlen_ = "";
 
         return this;
       }
@@ -742,8 +821,9 @@ public final class KrpcExt {
         result.match_ = match_;
         result.values_ = values_;
         result.length_ = length_;
-        result.range_ = range_;
+        result.nrange_ = nrange_;
         result.srange_ = srange_;
+        result.arrlen_ = arrlen_;
         onBuilt();
         return result;
       }
@@ -807,12 +887,16 @@ public final class KrpcExt {
           length_ = other.length_;
           onChanged();
         }
-        if (!other.getRange().isEmpty()) {
-          range_ = other.range_;
+        if (!other.getNrange().isEmpty()) {
+          nrange_ = other.nrange_;
           onChanged();
         }
         if (!other.getSrange().isEmpty()) {
           srange_ = other.srange_;
+          onChanged();
+        }
+        if (!other.getArrlen().isEmpty()) {
+          arrlen_ = other.arrlen_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -1059,7 +1143,7 @@ public final class KrpcExt {
       private java.lang.Object length_ = "";
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number,repeated
+       * value or min#max or min# or #max for string,number
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1078,7 +1162,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number,repeated
+       * value or min#max or min# or #max for string,number
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1098,7 +1182,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number,repeated
+       * value or min#max or min# or #max for string,number
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1113,7 +1197,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number,repeated
+       * value or min#max or min# or #max for string,number
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1126,7 +1210,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number,repeated
+       * value or min#max or min# or #max for string,number
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1143,21 +1227,21 @@ public final class KrpcExt {
         return this;
       }
 
-      private java.lang.Object range_ = "";
+      private java.lang.Object nrange_ = "";
       /**
        * <pre>
        * value or min#max or min# or #max for number only
        * </pre>
        *
-       * <code>string range = 5;</code>
+       * <code>string nrange = 5;</code>
        */
-      public java.lang.String getRange() {
-        java.lang.Object ref = range_;
+      public java.lang.String getNrange() {
+        java.lang.Object ref = nrange_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          range_ = s;
+          nrange_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
@@ -1168,16 +1252,16 @@ public final class KrpcExt {
        * value or min#max or min# or #max for number only
        * </pre>
        *
-       * <code>string range = 5;</code>
+       * <code>string nrange = 5;</code>
        */
       public com.google.protobuf.ByteString
-          getRangeBytes() {
-        java.lang.Object ref = range_;
+          getNrangeBytes() {
+        java.lang.Object ref = nrange_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          range_ = b;
+          nrange_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
@@ -1188,13 +1272,13 @@ public final class KrpcExt {
        * value or min#max or min# or #max for number only
        * </pre>
        *
-       * <code>string range = 5;</code>
+       * <code>string nrange = 5;</code>
        */
-      public Builder setRange(
+      public Builder setNrange(
           java.lang.String value) {
         if (value == null) value = "";
   
-        range_ = value;
+        nrange_ = value;
         onChanged();
         return this;
       }
@@ -1203,11 +1287,11 @@ public final class KrpcExt {
        * value or min#max or min# or #max for number only
        * </pre>
        *
-       * <code>string range = 5;</code>
+       * <code>string nrange = 5;</code>
        */
-      public Builder clearRange() {
+      public Builder clearNrange() {
         
-        range_ = getDefaultInstance().getRange();
+        nrange_ = getDefaultInstance().getNrange();
         onChanged();
         return this;
       }
@@ -1216,16 +1300,16 @@ public final class KrpcExt {
        * value or min#max or min# or #max for number only
        * </pre>
        *
-       * <code>string range = 5;</code>
+       * <code>string nrange = 5;</code>
        */
-      public Builder setRangeBytes(
+      public Builder setNrangeBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        range_ = value;
+        nrange_ = value;
         onChanged();
         return this;
       }
@@ -1313,6 +1397,93 @@ public final class KrpcExt {
   checkByteStringIsUtf8(value);
         
         srange_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object arrlen_ = "";
+      /**
+       * <pre>
+       * length for repeated field
+       * </pre>
+       *
+       * <code>string arrlen = 7;</code>
+       */
+      public java.lang.String getArrlen() {
+        java.lang.Object ref = arrlen_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          arrlen_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * length for repeated field
+       * </pre>
+       *
+       * <code>string arrlen = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getArrlenBytes() {
+        java.lang.Object ref = arrlen_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          arrlen_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * length for repeated field
+       * </pre>
+       *
+       * <code>string arrlen = 7;</code>
+       */
+      public Builder setArrlen(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        arrlen_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * length for repeated field
+       * </pre>
+       *
+       * <code>string arrlen = 7;</code>
+       */
+      public Builder clearArrlen() {
+        
+        arrlen_ = getDefaultInstance().getArrlen();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * length for repeated field
+       * </pre>
+       *
+       * <code>string arrlen = 7;</code>
+       */
+      public Builder setArrlenBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        arrlen_ = value;
         onChanged();
         return this;
       }
@@ -1417,14 +1588,14 @@ public final class KrpcExt {
   static {
     java.lang.String[] descriptorData = {
       "\n\rkrpcext.proto\022\004krpc\032\020descriptor.proto\"" +
-      "j\n\010Validate\022\020\n\010required\030\001 \001(\010\022\r\n\005match\030\002" +
-      " \001(\t\022\016\n\006values\030\003 \001(\t\022\016\n\006length\030\004 \001(\t\022\r\n\005" +
-      "range\030\005 \001(\t\022\016\n\006srange\030\006 \001(\t:4\n\tserviceId" +
-      "\022\037.google.protobuf.ServiceOptions\030\321\206\003 \001(" +
-      "\005:/\n\005msgId\022\036.google.protobuf.MethodOptio" +
-      "ns\030\322\206\003 \001(\005:<\n\003vld\022\035.google.protobuf.Fiel" +
-      "dOptions\030\323\206\003 \001(\0132\016.krpc.ValidateB\017\n\004krpc" +
-      "B\007KrpcExtb\006proto3"
+      "{\n\010Validate\022\020\n\010required\030\001 \001(\010\022\r\n\005match\030\002" +
+      " \001(\t\022\016\n\006values\030\003 \001(\t\022\016\n\006length\030\004 \001(\t\022\016\n\006" +
+      "nrange\030\005 \001(\t\022\016\n\006srange\030\006 \001(\t\022\016\n\006arrlen\030\007" +
+      " \001(\t:4\n\tserviceId\022\037.google.protobuf.Serv" +
+      "iceOptions\030\321\206\003 \001(\005:/\n\005msgId\022\036.google.pro" +
+      "tobuf.MethodOptions\030\322\206\003 \001(\005:<\n\003vld\022\035.goo" +
+      "gle.protobuf.FieldOptions\030\323\206\003 \001(\0132\016.krpc" +
+      ".ValidateB\017\n\004krpcB\007KrpcExtb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1444,7 +1615,7 @@ public final class KrpcExt {
     internal_static_krpc_Validate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_krpc_Validate_descriptor,
-        new java.lang.String[] { "Required", "Match", "Values", "Length", "Range", "Srange", });
+        new java.lang.String[] { "Required", "Match", "Values", "Length", "Nrange", "Srange", "Arrlen", });
     serviceId.internalInit(descriptor.getExtensions().get(0));
     msgId.internalInit(descriptor.getExtensions().get(1));
     vld.internalInit(descriptor.getExtensions().get(2));

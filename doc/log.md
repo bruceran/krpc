@@ -4,8 +4,8 @@
     可通过logback.xml配置调整生成的日志
     
     日志文件共4种：
-      作为rpcserver收到的日志，输出在server.log日志文件中
-      作为webserver收到的日志，输出在webserver.log日志文件中
+      作为rpcserver收到的请求处理日志，输出在server.log日志文件中
+      作为webserver收到的请求处理日志，输出在webserver.log日志文件中
       作为rpcclient发出的调用日志，输出在client.log日志文件中
       每分钟输出一次3类日志的统计，输出在stats.log日志文件中
 

@@ -11,6 +11,7 @@ import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.RpcCallable;
 import krpc.rpc.core.RpcException;
 import krpc.rpc.core.ServiceMetas;
+import krpc.rpc.core.Validator;
 
 import com.google.protobuf.DynamicMessage;
 
@@ -31,6 +32,8 @@ public class DefaultServiceMetas implements ServiceMetas {
 	HashMap<String,Descriptor> reqDescMap = new HashMap<String,Descriptor>();
 	HashMap<String,Descriptor> resDescMap = new HashMap<String,Descriptor>();
 	HashMap<Integer,RpcCallable> dynamicCallableMap = new HashMap<Integer,RpcCallable>();
+	
+	Validator validator;
 	
 	public Object findService(int serviceId) {
 		return services.get(serviceId);
@@ -71,6 +74,10 @@ public class DefaultServiceMetas implements ServiceMetas {
 	}	
 	
 	public Message generateRes(int serviceId,int msgId, int retCode) {
+		return generateRes(serviceId,msgId,retCode,null);
+	}
+	
+	public Message generateRes(int serviceId,int msgId, int retCode,String retMsg) {
 
 		Class<?> cls = findResClass(serviceId,msgId);
 		if( cls == null ) {
@@ -79,7 +86,8 @@ public class DefaultServiceMetas implements ServiceMetas {
 
 		Message res = null;
 		try {
-	    	String retMsg = RetCodes.retCodeText(retCode);
+			if( retMsg == null )
+	    		retMsg = RetCodes.retCodeText(retCode);
 			res = (Message)ReflectionUtils.generateResponseObject(cls,retCode,retMsg);
 		} catch(Exception e) {
 			throw new RpcException(RetCodes.ENCODE_RES_ERROR,"generateRes generate object exception");
@@ -111,6 +119,9 @@ public class DefaultServiceMetas implements ServiceMetas {
 			Method m = (Method)msgNameMap.get(msgName);
 			Class<?> reqCls = (Class<?>)msgNameMap.get(msgName+"-req");
 			Class<?> resCls = (Class<?>)msgNameMap.get(msgName+"-res");
+			
+			if( isService && validator != null ) validator.prepare(reqCls);
+			
 			Method reqParser = (Method)msgNameMap.get(msgName+"-reqp");
 			Method resParser = (Method)msgNameMap.get(msgName+"-resp");			
 			if( m != null ) {
@@ -220,6 +231,12 @@ public class DefaultServiceMetas implements ServiceMetas {
 		}			
 	
 		return res;
+	}
+	public Validator getValidator() {
+		return validator;
+	}
+	public void setValidator(Validator validator) {
+		this.validator = validator;
 	}	
 	
 }

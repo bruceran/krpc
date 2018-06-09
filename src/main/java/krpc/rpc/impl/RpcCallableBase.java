@@ -39,6 +39,7 @@ import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.StartStop;
 import krpc.rpc.core.Transport;
 import krpc.rpc.core.TransportCallback;
+import krpc.rpc.core.Validator;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.trace.TraceContext;
 import krpc.trace.Span;
@@ -66,6 +67,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	int retryQueueSize = 1000;
 	ThreadPoolExecutor retryPool;
 	MockService mockService;
+	Validator validator;
 	
 	// for server functions: as a service
 	ExecutorManager executorManager;
@@ -476,6 +478,15 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         	return null;
     	}
 
+		if( validator != null ) {
+			String result = validator.validate(req);
+			if( result != null ) {
+				String message = RetCodes.retCodeText(RetCodes.VALIDATE_ERROR) + result;
+				sendErrorResponse(ctx, req, RetCodes.VALIDATE_ERROR,message);
+				return null;
+			}
+		}
+		
 		Message res = (Message)method.invoke(object,new Object[]{req}); 
         return res;
 	}
@@ -503,9 +514,20 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 	
 	void sendErrorResponse(RpcContextData ctx, Message req, int retCode) {
+		sendErrorResponse(ctx,req,retCode,null);
+	}
+		
+	void sendErrorResponse(RpcContextData ctx, Message req, int retCode,String retMsg) {
 		RpcMeta reqMeta = ctx.getMeta();
 		RpcMeta resMeta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE).setServiceId(reqMeta.getServiceId()).setMsgId(reqMeta.getMsgId()).setSequence(reqMeta.getSequence()).setRetCode(retCode).build();
-		transport.send(ctx.getConnId(), new RpcData(resMeta));
+		RpcData data = null;
+		if( retMsg != null ) {
+			Message res = serviceMetas.generateRes(reqMeta.getServiceId(), reqMeta.getMsgId(), retCode, retMsg);
+			data = new RpcData(resMeta,res);
+		} else {
+			data = new RpcData(resMeta);
+		}
+		transport.send(ctx.getConnId(), data);
 		
 		RpcClosure closure = new RpcClosure(ctx,req);
 		endReq(closure,retCode);
@@ -638,6 +660,12 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 	public void setMockService(MockService mockService) {
 		this.mockService = mockService;
+	}
+	public Validator getValidator() {
+		return validator;
+	}
+	public void setValidator(Validator validator) {
+		this.validator = validator;
 	}
 	
 }
