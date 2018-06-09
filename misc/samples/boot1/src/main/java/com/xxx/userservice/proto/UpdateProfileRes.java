@@ -513,9 +513,7 @@ private static final long serialVersionUID = 0L;
      */
     public Builder setRetMsg(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      if (value == null) value = "";
   
       retMsg_ = value;
       onChanged();

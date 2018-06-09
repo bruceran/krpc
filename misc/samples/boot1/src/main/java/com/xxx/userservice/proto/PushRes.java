@@ -4,20 +4,20 @@
 package com.xxx.userservice.proto;
 
 /**
- * Protobuf type {@code OrderItemAttr}
+ * Protobuf type {@code PushRes}
  */
-public  final class OrderItemAttr extends
+public  final class PushRes extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:OrderItemAttr)
-    OrderItemAttrOrBuilder {
+    // @@protoc_insertion_point(message_implements:PushRes)
+    PushResOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use OrderItemAttr.newBuilder() to construct.
-  private OrderItemAttr(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use PushRes.newBuilder() to construct.
+  private PushRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private OrderItemAttr() {
-    name_ = "";
-    value_ = "";
+  private PushRes() {
+    retCode_ = 0;
+    retMsg_ = "";
   }
 
   @java.lang.Override
@@ -25,7 +25,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private OrderItemAttr(
+  private PushRes(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -44,16 +44,15 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
+          case 8: {
 
-            name_ = s;
+            retCode_ = input.readInt32();
             break;
           }
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            value_ = s;
+            retMsg_ = s;
             break;
           }
           default: {
@@ -77,79 +76,54 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.xxx.userservice.proto.UserServiceMetas.internal_static_OrderItemAttr_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_PushRes_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.xxx.userservice.proto.UserServiceMetas.internal_static_OrderItemAttr_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_PushRes_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.xxx.userservice.proto.OrderItemAttr.class, com.xxx.userservice.proto.OrderItemAttr.Builder.class);
+            com.xxx.userservice.proto.PushRes.class, com.xxx.userservice.proto.PushRes.Builder.class);
   }
 
-  public static final int NAME_FIELD_NUMBER = 1;
-  private volatile java.lang.Object name_;
+  public static final int RETCODE_FIELD_NUMBER = 1;
+  private int retCode_;
   /**
-   * <code>string name = 1;</code>
+   * <code>int32 retCode = 1;</code>
    */
-  public java.lang.String getName() {
-    java.lang.Object ref = name_;
+  public int getRetCode() {
+    return retCode_;
+  }
+
+  public static final int RETMSG_FIELD_NUMBER = 2;
+  private volatile java.lang.Object retMsg_;
+  /**
+   * <code>string retMsg = 2;</code>
+   */
+  public java.lang.String getRetMsg() {
+    java.lang.Object ref = retMsg_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      name_ = s;
+      retMsg_ = s;
       return s;
     }
   }
   /**
-   * <code>string name = 1;</code>
+   * <code>string retMsg = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getNameBytes() {
-    java.lang.Object ref = name_;
+      getRetMsgBytes() {
+    java.lang.Object ref = retMsg_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      name_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int VALUE_FIELD_NUMBER = 2;
-  private volatile java.lang.Object value_;
-  /**
-   * <code>string value = 2;</code>
-   */
-  public java.lang.String getValue() {
-    java.lang.Object ref = value_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      value_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string value = 2;</code>
-   */
-  public com.google.protobuf.ByteString
-      getValueBytes() {
-    java.lang.Object ref = value_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      value_ = b;
+      retMsg_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -170,11 +144,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getNameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+    if (retCode_ != 0) {
+      output.writeInt32(1, retCode_);
     }
-    if (!getValueBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
+    if (!getRetMsgBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, retMsg_);
     }
     unknownFields.writeTo(output);
   }
@@ -185,11 +159,12 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getNameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+    if (retCode_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(1, retCode_);
     }
-    if (!getValueBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
+    if (!getRetMsgBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, retMsg_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -201,16 +176,16 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.xxx.userservice.proto.OrderItemAttr)) {
+    if (!(obj instanceof com.xxx.userservice.proto.PushRes)) {
       return super.equals(obj);
     }
-    com.xxx.userservice.proto.OrderItemAttr other = (com.xxx.userservice.proto.OrderItemAttr) obj;
+    com.xxx.userservice.proto.PushRes other = (com.xxx.userservice.proto.PushRes) obj;
 
     boolean result = true;
-    result = result && getName()
-        .equals(other.getName());
-    result = result && getValue()
-        .equals(other.getValue());
+    result = result && (getRetCode()
+        == other.getRetCode());
+    result = result && getRetMsg()
+        .equals(other.getRetMsg());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -222,78 +197,78 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + NAME_FIELD_NUMBER;
-    hash = (53 * hash) + getName().hashCode();
-    hash = (37 * hash) + VALUE_FIELD_NUMBER;
-    hash = (53 * hash) + getValue().hashCode();
+    hash = (37 * hash) + RETCODE_FIELD_NUMBER;
+    hash = (53 * hash) + getRetCode();
+    hash = (37 * hash) + RETMSG_FIELD_NUMBER;
+    hash = (53 * hash) + getRetMsg().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(
+  public static com.xxx.userservice.proto.PushRes parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(
+  public static com.xxx.userservice.proto.PushRes parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(
+  public static com.xxx.userservice.proto.PushRes parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(
+  public static com.xxx.userservice.proto.PushRes parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.PushRes parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(
+  public static com.xxx.userservice.proto.PushRes parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.PushRes parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(
+  public static com.xxx.userservice.proto.PushRes parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.PushRes parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseDelimitedFrom(
+  public static com.xxx.userservice.proto.PushRes parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(
+  public static com.xxx.userservice.proto.PushRes parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.xxx.userservice.proto.OrderItemAttr parseFrom(
+  public static com.xxx.userservice.proto.PushRes parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -306,7 +281,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.xxx.userservice.proto.OrderItemAttr prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.PushRes prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -322,26 +297,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code OrderItemAttr}
+   * Protobuf type {@code PushRes}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:OrderItemAttr)
-      com.xxx.userservice.proto.OrderItemAttrOrBuilder {
+      // @@protoc_insertion_point(builder_implements:PushRes)
+      com.xxx.userservice.proto.PushResOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_OrderItemAttr_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_PushRes_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_OrderItemAttr_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_PushRes_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.xxx.userservice.proto.OrderItemAttr.class, com.xxx.userservice.proto.OrderItemAttr.Builder.class);
+              com.xxx.userservice.proto.PushRes.class, com.xxx.userservice.proto.PushRes.Builder.class);
     }
 
-    // Construct using com.xxx.userservice.proto.OrderItemAttr.newBuilder()
+    // Construct using com.xxx.userservice.proto.PushRes.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -359,9 +334,9 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      name_ = "";
+      retCode_ = 0;
 
-      value_ = "";
+      retMsg_ = "";
 
       return this;
     }
@@ -369,17 +344,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_OrderItemAttr_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_PushRes_descriptor;
     }
 
     @java.lang.Override
-    public com.xxx.userservice.proto.OrderItemAttr getDefaultInstanceForType() {
-      return com.xxx.userservice.proto.OrderItemAttr.getDefaultInstance();
+    public com.xxx.userservice.proto.PushRes getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.PushRes.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.xxx.userservice.proto.OrderItemAttr build() {
-      com.xxx.userservice.proto.OrderItemAttr result = buildPartial();
+    public com.xxx.userservice.proto.PushRes build() {
+      com.xxx.userservice.proto.PushRes result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -387,10 +362,10 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.xxx.userservice.proto.OrderItemAttr buildPartial() {
-      com.xxx.userservice.proto.OrderItemAttr result = new com.xxx.userservice.proto.OrderItemAttr(this);
-      result.name_ = name_;
-      result.value_ = value_;
+    public com.xxx.userservice.proto.PushRes buildPartial() {
+      com.xxx.userservice.proto.PushRes result = new com.xxx.userservice.proto.PushRes(this);
+      result.retCode_ = retCode_;
+      result.retMsg_ = retMsg_;
       onBuilt();
       return result;
     }
@@ -429,22 +404,21 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.xxx.userservice.proto.OrderItemAttr) {
-        return mergeFrom((com.xxx.userservice.proto.OrderItemAttr)other);
+      if (other instanceof com.xxx.userservice.proto.PushRes) {
+        return mergeFrom((com.xxx.userservice.proto.PushRes)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.xxx.userservice.proto.OrderItemAttr other) {
-      if (other == com.xxx.userservice.proto.OrderItemAttr.getDefaultInstance()) return this;
-      if (!other.getName().isEmpty()) {
-        name_ = other.name_;
-        onChanged();
+    public Builder mergeFrom(com.xxx.userservice.proto.PushRes other) {
+      if (other == com.xxx.userservice.proto.PushRes.getDefaultInstance()) return this;
+      if (other.getRetCode() != 0) {
+        setRetCode(other.getRetCode());
       }
-      if (!other.getValue().isEmpty()) {
-        value_ = other.value_;
+      if (!other.getRetMsg().isEmpty()) {
+        retMsg_ = other.retMsg_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -462,11 +436,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.xxx.userservice.proto.OrderItemAttr parsedMessage = null;
+      com.xxx.userservice.proto.PushRes parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.xxx.userservice.proto.OrderItemAttr) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.PushRes) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -476,140 +450,95 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object name_ = "";
+    private int retCode_ ;
     /**
-     * <code>string name = 1;</code>
+     * <code>int32 retCode = 1;</code>
      */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        name_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public int getRetCode() {
+      return retCode_;
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>int32 retCode = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        name_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string name = 1;</code>
-     */
-    public Builder setName(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      name_ = value;
+    public Builder setRetCode(int value) {
+      
+      retCode_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>int32 retCode = 1;</code>
      */
-    public Builder clearName() {
+    public Builder clearRetCode() {
       
-      name_ = getDefaultInstance().getName();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string name = 1;</code>
-     */
-    public Builder setNameBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      name_ = value;
+      retCode_ = 0;
       onChanged();
       return this;
     }
 
-    private java.lang.Object value_ = "";
+    private java.lang.Object retMsg_ = "";
     /**
-     * <code>string value = 2;</code>
+     * <code>string retMsg = 2;</code>
      */
-    public java.lang.String getValue() {
-      java.lang.Object ref = value_;
+    public java.lang.String getRetMsg() {
+      java.lang.Object ref = retMsg_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        value_ = s;
+        retMsg_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string value = 2;</code>
+     * <code>string retMsg = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getValueBytes() {
-      java.lang.Object ref = value_;
+        getRetMsgBytes() {
+      java.lang.Object ref = retMsg_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        value_ = b;
+        retMsg_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string value = 2;</code>
+     * <code>string retMsg = 2;</code>
      */
-    public Builder setValue(
+    public Builder setRetMsg(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      if (value == null) value = "";
   
-      value_ = value;
+      retMsg_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string value = 2;</code>
+     * <code>string retMsg = 2;</code>
      */
-    public Builder clearValue() {
+    public Builder clearRetMsg() {
       
-      value_ = getDefaultInstance().getValue();
+      retMsg_ = getDefaultInstance().getRetMsg();
       onChanged();
       return this;
     }
     /**
-     * <code>string value = 2;</code>
+     * <code>string retMsg = 2;</code>
      */
-    public Builder setValueBytes(
+    public Builder setRetMsgBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      value_ = value;
+      retMsg_ = value;
       onChanged();
       return this;
     }
@@ -626,41 +555,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:OrderItemAttr)
+    // @@protoc_insertion_point(builder_scope:PushRes)
   }
 
-  // @@protoc_insertion_point(class_scope:OrderItemAttr)
-  private static final com.xxx.userservice.proto.OrderItemAttr DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:PushRes)
+  private static final com.xxx.userservice.proto.PushRes DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.xxx.userservice.proto.OrderItemAttr();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.PushRes();
   }
 
-  public static com.xxx.userservice.proto.OrderItemAttr getDefaultInstance() {
+  public static com.xxx.userservice.proto.PushRes getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<OrderItemAttr>
-      PARSER = new com.google.protobuf.AbstractParser<OrderItemAttr>() {
+  private static final com.google.protobuf.Parser<PushRes>
+      PARSER = new com.google.protobuf.AbstractParser<PushRes>() {
     @java.lang.Override
-    public OrderItemAttr parsePartialFrom(
+    public PushRes parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new OrderItemAttr(input, extensionRegistry);
+      return new PushRes(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<OrderItemAttr> parser() {
+  public static com.google.protobuf.Parser<PushRes> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<OrderItemAttr> getParserForType() {
+  public com.google.protobuf.Parser<PushRes> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.xxx.userservice.proto.OrderItemAttr getDefaultInstanceForType() {
+  public com.xxx.userservice.proto.PushRes getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

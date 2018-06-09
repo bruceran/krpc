@@ -513,9 +513,7 @@ private static final long serialVersionUID = 0L;
      */
     public Builder setUserId(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      if (value == null) value = "";
   
       userId_ = value;
       onChanged();
@@ -582,9 +580,7 @@ private static final long serialVersionUID = 0L;
      */
     public Builder setMobile(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      if (value == null) value = "";
   
       mobile_ = value;
       onChanged();

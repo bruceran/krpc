@@ -7,12 +7,12 @@ krpc:
 #          interfaceName: com.xxx.userservice.proto.UserService
 #          impl: userService
 #    referer:
-#        interfaceName: com.xxx.pushservice.proto.PushService
+#        interfaceName: com.xxx.userservice.proto.PushService
 #        direct: 127.0.0.1:5600
     referers:
     -
         interfaceName: com.xxx.userservice.proto.UserService
         direct: 127.0.0.1:5600
     -
-        interfaceName: com.xxx.pushservice.proto.PushService
+        interfaceName: com.xxx.userservice.proto.PushService
         direct: 127.0.0.1:5600    

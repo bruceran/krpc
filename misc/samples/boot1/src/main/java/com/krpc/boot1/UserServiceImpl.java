@@ -5,7 +5,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.xxx.pushservice.proto.PushService;
+import com.xxx.userservice.proto.PushService;
 import com.xxx.userservice.proto.LoginReq;
 import com.xxx.userservice.proto.LoginRes;
 import com.xxx.userservice.proto.UpdateProfileReq;

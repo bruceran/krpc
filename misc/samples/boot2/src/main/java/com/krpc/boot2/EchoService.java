@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
-import com.xxx.pushservice.proto.PushService;
+import com.xxx.userservice.proto.PushService;
 import com.xxx.userservice.proto.UserService;
 
 @Component

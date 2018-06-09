@@ -513,9 +513,7 @@ private static final long serialVersionUID = 0L;
      */
     public Builder setUserName(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      if (value == null) value = "";
   
       userName_ = value;
       onChanged();
@@ -582,9 +580,7 @@ private static final long serialVersionUID = 0L;
      */
     public Builder setPassword(
         java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+      if (value == null) value = "";
   
       password_ = value;
       onChanged();
