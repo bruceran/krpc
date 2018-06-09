@@ -21,7 +21,7 @@ public class HttpServerWithSessionTest {
 		UserServiceImpl impl = new UserServiceImpl(); // in file: HttpServerTest.java
 
 		RpcApp app = new Bootstrap()
-			.addWebServer(new WebServerConfig(8888).setSessionService("jedis:addrs=127.0.0.1:6379")) 
+			.addWebServer(new WebServerConfig(8888).setDefaultSessionService("jedissessionservice:addrs=127.0.0.1:6379")) 
 			.addServer(5600) 
 			.addService(UserService.class,impl) 
 			.build();

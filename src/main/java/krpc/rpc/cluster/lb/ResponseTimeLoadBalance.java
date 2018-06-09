@@ -1,7 +1,5 @@
 package krpc.rpc.cluster.lb;
 
-
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.protobuf.Message;

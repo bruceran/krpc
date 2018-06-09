@@ -2,8 +2,14 @@ package krpc.test.misc;
 
 import org.junit.Test;
 
+import krpc.rpc.core.RpcContextData;
+import krpc.rpc.core.ServerContextData;
+import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.impl.JedisFlowControl;
 import krpc.rpc.impl.MemoryFlowControl;
+import krpc.trace.DefaultTraceContext;
+import krpc.trace.DefaultTraceContextFactory;
+import krpc.trace.TraceContext;
 
 
 public class FlowControlTest {
@@ -13,11 +19,15 @@ public class FlowControlTest {
 		
 		System.out.println("memory testing ...");
 
+		RpcMeta meta = RpcMeta.newBuilder().setServiceId(100).setMsgId(1).build();
+		TraceContext traceContext = new DefaultTraceContextFactory().newTraceContext("111","111","","",1,"TEST","");
+		ServerContextData ctx = new ServerContextData("0:0:0",meta,traceContext);
+		
 		MemoryFlowControl impl = new MemoryFlowControl();
 		impl.addLimit(100, 10, 5);
 		
 		for(int i=0;i<8;++i) {
-			boolean failed = impl.exceedLimit(100, 1,null);
+			boolean failed = impl.exceedLimit(ctx,null,null);
 			System.out.println("failed="+failed);
 			Thread.sleep(100);
 		}
@@ -33,8 +43,13 @@ public class FlowControlTest {
 		impl.addLimit(100, 10, 5);
 		impl.init();
 		
+		RpcMeta meta = RpcMeta.newBuilder().setServiceId(100).setMsgId(1).build();
+		TraceContext traceContext = new DefaultTraceContextFactory().newTraceContext("111","111","","",1,"TEST","");
+		ServerContextData ctx = new ServerContextData("0:0:0",meta,traceContext);
+		
+		
 		for(int i=0;i<8;++i) {
-			boolean failed = impl.exceedLimit(100, 1,null);
+			boolean failed = impl.exceedLimit(ctx,null,null);
 			System.out.println("failed="+failed);
 			Thread.sleep(100);
 		}

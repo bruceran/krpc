@@ -20,6 +20,8 @@ public class ServerConfig  {
 	int maxThreads = 0;
 	int queueSize = 10000;
 	
+	String flowControl = "";
+	
 	public ServerConfig() {
 	}
 
@@ -127,7 +129,17 @@ public class ServerConfig  {
 		return backlog;
 	}
 
-	public void setBacklog(int backlog) {
+	public ServerConfig setBacklog(int backlog) {
 		this.backlog = backlog;
+		return this;
+	}
+
+	public String getFlowControl() {
+		return flowControl;
+	}
+
+	public ServerConfig setFlowControl(String flowControl) {
+		this.flowControl = flowControl;
+		return this;
 	}	
 }

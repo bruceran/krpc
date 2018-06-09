@@ -2,6 +2,7 @@ package krpc.rpc.impl;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.Descriptors.Descriptor;
@@ -73,6 +74,20 @@ public class DefaultServiceMetas implements ServiceMetas {
 		return callableMap.get(implClsName);
 	}	
 	
+	public Map<Integer, String> getMsgNames(int serviceId) {
+		Map<Integer, String> map = new HashMap<>();
+		String prefix = serviceId + "." ;
+		for( Map.Entry<String, Method> entry: methods.entrySet()) {
+			String key = entry.getKey();
+			String name = entry.getValue().getName();
+			if( key.startsWith(prefix) ) {
+				int p = key.indexOf(".");
+				map.put(Integer.parseInt( key.substring(p+1) ), name);
+			}
+		}
+		return map;
+	}
+	
 	public Message generateRes(int serviceId,int msgId, int retCode) {
 		return generateRes(serviceId,msgId,retCode,null);
 	}
@@ -96,8 +111,6 @@ public class DefaultServiceMetas implements ServiceMetas {
 		return res;
 	}
 
-	// todo serviceId duplicated check,  referer sync/async use the same serviceId
-	
 	private void addImpl(Class<?> intf, Object obj,boolean isService) {
 		
 		ReflectionUtils.checkInterface(intf,obj);

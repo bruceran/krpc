@@ -14,7 +14,6 @@
               <attribute name="traceAdapter" type="string" use="optional"/>
               <attribute name="mockFile" type="string" use="optional"/>
               <attribute name="errorMsgConverter" type="string" use="optional"/>
-              <attribute name="flowControl" type="string" use="optional"/>
               <attribute name="dataDir" type="string" use="optional"/>
 	    </complexType>    
     </element>
@@ -65,11 +64,21 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
+              <attribute name="flowControl" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
+	<element name="plugin">
+	    <complexType>
+              <attribute name="params" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+    
     <element name="webserver">
 	    <complexType>
+			  <sequence minOccurs="0" maxOccurs="unbounded">
+		            <element ref="krpc:plugin" minOccurs="0" maxOccurs="unbounded"/>
+		      </sequence>	  	    
               <attribute name="id" type="string" use="optional"/>
               <attribute name="port" type="string" use="optional"/>
               <attribute name="host" type="string" use="optional"/>
@@ -81,12 +90,13 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-              <attribute name="sessionService" type="string" use="optional"/>
               <attribute name="routesFile" type="string" use="optional"/>
               <attribute name="sessionIdCookieName" type="string" use="optional"/>
               <attribute name="sessionIdCookiePath" type="string" use="optional"/>
               <attribute name="protoDir" type="string" use="optional"/>
               <attribute name="sampleRate" type="string" use="optional"/>
+              <attribute name="defaultSessionService" type="string" use="optional"/>
+              <attribute name="flowControl" type="string" use="optional"/>
 	    </complexType>    
     </element>
     

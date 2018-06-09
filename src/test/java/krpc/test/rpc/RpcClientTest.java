@@ -27,7 +27,6 @@ public class RpcClientTest {
 		RpcApp app = new Bootstrap() 
 				.addClient(new ClientConfig().setConnections(1))
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
-				.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
 				.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
 				//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
 				.setName("usa")
@@ -40,12 +39,12 @@ public class RpcClientTest {
 		//Thread.sleep(2000);
 		
 		UserService us = app.getReferer("us");
-		UserServiceAsync usa = app.getReferer("usa");
+		UserServiceAsync usa = app.getReferer("usAsync"); // + Async to get the async referer
 
 		LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
 		LoginRes res = us.login(req);
 		log.info("res="+res.getRetCode()+","+res.getRetMsg());
-/*
+
 		//Thread.sleep(2000);
 		
 		UpdateProfileReq ureq = UpdateProfileReq.newBuilder().build();
@@ -115,7 +114,7 @@ public class RpcClientTest {
 		
 
 		// user code end
-*/		
+ 	
 		Thread.sleep(3000);
 		
 		app.stopAndClose();

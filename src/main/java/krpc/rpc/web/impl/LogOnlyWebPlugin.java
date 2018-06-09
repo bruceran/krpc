@@ -11,6 +11,7 @@ import krpc.common.Json;
 import krpc.rpc.core.Continue;
 import krpc.rpc.web.AsyncPostParsePlugin;
 import krpc.rpc.web.AsyncPostSessionPlugin;
+import krpc.rpc.web.AsyncPreParsePlugin;
 import krpc.rpc.web.ParserPlugin;
 import krpc.rpc.web.PostParsePlugin;
 import krpc.rpc.web.PostRenderPlugin;
@@ -24,7 +25,7 @@ import krpc.rpc.web.WebReq;
 import krpc.rpc.web.WebRes;
 
 public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugin, PreParsePlugin, PostSessionPlugin,
-		PostRenderPlugin, PostParsePlugin, ParserPlugin, AsyncPostSessionPlugin, AsyncPostParsePlugin,InitClose {
+		PostRenderPlugin, PostParsePlugin, ParserPlugin, AsyncPreParsePlugin,  AsyncPostSessionPlugin, AsyncPostParsePlugin,InitClose {
 
 	static Logger log = LoggerFactory.getLogger(LogOnlyWebPlugin.class);
 
@@ -40,7 +41,19 @@ public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugi
 	}
 	
 	@Override
-	public void asyncPostParse(int serviceId, int msgId, WebReq req, Continue<Integer> cont) {
+	public void asyncPreParse(WebContextData ctx, WebReq req, Continue<Integer> cont) {
+		t.schedule( new TimerTask() {
+			public void run() {
+				log.info("asyncPreParse called");
+				cont.readyToContinue(0);
+			}
+		}, 0);
+		
+	}
+
+	
+	@Override
+	public void asyncPostParse(WebContextData ctx, WebReq req, Continue<Integer> cont) {
 		t.schedule( new TimerTask() {
 			public void run() {
 				log.info("asyncPostParse called");
@@ -61,13 +74,13 @@ public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugi
 	}
 
 	@Override
-	public int parse(int serviceId, int msgId, WebReq req) {
+	public int parse(WebContextData ctx, WebReq req) {
 		log.info("parse called");
 		return 0;
 	}
 
 	@Override
-	public int postParse(int serviceId, int msgId, WebReq req) {
+	public int postParse(WebContextData ctx, WebReq req) {
 		log.info("postParse called");
 		return 0;
 	}
@@ -84,7 +97,7 @@ public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugi
 	}
 
 	@Override
-	public int preParse(int serviceId, int msgId, WebReq req) {
+	public int preParse(WebContextData ctx, WebReq req) {
 		log.info("preParse called");
 		return 0;
 	}

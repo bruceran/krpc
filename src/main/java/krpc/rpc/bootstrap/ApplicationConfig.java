@@ -4,9 +4,7 @@ public class ApplicationConfig  {
 
 	String name = "unknown";
 	String traceAdapter = "default"; // default, skywalking, zipkin, cat
-
 	String errorMsgConverter = "file";
-	String flowControl = "";
 	String mockFile = "";
 	
 	String dataDir = ".";
@@ -16,15 +14,6 @@ public class ApplicationConfig  {
 
 	public ApplicationConfig(String name) {
 		this.name = name;
-	}
-
-	public String getFlowControl() {
-		return flowControl;
-	}
-
-	public ApplicationConfig setFlowControl(String flowControl) {
-		this.flowControl = flowControl;
-		return this;
 	}
 
 	public String getMockFile() {

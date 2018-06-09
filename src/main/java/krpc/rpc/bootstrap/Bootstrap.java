@@ -1,8 +1,11 @@
 package krpc.rpc.bootstrap;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;
@@ -10,11 +13,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -101,7 +103,6 @@ public class Bootstrap {
 
 	private ApplicationConfig appConfig = new ApplicationConfig();
 	private MonitorConfig monitorConfig = new MonitorConfig();
-
 	private List<RegistryConfig> registryList = new ArrayList<RegistryConfig>();
 	private List<ServerConfig> serverList = new ArrayList<ServerConfig>();
 	private List<ClientConfig> clientList = new ArrayList<ClientConfig>();
@@ -113,18 +114,50 @@ public class Bootstrap {
 	private HashMap<String, ServerConfig> servers = new HashMap<>();
 	private HashMap<String, ClientConfig> clients = new HashMap<>();
 	private HashMap<String, ServiceConfig> services = new HashMap<>();
+	private HashSet<String> serviceInterfaces = new HashSet<>();
 	private HashMap<String, RefererConfig> referers = new HashMap<>();
+	private HashSet<String> refererInterfaces = new HashSet<>();
 	private HashMap<String, WebServerConfig> webServers = new HashMap<>();
 
-	HashMap<String, LoadBalance> loadBalanceTypes = new HashMap<>(); // not sington
-	HashMap<String, Registry> registryTypes = new HashMap<>();
-	HashMap<String, FlowControl> flowControlTypes = new HashMap<>();
-	HashMap<String, ErrorMsgConverter> errorMsgConverterTypes = new HashMap<>();
-	HashMap<String, LogFormatter> logFormatterTypes = new HashMap<>();
-	HashMap<String, SessionService> sessionServiceTypes = new HashMap<>();
-	HashMap<String, WebPlugin> webPluginTypes = new HashMap<>();
+	static public class PluginInfo {
+		Class cls;
+		Class impCls;
+		Object bean;
+		Set<String> matchNames = new HashSet<>();
+		
+		public PluginInfo(Class cls,Class impCls) {
+			this(cls,impCls,null,null);
+		}
+		
+		public PluginInfo(Class cls,Class impCls,Object bean,String beanName) {
+			this.cls = cls;
+			this.impCls = impCls;
+			this.bean = bean;
+	
+			
+			String suffix = cls.getSimpleName().toLowerCase();
+			
+			if( beanName != null )
+				matchNames.add(beanName);
+			matchNames.add(impCls.getName().toLowerCase());
+			matchNames.add(impCls.getSimpleName().toLowerCase());
+			matchNames.add(removeSuffix(impCls.getSimpleName().toLowerCase(),suffix));	
+		}
+	
+		String removeSuffix(String s, String suffix) {
+			if (s.endsWith(suffix)) {
+				return s.substring(0, s.length() - suffix.length());
+			}
+			return s;
+		}		
+	}
 
+	HashMap<String, List<PluginInfo>> plugins = new HashMap<>();
+
+	RpcApp app = newRpcApp();
+	
 	public Bootstrap() {
+		loadSpi();
 	}
 
 	public Bootstrap(String name) {
@@ -211,7 +244,7 @@ public class Bootstrap {
 		m.setLogQueueSize(c.logQueueSize);
 		m.setAccessLog(c.accessLog);
 
-		LogFormatter lf = getLogFormatterObj(monitorConfig.logFormatter);
+		LogFormatter lf = getLogFormatterObj(parseType(monitorConfig.logFormatter));
 		String params = parseParams(monitorConfig.logFormatter);
 		params += "maskFields="+(c.maskFields==null?"":c.maskFields)+ ";maxRepeatedSizeToLog="+c.maxRepeatedSizeToLog+";printDefault="+c.printDefault;
 		lf.config(params);
@@ -228,7 +261,7 @@ public class Bootstrap {
 		DefaultRouteService rs = new DefaultRouteService();
 
 		if (!isEmpty(c.routesFile)) {
-			loadMapping(rs, c.routesFile);
+			loadRoutes(rs, c.routesFile);
 		}
 
 		return rs;
@@ -249,17 +282,6 @@ public class Bootstrap {
 	public RpcApp build() {
 		prepare();
 		return doBuild();
-	}
-
-	void loadSpi() {
-		loadSpi(LoadBalance.class, loadBalanceTypes, "LoadBalance");
-		loadSpi(FlowControl.class, flowControlTypes, "FlowControl");
-		loadSpi(Registry.class, registryTypes, "Registry");
-		loadSpi(ErrorMsgConverter.class, errorMsgConverterTypes, "ErrorMsgConverter");
-		loadSpi(ErrorMsgConverter.class, errorMsgConverterTypes, "ErrorMsgConverter");
-		loadSpi(LogFormatter.class, logFormatterTypes, "LogFormatter");
-		loadSpi(SessionService.class, sessionServiceTypes, "SessionService");
-		loadSpi(WebPlugin.class, webPluginTypes, "WebPlugin");
 	}
 
 	public TraceAdapter newTraceAdapter() {
@@ -285,20 +307,20 @@ public class Bootstrap {
 	
 	private void prepare() {
 
-		loadSpi();
-
 		if (isEmpty(appConfig.name))
 			throw new RuntimeException("app name must be specified");
 
 		if (isEmpty(appConfig.errorMsgConverter))
 			appConfig.errorMsgConverter = "file";
-
-		if (!isEmpty(appConfig.flowControl) && getFlowControlObj(appConfig.flowControl) == null) {
-			throw new RuntimeException("flow control not registered");
+		
+		if( isEmpty(appConfig.dataDir) ) {
+			appConfig.dataDir = ".";
 		}
 
-		if (isEmpty(monitorConfig.logFormatter))
+		if (isEmpty(monitorConfig.logFormatter)) {
 			monitorConfig.logFormatter = "simple";
+		}
+		
 		if (getLogFormatterObj(monitorConfig.logFormatter) == null) {
 			throw new RuntimeException("log formatter not registered");
 		}
@@ -307,9 +329,9 @@ public class Bootstrap {
 			throw new RuntimeException("service or referer or webserver must be specified");
 
 		ServerConfig lastServer = null;
-		// WebServerConfig lastWebServer = null;
+		WebServerConfig lastWebServer = null;
 		ClientConfig lastClient = null;
-
+		
 		String defaultRegistry  = null;
 		
 		for (RegistryConfig c : registryList) {
@@ -332,6 +354,11 @@ public class Bootstrap {
 				c.id = "default";
 			if (servers.containsKey(c.id))
 				throw new RuntimeException(String.format("server id %s duplicated", c.id));
+
+			if (!isEmpty(c.flowControl) && getFlowControlObj(c.flowControl) == null) {
+				throw new RuntimeException("flow control not registered");
+			}
+
 			servers.put(c.id, c);
 			lastServer = c;
 		}
@@ -341,12 +368,23 @@ public class Bootstrap {
 				c.id = "default";
 			if (webServers.containsKey(c.id))
 				throw new RuntimeException(String.format("web server id %s duplicated", c.id));
+			
+			if (!isEmpty(c.flowControl) && getFlowControlObj(c.flowControl) == null) {
+				throw new RuntimeException("flow control not registered");
+			}
+			
+			if (getSessionServiceObj(c.defaultSessionService) == null)
+				throw new RuntimeException(String.format("unknown session service %s", c.defaultSessionService));
 
-			if (getSessionServiceObj(c.sessionService) == null)
-				throw new RuntimeException(String.format("unknown session service %s", c.sessionService));
-
+			if( c.pluginParams != null ) {
+				for(String s:c.pluginParams) {
+					if (getWebPluginObj(s) == null)
+						throw new RuntimeException(String.format("unknown web plugin %s", s));
+				}
+			}
+			
 			webServers.put(c.id, c);
-			// lastWebServer = c;
+			lastWebServer = c;
 		}
 
 		for (ClientConfig c : clientList) {
@@ -357,7 +395,8 @@ public class Bootstrap {
 
 			if (isEmpty(c.loadBalance))
 				throw new RuntimeException(String.format("default loadbalance policy must be specified"));
-			if (!checkLoadBalanceType(c.loadBalance))
+			
+			if ( getLoadBalanceObj(c.loadBalance) == null )
 				throw new RuntimeException(String.format("client id %s loadbalance not specified", c.id));
 
 			clients.put(c.id, c);
@@ -373,6 +412,8 @@ public class Bootstrap {
 				c.id = c.interfaceName;
 			if (services.containsKey(c.id))
 				throw new RuntimeException(String.format("service id %s duplicated", c.id));
+			if( serviceInterfaces.contains(c.interfaceName)) 
+				throw new RuntimeException(String.format("service %s duplicated", c.interfaceName));
 			if (c.getImpl() == null)
 				throw new RuntimeException(String.format("service interface %s must be implemented", c.interfaceName));
 			ReflectionUtils.checkInterface(c.interfaceName, c.getImpl());
@@ -380,7 +421,6 @@ public class Bootstrap {
 				c.transport = "default";
 			}
 			if (c.isReverse()) {
-
 				if (!clients.containsKey(c.transport)) {
 					if (c.transport.equals("default") && clients.size() == 0) {
 						clients.put("default", new ClientConfig("default"));
@@ -428,6 +468,7 @@ public class Bootstrap {
 					throw new RuntimeException(String.format("method pattern not specified"));
 			}
 
+			serviceInterfaces.add(c.interfaceName);
 			services.put(c.id, c);
 		}
 
@@ -456,7 +497,9 @@ public class Bootstrap {
 			}
 			if (referers.containsKey(c.id))
 				throw new RuntimeException(String.format("referer id %s duplicated", c.id));
-
+			if( refererInterfaces.contains(c.interfaceName)) 
+				throw new RuntimeException(String.format("referer %s duplicated", c.interfaceName));
+			
 			if (isEmpty(c.transport)) {
 				c.transport = "default";
 			}
@@ -491,15 +534,12 @@ public class Bootstrap {
 					c.loadBalance = cc.loadBalance;
 				}
 
-				if (!checkLoadBalanceType(c.loadBalance))
+				if (getLoadBalanceObj(c.loadBalance) == null)
 					throw new RuntimeException(String.format("client id %s loadbalance not correct", c.id));
-
 			}
 
 			if (!c.isReverse()) {
-				if (isEmpty(c.registryName) && isEmpty(c.direct)) {
-					c.direct = "127.0.0.1:5600";
-				}
+
 				if (!isEmpty(c.registryName) && !isEmpty(c.direct)) {
 					throw new RuntimeException(
 							String.format("referer registry and direct cannot be specified at the same time", c.id));
@@ -509,8 +549,12 @@ public class Bootstrap {
 					if (!registries.containsKey(c.registryName))
 						throw new RuntimeException(String.format("service registry %s not found", c.registryName));
 				} else {
-					if( defaultRegistry != null ) {
-						c.registryName = defaultRegistry;
+					if(  isEmpty(c.direct)  ) {
+						if( defaultRegistry != null ) {
+							c.registryName = defaultRegistry;
+						} else {
+							c.direct = "127.0.0.1:5600";
+						}
 					}
 				}
 
@@ -529,6 +573,7 @@ public class Bootstrap {
 					throw new RuntimeException(String.format("referer retry level %s not valid", c.retryLevel));
 			}
 
+			refererInterfaces.add(c.interfaceName);
 			referers.put(c.id, c);
 		}
 
@@ -536,18 +581,13 @@ public class Bootstrap {
 
 	private RpcApp doBuild() {
 
-		RpcApp app = newRpcApp();
 		app.name = appConfig.name;
 		app.instanceId = UUID.randomUUID().toString().replaceAll("-", "");
 		
-		if( isEmpty(appConfig.dataDir) ) {
-			appConfig.dataDir = ".";
-		}
-
 		TraceAdapter traceAdapter = newTraceAdapter();
 		Trace.setAdapter(traceAdapter);
 		app.traceAdapter = traceAdapter;
-				
+
 		app.validator = newValidator();
 		app.serviceMetas = newServiceMetas(app.validator);
 		app.codec = newRpcCodec(app.serviceMetas);
@@ -555,17 +595,10 @@ public class Bootstrap {
 		app.registryManager = newRegistryManager(app.serviceMetas,appConfig.dataDir);
 		app.monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig);
 
-		if (!isEmpty(appConfig.flowControl)) {
-			FlowControl fc = getFlowControlObj(appConfig.flowControl);
-			fc.config(parseParams(appConfig.flowControl));
-			app.flowControl = fc;
-		}
-
 		if (!isEmpty(appConfig.errorMsgConverter)) {
 			ErrorMsgConverter emc = getErrorMsgConverterObj(appConfig.errorMsgConverter);
 			if (emc == null)
 				throw new RuntimeException("unknown errorMsgConverter type, type=" + appConfig.errorMsgConverter);
-			emc.config(parseParams(appConfig.errorMsgConverter));
 			app.errorMsgConverter = emc;
 		}
 		if (!isEmpty(appConfig.mockFile)) {
@@ -576,7 +609,7 @@ public class Bootstrap {
 
 		for (String name : registries.keySet()) {
 			RegistryConfig c = registries.get(name);
-			Registry impl = getRegistryObj(c.type);
+			Registry impl = getRegistryObj(parseType(c.type));
 			String params = parseParams(c.type);
 			params += "instanceId="+app.instanceId+";addrs="+c.addrs+";enableRegist="+c.enableRegist+";enableDiscover="+c.enableDiscover;
 			if(!isEmpty(c.params))
@@ -590,7 +623,12 @@ public class Bootstrap {
 			RpcServer server = newRpcServer();
 			server.setServiceMetas(app.serviceMetas);
 			server.setMockService(app.mockService);
-			server.setFlowControl(app.flowControl);
+			
+			if (!isEmpty(c.flowControl)) {
+				FlowControl fc = getFlowControlObj(c.flowControl);
+				server.setFlowControl(fc);
+			}
+			
 			server.setErrorMsgConverter(app.errorMsgConverter);
 			server.setMonitorService(app.monitorService);
 			server.setValidator(app.validator);
@@ -630,6 +668,49 @@ public class Bootstrap {
 			}
 
 			app.servers.put(name, server);
+		}
+
+		for (String name : webServers.keySet()) {
+			WebServerConfig c = webServers.get(name);
+
+			SessionService ss = getSessionServiceObj(c.defaultSessionService);
+			FlowControl fc = getFlowControlObj(c.flowControl);
+
+			WebServer server = newWebServer();
+			server.setSampleRate(c.sampleRate);
+			server.setServiceMetas(app.serviceMetas);
+			server.setErrorMsgConverter(app.errorMsgConverter);
+			server.setMonitorService(app.monitorService);
+			server.setRouteService(newRouteService(c));
+			server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
+			server.setDefaultSessionService(ss);
+			server.setFlowControl(fc);
+			server.setSessionIdCookieName(c.sessionIdCookieName);
+			server.setSessionIdCookiePath(c.sessionIdCookiePath);
+			server.setValidator(app.validator);
+
+			NettyHttpServer ns = newNettyHttpServer();
+			ns.setPort(c.port);
+			ns.setCallback(server);
+			ns.setHost(c.host);
+			ns.setBacklog(c.backlog);
+			ns.setIdleSeconds(c.idleSeconds);
+			ns.setMaxContentLength(c.maxContentLength);
+			ns.setMaxConns(c.maxConns);
+			ns.setWorkerThreads(c.ioThreads);
+			server.setHttpTransport(ns);
+
+			ExecutorManager em = newExecutorManager();
+			if (c.threads >= 0) {
+				if (c.threads == 0)
+					c.threads = processors;
+				em.addDefaultPool(c.threads, c.maxThreads, c.queueSize);
+			}
+			server.setExecutorManager(em);
+
+			app.webServers.put(name, server);
+			
+			loadProtos(app,c.protoDir);
 		}
 
 		for (String name : clients.keySet()) {
@@ -673,55 +754,12 @@ public class Bootstrap {
 				}
 				client.setExecutorManager(em);
 
-				client.setFlowControl(app.flowControl);
 				client.setErrorMsgConverter(app.errorMsgConverter);
 			}
 
 			client.setMonitorService(app.monitorService);
 
 			app.clients.put(name, client);
-		}
-
-		for (String name : webServers.keySet()) {
-			WebServerConfig c = webServers.get(name);
-
-			SessionService ss = getSessionServiceObj(c.sessionService);
-			ss.config(parseParams(c.sessionService));
-			WebServer server = newWebServer();
-			server.setSampleRate(c.sampleRate);
-			server.setServiceMetas(app.serviceMetas);
-			server.setFlowControl(app.flowControl);
-			server.setErrorMsgConverter(app.errorMsgConverter);
-			server.setMonitorService(app.monitorService);
-			server.setRouteService(newRouteService(c));
-			server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
-			server.setSessionService(ss);
-			server.setSessionIdCookieName(c.sessionIdCookieName);
-			server.setSessionIdCookiePath(c.sessionIdCookiePath);
-			server.setValidator(app.validator);
-
-			NettyHttpServer ns = newNettyHttpServer();
-			ns.setPort(c.port);
-			ns.setCallback(server);
-			ns.setHost(c.host);
-			ns.setBacklog(c.backlog);
-			ns.setIdleSeconds(c.idleSeconds);
-			ns.setMaxContentLength(c.maxContentLength);
-			ns.setMaxConns(c.maxConns);
-			ns.setWorkerThreads(c.ioThreads);
-			server.setHttpTransport(ns);
-
-			ExecutorManager em = newExecutorManager();
-			if (c.threads >= 0) {
-				if (c.threads == 0)
-					c.threads = processors;
-				em.addDefaultPool(c.threads, c.maxThreads, c.queueSize);
-			}
-			server.setExecutorManager(em);
-
-			app.webServers.put(name, server);
-			
-			loadProtos(app,c.protoDir);
 		}
 
 		for (String name : services.keySet()) {
@@ -732,31 +770,37 @@ public class Bootstrap {
 
 			ExecutorManager em = null;
 			RpcCallableBase callable = null;
+			FlowControl fc = null;
 			String addr = null;
+			
 			if (c.reverse) {
 				callable = app.clients.get(c.transport);
 				callable.addAllowedService(serviceId);
 				em = callable.getExecutorManager();
+				fc = callable.getFlowControl();
 			} else {
 				callable = app.servers.get(c.transport);
 				if (callable != null) {
 					callable.addAllowedService(serviceId);
 					em = callable.getExecutorManager();
+					fc = callable.getFlowControl();
 					ServerConfig sc = servers.get(c.transport);
 					addr = IpUtils.localIp()+":"+sc.port;
 				} else {
 					WebServer webServer = app.webServers.get(c.transport);
 					em = webServer.getExecutorManager();
-					// WebServerConfig wsc = webServers.get(c.transport); // todo register web service
-					// addr = IpUtils.localIp()+":"+wsc.port;
+					fc = webServer.getFlowControl();
+					//WebServerConfig wsc = webServers.get(c.transport);
+					//addr = IpUtils.localIp()+":"+wsc.port;
 				}
 			}
+			
 			app.serviceMetas.addService(cls, c.impl, callable);
 
 			if ( !isEmpty(c.registryNames) && addr != null) {
 				String[] ss = c.registryNames.split(",");
 				for (String s : ss)
-					app.registryManager.register(serviceId, s, c.group,addr);
+					app.registryManager.register(serviceId, s, c.group, addr);
 			}
 
 			if (c.threads >= 0) {
@@ -765,15 +809,15 @@ public class Bootstrap {
 				em.addPool(serviceId, c.threads, c.maxThreads, c.queueSize);
 			}
 
-			if (app.flowControl != null && !isEmpty(c.flowControl)) {
+			if ( fc != null && !isEmpty(c.flowControl)) {
 				HashMap<Integer, Integer> fcParams = parseFlowControlParams(c.flowControl);
 				for (Map.Entry<Integer, Integer> entry : fcParams.entrySet()) {
-					app.flowControl.addLimit(serviceId, entry.getKey(), entry.getValue());
+					fc.addLimit(serviceId, entry.getKey(), entry.getValue());
 				}
 			}
 
 			for (MethodConfig mc : c.getMethods()) {
-				int[] msgIds = patternToMsgIds(cls, mc.pattern);
+				int[] msgIds = patternToMsgIds(serviceId, mc.pattern);
 				if (msgIds == null || msgIds.length == 0)
 					throw new RuntimeException(String.format("no msgId match method pattern " + mc.pattern));
 				if (mc.threads >= 0) {
@@ -782,11 +826,11 @@ public class Bootstrap {
 					em.addPool(serviceId, msgIds, mc.threads, mc.maxThreads, mc.queueSize);
 				}
 
-				if (app.flowControl != null && !isEmpty(mc.flowControl)) {
+				if ( fc != null && !isEmpty(mc.flowControl)) {
 					HashMap<Integer, Integer> fcParams = parseFlowControlParams(mc.flowControl);
 					for (Map.Entry<Integer, Integer> entry : fcParams.entrySet()) {
 						for (int msgId : msgIds)
-							app.flowControl.addLimit(serviceId, msgId, entry.getKey(), entry.getValue());
+							fc.addLimit(serviceId, msgId, entry.getKey(), entry.getValue());
 					}
 				}
 			}
@@ -818,15 +862,14 @@ public class Bootstrap {
 			app.codec.configZip(serviceId, getZip(c.zip), c.minSizeToZip);
 
 			if( cls != null ) {
-				Object impl = null;
-				if (c.interfaceName.endsWith("Async")) {
-					impl = app.proxyGenerator.generateAsyncReferer(cls, callable);
-					app.serviceMetas.addAsyncReferer(cls, impl, callable);
-				} else {
-					impl = app.proxyGenerator.generateReferer(cls, callable);
-					app.serviceMetas.addReferer(cls, impl, callable);
-				}
+				Object impl = app.proxyGenerator.generateReferer(cls, callable);
+				app.serviceMetas.addReferer(cls, impl, callable);
 				app.referers.put(name, impl);
+				Class<?> asyncCls = ReflectionUtils.getClass(c.interfaceName+"Async");
+				Object asyncImpl = app.proxyGenerator.generateAsyncReferer(asyncCls, callable);
+				app.serviceMetas.addAsyncReferer(asyncCls, asyncImpl, callable);
+				app.referers.put(name+"Async", asyncImpl);
+				
 			} else {
 				app.serviceMetas.addDynamic(serviceId,callable);
 			}
@@ -838,8 +881,7 @@ public class Bootstrap {
 				DefaultClusterManager cmi = (DefaultClusterManager) client.getClusterManager();
 
 				if (!isEmpty(c.loadBalance)) {
-					LoadBalance policy = newLoadBalanceObj(c.loadBalance);
-					policy.config(parseParams(c.loadBalance));
+					LoadBalance policy = getLoadBalanceObj(c.loadBalance);
 					cmi.addLbPolicy(serviceId, policy);
 				}
 
@@ -849,26 +891,17 @@ public class Bootstrap {
 					app.registryManager.addDirect(serviceId, c.direct, cmi);
 				}
 
-				if( cls != null ) {
-					for (MethodConfig mc : c.getMethods()) {
-						int[] msgIds = patternToMsgIds(cls, mc.pattern);
-						if (msgIds == null || msgIds.length == 0)
-							throw new RuntimeException(String.format("no msgId match method pattern " + mc.pattern));
-	
-						for (int msgId : msgIds) {
-							client.addRetryPolicy(serviceId, msgId, mc.timeout, getRetryLevel(mc.retryLevel),
-									mc.retryCount);
-						}
-					}
-				} else {
-					for (MethodConfig mc : c.getMethods()) {
-						throw new RuntimeException(String.format("methods cannot be specified ")); // todo
+				for (MethodConfig mc : c.getMethods()) {
+					int[] msgIds = patternToMsgIds(serviceId, mc.pattern);
+					if (msgIds == null || msgIds.length == 0)
+						throw new RuntimeException(String.format("no msgId match method pattern " + mc.pattern));
+
+					for (int msgId : msgIds) {
+						client.addRetryPolicy(serviceId, msgId, mc.timeout, getRetryLevel(mc.retryLevel),
+								mc.retryCount);
 					}
 				}
-				
-				// todo serviceId not allowed to duplicated
 			}
-
 		}
 
 		return app;
@@ -993,20 +1026,20 @@ public class Bootstrap {
 		return false;
 	}
 
-	int[] patternToMsgIds(Class<?> intf, String pattern) {
+	int[] patternToMsgIds(int serviceId, String pattern) {
 		char ch = pattern.charAt(0);
 		boolean byMsgId = false;
 		if (ch >= '0' && ch <= '9') {
 			byMsgId = true;
 		}
 		if (byMsgId) {
-			return splitMsgIdPattern(intf, pattern);
+			return splitMsgIdPattern(serviceId, pattern);
 		} else {
-			return matchMsgNamePattern(intf, pattern);
+			return matchMsgNamePattern(serviceId, pattern);
 		}
 	}
 
-	int[] splitMsgIdPattern(Class<?> intf, String pattern) {
+	int[] splitMsgIdPattern(int serviceId, String pattern) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		String[] ss = pattern.split(",");
 		try {
@@ -1029,7 +1062,7 @@ public class Bootstrap {
 		if (list.size() == 0)
 			throw new RuntimeException(String.format("msgId not found, pattern=" + pattern));
 
-		HashMap<Integer, String> msgIdMap = ReflectionUtils.getMsgIds(intf);
+		Map<Integer, String> msgIdMap = app.serviceMetas.getMsgNames(serviceId);
 		for (int i : list) {
 			if (!msgIdMap.containsKey(i))
 				throw new RuntimeException(String.format("msgId %d not found", i));
@@ -1040,12 +1073,14 @@ public class Bootstrap {
 		return vs;
 	}
 
-	int[] matchMsgNamePattern(Class<?> intf, String pattern) {
+	int[] matchMsgNamePattern(int serviceId, String pattern) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		HashMap<String, Integer> msgNameMap = ReflectionUtils.getMsgNames(intf);
-		for (String msgName : msgNameMap.keySet()) {
+		Map<Integer, String> msgNameMap = app.serviceMetas.getMsgNames(serviceId);
+		for (Map.Entry<Integer, String> entry: msgNameMap.entrySet() ) {
+			int msgId = entry.getKey();
+			String msgName = entry.getValue();
 			if (msgName.matches(pattern))
-				list.add(msgNameMap.get(msgName));
+				list.add(msgId);
 		}
 
 		if (list.size() == 0)
@@ -1090,68 +1125,149 @@ public class Bootstrap {
 		}
 	}
 
+	HashMap<Integer, Integer> parseFlowControlParams(String flowControlParams) {
+		HashMap<Integer, Integer> params = new HashMap<Integer, Integer>();
+		Map<String,String> tmp = Plugin.defaultSplitParams(flowControlParams);
+		for (String key : tmp.keySet()) {
+			String value = tmp.get(key);
+			try {
+				params.put(Integer.parseInt(key), Integer.parseInt(value));
+			} catch (Exception e) {
+				throw new RuntimeException("flow control parameter not valid, param=" + flowControlParams);
+			}
+		}
+		return params;
+	}
+
+	void loadSpi() {
+		try {
+			loadSpi(LoadBalance.class);
+			loadSpi(FlowControl.class);
+			loadSpi(Registry.class);
+			loadSpi(ErrorMsgConverter.class);
+			loadSpi(LogFormatter.class);
+			loadSpi(WebPlugin.class);
+		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	List<String> readSpiLines(URL url) {
+		List<String> lines = new ArrayList<>();
+
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+			 String s = in.readLine();
+			 while(  s != null ) {
+				 if( !s.isEmpty() ) {
+					 lines.add(s);
+				 }
+				 s = in.readLine();
+			 }
+			 in.close();
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		return lines;
+	}
+	
+	void loadSpi(Class cls)  throws Exception {
+		Enumeration<URL> urls = getClass().getClassLoader().getResources("META-INF/services/"+cls.getName());
+		List<PluginInfo> list = new ArrayList<>();
+		while( urls.hasMoreElements() ) {
+			URL url = urls.nextElement();
+			List<String> lines = readSpiLines(url);
+
+			for(String s : lines ) {
+				if( s.trim().isEmpty() ) continue;
+	
+				try {
+					Class implCls = Class.forName(s);
+					PluginInfo pi = new PluginInfo(cls,implCls);
+					list.add(pi);
+				} catch(Exception e) {
+					log.info("cannot load plugin: "+s);
+				}
+				
+			}
+			
+		}
+		plugins.put(cls.getName(), list);
+	}
+
+	public void mergePlugins(HashMap<String, List<PluginInfo>> map) { // for spring context
+		for(Map.Entry<String, List<PluginInfo>> entry: map.entrySet()) {
+			String name = entry.getKey();
+			List<PluginInfo> list = entry.getValue();
+			List<PluginInfo> t = plugins.get(name);
+			if( t != null ) {
+				list.addAll(t); // spring bean first
+			}
+			plugins.put(name,list);
+		}
+	}
+
 	FlowControl getFlowControlObj(String type) {
-		type = parseType(type);
-		FlowControl fc = flowControlTypes.get(type);
-		if (fc == null)
-			return null;
-		return fc;
+		return getPlugin(FlowControl.class,type);
 	}
 
 	SessionService getSessionServiceObj(String type) {
-		type = parseType(type);
-		SessionService ss = sessionServiceTypes.get(type);
-		if (ss == null)
-			return null;
-		return ss;
+		return (SessionService)getPlugin(WebPlugin.class,type);
 	}
 
 	LogFormatter getLogFormatterObj(String type) {
-		type = parseType(type);
-		LogFormatter lf = logFormatterTypes.get(type);
-		if (lf == null)
-			return null;
-		return lf;
+		return getPlugin(LogFormatter.class,type);
 	}
 
 	ErrorMsgConverter getErrorMsgConverterObj(String type) {
-		type = parseType(type);
-		ErrorMsgConverter emc = errorMsgConverterTypes.get(type);
-		if (emc == null)
-			return null;
-		return emc;
+		return getPlugin(ErrorMsgConverter.class,type);
 	}
 
 	WebPlugin getWebPluginObj(String type) {
-		type = parseType(type);
-		WebPlugin p = webPluginTypes.get(type);
-		if (p == null)
-			return null;
-		return p;
+		return getPlugin(WebPlugin.class,type);
 	}
 
 	Registry getRegistryObj(String type) {
-		type = parseType(type);
-		Registry reg = registryTypes.get(type);
-		if (reg == null)
-			return null;
-		return reg;
+		return getPlugin(Registry.class,type);
 	}
 
-	LoadBalance newLoadBalanceObj(String type) {
-		type = parseType(type);
-		LoadBalance lb = loadBalanceTypes.get(type);
-		if (lb == null)
-			return null;
-		return (LoadBalance) ReflectionUtils.newObject(lb.getClass().getName());
+	LoadBalance getLoadBalanceObj(String type) {
+		return getPlugin(LoadBalance.class,type);
 	}
 
-	boolean checkLoadBalanceType(String type) {
-		type = parseType(type);
-		LoadBalance lb = loadBalanceTypes.get(type);
-		return lb != null;
+	<T> T getPlugin(Class<T> cls, String params) {
+
+		List<PluginInfo> list = plugins.get(cls.getName());
+		if( list == null ) return null;
+		String type = parseType(params);
+		for( PluginInfo pi: list ) {
+			if( pi.matchNames.contains(type) ) {
+				
+				if( pi.bean != null ) return (T)pi.bean;
+			
+				pi.bean = ReflectionUtils.newObject(pi.impCls.getName());
+				String t = parseParams(params);
+				if( !t.isEmpty() ) {
+					Plugin p = (Plugin)pi.bean;
+					p.config(t);
+				}					
+				return (T)pi.bean;
+			}
+		}
+		return null;
 	}
 
+	boolean checkPlugin(Class cls, String type) {
+		List<PluginInfo> list = plugins.get(cls.getName());
+		if( list == null ) return false;
+		type = parseType(type);
+		for( PluginInfo pi: list ) {
+			if( pi.matchNames.contains(type) ) return true;
+		}
+		return false;
+	}
+	
 	String parseType(String s) {
 		s = s.toLowerCase();
 		int p = s.indexOf(":");
@@ -1167,54 +1283,17 @@ public class Bootstrap {
 		return "";
 	}
 
-	HashMap<Integer, Integer> parseFlowControlParams(String flowControlParams) {
-		HashMap<Integer, Integer> params = new HashMap<Integer, Integer>();
-		Map<String,String> tmp = Plugin.defaultSplitParams(flowControlParams);
-		for (String key : tmp.keySet()) {
-			String value = tmp.get(key);
-			try {
-				params.put(Integer.parseInt(key), Integer.parseInt(value));
-			} catch (Exception e) {
-				throw new RuntimeException("flow control parameter not valid, param=" + flowControlParams);
-			}
-		}
-		return params;
-	}
-
-	<T> void loadSpi(Class<T> cls, HashMap<String, T> map, String suffix) {
-		suffix = suffix.toLowerCase();
-		ServiceLoader<T> matcher = ServiceLoader.load(cls);
-		Iterator<T> iter = matcher.iterator();
-		while (iter.hasNext()) {
-			try {
-				T lb = iter.next();
-				map.put(lb.getClass().getName().toLowerCase(), lb);
-				map.put(lb.getClass().getSimpleName().toLowerCase(), lb);
-				map.put(removeSuffix(lb.getClass().getSimpleName().toLowerCase(), suffix), lb);
-			} catch (ServiceConfigurationError e) {
-				log.error("load spi error:" + e.getMessage());
-			}
-		}
-	}
-
-	String removeSuffix(String s, String suffix) {
-		if (s.endsWith(suffix)) {
-			return s.substring(0, s.length() - suffix.length());
-		}
-		return s;
-	}
-
-	private void loadMapping(DefaultRouteService rs, String routesFile) {
+	private void loadRoutes(DefaultRouteService rs, String routesFile) {
 
 		try {
-			loadMappingFileInternal(rs, routesFile);
+			loadRoutesFileInternal(rs, routesFile);
 		} catch (Exception e) {
 			throw new RuntimeException("cannot load mapping file, file=" + routesFile, e);
 		}
 
 	}
 
-	void loadMappingFileInternal(DefaultRouteService rs, String mappingFile) throws Exception {
+	void loadRoutesFileInternal(DefaultRouteService rs, String mappingFile) throws Exception {
 		DocumentBuilderFactory docbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docb = docbf.newDocumentBuilder();
 		Document doc = docb.parse(getResource(mappingFile));
@@ -1225,20 +1304,17 @@ public class Bootstrap {
 			Node node = rootChildren.item(i);
 			if (node.getNodeType() != Node.ELEMENT_NODE ) continue;
 			switch( node.getNodeName() ) {
-				case "plugin":
-					configPlugin(node);
-					break;
 				case "import":
 					importRoutes(rs,node);
+					break;
+				case "group":
+					loadGroup(rs,node);
 					break;
 				case "dir":
 					loadDir(rs,node);
 					break;
 				case "url":
 					loadUrl(rs,node);
-					break;
-				case "group":
-					loadGroup(rs,node);
 					break;
 				default:
 					break;
@@ -1439,24 +1515,7 @@ public class Bootstrap {
 		String file = attrs.get("file");
 		if (isEmpty(file))
 			throw new RuntimeException("import file must be specified");
-		loadMappingFileInternal(rs, file);
-	}
-
-	private void configPlugin(Node node) {
-		Map<String, String> attrs = getAttrs(node);
-		String name = attrs.get("name");
-		if (isEmpty(name))
-			throw new RuntimeException("plugin name must be specified");
-
-		String params = attrs.get("params");
-		if (isEmpty(params))
-			throw new RuntimeException("plugin params must be specified");
-
-		WebPlugin p = getWebPluginObj(name);
-		if (p == null) {
-			throw new RuntimeException("web plugin not found, name=" + name);
-		}
-		p.config(params);
+		loadRoutesFileInternal(rs, file);
 	}
 
 	InputStream getResource(String file) {
@@ -1691,11 +1750,6 @@ public class Bootstrap {
 
 	public Bootstrap setErrorMsgConverter(String errorMsgConverter) {
 		appConfig.errorMsgConverter = errorMsgConverter;
-		return this;
-	}
-
-	public Bootstrap setFlowControl(String flowControl) {
-		appConfig.flowControl = flowControl;
 		return this;
 	}
 

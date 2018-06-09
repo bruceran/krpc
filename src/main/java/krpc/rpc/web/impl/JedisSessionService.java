@@ -11,13 +11,14 @@ import krpc.common.InitClose;
 import krpc.rpc.core.Continue;
 import krpc.rpc.core.Plugin;
 import krpc.rpc.web.SessionService;
+import krpc.rpc.web.WebPlugin;
 import krpc.trace.Trace;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 
-public class JedisSessionService implements SessionService, InitClose {
+public class JedisSessionService implements WebPlugin,SessionService, InitClose {
 	
 	static Logger log = LoggerFactory.getLogger(JedisSessionService.class);
 	

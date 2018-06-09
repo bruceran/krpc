@@ -1,8 +1,9 @@
 package krpc.rpc.bootstrap.spring;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -19,13 +20,13 @@ public class Parsers extends NamespaceHandlerSupport {
     @Override
     public void init() {
         registerBeanDefinitionParser("application", new ApplicationConfigBeanParser());
-        registerBeanDefinitionParser("client", new ClientConfigBeanParser());
+        registerBeanDefinitionParser("registry", new RegistryConfigBeanParser());
+        registerBeanDefinitionParser("monitor", new MonitorConfigBeanParser());
         registerBeanDefinitionParser("server", new ServerConfigBeanParser());
         registerBeanDefinitionParser("webserver", new WebServerConfigBeanParser());
-        registerBeanDefinitionParser("registry", new RegistryConfigBeanParser());
+        registerBeanDefinitionParser("client", new ClientConfigBeanParser());
         registerBeanDefinitionParser("service", new ServiceConfigBeanParser());
         registerBeanDefinitionParser("referer", new RefererConfigBeanParser());
-        registerBeanDefinitionParser("monitor", new MonitorConfigBeanParser());
     }
 }
 
@@ -35,6 +36,7 @@ class BaseParser<T> implements BeanDefinitionParser {
     
     String[] attributes;
     boolean hasMethods = false;
+    boolean hasPlugins = false;
     boolean hasId = true;
     
     String beanId;
@@ -56,46 +58,15 @@ class BaseParser<T> implements BeanDefinitionParser {
                 	bd.getPropertyValues().addPropertyValue(name, value);
             }        	
         }
-        /*
-        if( refs != null ) {
-            for(String name:refs) {
-            	parseReference(name,root,parserContext,bd);
-            }        	
-        }
-        */
 
         if( hasMethods ) 
         	parseMethod(root,parserContext,bd);
         
+        if( hasPlugins ) 
+        	parsePlugin(root,parserContext,bd);
+        
         return bd;
     }
-
-    /*
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    void parseParams(Element root, ParserContext parserContext, RootBeanDefinition bd) {
-    	NodeList nodeList = root.getChildNodes();
-    	if (nodeList == null || nodeList.getLength() == 0) return;
-	 
-    	ManagedMap params = new ManagedMap();
-    	for (int i = 0; i < nodeList.getLength(); i++) {
-    		Node node = nodeList.item(i);
-	         if (node instanceof Element) {
-	             Element element = (Element) node;
-	             if ("property".equals(node.getNodeName()) || "property".equals(node.getLocalName())) {
-					 String name = element.getAttribute("name");
-					 String value = element.getAttribute("value");
-					 if (name == null || name.isEmpty()) {
-					     throw new RuntimeException("property name must be specified");
-					 }
-					 params.put(name, value);
-		         }
-	         }
-		 }
-		 if (params.size() > 0) {
-		     bd.getPropertyValues().addPropertyValue("params", params);
-		 }	    	
-    }
-	*/
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	void parseMethod(Element root, ParserContext parserContext, RootBeanDefinition bd) {
@@ -125,27 +96,29 @@ class BaseParser<T> implements BeanDefinitionParser {
 		     bd.getPropertyValues().addPropertyValue("methods", methods);
 		 }	
     }
-    
-    /*
-    void parseReference(String key, Element element, ParserContext parserContext, RootBeanDefinition bd) {
-    	try {
-	    	String refName = element.getAttribute(key);
-	    	
-	    	if (parserContext.getRegistry().containsBeanDefinition(refName)) {
-                BeanDefinition refBean = parserContext.getRegistry().getBeanDefinition(refName);
-                if (!refBean.isSingleton()) {
-                    throw new RuntimeException("not a valid impl for service, "+key+"="+refName);
-                }
-            }
-	    	RuntimeBeanReference reference = new RuntimeBeanReference(refName);
-	    	bd.getPropertyValues().addPropertyValue(key, reference);
+	void parsePlugin(Element root, ParserContext parserContext, RootBeanDefinition bd) {
+    	NodeList nodeList = root.getChildNodes();
+    	if (nodeList == null || nodeList.getLength() == 0) return;
 
-    	} catch(Exception e) {
-    		throw new RuntimeException(e);
-    	}
+    	ArrayList<String> plugins = new ArrayList<>();
+    	for (int i = 0; i < nodeList.getLength(); i++) {
+    		Node node = nodeList.item(i);
+	         if (node instanceof Element) {
+	             Element element = (Element) node;
+	             if ("plugin".equals(node.getNodeName()) || "plugin".equals(node.getLocalName())) {
+					 String params = element.getAttribute("params");
+					 if (params == null || params.isEmpty() ) {
+					     throw new RuntimeException("plugin params must be specified");
+					 }
+					 plugins.add(params);
+		         }
+	         }
+		 }
+		 if (plugins.size() > 0) {
+		     bd.getPropertyValues().addPropertyValue("pluginParams", plugins);
+		 }	
     }
-    */
-    
+
 	String parseId(Element element, ParserContext parserContext, RootBeanDefinition bd) {
 		String id = element.getAttribute("id");
         if ( id == null || id.isEmpty() ) {
@@ -165,7 +138,7 @@ class BaseParser<T> implements BeanDefinitionParser {
 class ApplicationConfigBeanParser extends BaseParser<ApplicationConfigBean> {
 	ApplicationConfigBeanParser() {
 		beanClass = ApplicationConfigBean.class;
-		attributes = new String[] {"name","errorMsgConverter","mockFile","flowControl","traceAdapter","dataDir"};
+		attributes = new String[] {"name","errorMsgConverter","mockFile","traceAdapter","dataDir"};
 	}
 }
 
@@ -185,6 +158,7 @@ class ServerConfigBeanParser extends BaseParser<ServerConfigBean> {
 		attributes = new String[] {"port","host","backlog","idleSeconds",
 				"maxPackageSize","maxConns","ioThreads",
 				"notifyThreads","notifyMaxThreads","notifyQueueSize","threads","maxThreads","queueSize",
+				"flowControl",
 				};
 	}
 }
@@ -195,8 +169,11 @@ class WebServerConfigBeanParser extends BaseParser<WebServerConfigBean> {
 		attributes = new String[] {"port","host","backlog","idleSeconds",
 				"maxContentLength","maxConns","ioThreads",
 				"threads","maxThreads","queueSize",
-				"sessionService","routesFile",
-				"sessionIdCookieName","sessionIdCookiePath","protoDir","sampleRate"};
+				"routesFile",
+				"sessionIdCookieName","sessionIdCookiePath","protoDir","sampleRate",
+				"defaultSessionService","flowControl", 
+				};
+		hasPlugins = true;
 	}
 }
 
@@ -212,7 +189,6 @@ class ServiceConfigBeanParser extends BaseParser<ServiceConfigBean> {
 		beanClass = ServiceConfigBean.class;
 		attributes = new String[] { "interfaceName","impl","transport","reverse",
 				"registryNames","group","threads","maxThreads","queueSize","flowControl"};
-		// refs = new String[] { "impl" };
 		hasMethods = true;
 	}
 	

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
  
 import com.xxx.userservice.proto.*;
 
-@Component("pushService")
+@Component
 class PushServiceImpl implements PushService {
 
 	static Logger log = LoggerFactory.getLogger(PushServiceImpl.class);

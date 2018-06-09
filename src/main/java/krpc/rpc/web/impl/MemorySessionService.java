@@ -10,8 +10,9 @@ import krpc.common.InitClose;
 import krpc.rpc.core.Continue;
 import krpc.rpc.core.Plugin;
 import krpc.rpc.web.SessionService;
+import krpc.rpc.web.WebPlugin;
 
-public class MemorySessionService implements SessionService, InitClose {
+public class MemorySessionService implements WebPlugin,SessionService, InitClose {
 	
 	static class SessionInfo {
 		String sessionId;

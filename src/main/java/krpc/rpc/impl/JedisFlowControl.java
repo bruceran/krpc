@@ -13,11 +13,14 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.protobuf.Message;
+
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
 import krpc.rpc.core.Continue;
 import krpc.rpc.core.FlowControl;
 import krpc.rpc.core.Plugin;
+import krpc.rpc.core.RpcContextData;
 import krpc.trace.Trace;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
@@ -144,7 +147,9 @@ public class JedisFlowControl implements FlowControl,InitClose {
 	
 	public boolean isAsync() { return false; }
 
-    public boolean exceedLimit(int serviceId,int msgId,Continue<Boolean> dummy) {
+    public boolean exceedLimit(RpcContextData ctx,Message req,Continue<Boolean> dummy) {
+    	int serviceId = ctx.getMeta().getServiceId();
+    	int msgId = ctx.getMeta().getMsgId();
     	long now = System.currentTimeMillis()/1000;
     	boolean failed1 = updateServiceStats(serviceId,now);
     	boolean failed2 = updateMsgStats(serviceId,msgId,now);

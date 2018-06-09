@@ -10,16 +10,23 @@
        http://krpc.org/schema/krpc
        http://krpc.org/schema/krpc.xsd ">
 
-	<bean  class=" krpc.test.rpc.schema.UserServiceImpl"/>
-	
+	<bean  class="krpc.test.rpc.schema.UserServiceImpl"/>
+	<bean  class="krpc.test.rpc.schema.TestBeanWebPlugin"/>
 
-	<krpc:application name="testapp" mockFile="abc" flowControl="memory"/>
+	<krpc:application name="testapp" mockFile="abc"  />
 	
 <!-- 	
 	<krpc:registry type="etcd" addrs="1.1.1.1:1111" />
 
 	<krpc:server/>
 -->
+<krpc:server/>
+<krpc:webserver>
+	 <krpc:plugin params="jedissessionservice:addrs=127.0.0.1:1111"  />
+	 <krpc:plugin params="memorysessionservice"  />
+	 <krpc:plugin params="testbean"  />
+</krpc:webserver>
+		
 	<krpc:service interfaceName="com.xxx.userservice.proto.UserService"  >
 		<krpc:method pattern="login|updateProfile" flowControl="5=10"/>
 	</krpc:service>

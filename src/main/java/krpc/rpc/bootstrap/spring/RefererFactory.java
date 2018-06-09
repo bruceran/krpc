@@ -1,7 +1,6 @@
-package krpc.rpc.bootstrap.springboot;
+package krpc.rpc.bootstrap.spring;
 
 import org.springframework.beans.factory.FactoryBean;
-import krpc.rpc.bootstrap.spring.SpringBootstrap;
 
 public class RefererFactory<T>  implements FactoryBean<T>  {
 

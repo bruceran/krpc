@@ -24,7 +24,7 @@ public class DefaultTraceContext implements TraceContext {
 	Deque<Span> spans = new ArrayDeque<Span>();
 	
 	// for server
-	DefaultTraceContext(String traceId,String rpcId,String peers,String apps,int sampled,String type,String action) {
+	public DefaultTraceContext(String traceId,String rpcId,String peers,String apps,int sampled,String type,String action) {
 		if( isEmpty(traceId) ) {
 			this.traceId = Trace.getAdapter().newTraceId();
 		} else {
@@ -44,7 +44,7 @@ public class DefaultTraceContext implements TraceContext {
 	}
 
 	// for client
-	DefaultTraceContext() {
+	public DefaultTraceContext() {
 		this.traceId = Trace.getAdapter().newTraceId();
 		this.rootRpcId = Trace.getAdapter().newZeroRpcId(false);
 	}

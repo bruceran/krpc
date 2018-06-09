@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -24,6 +26,7 @@ import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.bootstrap.ServerConfig;
 import krpc.rpc.bootstrap.ServiceConfig;
 import krpc.rpc.bootstrap.WebServerConfig;
+import krpc.rpc.bootstrap.spring.RefererFactory;
 import krpc.rpc.bootstrap.spring.SpringBootstrap;
 
 @Configuration
@@ -41,8 +44,10 @@ public class AutoConfiguration  {
 
     @Bean(destroyMethod = "stopAndClose")
     @ConditionalOnMissingBean(RpcApp.class)
-    public RpcApp rpcApp(BootProperties bootProperties,Environment environment,BeanFactory beanFactory) {	
+    public RpcApp rpcApp(BootProperties bootProperties,Environment environment,ApplicationContext context) {	
 
+		SpringBootstrap.instance.spring = (ConfigurableApplicationContext)context;
+		
     	Bootstrap bootstrap = SpringBootstrap.instance.getBootstrap();
 		
     	if( bootProperties.application != null ) {
@@ -88,7 +93,7 @@ public class AutoConfiguration  {
     		ServiceConfig c = bootProperties.service;
 
 			String impl = c.getImpl() == null ? null : c.getImpl().toString()  ;
-			Object bean = loadBean(impl,c.getInterfaceName(),beanFactory);
+			Object bean = loadBean(impl,c.getInterfaceName(),context);
 			if( bean == null ) throw new RuntimeException("bean not found for service "+ c.getInterfaceName() );
 			c.setImpl(bean);
 			
@@ -102,7 +107,7 @@ public class AutoConfiguration  {
     	if( bootProperties.services != null ) {
     		for(ServiceConfig c: bootProperties.services) {
     			String impl = c.getImpl() == null ? null : c.getImpl().toString()  ;
-    			Object bean = loadBean(impl,c.getInterfaceName(),beanFactory);
+    			Object bean = loadBean(impl,c.getInterfaceName(),context);
     			if( bean == null ) throw new RuntimeException("bean not found for service "+ c.getInterfaceName() );
     			c.setImpl(bean);
     			
@@ -137,14 +142,16 @@ public class AutoConfiguration  {
     		}
     	}
     	
-    	if( bootProperties.webServer != null ) {
-    		bootstrap.addWebServer(bootProperties.webServer);
+    	if( bootProperties.webserver != null ) {
+    		bootstrap.addWebServer(bootProperties.webserver);
     	}    	    	
-    	if( bootProperties.webServers != null ) {
-    		for(WebServerConfig c: bootProperties.webServers)
+    	if( bootProperties.webservers != null ) {
+    		for(WebServerConfig c: bootProperties.webservers)
     			bootstrap.addWebServer(c);
     	}
-				
+
+    	bootstrap.mergePlugins(SpringBootstrap.instance.loadSpiBeans());
+    	
 		RpcApp app = bootstrap.build();
 		app.init();
 		
@@ -190,12 +197,11 @@ public class AutoConfiguration  {
 		
 		@Override
 		public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory0) throws BeansException {
-			
-			SpringBootstrap.instance.spring = beanFactory0;
+
 			DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory)beanFactory0;
-			
+
 			Environment environment = (Environment)beanFactory.getBean("environment");
-			
+		
 			String s = environment.getProperty("krpc.referer.interfaceName");
 			if( s != null ) {
 				String id = environment.getProperty("krpc.referer.id");
@@ -220,8 +226,19 @@ public class AutoConfiguration  {
 	        beanDefinitionBuilder.addConstructorArgValue(interfaceName);
 	        beanDefinitionBuilder.addDependsOn("rpcApp");
 	        beanDefinitionBuilder.setLazyInit(true);
-	        beanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getRawBeanDefinition());			
+	        beanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getRawBeanDefinition());	
+	        
+	        registerAsyncReferer(beanName+"Async",interfaceName+"Async",beanFactory);
 		}
+		void registerAsyncReferer(String beanName,String interfaceName,DefaultListableBeanFactory beanFactory) {
+			log.info("register referer "+interfaceName+", beanName="+beanName);
+	        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(RefererFactory.class);
+	        beanDefinitionBuilder.addConstructorArgValue(beanName);
+	        beanDefinitionBuilder.addConstructorArgValue(interfaceName);
+	        beanDefinitionBuilder.addDependsOn("rpcApp");
+	        beanDefinitionBuilder.setLazyInit(true);
+	        beanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getRawBeanDefinition());			
+		}		
 
 		String generateBeanName(String id, String interfaceName) {
 			if( id != null && !id.isEmpty()) return id;

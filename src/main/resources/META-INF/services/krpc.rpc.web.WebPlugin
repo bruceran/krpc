@@ -1,3 +1,5 @@
+krpc.rpc.web.impl.MemorySessionService
+krpc.rpc.web.impl.JedisSessionService
 krpc.rpc.web.impl.LogOnlyWebPlugin
 
 

@@ -25,7 +25,6 @@ public class RpcClientTest {
 		RpcApp app = new Bootstrap() 
 				.addClient(new ClientConfig().setConnections(1))
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
-				.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
 				.build();
 		
 		app.initAndStart();
@@ -35,7 +34,7 @@ public class RpcClientTest {
 		//Thread.sleep(2000);
 		
 		UserService us = app.getReferer("us");
-		UserServiceAsync usa = app.getReferer("usa");
+		UserServiceAsync usa = app.getReferer("usAsync");
 
 		LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
 		LoginRes res = us.login(req);

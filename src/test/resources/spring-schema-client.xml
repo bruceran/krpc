@@ -14,8 +14,8 @@
 <!--  
 	<krpc:registry type="etcd" addrs="1.1.1.1:1111" />
   -->
-  
-	
+
 	<krpc:referer id="userService" interfaceName="com.xxx.userservice.proto.UserService"/>
+	<krpc:referer id="pushService" interfaceName="com.xxx.userservice.proto.PushService"/>
  
 </beans>

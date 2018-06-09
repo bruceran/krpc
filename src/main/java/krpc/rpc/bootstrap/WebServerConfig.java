@@ -1,5 +1,8 @@
 package krpc.rpc.bootstrap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import krpc.rpc.web.WebConstants;
 
 public class WebServerConfig  {
@@ -9,12 +12,10 @@ public class WebServerConfig  {
 	int port = 8600;
 	String host = "*";
 	int backlog = 128;
-	int idleSeconds = 60;
+	int idleSeconds = 30;
 	int maxContentLength = 1000000;
 	int maxConns = 500000;
 	int ioThreads = 0;	// auto
-
-	String sessionService = "memory";
 
 	int threads = 0; // workthreads, 0=auto -1=no workthreads,use iothreads n=workthreads
 	int maxThreads = 0;
@@ -27,6 +28,15 @@ public class WebServerConfig  {
 	String sessionIdCookiePath = "";
 
 	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
+
+	String flowControl = "";
+	
+	String defaultSessionService = "memorysessionservice";
+	List<String> pluginParams  = new ArrayList<>();
+	
+	public void addPluginParams(String params) {
+		pluginParams.add(params);
+	}
 	
 	public WebServerConfig() {
 	}
@@ -113,15 +123,6 @@ public class WebServerConfig  {
 		return this;
 	}
 
-	public String getSessionService() {
-		return sessionService;
-	}
-
-	public WebServerConfig setSessionService(String sessionService) {
-		this.sessionService = sessionService;
-		return this;
-	}
-
 	public String getRoutesFile() {
 		return routesFile;
 	}
@@ -162,15 +163,44 @@ public class WebServerConfig  {
 		return sampleRate;
 	}
 
-	public void setSampleRate(int sampleRate) {
+	public WebServerConfig setSampleRate(int sampleRate) {
 		this.sampleRate = sampleRate;
+		return this;
 	}
 
 	public int getBacklog() {
 		return backlog;
 	}
 
-	public void setBacklog(int backlog) {
+	public WebServerConfig setBacklog(int backlog) {
 		this.backlog = backlog;
+		return this;
+	}
+
+	public String getDefaultSessionService() {
+		return defaultSessionService;
+	}
+
+	public WebServerConfig setDefaultSessionService(String defaultSessionService) {
+		this.defaultSessionService = defaultSessionService;
+		return this;
+	}
+
+	public List<String> getPluginParams() {
+		return pluginParams;
+	}
+
+	public WebServerConfig setPluginParams(List<String> pluginParams) {
+		this.pluginParams = pluginParams;
+		return this;
+	}
+
+	public String getFlowControl() {
+		return flowControl;
+	}
+
+	public WebServerConfig setFlowControl(String flowControl) {
+		this.flowControl = flowControl;
+		return this;
 	}	
 }

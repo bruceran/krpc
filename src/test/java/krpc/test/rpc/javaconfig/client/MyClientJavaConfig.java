@@ -19,8 +19,7 @@ public class MyClientJavaConfig   {
     public RpcApp rpcApp(PushService pushService) {
 		RpcApp app = new Bootstrap() 
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
-				.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
-				.addReverseService(PushService.class,pushService)  // !!!				
+				.addReverseService(PushService.class,pushService)	
 				.build();
 		app.initAndStart();
 		return app;
@@ -34,7 +33,7 @@ public class MyClientJavaConfig   {
 
     @Bean
     public UserServiceAsync userServiceAsync(RpcApp app) {
-    	UserServiceAsync usa = app.getReferer("usa");
+    	UserServiceAsync usa = app.getReferer("usAsync");
     	return usa;
     }    
 }

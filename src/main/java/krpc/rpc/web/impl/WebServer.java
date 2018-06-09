@@ -38,6 +38,7 @@ import krpc.rpc.util.TypeSafe;
 import krpc.rpc.util.TypeSafeMap;
 import krpc.rpc.web.AsyncPostParsePlugin;
 import krpc.rpc.web.AsyncPostSessionPlugin;
+import krpc.rpc.web.AsyncPreParsePlugin;
 import krpc.rpc.web.DefaultWebReq;
 import krpc.rpc.web.DefaultWebRes;
 import krpc.rpc.web.HttpTransport;
@@ -57,7 +58,6 @@ import krpc.rpc.web.SessionService;
 import krpc.rpc.web.WebClosure;
 import krpc.rpc.web.WebContextData;
 import krpc.rpc.web.WebMonitorService;
-import krpc.rpc.web.WebPlugin;
 import krpc.trace.TraceContext;
 import krpc.trace.Span;
 import krpc.trace.Trace;
@@ -70,16 +70,17 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	String sessionIdCookiePath = "";
 	int sampleRate = 1;
 
-	FlowControl flowControl;
+	SessionService defaultSessionService;
+
 	ServiceMetas serviceMetas;
 	ErrorMsgConverter errorMsgConverter;
 
 	RouteService routeService;
 	HttpTransport httpTransport;
-	SessionService sessionService;
 	RpcDataConverter rpcDataConverter;
 	Validator validator;
 	ExecutorManager executorManager;
+	FlowControl flowControl;
 	WebMonitorService monitorService;
 
 	AtomicInteger seq = new AtomicInteger(0);
@@ -89,11 +90,12 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void init() {
 
+		resources.add(defaultSessionService);
 		resources.add(routeService);
 		resources.add(httpTransport);
-		resources.add(sessionService);
 		resources.add(rpcDataConverter);
 		resources.add(executorManager);
+		resources.add(flowControl);
 
 		InitCloseUtils.init(resources);
 	}
@@ -180,52 +182,71 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 		WebContextData ctx = generateCtx(connId, req, r);
 		ServerContext.set(ctx);
-		
-		// flow control
-		if (flowControl != null) {
-			if (!flowControl.isAsync()) {
-				boolean exceeded = flowControl.exceedLimit(r.getServiceId(), r.getMsgId(),null);
-				if (exceeded) {
-					sendErrorResponse(ctx, req, RetCodes.FLOW_LIMIT);
-					return;
-				}
-			} else {
-				flowControl.exceedLimit(r.getServiceId(), r.getMsgId(), new Continue<Boolean>() {
-					public void readyToContinue(Boolean exceeded) {
-						
-						ServerContext.set(ctx);
-						
-						if (exceeded) {
-							sendErrorResponse(ctx, req, RetCodes.FLOW_LIMIT);
-							return;
-						}
-						continue1(ctx, req);
-					}
-				});
-			}
-		}
 
-		continue1(ctx, req);
-	}
+		List<PreParsePlugin> ppps = r.getPreParsePlugins();
 
-	void continue1(WebContextData ctx, DefaultWebReq req ) {
-
-		Route r = ctx.getRoute();
-		WebPlugin[] plugins = r.getPlugins();
-
-		// preparse
-		if (plugins != null) {
-			for (WebPlugin p : plugins) {
-				if (p instanceof PreParsePlugin) {
-					int retCode = ((PreParsePlugin) p).preParse(r.getServiceId(), r.getMsgId(), req);
+		if (ppps != null) {
+			for (PreParsePlugin p : ppps) {
+					int retCode = p.preParse(ctx, req);
 					if (retCode != 0) {
 						sendErrorResponse(ctx, req, retCode);
 						return;
 					}
-				}
 			}
 		}
+		
+		// asyncpreparse
+		List<AsyncPreParsePlugin> apopps = r.getAsyncPreParsePlugins();
+		if (apopps != null) {
+				if (apopps.size() == 1) {
+					apopps.get(0).asyncPreParse(ctx, req, new Continue<Integer>() {
+						public void readyToContinue(Integer retCode) {
+							
+							ServerContext.set(ctx);
+							
+							if (retCode != 0) {
+								sendErrorResponse(ctx, req, retCode);
+								return;
+							}
+							continue1(ctx, req);
+						}
+					});
 
+				} else {
+					doMultiAsyncPreParse(ctx, req, apopps, 0);
+				}
+				return;
+		}
+		
+		continue1(ctx,req);
+	}
+
+	void doMultiAsyncPreParse(WebContextData ctx, DefaultWebReq req, List<AsyncPreParsePlugin> list,
+			int index) {
+		
+		if (index >= list.size()) {
+			continue1(ctx, req);
+			return;
+		}
+
+		list.get(index).asyncPreParse(ctx, req, new Continue<Integer>() {
+			public void readyToContinue(Integer retCode) {
+				
+				ServerContext.set(ctx);
+				
+				if (retCode != 0) {
+					sendErrorResponse(ctx, req, retCode);
+					return;
+				}
+				doMultiAsyncPreParse(ctx, req, list, index + 1);
+			}
+		});
+	}
+	
+	public void continue1(WebContextData ctx, DefaultWebReq req) {
+		
+		Route r = ctx.getRoute();
+		
 		if (r.getVariables() != null) {
 			req.getParameters().putAll(r.getVariables());
 		}
@@ -234,52 +255,34 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		parseQueryString(req);
 
 		// parse
-		boolean hasParser = false;
-		if (plugins != null) {
-			for (WebPlugin p : plugins) {
-				if (p instanceof ParserPlugin) {
-					int retCode = ((ParserPlugin) p).parse(r.getServiceId(), r.getMsgId(), req);
-					if (retCode != 0) {
-						sendErrorResponse(ctx, req, retCode);
-						return;
-					}
-					hasParser = true;
+		ParserPlugin pp = r.getParserPlugin();
+		if (pp != null) {
+				int retCode = pp.parse(ctx, req);
+				if (retCode != 0) {
+					sendErrorResponse(ctx, req, retCode);
+					return;
 				}
-			}
-		}
-
-		// standard json parser
-		if (!hasParser) {
+		} else {
 			parseJsonContent(req);
 		}
 
 		// postparse
-		if (plugins != null) {
-			for (WebPlugin p : plugins) {
-				if (p instanceof PostParsePlugin) {
-					int retCode = ((PostParsePlugin) p).postParse(r.getServiceId(), r.getMsgId(), req);
+		List<PostParsePlugin> popps = r.getPostParsePlugins();
+		if (popps != null) {
+			for (PostParsePlugin p : popps) {
+					int retCode = p.postParse(ctx, req);
 					if (retCode != 0) {
 						sendErrorResponse(ctx, req, retCode);
 						return;
 					}
-				}
 			}
 		}
 
 		// asyncpostparse
-		if (plugins != null) {
-			ArrayList<AsyncPostParsePlugin> list = null;
-			for (WebPlugin p : plugins) {
-				if (p instanceof AsyncPostParsePlugin) {
-					if (list == null)
-						list = new ArrayList<AsyncPostParsePlugin>();
-					list.add((AsyncPostParsePlugin) p);
-				}
-			}
-			if (list != null) {
-				if (list.size() == 1) {
-
-					list.get(0).asyncPostParse(r.getServiceId(), r.getMsgId(), req, new Continue<Integer>() {
+		List<AsyncPostParsePlugin> apopps = r.getAsyncPostParsePlugins();
+		if (apopps != null) {
+				if (apopps.size() == 1) {
+					apopps.get(0).asyncPostParse(ctx, req, new Continue<Integer>() {
 						public void readyToContinue(Integer retCode) {
 							
 							ServerContext.set(ctx);
@@ -293,26 +296,23 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 					});
 
 				} else {
-					doMultiAsyncPostParse(ctx, req, list, 0);
+					doMultiAsyncPostParse(ctx, req, apopps, 0);
 				}
 				return;
-			}
 		}
 
 		continue2(ctx, req);
 	}
 
-	void doMultiAsyncPostParse(WebContextData ctx, DefaultWebReq req, ArrayList<AsyncPostParsePlugin> list,
+	void doMultiAsyncPostParse(WebContextData ctx, DefaultWebReq req, List<AsyncPostParsePlugin> list,
 			int index) {
-		
-		Route r = ctx.getRoute();
-		
+
 		if (index >= list.size()) {
 			continue2(ctx, req);
 			return;
 		}
 
-		list.get(index).asyncPostParse(r.getServiceId(), r.getMsgId(), req, new Continue<Integer>() {
+		list.get(index).asyncPostParse(ctx, req, new Continue<Integer>() {
 			public void readyToContinue(Integer retCode) {
 				
 				ServerContext.set(ctx);
@@ -337,7 +337,10 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 		if (r.getSessionMode() == Route.SESSION_MODE_YES || r.getSessionMode() == Route.SESSION_MODE_OPTIONAL) {
 
-			if (sessionService == null) {
+			SessionService ss = defaultSessionService;
+			if( r.getSessionServicePlugin() != null ) ss = r.getSessionServicePlugin();
+			
+			if ( ss == null) {
 				sendErrorResponse(ctx, req, RetCodes.HTTP_NO_SESSIONSERVICE);
 				return;
 			}
@@ -354,7 +357,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			ctx.setSession(session);
 
 			if (hasSessionId(req)) {
-				sessionService.load(sessionId, session, new Continue<Integer>() {
+				ss.load(sessionId, session, new Continue<Integer>() {
 					public void readyToContinue(Integer retCode) {
 						
 						ServerContext.set(ctx);
@@ -385,35 +388,30 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	void continue3(WebContextData ctx, DefaultWebReq req) {
 
-		WebPlugin[] plugins = ctx.getRoute().getPlugins();
-
+		Route r = ctx.getRoute();
+		List<PostSessionPlugin> psp = r.getPostSessionPlugins();
+		
 		// postsession
-		if (plugins != null) {
-			for (WebPlugin p : plugins) {
-				if (p instanceof PostSessionPlugin) {
-					int retCode = ((PostSessionPlugin) p).postSession(ctx, req);
+		if (psp != null) {
+			for (PostSessionPlugin p : psp) {
+ 
+					int retCode = p.postSession(ctx, req);
 					if (retCode != 0) {
 						sendErrorResponse(ctx, req, retCode);
 						return;
 					}
-				}
+
 			}
 		}
 
 		// asyncpostsession
-		if (plugins != null) {
-			ArrayList<AsyncPostSessionPlugin> list = null;
-			for (WebPlugin p : plugins) {
-				if (p instanceof AsyncPostSessionPlugin) {
-					if (list == null)
-						list = new ArrayList<AsyncPostSessionPlugin>();
-					list.add((AsyncPostSessionPlugin) p);
-				}
-			}
-			if (list != null) {
-				if (list.size() == 1) {
+		List<AsyncPostSessionPlugin> apsp = r.getAsyncPostSessionPlugins();
+		
+		if (apsp != null) {
+ 
+				if (apsp.size() == 1) {
 
-					list.get(0).asyncPostSession(ctx, req, new Continue<Integer>() {
+					apsp.get(0).asyncPostSession(ctx, req, new Continue<Integer>() {
 						public void readyToContinue(Integer retCode) {
 							
 							ServerContext.set(ctx);
@@ -427,16 +425,16 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 					});
 
 				} else {
-					doMultiAsyncPostSession(ctx, req, list, 0);
+					doMultiAsyncPostSession(ctx, req, apsp, 0);
 				}
 				return;
-			}
+ 
 		}
 
 		continue4(ctx, req);
 	}
 
-	void doMultiAsyncPostSession(WebContextData ctx, DefaultWebReq req, ArrayList<AsyncPostSessionPlugin> list,
+	void doMultiAsyncPostSession(WebContextData ctx, DefaultWebReq req, List<AsyncPostSessionPlugin> list,
 			int index) {
 		if (index >= list.size()) {
 			continue4(ctx, req);
@@ -483,37 +481,65 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	void callService(WebContextData ctx, DefaultWebReq req, Object service) {
 
 		ExecutorManager em = executorManager;
+		FlowControl fc = flowControl ;
 		RpcCallable callable = serviceMetas.findCallable(service.getClass().getName());
-		if (callable != null)
+		if (callable != null) {  // webserver -> server -> service   else:  webserver -> service
 			em = callable.getExecutorManager();
-
-		Message data = rpcDataConverter.generateData(ctx, req, false);
-		if (data == null) {
+			fc = callable.getFlowControl();
+		}
+		
+		Message msgReq = rpcDataConverter.generateData(ctx, req, false);
+		if (msgReq == null) {
 			sendErrorResponse(ctx, req, RetCodes.ENCODE_REQ_ERROR);
 			return;
 		}
 
 		req.freeMemory();
 
-		// find a pool to execute the request
-		if (em != null) {
-			ThreadPoolExecutor pool = em.getExecutor(ctx.getMeta().getServiceId(), ctx.getMeta().getMsgId());
-			if (pool != null) {
-				callServiceInPool(pool, ctx, req, data);
+		if( fc != null ) {
+			if( !fc.isAsync() ) {
+				boolean exceeded = fc.exceedLimit(ctx,msgReq,null);
+				if( exceeded ) {
+		        	sendErrorResponse(ctx,req,RetCodes.FLOW_LIMIT);
+		        	return;
+				}
+			} else {
+				ExecutorManager fem = em;
+				fc.exceedLimit(ctx, msgReq, new Continue<Boolean>() {
+    				public void readyToContinue(Boolean exceeded) {
+    					ServerContext.set(ctx);
+    					if( exceeded ) {
+    						sendErrorResponse(ctx,req,RetCodes.FLOW_LIMIT);
+    	    	    		return;    			
+    	    	    	}
+    					callServiceAfterFlowControl(fem,ctx,req,msgReq);
+    				}
+    			});
 				return;
 			}
 		}
-		callService(ctx, req, data);
+
+		callServiceAfterFlowControl(em,ctx,req,msgReq);
 	}
 
-	void callServiceInPool(ThreadPoolExecutor pool, WebContextData ctx, DefaultWebReq req, Message data) {
+	void callServiceAfterFlowControl(ExecutorManager em, WebContextData ctx, DefaultWebReq req, Message msgReq) {
+
+		if (em != null) {
+			ThreadPoolExecutor pool = em.getExecutor(ctx.getMeta().getServiceId(), ctx.getMeta().getMsgId());
+			if (pool != null) {
+				callServiceInPool(pool, ctx, req, msgReq);
+				return;
+			}
+		}
+		callService(ctx, req, msgReq);		
+	}
+	
+	void callServiceInPool(ThreadPoolExecutor pool, WebContextData ctx, DefaultWebReq req, Message msgReq) {
 		try {
 			pool.execute(new Runnable() {
 				public void run() {
-					
 					ServerContext.set(ctx);
-					
-					callService(ctx, req, data);
+					callService(ctx, req, msgReq);
 				}
 			});
 		} catch (Exception e) {
@@ -523,7 +549,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 	}
 
-	void callService(WebContextData ctx, DefaultWebReq req, Message data) {
+	void callService(WebContextData ctx, DefaultWebReq req, Message msgReq) {
 
 		String connId = ctx.getConnId();
 
@@ -541,17 +567,15 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 		ctx.setContinue(new Continue<RpcClosure>() {
 			public void readyToContinue(RpcClosure closure) {
-				
 				ServerContext.set(ctx);
-				
 				WebServer.this.callServiceEnd(ctx, req, closure);
 			}
 		});
 
 		try {
-			Message res = doCallService(ctx, req, data);
+			Message res = doCallService(ctx, req, msgReq);
 			if (res == null) return; // an async service or exception, do nothing
-			RpcClosure closure = new RpcClosure(ctx, data, res);
+			RpcClosure closure = new RpcClosure(ctx, msgReq, res);
 			callServiceEnd(ctx, req, closure);
 		} catch (Exception e) {
 			sendErrorResponse(ctx, req, RetCodes.BUSINESS_ERROR);
@@ -561,7 +585,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 	}
 
-	Message doCallService(WebContextData ctx, DefaultWebReq req, Message data) throws Exception {
+	Message doCallService(WebContextData ctx, DefaultWebReq req, Message msgReq) throws Exception {
 		RpcMeta meta = ctx.getMeta();
 
 		Object object = serviceMetas.findService(meta.getServiceId());
@@ -576,7 +600,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 
 		if( validator != null ) {
-			String result = validator.validate(data);
+			String result = validator.validate(msgReq);
 			if( result != null ) {
 				String retMsg = RetCodes.retCodeText(RetCodes.VALIDATE_ERROR) + result;
 				sendErrorResponse(ctx, req, RetCodes.VALIDATE_ERROR,retMsg);
@@ -584,7 +608,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			}
 		}
 		
-		Message res = (Message) method.invoke(object, new Object[] { data });
+		Message res = (Message) method.invoke(object, new Object[] { msgReq });
 		return res;
 	}
 
@@ -673,14 +697,12 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 
 		Route r = ctx.getRoute();
-		WebPlugin[] plugins = r.getPlugins();
-
+		List<PreRenderPlugin> prp = r.getPreRenderPlugins();
+		
 		// prerender
-		if (plugins != null) {
-			for (WebPlugin p : plugins) {
-				if (p instanceof PreRenderPlugin) {
-					((PreRenderPlugin) p).preRender(ctx, req, res);
-				}
+		if (prp != null) {
+			for (PreRenderPlugin p : prp) {
+					p.preRender(ctx, req, res);
 			}
 		}
 
@@ -688,25 +710,18 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		starndardResultMapping(ctx, req, res);
 
 		// render
-		boolean hasRender = false;
-		if (plugins != null) {
-			for (WebPlugin p : plugins) {
-				if (p instanceof RenderPlugin) {
-					((RenderPlugin) p).render(ctx, req, res);
-					hasRender = true;
-				}
-			}
-		}
-		if (!hasRender) {
+		RenderPlugin rp = r.getRenderPlugin();
+		if (rp != null) {
+			rp.render(ctx, req, res);
+		} else {
 			renderToJson(ctx, req, res);
 		}
 
 		// postrender
-		if (plugins != null) {
-			for (WebPlugin p : plugins) {
-				if (p instanceof PostRenderPlugin) {
-					((PostRenderPlugin) p).postRender(ctx, req, res);
-				}
+		List<PostRenderPlugin> porp = r.getPostRenderPlugins();
+		if (porp != null) {
+			for (PostRenderPlugin p : porp) {
+					p.postRender(ctx, req, res);
 			}
 		}
 
@@ -802,18 +817,23 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
     	
     	if( results.contains(SessionMapName) ) {
+    		
+    		Route r = ctx.getRoute();
+			SessionService ss = defaultSessionService;
+			if( r.getSessionServicePlugin() != null ) ss = r.getSessionServicePlugin();
+			
     		Map<String,Object> sessionMap = results.mapValue(SessionMapName);
     		if( sessionMap != null ) {
     			TypeSafeMap session = new TypeSafeMap(sessionMap);
     			String loginFlag = session.stringValue(LoginFlagName);
 				if( !isEmpty(loginFlag) && loginFlag.equals("0") ) { // remove all session
-					sessionService.remove(sessionId, null);
+					ss.remove(sessionId, null);
 				} else {
 					HashMap<String,String> values = new HashMap<>();
 					for(Map.Entry<String, Object> i: sessionMap.entrySet() ) {
 						values.put(i.getKey(), TypeSafe.anyToString( i.getValue() ) );
 					}
-					sessionService.update(sessionId, values, null);
+					ss.update(sessionId, values, null);
 				}
     		}
     		results.remove(SessionMapName);
@@ -930,22 +950,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		this.httpTransport = httpTransport;
 	}
 
-	public FlowControl getFlowControl() {
-		return flowControl;
-	}
-
-	public void setFlowControl(FlowControl flowControl) {
-		this.flowControl = flowControl;
-	}
-
-	public SessionService getSessionService() {
-		return sessionService;
-	}
-
-	public void setSessionService(SessionService sessionService) {
-		this.sessionService = sessionService;
-	}
-
 	public RpcDataConverter getRpcDataConverter() {
 		return rpcDataConverter;
 	}
@@ -1025,4 +1029,21 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
+
+	public SessionService getDefaultSessionService() {
+		return defaultSessionService;
+	}
+
+	public void setDefaultSessionService(SessionService defaultSessionService) {
+		this.defaultSessionService = defaultSessionService;
+	}
+
+	public FlowControl getFlowControl() {
+		return flowControl;
+	}
+
+	public void setFlowControl(FlowControl flowControl) {
+		this.flowControl = flowControl;
+	}
+
 }

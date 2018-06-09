@@ -7,11 +7,26 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
  ">
 
-	<bean id="userService" class=" krpc.test.rpc.xml.UserServiceImpl"/>
+	<bean class=" krpc.test.rpc.xml.UserServiceImpl"/>
+	<bean  class="krpc.test.rpc.xml.TestBeanWebPlugin"/>
 
 	<bean class="krpc.rpc.bootstrap.spring.ServiceConfigBean">
 		<property name="interfaceName" value="com.xxx.userservice.proto.UserService"/>
-		<property name="impl" ref="userService"/>
 	</bean>
+
+	<bean class="krpc.rpc.bootstrap.spring.ServerConfigBean">
+		<property name="port" value="5600"/>
+	</bean>
+	<bean class="krpc.rpc.bootstrap.spring.WebServerConfigBean">
+		<property name="port" value="8888"/>
+		<property name="pluginParams">
+			 <list>
+			 <value>jedissessionservice:addrs=127.0.0.1:1111</value>
+             <value>memorysessionservice</value>
+             <value>testbean</value>
+           </list>
+		</property>
+	</bean>
+
 
 </beans>

@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.protobuf.Message;
+
 import krpc.rpc.core.Continue;
 import krpc.rpc.core.FlowControl;
+import krpc.rpc.core.RpcContextData;
 
 public class MemoryFlowControl implements FlowControl {
 	
@@ -56,7 +59,9 @@ public class MemoryFlowControl implements FlowControl {
 	
 	public boolean isAsync() { return false; }
 
-    public boolean exceedLimit(int serviceId,int msgId,Continue<Boolean> dummy) {
+    public boolean exceedLimit(RpcContextData ctx,Message req,Continue<Boolean> dummy) {
+    	int serviceId = ctx.getMeta().getServiceId();
+    	int msgId = ctx.getMeta().getMsgId();
     	long now = System.currentTimeMillis()/1000;
     	boolean failed1 = updateServiceStats(serviceId,now);
     	boolean failed2 = updateMsgStats(serviceId,msgId,now);

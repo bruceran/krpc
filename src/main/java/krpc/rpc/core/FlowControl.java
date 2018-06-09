@@ -1,5 +1,7 @@
 package krpc.rpc.core;
 
+import com.google.protobuf.Message;
+
 public interface FlowControl extends Plugin {
 
 	void addLimit(int serviceId,int seconds,int limit); // service level limit
@@ -7,5 +9,5 @@ public interface FlowControl extends Plugin {
 	
 	boolean isAsync();
 
-    boolean exceedLimit(int serviceId,int msgId,Continue<Boolean> cont);
+    boolean exceedLimit(RpcContextData ctx,Message req, Continue<Boolean> cont);
 }

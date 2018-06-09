@@ -13,9 +13,10 @@ import krpc.rpc.bootstrap.ServerConfig;
 import krpc.rpc.bootstrap.ServiceConfig;
 import krpc.rpc.bootstrap.WebServerConfig;
 
-@ConfigurationProperties(prefix = "krpc")
+@ConfigurationProperties(prefix = "krpc",ignoreUnknownFields=false)
 public class BootProperties {
 
+	boolean enabled = false;
 	boolean autoStart = true;
 	
 	ApplicationConfig application;
@@ -31,8 +32,8 @@ public class BootProperties {
 	List<ServiceConfig> services;
 	RefererConfig referer;
 	List<RefererConfig> referers;
-	WebServerConfig webServer;
-	List<WebServerConfig> webServers;
+	WebServerConfig webserver;
+	List<WebServerConfig> webservers;
 	
 	public ApplicationConfig getApplication() {
 		return application;
@@ -76,12 +77,6 @@ public class BootProperties {
 	public void setReferers(List<RefererConfig> referers) {
 		this.referers = referers;
 	}
-	public List<WebServerConfig> getWebServers() {
-		return webServers;
-	}
-	public void setWebServers(List<WebServerConfig> webServers) {
-		this.webServers = webServers;
-	}
 	public RegistryConfig getRegistry() {
 		return registry;
 	}
@@ -112,17 +107,29 @@ public class BootProperties {
 	public void setReferer(RefererConfig referer) {
 		this.referer = referer;
 	}
-	public WebServerConfig getWebServer() {
-		return webServer;
-	}
-	public void setWebServer(WebServerConfig webServer) {
-		this.webServer = webServer;
-	}
 	public boolean isAutoStart() {
 		return autoStart;
 	}
 	public void setAutoStart(boolean autoStart) {
 		this.autoStart = autoStart;
+	}
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	public WebServerConfig getWebserver() {
+		return webserver;
+	}
+	public void setWebserver(WebServerConfig webserver) {
+		this.webserver = webserver;
+	}
+	public List<WebServerConfig> getWebservers() {
+		return webservers;
+	}
+	public void setWebservers(List<WebServerConfig> webservers) {
+		this.webservers = webservers;
 	}
 
 

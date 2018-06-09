@@ -56,11 +56,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	ServiceMetas serviceMetas;
 	MonitorService monitorService;
 	ErrorMsgConverter errorMsgConverter;
-	FlowControl flowControl;
 	
 	// for both
 	Transport transport;
-	
+
 	// for client functions: as a referer
 	DataManager dataManager;  // must not be null
 	RpcFutureFactory futureFactory; // must not be null
@@ -71,6 +70,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	
 	// for server functions: as a service
 	ExecutorManager executorManager;
+	FlowControl flowControl;
 	
 	HashSet<Integer> allowedServices = new HashSet<Integer>();
 	HashSet<Integer> allowedReferers = new HashSet<Integer>();
@@ -100,7 +100,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		resources.add(dataManager);
 		resources.add(futureFactory);
 		resources.add(executorManager);
-		
+		resources.add(flowControl);
+
 		InitCloseUtils.init(resources);
 	}
 	
@@ -362,13 +363,13 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
 			if( flowControl != null ) {
 				if( !flowControl.isAsync() ) {
-					boolean exceeded = flowControl.exceedLimit(data.getMeta().getServiceId(), data.getMeta().getMsgId(),null);
+					boolean exceeded = flowControl.exceedLimit(ctx,data.getBody(),null);
 					if( exceeded ) {
 			        	sendErrorResponse(ctx,data.getBody(),RetCodes.FLOW_LIMIT);
 			        	return;
 					}
 				} else {
-					flowControl.exceedLimit(data.getMeta().getServiceId(), data.getMeta().getMsgId(), new Continue<Boolean>() {
+					flowControl.exceedLimit(ctx, data.getBody(), new Continue<Boolean>() {
 	    				public void readyToContinue(Boolean exceeded) {
 	    					ServerContext.set(ctx);
 	    					if( exceeded ) {
@@ -378,6 +379,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	    					continue1(ctx,data);
 	    				}
 	    			});
+					return;
 				}
 			}
 			

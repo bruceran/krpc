@@ -2,12 +2,13 @@ package krpc.rpc.bootstrap.spring;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
-
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
@@ -15,7 +16,7 @@ import org.springframework.core.env.Environment;
 
 import krpc.rpc.bootstrap.ServiceConfig;
 
-public class ServiceConfigBean extends ServiceConfig implements InitializingBean, BeanNameAware,  BeanFactoryAware,
+public class ServiceConfigBean extends ServiceConfig implements InitializingBean, BeanNameAware,  ApplicationContextAware,
 		ApplicationListener<ApplicationEvent>  {
 
     public void setBeanName(String name) {
@@ -78,8 +79,8 @@ public class ServiceConfigBean extends ServiceConfig implements InitializingBean
     }
 
 	@Override
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		SpringBootstrap.instance.spring = beanFactory;
+	public void setApplicationContext(ApplicationContext beanFactory) throws BeansException {
+		SpringBootstrap.instance.spring = (ConfigurableApplicationContext)beanFactory;
 	}
     
 }
