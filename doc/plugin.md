@@ -6,6 +6,10 @@
 	 
 	 krpc 框架内置的插件可查看 krpc jar包里的 META-INF/services/ 目录。
 
+# Spring Bean 扩展机制
+
+	 Spring容器中所有实现了SPI扩展接口的Bean都可以直接作为插件使用, 无需在META-INF/services/下进行定义
+
 # 插件加载和插件参数
 
 	   在krpc的配置里，凡是可配置插件的地方，可通过以下方式指定插件名（不区分大小写）：
@@ -77,13 +81,12 @@
     
       		  krpc.rpc.web.PreParseWebPlugin  适用于参数解析前做签名校验，加解密等工作
       		  krpc.rpc.web.ParseWebPlugin 可自定义非标准入参的参数解析方式
-      		  krpc.rpc.web.PostParseWebPlugin  适用于在对参数解析完毕后进一步处理，此接口为同步形式
-      		  krpc.rpc.web.AsyncPostParseWebPlugin  适用于在对参数解析完毕后进一步处理，此接口为异步形式
-      		  krpc.rpc.web.PostSessionWebPlugin  适用于在获取到会话信息后做进一步处理，此接口为同步形式
-      		  krpc.rpc.web.AsyncPostSessionWebPlugin  适用于在获取到会话信息后做进一步处理，此接口为异步形式
+      		  krpc.rpc.web.PostParseWebPlugin  适用于在对参数解析完毕后进一步处理
+      		  krpc.rpc.web.AsyncPostParseWebPlugin  同PostParseWebPlugin，但接口形式为异步形式
+      		  krpc.rpc.web.PostSessionWebPlugin  适用于在获取到会话信息后做进一步处理
+      		  krpc.rpc.web.AsyncPostSessionWebPlugin  同PostSessionWebPlugin，但接口形式为异步形式
       		  krpc.rpc.web.PreRenderWebPlugin  适用于在渲染前调整map对象为符合要求的渲染数据格式
       		  krpc.rpc.web.RenderWebPlugin 可自定义非json输出的渲染插件，框架默认只会渲染为json格式
-      		  krpc.rpc.web.PostRenderWebPlugin  适用于在对参数解析完毕后进一步处理，如签名校验，加解密，此接口为同步形式
-      		    
+      		  krpc.rpc.web.PostRenderWebPlugin  适用于在对参数解析完毕后进一步处理
 
-
+      		  
