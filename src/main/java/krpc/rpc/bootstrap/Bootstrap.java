@@ -923,10 +923,8 @@ public class Bootstrap {
 			FileDescriptor base = FileDescriptor.buildFrom(baseSet.getFile(0),new FileDescriptor[] {});  
 			
 			List<String> files = getProtoFiles(proto);
-			if( files != null ) {
-				for(String file:files) {
-					loadProtoFile(app,base,proto + file);  
-				}
+			for(String file:files) {
+				loadProtoFile(app,base,proto + file);  
 			}
 		 } catch(Exception e) {
 			 log.error("load dynamic proto resource failed",e);
@@ -964,33 +962,41 @@ public class Bootstrap {
 		}
 	}
 	
-	List<String> getProtoFiles(String proto) {
-		List<String> l = new ArrayList<>();
+	List<String> getProtoFiles(String proto) throws IOException {
+		List<String> list = new ArrayList<>();
 	
-        URL classResourceURL = this.getClass().getClassLoader().getResource(proto);  
-        if( classResourceURL == null ) {
+		Enumeration<URL> urls = getClass().getClassLoader().getResources(proto);
+		while( urls.hasMoreElements() ) {
+			URL url = urls.nextElement();
+			getProtoFiles(proto,list,url);
+		}
+
+        if( list.size() == 0 ) {
         	log.info("no dynamic proto resource loaded from "+proto);
-        	return null;
         }
+        
+        return list;
+	}
+	
+    void  getProtoFiles(String proto,List<String>list,URL url) {
+        String path = url.getPath(); 
+        if (url.getProtocol().equals("file")) { 
 
-        String classResourcePath = classResourceURL.getPath(); 
-        if (classResourceURL.getProtocol().equals("file")) { 
-
-            String classesDirPath = classResourcePath.substring(classResourcePath.indexOf("/"));
+            String classesDirPath = path.substring(path.indexOf("/"));
             File classesDir = new File(classesDirPath); 
             File[] files = classesDir.listFiles();
             if( files != null ) {
                 for (File file : files) { 
                     String resourceName = file.getName();  
                     if (!file.isDirectory() && resourceName.endsWith(".proto.pb")) {  
-                        l.add(resourceName);  
+                    	list.add(resourceName);  
                     } 
                 } 
             }
             
-        } else if (classResourceURL.getProtocol().equals("jar")) {
+        } else if (url.getProtocol().equals("jar")) {
  
-            String jarPath = classResourcePath.substring(classResourcePath.indexOf("/"), classResourceURL.getPath().indexOf("!")); 
+            String jarPath = path.substring(path.indexOf("/"), url.getPath().indexOf("!")); 
             try { 
                 JarFile jarFile = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));  
                 Enumeration<JarEntry> jarEntries = jarFile.entries(); 
@@ -998,7 +1004,7 @@ public class Bootstrap {
                     JarEntry jarEntry = (JarEntry)jarEntries.nextElement();  
                     String resourceName = jarEntry.getName();  
                     if (resourceName.endsWith(".proto.pb") && !jarEntry.isDirectory()) {  
-                        l.add(resourceName.substring(proto.length()));  
+                    	list.add(resourceName.substring(proto.length()));  
                     } 
                 } 
                 jarFile.close();
@@ -1006,8 +1012,6 @@ public class Bootstrap {
                 throw new RuntimeException("load dynamic proto resource failed",e);
             } 
         } 
-
-		return l;
 	}
 	
 	boolean hasReverseReferer(String serverName) {
