@@ -9,7 +9,7 @@ public class MethodConfig  {
 	String retryLevel = "no_retry";
 	int retryCount = 0;
 	
-	String flowControl;
+	String flowControlParams;
 
 	// for service's methods
 	int threads = -1;
@@ -66,21 +66,21 @@ public class MethodConfig  {
 		return this;
 	}
 
-	public String getFlowControl() {
-		return flowControl;
-	}
-
-	public MethodConfig setFlowControl(String flowControl) {
-		this.flowControl = flowControl;
-		return this;
-	}
-
 	public int getMaxThreads() {
 		return maxThreads;
 	}
 
 	public MethodConfig setMaxThreads(int maxThreads) {
 		this.maxThreads = maxThreads;
+		return this;
+	}
+
+	public String getFlowControlParams() {
+		return flowControlParams;
+	}
+
+	public MethodConfig setFlowControlParams(String flowControlParams) {
+		this.flowControlParams = flowControlParams;
 		return this;
 	}
 

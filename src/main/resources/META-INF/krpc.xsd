@@ -109,7 +109,7 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-              <attribute name="flowControl" type="string" use="optional"/>
+              <attribute name="flowControlParams" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
@@ -128,7 +128,7 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-              <attribute name="flowControl" type="string" use="optional"/>
+              <attribute name="flowControlParams" type="string" use="optional"/>
 	    </complexType>    
     </element>
 

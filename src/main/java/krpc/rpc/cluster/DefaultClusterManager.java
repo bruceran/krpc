@@ -139,6 +139,7 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     	if( si == null ) return null;
     	AddrInfo ai = si.nextAddr(msgId,req,excludeConnIds); // msgId not used now
     	if( ai == null ) return null;
+    	ai.incPending();
     	int index = ai.nextConnection();
     	return makeConnId(ai.addr,index);
     }
@@ -197,14 +198,17 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     }
     
     public void updateStats(RpcClosure closure) {
-    	LoadBalance lbPolicy = getLbPolicy(closure.getCtx().getMeta().getServiceId());
-    	if( lbPolicy == null || !lbPolicy.needCallStats() ) return;
     	String connId = closure.getCtx().getConnId();
     	String addr = getAddr(connId);
     	AddrInfo ai = addrMap.get(addr);
     	if( ai == null ) return;    	
+    	ai.decPending();
+    	
+    	LoadBalance lbPolicy = getLbPolicy(closure.getCtx().getMeta().getServiceId());
+    	if( lbPolicy == null || !lbPolicy.needCallStats() ) return;
+
     	int retCode = ReflectionUtils.getRetCode(closure.getRes());
-    	long ts = closure.getCtx().getTimeUsedMillis();
+    	long ts = closure.getCtx().getTimeUsedMicros();
     	ai.updateResult(retCode, ts);
     }
 

@@ -15,7 +15,7 @@ public class ServiceConfig  {
 	String registryNames; // refer to multiple registry
 	String group;
 
-	String flowControl;
+	String flowControlParams;
 
 	int threads = -1;
 	int maxThreads = 0;
@@ -125,21 +125,21 @@ public class ServiceConfig  {
 		return this;
 	}
 
-	public String getFlowControl() {
-		return flowControl;
-	}
-
-	public ServiceConfig setFlowControl(String flowControl) {
-		this.flowControl = flowControl;
-		return this;
-	}
-
 	public int getMaxThreads() {
 		return maxThreads;
 	}
 
 	public ServiceConfig setMaxThreads(int maxThreads) {
 		this.maxThreads = maxThreads;
+		return this;
+	}
+
+	public String getFlowControlParams() {
+		return flowControlParams;
+	}
+
+	public ServiceConfig setFlowControlParams(String flowControlParams) {
+		this.flowControlParams = flowControlParams;
 		return this;
 	}	
 	

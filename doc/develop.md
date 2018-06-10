@@ -427,7 +427,9 @@
             默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
     maxThreads 同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
-	
+    loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,responsetime,hash,
+                      leastactiveweight,roudrobinweight,randomweight 默认为 leastactive
+                      	
 ## server	
 
     id 名称 不填则会自动生成
@@ -491,8 +493,9 @@
     threads 服务级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
     maxThreads 服务级别的线程池配置参数, 含义同server
     queueSize 服务级别的线程池配置参数, 含义同server
-    flowControl 流量控制参数，前提要app级别开启了流量控制，
-                格式为：seconds1=allowed1;seconds2=allowed2;... 示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
+    flowControlParams 流量控制参数，前提要server/webserver级别开启了流量控制，
+                格式为：seconds1=allowed1;seconds2=allowed2;... 
+                示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
     
     每个service可配置0个或多个method在消息级别做配置
 
@@ -509,7 +512,8 @@
     timeout 超时时间, 毫秒，默认为3000
     retryLevel 重试级别, 默认为 no_retry
     retryCount 重试次数，默认为0
-    loadBalance 负载均衡策略，可配置为 rr,random,responsetime, 默认为 rr
+    loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,responsetime,hash,
+                      leastactiveweight,roudrobinweight,randomweight 默认为 空，使用client上的默认配置
     zip 压缩方式 0=不压缩 1=zlib 2=snappy
     minSizeToZip 启用压缩所需的最小字节数, 默认为10000
  
@@ -530,7 +534,8 @@
     threads 消息级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
     maxThreads 消息级别的线程池配置参数, 含义同server
     queueSize 消息级别的线程池配置参数, 含义同server
-    flowControl 消息控制参数，前提要app级别开启了流量控制，格式为：seconds1=allowed1;seconds2=allowed2;... 
+    flowControlParams 流量控制参数，前提要server/webserver级别开启了流量控制，
+    			格式为：seconds1=allowed1;seconds2=allowed2;... 
                 示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
     
 ## monitor
@@ -915,3 +920,19 @@
      
          krpc框架已做了处理，业务层代码无需关心
  
+# 负载均衡策略
+
+		负载均衡策略按referer设置(不支持到method级别)，referer级别如未设置，则统一使用client级别的设置
+		
+		LeastActiveLoadBalance  最小活跃请求数，相同最小则随机  (默认)
+		RoundRobinLoadBalance  轮训
+		RandomLoadBalance 随机
+		LeastActiveWeightLoadBalance  带权重的LeastActive
+		RoundRobinWeightLoadBalance  带权重的RoundRobin
+		RandomWeightLoadBalance  带权重的Random
+		HashLoadBalance  根据某个入参进行hash取余
+		ResponseTimeLoadBalance 最近n秒的平均响应时间
+		
+        带权重的版本需和注册与服务插件配合使用，否则等价于不带权重的版本
+        
+		

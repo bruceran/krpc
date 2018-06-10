@@ -31,7 +31,7 @@ public class HashLoadBalance implements LoadBalance {
 	
 	int getIndex(Addr[] addrs,Message req) {
 		if( getter == null ) return -1;
-		Object o = ReflectionUtils.invokeMethod(req,getter); // todo dynamic
+		Object o = ReflectionUtils.invokeMethod(req,getter);
 		if( o == null ) return -1;
 
 		long hash = MurmurHash.hash(o.toString());
@@ -41,19 +41,3 @@ public class HashLoadBalance implements LoadBalance {
 	
 }
 
-/*
-
-TreeMap<Long, Integer> treeMap = new TreeMap<>();
-for(int i=0;i<addrs.length;++i) {
-    for (int j=0;j<50;++j) {
-        long h = MurmurHash.hash(addrs[i] + "-" + j);
-        treeMap.put(h, i);
-    }
-}
-SortedMap<Long,Integer>  tail = treeMap.tailMap(hash);
-if (tail == null || tail.isEmpty())
-    return treeMap.get(treeMap.firstKey());
-else
-    return tail.get(tail.firstKey());
-    
-*/

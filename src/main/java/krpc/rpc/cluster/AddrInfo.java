@@ -30,26 +30,28 @@ public class AddrInfo implements Addr {
 	private AtomicInteger status = new AtomicInteger(0); // include all connection status, each bit has a status
 	private AtomicInteger current = new AtomicInteger(-1); // current index to get next connect
 	private AtomicInteger seq = new AtomicInteger(0);
+	private AtomicInteger pending = new AtomicInteger(0);
+	private AtomicInteger weight = new AtomicInteger(0); // todo dynamic change
 	private AtomicBoolean removeFlag = new AtomicBoolean(false);
 	
 	static class SecondStat {
 		long time;
 		int reqs = 0;
-		long timeUsed = 0;
+		long timeUsedMicros = 0;
 		SecondStat(long time) { this.time = time; }
 	}
 	
 	static class AllSecondStat {
 		LinkedList<SecondStat> list = new LinkedList<SecondStat>();
 		
-		synchronized void incReq(long timeUsed) {
+		synchronized void incReq(long timeUsedMicros) {
 			long now = System.currentTimeMillis()/1000;
 			if( list.isEmpty() || now > list.getFirst().time ) {
 				list.addFirst( new SecondStat(now) );
 			}
 			SecondStat item = list.getFirst();
 			item.reqs++;
-			item.timeUsed += timeUsed;
+			item.timeUsedMicros += timeUsedMicros;
 			
 			// clear old data
 			long clearTime = now - Addr.MAX_SECONDS_ALLOWED;
@@ -61,19 +63,19 @@ public class AddrInfo implements Addr {
 		synchronized long getAvgTimeUsed(long secondsBefore) {
 			long beforeTime = System.currentTimeMillis()/1000 - secondsBefore;
 			int ttlReqs = 0;
-			long ttlTimeUsed = 0;
+			long ttlTimeUsedMicros = 0;
 			
 			for(SecondStat item: list) {
 				if( item.time >= beforeTime ) {
 					ttlReqs += item.reqs;
-					ttlTimeUsed += item.timeUsed;
+					ttlTimeUsedMicros += item.timeUsedMicros;
 				} else {
 					break;
 				}
 			}
 			
 			if( ttlReqs > 0 ) {
-				return ttlTimeUsed / ttlReqs;
+				return ttlTimeUsedMicros / ttlReqs;
 			} else {
 				return 0;
 			}
@@ -87,15 +89,31 @@ public class AddrInfo implements Addr {
 		this.connections = connections;
 	}
 	
-	public long getAvgTimeUsed(int secondsBefore ) {
+	public long getAvgTimeUsedMicros(int secondsBefore ) {
 		return allSecondStat.getAvgTimeUsed(secondsBefore);
 	}
 	
-	public void updateResult(int retCode,long timeUsed) {
-		if( !RetCodes.hasExecuted(retCode) ) return;
-		allSecondStat.incReq(timeUsed);
+	public int getWeight() {
+		return weight.get();
 	}
 	
+	public void incPending() {
+		pending.incrementAndGet();
+	}
+
+	public void decPending() {
+		pending.decrementAndGet();
+	}
+    
+    public int getPendingCalls() {
+    	return pending.get();
+    }
+	
+	public void updateResult(int retCode,long timeUsedMicros) {
+		if( !RetCodes.hasExecuted(retCode) ) return;
+		allSecondStat.incReq(timeUsedMicros);
+	}
+    
 	public String getAddr() { 
 		return addr; 
 	}
@@ -155,5 +173,5 @@ public class AddrInfo implements Addr {
     	if( v >= 10000000 ) seq.set(0);
     	return v;
     }
-    
+
 }

@@ -14,6 +14,12 @@ public class RoundRobinLoadBalance implements LoadBalance {
 	
 	public int select(Addr[] addrs,int serviceId,int msgId,Message req) {
 		
+		int index = nextIndex(serviceId);
+
+		return index % addrs.length ;
+	}
+
+	private int nextIndex(int serviceId) {
 		AtomicInteger ai = map.get(serviceId);
 		if( ai == null ) {
 			ai = new AtomicInteger(-1);
@@ -24,7 +30,7 @@ public class RoundRobinLoadBalance implements LoadBalance {
 		if( index >= 10000000 ) {
 			ai.set(0);
 		}
-
-		return index % addrs.length ;
+		return index;
 	}
+	
 }

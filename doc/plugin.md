@@ -47,16 +47,16 @@
 	   负载均衡插件  krpc.rpc.cluster.LoadBalance 接口
 		       用来自定义loadbalance策略
 		       框架自带了roundrobin,random,leastactive,hash 插件
-		       
-	   注册与发现插件  krpc.rpc.core.Registry接口
-		       用来自定义注册与发现机制
-		       框架自带了 consul, etcd, zookeeper, eureka 插件
 
 	   流量控制插件 krpc.rpc.core.FlowControl 接口
 		        用来自定义流控策略
 		        框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
 		        此插件可用于server和webserver
-		       
+		       		       
+	   注册与发现插件  krpc.rpc.core.Registry 接口
+		       用来自定义注册与发现机制
+		       框架自带了 consul, etcd, zookeeper, eureka 插件
+
 	   错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口
 		        用来自定义错误码错误消息转换方式
 		        框架自带了 file (基于文件error.properties) 插件

@@ -11,8 +11,7 @@ import krpc.rpc.core.Plugin;
 public class ResponseTimeLoadBalance implements LoadBalance {
 
 	int seconds = 3;
-	int rrIndex = -1;
-	
+
 	public boolean needCallStats() { return true; }
 
 	public void config(String paramsStr) {
@@ -28,16 +27,12 @@ public class ResponseTimeLoadBalance implements LoadBalance {
 		long min = Long.MAX_VALUE;
 		int idx = -1;
 		for(int i=0;i<addrs.length;++i) {
-			long t =  addrs[i].getAvgTimeUsed(seconds);
+			long t =  addrs[i].getAvgTimeUsedMicros(seconds);
 			if( t < min ) {
 				min = t;
 				idx = i;
 			}
 		}
-		if( idx >= 0 ) return idx;
-		
-		rrIndex++;
-		if( rrIndex >= addrs.length ) rrIndex = 0;
-		return rrIndex;
+		return idx;
 	}
 }

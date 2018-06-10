@@ -188,7 +188,7 @@ class ServiceConfigBeanParser extends BaseParser<ServiceConfigBean> {
 	ServiceConfigBeanParser() {
 		beanClass = ServiceConfigBean.class;
 		attributes = new String[] { "interfaceName","impl","transport","reverse",
-				"registryNames","group","threads","maxThreads","queueSize","flowControl"};
+				"registryNames","group","threads","maxThreads","queueSize","flowControlParams"};
 		hasMethods = true;
 	}
 	
@@ -207,7 +207,7 @@ class RefererConfigBeanParser extends BaseParser<RefererConfigBean> {
 class MethodConfigBeanParser extends BaseParser<MethodConfig> {
 	MethodConfigBeanParser() {
 		beanClass = MethodConfig.class;
-		attributes = new String[] {"pattern","timeout","threads","maxThreads","queueSize","retryLevel","retryCount","loadBalance","flowControl"};
+		attributes = new String[] {"pattern","timeout","threads","maxThreads","queueSize","retryLevel","retryCount","loadBalance","flowControlParams"};
 		hasId = false;
 	}
 }

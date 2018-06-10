@@ -1,4 +1,8 @@
+krpc.rpc.cluster.lb.LeastActiveLoadBalance
 krpc.rpc.cluster.lb.RoundRobinLoadBalance
 krpc.rpc.cluster.lb.RandomLoadBalance
+krpc.rpc.cluster.lb.LeastActiveWeightLoadBalance
+krpc.rpc.cluster.lb.RoundRobinWeightLoadBalance
+krpc.rpc.cluster.lb.RandomWeightLoadBalance
 krpc.rpc.cluster.lb.HashLoadBalance
 krpc.rpc.cluster.lb.ResponseTimeLoadBalance

@@ -1,6 +1,5 @@
 package krpc.rpc.bootstrap;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -119,6 +118,7 @@ public class Bootstrap {
 	private HashSet<String> refererInterfaces = new HashSet<>();
 	private HashMap<String, WebServerConfig> webServers = new HashMap<>();
 
+	@SuppressWarnings("rawtypes")
 	static public class PluginInfo {
 		Class cls;
 		Class impCls;
@@ -329,7 +329,7 @@ public class Bootstrap {
 			throw new RuntimeException("service or referer or webserver must be specified");
 
 		ServerConfig lastServer = null;
-		WebServerConfig lastWebServer = null;
+		//WebServerConfig lastWebServer = null;
 		ClientConfig lastClient = null;
 		
 		String defaultRegistry  = null;
@@ -384,7 +384,7 @@ public class Bootstrap {
 			}
 			
 			webServers.put(c.id, c);
-			lastWebServer = c;
+			//lastWebServer = c;
 		}
 
 		for (ClientConfig c : clientList) {
@@ -809,8 +809,8 @@ public class Bootstrap {
 				em.addPool(serviceId, c.threads, c.maxThreads, c.queueSize);
 			}
 
-			if ( fc != null && !isEmpty(c.flowControl)) {
-				HashMap<Integer, Integer> fcParams = parseFlowControlParams(c.flowControl);
+			if ( fc != null && !isEmpty(c.flowControlParams)) {
+				HashMap<Integer, Integer> fcParams = parseFlowControlParams(c.flowControlParams);
 				for (Map.Entry<Integer, Integer> entry : fcParams.entrySet()) {
 					fc.addLimit(serviceId, entry.getKey(), entry.getValue());
 				}
@@ -826,8 +826,8 @@ public class Bootstrap {
 					em.addPool(serviceId, msgIds, mc.threads, mc.maxThreads, mc.queueSize);
 				}
 
-				if ( fc != null && !isEmpty(mc.flowControl)) {
-					HashMap<Integer, Integer> fcParams = parseFlowControlParams(mc.flowControl);
+				if ( fc != null && !isEmpty(mc.flowControlParams)) {
+					HashMap<Integer, Integer> fcParams = parseFlowControlParams(mc.flowControlParams);
 					for (Map.Entry<Integer, Integer> entry : fcParams.entrySet()) {
 						for (int msgId : msgIds)
 							fc.addLimit(serviceId, msgId, entry.getKey(), entry.getValue());
@@ -1172,6 +1172,7 @@ public class Bootstrap {
 		return lines;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	void loadSpi(Class cls)  throws Exception {
 		Enumeration<URL> urls = getClass().getClassLoader().getResources("META-INF/services/"+cls.getName());
 		List<PluginInfo> list = new ArrayList<>();
@@ -1236,6 +1237,7 @@ public class Bootstrap {
 		return getPlugin(LoadBalance.class,type);
 	}
 
+	@SuppressWarnings("unchecked")
 	<T> T getPlugin(Class<T> cls, String params) {
 
 		List<PluginInfo> list = plugins.get(cls.getName());
@@ -1258,6 +1260,7 @@ public class Bootstrap {
 		return null;
 	}
 
+	@SuppressWarnings("rawtypes")
 	boolean checkPlugin(Class cls, String type) {
 		List<PluginInfo> list = plugins.get(cls.getName());
 		if( list == null ) return false;

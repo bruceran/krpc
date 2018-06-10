@@ -12,7 +12,7 @@ public class ClientConfig  {
 	
 	int connections = 1;
 
-	String loadBalance = "roundrobin"; // can be random, roundrobin, ...
+	String loadBalance = "leastactive"; // can be random, roundrobin, leastactive, responsetime, ...
 	
 	int notifyThreads = 0; // for future listener, 0=auto -1=no threads
 	int notifyMaxThreads = 0;

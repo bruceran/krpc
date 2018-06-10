@@ -1,0 +1,67 @@
+package krpc.rpc.cluster.lb;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import com.google.protobuf.Message;
+
+import krpc.rpc.cluster.Addr;
+import krpc.rpc.cluster.LoadBalance;
+
+public class LeastActiveWeightLoadBalance implements LoadBalance {
+
+	Random rand = new Random();
+	
+	public int select(Addr[] addrs,int serviceId,int msgId,Message req) {
+		
+		int min = Integer.MAX_VALUE;
+		
+		int[] pendings =new int[addrs.length]; // pending may be changed during select
+		for(int i=0;i<addrs.length;++i) {
+			pendings[i] = addrs[i].getPendingCalls();
+			if( pendings[i] < min ) min = pendings[i] ;
+		}
+		
+		List<Integer> match = new ArrayList<>(pendings.length);
+		for(int i=0;i<pendings.length;++i) {
+			if( pendings[i] == min ) match.add(i);
+		}
+
+		if( match.size() == 1 ) return match.get(0);
+
+		int[] matchWeights =new int[match.size()]; // weight may be changed during select
+		for(int i=0;i<match.size();++i) {
+			matchWeights[i] = addrs[match.get(i)].getWeight();
+		}
+		
+		int total = 0;
+		boolean same = true;
+
+		for(int i=0;i<matchWeights.length;++i) {
+			total += matchWeights[i];
+			if( same && i >= 1 ) {
+				if( matchWeights[i] != matchWeights[i-1] ) same = false;
+			}
+		}
+		
+		if( total == 0 || same ) {
+			int r = rand.nextInt(match.size());
+			return match.get(r);
+		}
+
+		int r = select(matchWeights,total);
+		return match.get(r);
+	}
+	
+	public int select(int[] weights,int total) {
+		int offset = rand.nextInt(total);
+		for(int i=0;i<weights.length;++i) {
+			offset -= weights[i];
+			if( offset < 0 ) return i;
+		}
+		
+		return 0; // impossible
+	}
+	
+}
