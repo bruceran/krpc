@@ -141,7 +141,8 @@
   * krpc.rpc.monitor  krpc.rpc.core中的MonitorService接口实现
   
   * krpc.rpc.bootstrap 启动包，依赖所有上述包, 程序启动关闭只需依赖此包; 系统支持的所有配置参数可通过浏览此包下的XxxConfig类快速查看
-  * krpc.rpc.bootstrap.spring Spring下的启动包，依赖所有上述包
+  * krpc.rpc.bootstrap.spring Spring下的启动类，依赖所有上述包
+  * krpc.rpc.bootstrap.springboot Spring boot下的启动类，依赖所有上述包
   
 # PROTOC工具安装及使用
 

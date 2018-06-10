@@ -29,7 +29,7 @@ public class ApplicationConfigBean extends ApplicationConfig implements FactoryB
     public void afterPropertiesSet() throws Exception {
     	count++;
     	if( count >= 2 ) throw new RuntimeException("only one ApplicationConfigBean can be specified");
-    	SpringBootstrap.instance.bootstrap.setAppConfig(this);
+    	SpringBootstrap.instance.getBootstrap().setAppConfig(this);
     }
     
     @Override

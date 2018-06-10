@@ -13,7 +13,7 @@ public class ServerConfigBean extends ServerConfig  implements InitializingBean,
     }
     
     public void afterPropertiesSet() throws Exception {
-        SpringBootstrap.instance.bootstrap.addServer(this);
+        SpringBootstrap.instance.getBootstrap().addServer(this);
     } 
 
 }

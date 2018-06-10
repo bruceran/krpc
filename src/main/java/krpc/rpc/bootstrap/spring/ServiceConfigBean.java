@@ -38,7 +38,7 @@ public class ServiceConfigBean extends ServiceConfig implements InitializingBean
 		if( bean == null ) throw new RuntimeException("bean not found for service "+ this.getInterfaceName() );
 		this.setImpl(bean);
 		
-        SpringBootstrap.instance.bootstrap.addService(this);
+        SpringBootstrap.instance.getBootstrap().addService(this);
     }
 	
     Object loadBean(String impl, String interfaceName,BeanFactory beanFactory) {

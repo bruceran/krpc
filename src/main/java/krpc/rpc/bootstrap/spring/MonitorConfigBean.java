@@ -7,7 +7,7 @@ import krpc.rpc.bootstrap.MonitorConfig;
 public class MonitorConfigBean extends MonitorConfig implements InitializingBean {
 	
     public void afterPropertiesSet() throws Exception {
-        SpringBootstrap.instance.bootstrap.setMonitorConfig(this);
+        SpringBootstrap.instance.getBootstrap().setMonitorConfig(this);
     }
 
 }

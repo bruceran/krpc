@@ -13,7 +13,7 @@ public class ClientConfigBean extends ClientConfig implements InitializingBean, 
     }
     
     public void afterPropertiesSet() throws Exception {
-        SpringBootstrap.instance.bootstrap.addClient(this);
+        SpringBootstrap.instance.getBootstrap().addClient(this);
     }
 
 }

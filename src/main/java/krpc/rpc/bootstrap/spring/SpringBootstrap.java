@@ -36,8 +36,25 @@ public class SpringBootstrap {
 	boolean inited = false;
 	boolean stopped = false;
 	boolean closed = false;
-	Bootstrap bootstrap = new Bootstrap(); // todo can be customized
+	private Bootstrap bootstrap = null;
 	RpcApp rpcApp = null;
+	
+	public Bootstrap getBootstrap() {
+		if( bootstrap == null ) {
+			String bootstrapCls = System.getProperty("KRPC_BOOTSTRAP");
+			if( bootstrapCls != null && !bootstrapCls.isEmpty() ) {
+				try {
+					Class cls = Class.forName(bootstrapCls);
+					bootstrap = (Bootstrap)cls.newInstance();
+				} catch(Exception e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+				bootstrap = new Bootstrap();
+			}
+		}
+		return bootstrap;
+	}
 	
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory0) throws BeansException {
 		if(postProcessed) return;
@@ -79,10 +96,6 @@ public class SpringBootstrap {
         beanDefinitionBuilder.setLazyInit(true);
         beanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getRawBeanDefinition());			
 	}		
-	
-	public Bootstrap getBootstrap() {
-		return bootstrap;
-	}
 
 	public RpcApp getRpcApp() {
 		return rpcApp;

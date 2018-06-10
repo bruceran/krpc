@@ -38,7 +38,7 @@
              纯静态页面HTTP网关  webserver
              
         每个app内可配置一个monitorservice做日志相关配置
-        洁的TRACE接口, 仅需调整一个配置就可对接不同的全链路跟踪系统(APM系统)
+        简洁的TRACE接口, 仅需调整一个配置就可对接不同的全链路跟踪系统(APM系统)
         每个app内可配置多个注册与服务插件，每个service可同时连接多个注册与发现服务
         
         框架内的client,server,webserver是重量级对象，因谨慎创建实例；
@@ -48,12 +48,13 @@
         客户端的异步调用返回jdk 8的CompleatableFuture<T>, 可以用简单的代码实现各种异步：并行调用，灵活组合多个回调；
         服务端的异步实现非常简洁
         逆向调用(PUSH)和正向调用一样简洁
-        大的HTTP通用网关
+        强大的HTTP通用网关
 
 	* 强大的扩展机制
-	
+
 	    a) 使用预定义的spi接口进行功能扩展
-	    b) 框架内部几乎都是以接口方式进行编程，所有实体类的创建都在BootStrap类中，可通过继承BootStrap类做更深度的定制
+	    b) 使用Spring bean扩展spi接口
+	    b) 继承BootStrap类做更深度的定制
 	    c) 框架本身只对logback,protobuff3,netty4,javassist,jackson有强依赖，其它依赖都是可选的, 都是可以替换的
 	
 # krpc网络包协议
@@ -231,11 +232,10 @@
 			
         RpcApp app = new Bootstrap() 
         	.addReferer("us",UserService.class,"127.0.0.1:5600")  // 如果打算使用同步调用需这一行
-        	.addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") // 如果打算使用异步调用需这一行
         	.build().initAndStart();
   		
         UserService us = app.getReferer("us"); // 获取同步代理
-        UserServiceAsync usa = app.getReferer("usa");  // 获取异步代理
+        UserServiceAsync usa = app.getReferer("usAsync");  // 获取异步代理, 命名约定：同步代理的名称后+Async获取异步代理
         
         LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();  // pb风格的对象创建
         
@@ -266,10 +266,8 @@
 		
         <?xml version="1.0" encoding="utf-8"?>    
         <routes>    
-          <group hosts="*" prefix="/user"  methods="get,post" serviceId="100">  
-          	<url path="/test1" msgId="1"/>  
-          	<url path="/test2" msgId="2"/>  
-          </group>
+          	<url path="/user/test1" serviceId="100" msgId="1"/>  
+          	<url path="/user/test2" serviceId="100" msgId="2"/>  
         </routes>  
 			
   * 服务对外同时提供tcp接口和http接口:
@@ -294,7 +292,6 @@
         RpcApp app = new Bootstrap()
           .addWebServer(8888)  // 相比普通的客户端多出来的一行
           .addReferer("us",UserService.class,"127.0.0.1:5600") 
-          .addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600") 
           .build().initAndStart();
 
   * 启动HTTP通用网关(动态方式), 网关中不用集成protoc生成的源码或jar包，只用生成的userservice.proto.pb文件
@@ -339,8 +336,7 @@
             @Bean(destroyMethod = "stopAndClose")
             public RpcApp rpcApp() {
               RpcApp app = new Bootstrap() 
-                .addReferer("us",UserService.class,"127.0.0.1:5600") 
-                .addReferer("usa",UserServiceAsync.class,"127.0.0.1:5600")         			
+                .addReferer("us",UserService.class,"127.0.0.1:5600")     			
                 .build().initAndStart();
               return app;
             }
@@ -353,7 +349,7 @@
             
             @Bean
             public UserServiceAsync userServiceAsync(RpcApp app) {
-              UserServiceAsync usa = app.getReferer("usa");
+              UserServiceAsync usa = app.getReferer("usAsync");
               return usa;
             }            
     		
@@ -363,6 +359,9 @@
   
     spring-schema-server.xml
     spring-schema-client.xml
+
+    referer 的 id 可不配置，若不配置则自动根据接口名的SimpleName自动生成
+    无需对客户端异步代理做配置, 只要配置了同步代理，框架会自动生成一个名称为同步代理BeanName+Async的异步代理Bean，程序里直接引用该异步代理就可以
 
 # 和spring框架集成(spring boot方式)
   
@@ -378,14 +377,16 @@
 		krpc.monitor 对应 krpc:monitor
 		krpc.registry 和 krpc.registries 对应 krpc:registry, 当只有一个时使用 registry, 多个时使用registries
 		krpc.server 和 krpc.servers 对应 krpc:server, 当只有一个时使用使用 server, 多个时使用servers
-		krpc.webServer 和 krpc.webServers 对应 krpc:webServer, 当只有一个时使用 webServer, 多个时使用webServers
+		krpc.webserver 和 krpc.webservers 对应 krpc:webserver, 当只有一个时使用 webserver, 多个时使用webservers
 		krpc.client 和 krpc.clients 对应 krpc:client, 当只有一个时使用 client, 多个时使用clients
 		krpc.service 和 krpc.services 对应 krpc:service, 当只有一个时使用 service, 多个时使用services
 		krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个时使用 referer, 多个时使用referers
 
 	 spring boot 特有开关：
-	 
-    krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 可设置为false,然后调用rpcApp.start()方法打开对外的端口
+         krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 可设置为false,然后调用rpcApp.start()方法打开对外的端口
+     
+    referer 的 id 可不配置，若不配置则自动根据接口名的SimpleName自动生成
+    无需对客户端异步代理做配置, 只要配置了同步代理，框架会自动生成一个名称为同步代理BeanName+Async的异步代理Bean，程序里直接引用该异步代理就可以
 
 # 配置参数详解				  
 
@@ -397,7 +398,6 @@
     mockFile 开发阶段可通过此文件来对service做mock, 暂未实现
     errorMsgConverter 错误码错误消息转换文件，默认为classpath下的error.properties
     traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, skywalking(暂未实现), cat(暂未实现)
-    flowControl 流量控制策略，默认不启用, 可配置为  memory 或  jedis
     dataDir 数据文件保存目录，默认为当前目录
     
 ## registry
@@ -446,6 +446,7 @@
              可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
     maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
+    flowControl 流量控制策略，默认不启用, 可配置为  memory 或  jedis
 
 ## webserver	
 
@@ -466,14 +467,17 @@
     maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
          
-    sessionService  会话服务插件, 支持 memory,jedis, 默认为memory
+    protoDir proto文件所在目录，默认为 proto, 会自动搜索classpath下的proto/子目录下的所有xxx.proto.pb文件
     routesFile 路由配置文件， 默认为 routes.xml，会自动搜索classpath下的routes.xml配置文件
     sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID
     sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录
     
-    protoDir proto文件所在目录，默认为 proto, 会自动搜索classpath下的proto/子目录下的所有xxx.proto.pb文件
     sampleRate 全链路跟踪采样率, 实际比率为 1/sampleRate, 默认为1
-
+    flowControl 流量控制策略，默认不启用, 可配置为  memory 或  jedis
+    defaultSessionService  会话服务插件, 支持 memorysessionservice,jedissessionservice, 默认为memorysessionservice
+    pluginParams  Web插件参数配置, 类型为List<String>, 所有需要配置参数的web插件通过此参数进行配置，不需要配置参数的web插件不用配置
+                          每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
+    
 ## service
 
     id 名称 不填则会自动生成
@@ -551,11 +555,7 @@
       <routes>    
       
           <import file="routes-b.xml"/>  
-          
-          <plugin name="dummy" params="a=1;b=2"/>
-          
-          <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
-          
+
           <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" 
                plugins="dummy" sessionMode="0"/>  
           <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
@@ -565,11 +565,11 @@
             <url path="/test4" msgId="4"/>  
           </group>
       
+          <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
+                
       </routes>
       
   * 可通过import导入其它routes文件，这样可以按服务分别存放路由
-  
-  * 可通过dir定义静态资源目录，上传目录等
   
   * 每个url标识一个路由映射, 可直接放在routes下，也可放在group下, 通常总是一类消息会共用相同的配置，建议都放在group下 
 
@@ -585,6 +585,8 @@
 
         每个url里的其它属性也会保存下来，如果自定义插件需要一些扩展属性，也可以从context中获取到这些自定义的属性
         
+        对插件的引用只能使用名称，不可带参数； 如参数需要参数，需在webserver的pluginParams里申明, 不带参数的插件不要申明，直接引用即可
+        
   * group用来配置一组url公共的属性，简化url配置
   
         group节点不支持配置 path 和 msgId
@@ -597,12 +599,9 @@
         serviceId path对应的服务号
         plugins 用来配置插件名，允许多个，用逗号隔开
         sessionMode 会话模式 0=不需要会话 1=只需要会话ID 2=有会话则把会话信息传给后端，但不强制登录 2=必须要登录, 默认为0
-
-  * 绝大多数插件并不需要配置参数，不需要参数的插件直接在plugins里引用就可以；如果插件需要配置参数，则需使用plugin节点来进行参数配置
   
-        name 插件名
-        params 插件参数，由插件自行解析的字符串，系统自带插件采用的风格为 a=1;b=2 这种形式，使用分号和等于号做分隔符
-        
+  * 可通过dir定义静态资源目录，上传目录等
+
 # HTTP通用网关参数映射
     
       webserver框架会自动将http里的http元信息，header,cookie,session,入参等映射到protobuff请求消息；
@@ -674,7 +673,7 @@
         在客户端可以同时使用同步代理和异步代理 (启动方式不同获取动态代理方式也不同)
         获取到异步代理后，可以自由使用返回的future, 如：
         
-        UserServiceAsync usa = app.getReferer("usa");
+        UserServiceAsync usa = app.getReferer("usAsync");
         
         1) 同时发出多个异步请求，等待所有返回
 
@@ -777,14 +776,57 @@
       ClientContext.setConnId(connId); // 推送前需要调用此函数确定此消息是推送到那个连接上
       PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
       ps.push(req); // 完成推送
-				
-# 自定义SPI插件如何获取到Spring容器
 
-      BeanFactory bf = krpc.rpc.bootstrap.spring.SpringBootstrap.instance.spring;
-      
-      注意：框架支持直接将spring bean作为插件，通常没必要手工去获取spring容器对象
+# 参数验证
 
-# 如何进行业务层打点  
+	* 框架支持直接在proto文件中定义参数验证规则，简化程序中的程式化代码
+	* 框架只会对请求对象进行参数验证，对结果对象不做验证
+	* 参数验证的编写语法为protobuffer的标准语法, 示例：
+	
+		string s1 = 1  [  (krpc.vld).required = true  ] ;
+		string s2 = 2  [  (krpc.vld).match="date" ] ;	
+	    string s3 = 3  [  (krpc.vld).match="a.*c" ] ;			
+		string s4 = 4  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
+		repeated string s5 = 5  [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
+		
+		一个field多个规则的时候protobuffer允许用两种等价形式编写规则：
+		
+			[  (krpc.vld).arrlen = "1,-", (krpc.vld).values = "111,222" ];
+		    [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
+		
+    * 支持的验证规则
+    	
+    	required 非空字符串, 适用于字符串
+    	match 字符串必须符合某个规则, 适用于字符串和数值，转换为字符串后再匹配
+    			int 必须是java int
+    			long 必须是java long
+    			double 必须是java double
+    			date 必须是 2011-01-01 这种日期格式
+    			timestamp  必须是 2011-01-01 12:12:11 这种时间戳格式
+    			email 必须是电子邮件
+    			其他  则认为是正则表达式
+    	 values 用逗号隔开的多个枚举值, 适用于字符串和数值
+    	 length 字符串长度, 适用于字符串和数值，转换为字符串后获取长度再比较
+    	 	n  n个字符
+    	 	n,m  仅n到m个字符
+    	 	n,-  最少n个字符
+    	 	-,n  最大为n个字符
+    	 nrange 数值范围, 适用于字符串和数值，转换为数值后比较大小
+    	 	n  min,max都为n
+    	 	min,max 范围为min到max
+    	 	min,-  最少min
+    	 	-,max  最大max
+    	 srange 字符串范围, 适用于字符串和数值，转换为字符串后比较大小
+    	 	min,max 字符串范围为min到max
+    	 arrlen 数组长度范围, 仅适用于repeated field
+    	 	n  min,max都为n
+    	 	min,max 范围为min到max
+    	 	min,-  最少min
+    	 	-,max  最大max
+
+	 * 支持的验证规则目前不提供扩展机制
+	 
+# 业务层手工打点  
 
     * 通过application配置参数 traceAdapter 来配置使用的全链路跟踪系统
 
@@ -793,8 +835,7 @@
     * 打点范围
     
         一般情况下业务层不需自己打点, 如数据库访问，缓存访问, 外部http调用这类由trace框架统一解决
-        业务层只应该对一些特殊代码段打点，记录一些信息，在框架尚未解决的外部IO打点也可临时手工打点
-        所有打点的信息都可以在全链路跟踪系统里查询到
+        业务层只应该对一些特殊代码段打点，记录一些信息，所有打点的信息都可以在全链路跟踪系统里查询到
 
      * 模型
     
@@ -873,53 +914,4 @@
      * 进程间Trace上下文传递
      
          krpc框架已做了处理，业务层代码无需关心
-         
-# 参数验证
-
-	* 框架支持直接在proto文件中定义参数验证规则，简化程序中的程式化代码
-	* 框架只会对请求对象进行参数验证，对结果对象不做验证
-	* 参数验证的编写语法为protobuffer的标准语法, 示例：
-	
-		string s1 = 1  [  (krpc.vld).required = true  ] ;
-		string s2 = 2  [  (krpc.vld).match="date" ] ;	
-	    string s3 = 3  [  (krpc.vld).match="a.*c" ] ;			
-		string s4 = 4  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
-		repeated string s5 = 5  [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
-		
-		一个field多个规则的时候protobuffer允许用两种等价形式编写规则：
-		
-			[  (krpc.vld).arrlen = "1,-", (krpc.vld).values = "111,222" ];
-		    [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
-		
-    * 支持的验证规则
-    	
-    	required 非空字符串, 适用于字符串
-    	match 字符串必须符合某个规则, 适用于字符串和数值，转换为字符串后再匹配
-    			int 必须是java int
-    			long 必须是java long
-    			double 必须是java double
-    			date 必须是 2011-01-01 这种日期格式
-    			timestamp  必须是 2011-01-01 12:12:11 这种时间戳格式
-    			email 必须是电子邮件
-    			其他  则认为是正则表达式
-    	 values 用逗号隔开的多个枚举值, 适用于字符串和数值
-    	 length 字符串长度, 适用于字符串和数值，转换为字符串后获取长度再比较
-    	 	n  n个字符
-    	 	n,m  仅n到m个字符
-    	 	n,-  最少n个字符
-    	 	-,n  最大为n个字符
-    	 nrange 数值范围, 适用于字符串和数值，转换为数值后比较大小
-    	 	n  min,max都为n
-    	 	min,max 范围为min到max
-    	 	min,-  最少min
-    	 	-,max  最大max
-    	 srange 字符串范围, 适用于字符串和数值，转换为字符串后比较大小
-    	 	min,max 字符串范围为min到max
-    	 arrlen 数组长度范围, 仅适用于repeated field
-    	 	n  min,max都为n
-    	 	min,max 范围为min到max
-    	 	min,-  最少min
-    	 	-,max  最大max
-
-	 * 支持的验证规则目前不提供扩展机制
-	 
+ 

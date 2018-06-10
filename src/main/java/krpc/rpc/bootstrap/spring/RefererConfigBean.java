@@ -39,7 +39,7 @@ public class RefererConfigBean<T> extends RefererConfig  implements FactoryBean<
     		group = environment.getProperty("spring.profiles.active");
     		setGroup(group);
     	}    	
-        SpringBootstrap.instance.bootstrap.addReferer(this);
+        SpringBootstrap.instance.getBootstrap().addReferer(this);
     }
 
     public void onApplicationEvent(ApplicationEvent event) {

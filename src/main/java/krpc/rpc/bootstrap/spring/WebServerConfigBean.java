@@ -13,7 +13,7 @@ public class WebServerConfigBean extends WebServerConfig  implements Initializin
     }
     
     public void afterPropertiesSet() throws Exception {
-        SpringBootstrap.instance.bootstrap.addWebServer(this);
+        SpringBootstrap.instance.getBootstrap().addWebServer(this);
     } 
 
 }

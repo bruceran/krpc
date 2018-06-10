@@ -13,7 +13,7 @@ public class RegistryConfigBean extends RegistryConfig  implements InitializingB
     }
     
     public void afterPropertiesSet() throws Exception {
-        SpringBootstrap.instance.bootstrap.addRegistry(this);
+        SpringBootstrap.instance.getBootstrap().addRegistry(this);
     } 
 
 }
