@@ -26,14 +26,14 @@ public class RpcServerTest {
 
 		RpcApp app = new Bootstrap() 
 			.addRegistry(new RegistryConfig().setType("consul").setAddrs("192.168.31.144:8500"))			
-			//.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("consul")) 
-			.addRegistry(new RegistryConfig().setType("etcd").setAddrs("192.168.31.144:2379"))			
-			.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("etcd,consul")) 
+			.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("consul")) 
+			//.addRegistry(new RegistryConfig().setType("etcd").setAddrs("192.168.31.144:2379"))			
+			//.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("etcd")) 
 			.build();
 		
 		app.initAndStart();
 		
-		Thread.sleep(1000000);
+		Thread.sleep(500000);
 
 		app.stopAndClose();
 

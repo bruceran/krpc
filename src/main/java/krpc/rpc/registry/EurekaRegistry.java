@@ -15,7 +15,7 @@ public class EurekaRegistry implements Registry {
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		
 	}
-	public void deregister(int serviceId,String serviceName,String group) {
+	public void deregister(int serviceId,String serviceName,String group,String addr) {
 		
 	}	
 	

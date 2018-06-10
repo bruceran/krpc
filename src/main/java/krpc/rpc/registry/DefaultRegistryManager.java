@@ -183,7 +183,7 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
     	for(RegisterItem item:registerItems) {
     		Registry r = registries.get(item.registryName);
     		String serviceName = serviceMetas.getServiceName(item.serviceId);
-    		r.deregister(item.serviceId, serviceName, item.group);
+    		r.deregister(item.serviceId, serviceName, item.group,item.addr);
     	}
     }
     

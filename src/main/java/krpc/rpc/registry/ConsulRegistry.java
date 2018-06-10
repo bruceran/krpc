@@ -27,13 +27,17 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 	int ttl = 90;
 	int interval = 15;
 	
-	HashSet<String> registeredServiceNames = new HashSet<>();
+	HashSet<Integer> registeredServiceIds = new HashSet<>();
+	
+	// curl "http://192.168.31.144:8500/v1/agent/services"
+	// curl "http://192.168.31.144:8500/v1/catalog/services"
+	// curl "http://192.168.31.144:8500/v1/health/service/100"
 	
     public void init() {
     	registerUrlTemplate = "http://%s/v1/agent/service/register";
     	keepAliveUrlTemplate = "http://%s/v1/agent/check/pass/service:%s";
     	degisterUrlTemplate = "http://%s/v1/agent/service/deregister";
-    	discoverUrlTemplate = "http://%s/v1/health/service/%s?passing";
+    	discoverUrlTemplate = "http://%s/v1/health/service/%d?passing";
 		super.init();
     }	
 
@@ -55,8 +59,10 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 		if( !enableRegist ) return;
 		if( hc == null ) return;
 	
-		if( registeredServiceNames.contains(serviceName) ) {
-			String url = String.format(keepAliveUrlTemplate, addr(), serviceName);
+		String instanceId = addr;
+		
+		if( registeredServiceIds.contains(serviceId) ) {
+			String url = String.format(keepAliveUrlTemplate, addr(), instanceId);
 			HttpClientReq req = new HttpClientReq("PUT",url);
 
 			HttpClientRes res = hc.call(req);
@@ -65,14 +71,20 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 				nextAddr();
 				return;
 			} 
-			registeredServiceNames.remove(serviceName);
+			registeredServiceIds.remove(serviceId);
 			return;
 		}
 		
 		HashMap<String,Object> m = new HashMap<>();
-		m.put("ID", serviceName);
-		m.put("Name", serviceName);
-		m.put("Tags", Arrays.asList(group));
+		m.put("ID", instanceId);
+		m.put("Name", String.valueOf(serviceId));
+		
+		HashMap<String,Object> meta = new HashMap<>();
+		meta.put("group", group);
+		meta.put("serviceName", serviceName);
+		m.put("Meta", meta);
+		
+		m.put("Tags", Arrays.asList(serviceName)); //  displayed in ui;
 		
 		int p = addr.lastIndexOf(":");
 		String address = addr.substring(0,p);
@@ -81,7 +93,7 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 		m.put("Address", address);
 		m.put("Port", port);
 		HashMap<String,Object> check = new HashMap<>();
-		check.put("Name", "check "+serviceName);
+		check.put("Name", "check_"+serviceId);
 		check.put("Status", "passing");
 		check.put("DeregisterCriticalServiceAfter", "3m");
 		check.put("TTL", ttl+"s");
@@ -98,14 +110,16 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 			return;
 		} 
 		
-		registeredServiceNames.add(serviceName);
+		registeredServiceIds.add(serviceId);
 	}
 	
-	public void deregister(int serviceId,String serviceName,String group) {
+	public void deregister(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
 		if( hc == null ) return;
 		
-		String url = String.format(degisterUrlTemplate, addr()) + "/" + serviceName;
+		String instanceId = addr;
+		
+		String url = String.format(degisterUrlTemplate, addr()) + "/" + instanceId;
 		HttpClientReq req = new HttpClientReq("PUT",url);
 		HttpClientRes res = hc.call(req);
 		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
@@ -114,7 +128,7 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 			return;
 		}
 		
-		registeredServiceNames.remove(serviceName);
+		registeredServiceIds.remove(serviceId);
 	}	
 	
 	@SuppressWarnings("unchecked")
@@ -122,7 +136,7 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 		if( !enableDiscover ) return null;
 		if( hc == null ) return null;
 		
-		String url = String.format(discoverUrlTemplate, addr(), serviceName);
+		String url = String.format(discoverUrlTemplate, addr(), serviceId);
 		HttpClientReq req = new HttpClientReq("GET",url);
 		HttpClientRes res = hc.call(req);
 		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
@@ -142,8 +156,9 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 		for(Object o:list) {
 			Map<String,Object> m = (Map<String,Object>)o;
 			Map<String,Object> service = (Map<String,Object>)m.get("Service");
-			List<String> tags = (List<String>)service.get("Tags");
-			if( !tags.contains(group) ) continue;
+			Map<String,String> meta = (Map<String,String>)service.get("Meta");
+			if( !meta.containsKey("group") ) continue;
+			if( !meta.get("group").equals(group) ) continue;
 			String address = (String)service.get("Address");
 			int port = (Integer)service.get("Port");
 			set.add(address+":"+port);

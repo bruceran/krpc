@@ -1,5 +1,7 @@
 package krpc.rpc.registry;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import krpc.common.InitClose;
@@ -9,7 +11,6 @@ import krpc.rpc.core.Registry;
 
 abstract public class AbstractHttpRegistry implements Registry,InitClose {
 
-	String instanceId;
 	private String addrs;
 	String[] addrArray;
 	int addrIndex = 0;
@@ -26,7 +27,6 @@ abstract public class AbstractHttpRegistry implements Registry,InitClose {
 
 	public void config(Map<String,String> params) {
 
-		instanceId = params.get("instanceId");
 		addrs = params.get("addrs");
 		addrArray = addrs.split(",");
 		
@@ -59,6 +59,20 @@ abstract public class AbstractHttpRegistry implements Registry,InitClose {
 	boolean isEmpty(String s) {
 		return s == null || s.isEmpty();
 	}    
-
+    
+    public String encode(String v) {
+    	try {
+    		return URLEncoder.encode(v,"utf-8");
+    	} catch(Exception e) {
+    		return v;
+    	}
+    }
+    public String decode(String v) {
+    	try {
+    		return URLDecoder.decode(v,"utf-8");
+    	} catch(Exception e) {
+    		return v;
+    	}
+    }    
 }
 

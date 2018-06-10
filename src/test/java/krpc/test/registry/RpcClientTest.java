@@ -19,10 +19,10 @@ public class RpcClientTest {
 	public static void main(String[] args) throws Exception {
 		
 		RpcApp app = new Bootstrap() 
-				//.addRegistry(new RegistryConfig().setType("consul").setAddrs("192.168.31.144:8500"))			
-				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("consul")) 
-				.addRegistry(new RegistryConfig().setType("etcd").setAddrs("192.168.31.144:2379"))			
-				.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("etcd")) 
+				.addRegistry(new RegistryConfig().setType("consul").setAddrs("192.168.31.144:8500"))			
+				.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("consul")) 
+				//.addRegistry(new RegistryConfig().setType("etcd").setAddrs("192.168.31.144:2379"))			
+				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("etcd")) 
 				.build();
 		
 		app.initAndStart();

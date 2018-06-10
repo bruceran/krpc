@@ -1,5 +1,6 @@
 package krpc.rpc.registry;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -21,6 +22,9 @@ public class EtcdRegistry extends AbstractHttpRegistry {
     int ttl = 90;
     int interval = 15;
 	
+    // curl "http://192.168.31.144:2379/v2/keys/services"
+    // curl "http://192.168.31.144:2379/v2/keys/services/default/100"
+    
     public void init() {
     	basePathTemplate = "http://%s/v2/keys/services";
 		super.init();
@@ -38,14 +42,20 @@ public class EtcdRegistry extends AbstractHttpRegistry {
     public int getCheckIntervalSeconds() {
     	return interval;
     }
-    
+
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
 		if( hc == null ) return;
 
+		String instanceId = addr;
+		
 		String basePath = String.format(basePathTemplate, addr());
-		String url = basePath +"/"+group+"/"+serviceName+"/"+instanceId +"?ttl="+ttl;		
-        String value = "value="+addr;
+		String url = basePath +"/"+group+"/"+serviceId+"/"+instanceId +"?ttl="+ttl;	
+		Map<String,String> valueMap = new HashMap<>();
+		valueMap.put("addr", addr);
+		valueMap.put("serviceName", serviceName);
+		String json = Json.toJson(valueMap);
+        String value = "value="+encode(json);
 		HttpClientReq req = new HttpClientReq("PUT",url).addHeader("content-type", "application/x-www-form-urlencoded").setContent(value);
 
 		HttpClientRes res = hc.call(req);
@@ -55,7 +65,7 @@ public class EtcdRegistry extends AbstractHttpRegistry {
 			return;
 		} 		
 		
-		String json = res.getContent();
+		json = res.getContent();
 		Map<String,Object> m = Json.toMap(json);
 		if( m == null ) {
 			nextAddr();
@@ -67,12 +77,14 @@ public class EtcdRegistry extends AbstractHttpRegistry {
         }		
 	}
 	
-	public void deregister(int serviceId,String serviceName,String group) {
+	public void deregister(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
 		if( hc == null ) return;
 		
+		String instanceId = addr;
+		
 		String basePath = String.format(basePathTemplate, addr());
-		String url = basePath +"/"+group+"/"+serviceName+"/"+instanceId;		
+		String url = basePath +"/"+group+"/"+serviceId+"/"+instanceId;		
 		HttpClientReq req = new HttpClientReq("DELETE",url);
 
 		HttpClientRes res = hc.call(req);
@@ -100,7 +112,7 @@ public class EtcdRegistry extends AbstractHttpRegistry {
 		if( hc == null ) return null;
 
 		String basePath = String.format(basePathTemplate, addr());
-		String url = basePath +"/"+group+"/"+serviceName;		
+		String url = basePath +"/"+group+"/"+serviceId;		
 		HttpClientReq req = new HttpClientReq("GET",url);
 
 		HttpClientRes res = hc.call(req);
@@ -133,7 +145,9 @@ public class EtcdRegistry extends AbstractHttpRegistry {
         	if( o instanceof Map ) {
         		Map mm = (Map)o;
             	if(mm != null) {
-            		set.add((String)mm.get("value"));
+            		String value = (String)mm.get("value"); 
+            		Map valueMap = Json.toMap(value);
+            		set.add( (String)valueMap.get("addr") );
             	}
         	}
         }
