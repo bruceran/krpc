@@ -10,6 +10,7 @@ dependencies {
 		compile 'org.slf4j:slf4j-api:1.7.22'
 		compile  'ch.qos.logback:logback-core:1.2.1'
 		compile  'ch.qos.logback:logback-classic:1.2.1'
+		compile 'org.slf4j:log4j-over-slf4j:1.7.22'
 		
 		compile 'com.google.protobuf:protobuf-java:3.5.1'
 		compile 'io.netty:netty-all:4.1.16.Final'
@@ -26,6 +27,8 @@ dependencies {
 		compile 'org.xerial.snappy:snappy-java:1.1.2.3'
 		compile 'redis.clients:jedis:2.9.0'
 		
+		compile ('org.apache.curator:curator-framework:2.12.0') {   exclude group: 'log4j' } // depends on : curator-client,zookeeper, guava
+
 		testCompile 'junit:junit:4.12'
 }
 

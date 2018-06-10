@@ -55,7 +55,7 @@
 		       		       
 	   注册与发现插件  krpc.rpc.core.Registry 接口
 		       用来自定义注册与发现机制
-		       框架自带了 consul, etcd, zookeeper, eureka 插件
+		       框架自带了 consul, etcd, zookeeper 插件
 
 	   错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口
 		        用来自定义错误码错误消息转换方式

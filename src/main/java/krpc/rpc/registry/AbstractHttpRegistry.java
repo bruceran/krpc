@@ -11,7 +11,7 @@ import krpc.rpc.core.Registry;
 
 abstract public class AbstractHttpRegistry implements Registry,InitClose {
 
-	private String addrs;
+	String addrs;
 	String[] addrArray;
 	int addrIndex = 0;
 	boolean enableRegist = true;
