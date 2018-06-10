@@ -16,7 +16,7 @@
 ## [框架编译指南](doc/install.md) 
 
     安装JDK 8
-    安装gradle 3.3 以上
+    安装gradle或maven
     框架目录结构
     框架外部依赖说明
     框架包依赖关系	  

@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'maven'
 
 group = 'krpc'
 version = '0.1.0'
@@ -7,20 +6,21 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+
 		compile 'org.slf4j:slf4j-api:1.7.22'
-		compile 'ch.qos.logback:logback-core:1.2.1'
-		compile 'ch.qos.logback:logback-classic:1.2.1'
+		compile  'ch.qos.logback:logback-core:1.2.1'
+		compile  'ch.qos.logback:logback-classic:1.2.1'
+		
 		compile 'com.google.protobuf:protobuf-java:3.5.1'
 		compile 'io.netty:netty-all:4.1.16.Final'
 		compile 'javassist:javassist:3.12.1.GA'
 		compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'		
+        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
 		
 		compile 'org.springframework:spring-core:4.3.17.RELEASE'
 		compile 'org.springframework:spring-beans:4.3.17.RELEASE'
 		compile 'org.springframework:spring-context:4.3.17.RELEASE'
-		
 		compile 'org.springframework.boot:spring-boot-autoconfigure:1.5.13.RELEASE'
 		
 		compile 'org.xerial.snappy:snappy-java:1.1.2.3'
@@ -32,17 +32,3 @@ dependencies {
 repositories {
      maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 }
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "http://host:port/nexus/content/repositories/releases/") {
-                authentication(userName: "xxx", password: "xxx")
-            }
-            pom.version = "$version"
-            pom.artifactId = "krpc"
-            pom.groupId = "krpc"
-        }
-    }
-}
-

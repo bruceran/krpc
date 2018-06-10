@@ -17,31 +17,46 @@
 	
 		在命令行下运行java -version, 若配置正确会显示版本信息
 
-# 安装gradle 3.3 以上
+# 安装maven或gradle
 
-  下载地址: https://gradle.org/releases/
+    由于gradle发布到maven仓库时生成的pom文件缺少optional属性，会导致依赖krpc的项目导入不必要的依赖，
+    故同时提供maven配置和gradle配置，gradle配置仅用于本地源码编译，不用于发布; 正式发布请使用maven。
 
-	框架本身的编译使用gradle 3.3或以上版本; 默认配置文件里会用到阿里云仓库 
-	如果要在spring boot 2.x下使用，需安装gradle 4.x版本，建议总是安装最新版本 的 gradle 
+	* maven 安装
+	    
+	    下载地址: http://maven.apache.org/download.cgi
+	    下载完毕后展开并设置M2_HOME和PATH环境变量
 
-	* 下载 
-
-		下载完毕后展开gradle目录即可
+		linux下示例：
+		编辑.bash_profile
+		    export M2_HOME=/usr/local/maven-3.5.3
+		    export PATH=$M2_HOME/bin:$PATH
 	
-	* 设置GRADLE_HOME和PATH环境变量
-	
-		在PATH环境变量增加gradle安装目录下的bin目录为查找路径
+        运行 >mvn install 若无错误则表示编译成功
+        运行 >mvn deploy 上传jar包到自己搭建的私服，需先设置私服的用户名和密码才能上传成功
+	    
+	    进入misc/starters/springboot1x/
+	    运行 >mvn install 完成对starter的编译和本地安装,   运行misc/samples/boot1  misc/samples/boot2需要此依赖
+	    		
+	* gradle 安装
+	    
+	     gradle 需要至少 3.3 以上, 如果要在spring boot 2.x下使用，需安装gradle 4.x版本，建议总是安装最新版本 的 gradle
+	    下载地址: https://gradle.org/releases/
+	    下载完毕后展开并设置GRADLE_HOME和PATH环境变量
 
 		linux下示例：
 		编辑.bash_profile
 		    export GRADLE_HOME=/usr/local/gradle-3.3
 		    export PATH=$GRADLE_HOME/bin:$PATH
 
+		运行 >gradle build 若无错误则表示编译成功
+    
 # 框架目录结构
 
     README.md 本文件
     LICENSE  许可证
     build.gradle gradle配置文件
+    pom.xml maven配置文件
     src/ 所有源码
       main/
         java/
@@ -65,6 +80,7 @@
     		boot1/  使用spring boot 1.x的示例  
     		boot2/  使用spring boot 2.x的示例, 注意： 此工程要求gradle 4.x (spring boot 2.x的最低要求)才能编译运行
     	starters/ spring boot starter
+    		springboot1x/  目前 spring boot 1.x / 2.x  starter通用
     dist/
     dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
     dist/tools/ protoc工具
@@ -73,37 +89,23 @@
     			 win/ windows版本下的工具
     			 linux/ lilux版本下的工具
     			 mac/ mac版本下的工具
-	
-    将源码下载到本地后运行:
-    
-    > gradle build 若无错误则表示编译成功
-    > gradle install 将编译好后的jar包安装到本机的maven仓库
-    > gradle upload 将编译好后的jar包上传到自己搭建的maven仓库，需先设置好build.gradle文件里的用户名和密码才能上传成功
 
 # 框架外部依赖说明
 
-  依赖项参见 build.gradle
+  依赖项参见 build.gradle 或 pom.xml 
   
 	强依赖：缺少以下依赖框架无法编译和运行
   
-        日志框架: 默认是使用logback框架
 		compile 'org.slf4j:slf4j-api:1.7.22'  -- logback
 		compile 'ch.qos.logback:logback-core:1.2.1'   -- logback
 		compile 'ch.qos.logback:logback-classic:1.2.1'  -- logback
-		
-		若应用程序使用了其它日志框架，可自行加入以下jar包透明地转换到logback, 统一使用logback来做日志
-		jcl-over-slf4j-1.6.6.jar   -- java common logging --> logback
-		log4j-over-slf4j-1.6.6.jar   -- log4j -> logback
-		
 		compile 'com.google.protobuf:protobuf-java:3.5.1'   -- protobuff 支持
 		compile 'io.netty:netty-all:4.1.16.Final'     -- netty 4
 		compile 'javassist:javassist:3.12.1.GA'    -- 字节码生成
+        compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'   -- json框架
+        compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'   -- json框架
+        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'   -- json框架
 
-		json框架: 默认是使用jackson框架
-            compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'
-            compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-            compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
-	
 	可选依赖：
 	
 		网络包压缩；默认为不压缩, 除非配置使用snappy压缩才会用到以下依赖
