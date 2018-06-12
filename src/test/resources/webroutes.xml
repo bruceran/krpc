@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>    
 <routes>    
  
- 	<import file="routes-b.xml"/>  
+ 	<import file="webroutes-b.xml"/>  
 
     <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
  

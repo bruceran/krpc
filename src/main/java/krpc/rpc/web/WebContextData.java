@@ -8,20 +8,20 @@ import krpc.trace.TraceContext;
 
 public class WebContextData extends ServerContextData {
 
-	Route route;
+	WebRoute route;
 	String sessionId;
 	Map<String,String> session;
 
-	public WebContextData(String connId,RpcMeta meta,Route route,TraceContext traceContext) {
+	public WebContextData(String connId,RpcMeta meta,WebRoute route,TraceContext traceContext) {
 		super(connId,meta,traceContext);
 		this.route = route;
 	}
 
-	public Route getRoute() {
+	public WebRoute getRoute() {
 		return route;
 	}
 
-	public void setRoute(Route route) {
+	public void setRoute(WebRoute route) {
 		this.route = route;
 	}
 

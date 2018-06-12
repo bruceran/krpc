@@ -262,7 +262,7 @@
         
         每个rpcapp里可以创建多个service和多个referer
 
-  * 对外提供http接口都需要在classpath下先编辑好routes.xml文件，示例：
+  * 对外提供http接口都需要在classpath下先编辑好webroutes.xml文件，示例：
 		
         <?xml version="1.0" encoding="utf-8"?>    
         <routes>    
@@ -280,7 +280,7 @@
           .addService(UserService.class,impl)
           .build().initAndStart();
   						
-  		  按上述的routes.xml通过以下三种方式访问接口都可以：
+  		  按上述的webroutes.xml通过以下三种方式访问接口都可以：
           curl -i http://localhost:8888/user/test1?userName=a&password=b
           curl -i -X POST http://localhost:8888/user/test1 
                -H "Content-Type: application/x-www-form-urlencoded" --data "userName=a&password=b"
@@ -470,7 +470,7 @@
     queueSize 同上，线程池中固定队列大小，默认为10000
          
     protoDir proto文件所在目录，默认为 proto, 会自动搜索classpath下的proto/子目录下的所有xxx.proto.pb文件
-    routesFile 路由配置文件， 默认为 routes.xml，会自动搜索classpath下的routes.xml配置文件
+    routesFile 路由配置文件， 默认为 webroutes.xml，会自动搜索classpath下的webroutes.xml配置文件
     sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID
     sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录
     
@@ -549,10 +549,10 @@
     serverAddr 监控服务地址
     printDefault 是否输出protobuff消息里的默认值, 默认为false
     
-# routes.xml配置				  
+# webroutes.xml配置				  
 
 	启动webserver需要一个配套的rouets.xml, 否则webserver不知道如何路由
-	routes.xml 必须放在classpath目录下
+	webroutes.xml 必须放在classpath目录下
 	
 	示例：
 	

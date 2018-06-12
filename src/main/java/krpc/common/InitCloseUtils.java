@@ -2,8 +2,6 @@ package krpc.common;
 
 import java.util.List;
 
-import krpc.rpc.core.StartStop;
-
 public class InitCloseUtils {
 
     public static void init(Object o) {

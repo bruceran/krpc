@@ -27,9 +27,9 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
+import krpc.common.StartStop;
 import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.core.StartStop;
 import krpc.rpc.core.Transport;
 import krpc.rpc.core.TransportCallback;
 

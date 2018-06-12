@@ -2,6 +2,7 @@ package krpc.rpc.cluster;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,12 +13,15 @@ import com.google.protobuf.Message;
 
 import krpc.common.InitClose;
 import krpc.rpc.core.ClusterManager;
+import krpc.rpc.core.DynamicRouteManagerCallback;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.RegistryManagerCallback;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.TransportChannel;
+import krpc.rpc.core.DynamicRoute.AddrWeight;
+import krpc.rpc.core.DynamicRoute.RouteRule;
 
-public class DefaultClusterManager implements ClusterManager, RegistryManagerCallback, InitClose {
+public class DefaultClusterManager implements ClusterManager, RegistryManagerCallback, DynamicRouteManagerCallback, InitClose {
 	
 	static Logger log = LoggerFactory.getLogger(DefaultClusterManager.class);
 
@@ -44,8 +48,8 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 
 	}
 	
-	public void routeChanged(String rules) {
-		
+	public void configChanged(int serviceId,List<AddrWeight> weight,List<RouteRule> rules) {
+		// todo
 	}
 
     public void addrChanged(Map<Integer,String> addrsMap) { 

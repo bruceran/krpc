@@ -21,7 +21,7 @@ public class WebServerConfig  {
 	int maxThreads = 0;
 	int queueSize = 10000;
 
-	String routesFile = "routes.xml";
+	String routesFile = "webroutes.xml";
 	String protoDir = "proto";
 	
 	String sessionIdCookieName = WebConstants.DefaultSessionIdCookieName;

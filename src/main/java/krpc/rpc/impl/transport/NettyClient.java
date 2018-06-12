@@ -34,12 +34,12 @@ import io.netty.util.TimerTask;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.core.StartStop;
 import krpc.rpc.core.Transport;
 import krpc.rpc.core.TransportCallback;
 import krpc.rpc.core.TransportChannel;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
+import krpc.common.StartStop;
 
 @Sharable
 public class NettyClient extends TransportBase implements Transport, TransportChannel,InitClose,StartStop {

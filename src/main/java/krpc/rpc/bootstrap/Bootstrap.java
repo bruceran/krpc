@@ -77,15 +77,15 @@ import krpc.rpc.monitor.DefaultMonitorService;
 import krpc.rpc.monitor.LogFormatter;
 import krpc.rpc.registry.DefaultRegistryManager;
 import krpc.rpc.util.IpUtils;
-import krpc.rpc.web.Route;
-import krpc.rpc.web.RouteService;
+import krpc.rpc.web.WebRoute;
+import krpc.rpc.web.WebRouteService;
 import krpc.rpc.web.RpcDataConverter;
 import krpc.rpc.web.SessionService;
 import krpc.rpc.web.WebDir;
 import krpc.rpc.web.WebMonitorService;
 import krpc.rpc.web.WebPlugin;
 import krpc.rpc.web.WebUrl;
-import krpc.rpc.web.impl.DefaultRouteService;
+import krpc.rpc.web.impl.DefaultWebRouteService;
 import krpc.rpc.web.impl.DefaultRpcDataConverter;
 import krpc.rpc.web.impl.NettyHttpServer;
 import krpc.rpc.web.impl.WebServer;
@@ -257,8 +257,8 @@ public class Bootstrap {
 		return m;
 	}
 
-	public RouteService newRouteService(WebServerConfig c) {
-		DefaultRouteService rs = new DefaultRouteService();
+	public WebRouteService newRouteService(WebServerConfig c) {
+		DefaultWebRouteService rs = new DefaultWebRouteService();
 
 		if (!isEmpty(c.routesFile)) {
 			loadRoutes(rs, c.routesFile);
@@ -1290,7 +1290,7 @@ public class Bootstrap {
 		return "";
 	}
 
-	private void loadRoutes(DefaultRouteService rs, String routesFile) {
+	private void loadRoutes(DefaultWebRouteService rs, String routesFile) {
 
 		try {
 			loadRoutesFileInternal(rs, routesFile);
@@ -1300,7 +1300,7 @@ public class Bootstrap {
 
 	}
 
-	void loadRoutesFileInternal(DefaultRouteService rs, String mappingFile) throws Exception {
+	void loadRoutesFileInternal(DefaultWebRouteService rs, String mappingFile) throws Exception {
 		DocumentBuilderFactory docbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docb = docbf.newDocumentBuilder();
 		Document doc = docb.parse(getResource(mappingFile));
@@ -1330,7 +1330,7 @@ public class Bootstrap {
 
 	}
 
-	private void loadGroup(DefaultRouteService rs, Node node) {
+	private void loadGroup(DefaultWebRouteService rs, Node node) {
 		Map<String, String> defaultAttrs = getAttrs(node);
 
 		String defaultHosts = defaultAttrs.getOrDefault("hosts", "");
@@ -1406,7 +1406,7 @@ public class Bootstrap {
 					throw new RuntimeException("mapping sessionMode can not be empty");
 
 				int sessionMode = Integer.parseInt(sessionModeStr);
-				if (sessionMode < Route.SESSION_MODE_NO || sessionMode > Route.SESSION_MODE_OPTIONAL)
+				if (sessionMode < WebRoute.SESSION_MODE_NO || sessionMode > WebRoute.SESSION_MODE_OPTIONAL)
 					throw new RuntimeException("sessionMode is not valid");
 
 				String plugins = attrs.get("plugins");
@@ -1434,7 +1434,7 @@ public class Bootstrap {
 		}
 	}
 
-	private void loadUrl(DefaultRouteService rs, Node node) {
+	private void loadUrl(DefaultWebRouteService rs, Node node) {
 		Map<String, String> attrs = getAttrs(node);
 
 		String hosts = attrs.getOrDefault("hosts", "*");
@@ -1466,7 +1466,7 @@ public class Bootstrap {
 			throw new RuntimeException("mapping sessionMode can not be empty");
 
 		int sessionMode = Integer.parseInt(sessionModeStr);
-		if (sessionMode < Route.SESSION_MODE_NO || sessionMode > Route.SESSION_MODE_OPTIONAL)
+		if (sessionMode < WebRoute.SESSION_MODE_NO || sessionMode > WebRoute.SESSION_MODE_OPTIONAL)
 			throw new RuntimeException("sessionMode is not valid");
 
 		WebPlugin[] pluginList = loadPlugins(attrs.get("plugins"));
@@ -1485,7 +1485,7 @@ public class Bootstrap {
 		rs.addUrl(url);
 	}
 
-	private void loadDir(DefaultRouteService rs, Node node) {
+	private void loadDir(DefaultWebRouteService rs, Node node) {
 		Map<String, String> attrs = getAttrs(node);
 
 		String hosts = attrs.getOrDefault("hosts", "*");
@@ -1517,7 +1517,7 @@ public class Bootstrap {
 		rs.addDir(dir);
 	}
 
-	private void importRoutes(DefaultRouteService rs, Node node) throws Exception {
+	private void importRoutes(DefaultWebRouteService rs, Node node) throws Exception {
 		Map<String, String> attrs = getAttrs(node);
 		String file = attrs.get("file");
 		if (isEmpty(file))

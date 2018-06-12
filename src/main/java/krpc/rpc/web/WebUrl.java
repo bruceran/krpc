@@ -9,7 +9,7 @@ public class WebUrl {
 	String methods;
 	int serviceId;
 	int msgId;
-	int sessionMode = Route.SESSION_MODE_NO ;
+	int sessionMode = WebRoute.SESSION_MODE_NO ;
 	WebPlugin[] plugins;
 	Map<String,String>  attrs;
 	

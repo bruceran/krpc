@@ -22,6 +22,8 @@ public class ClientConfig  {
 	int maxThreads = 0;
 	int queueSize = 10000;
 	
+	String dynamicRoute;  // dynamicRoute plugin, only one
+	
 	public ClientConfig() {
 	}
 
@@ -135,6 +137,15 @@ public class ClientConfig  {
 
 	public ClientConfig setNotifyMaxThreads(int notifyMaxThreads) {
 		this.notifyMaxThreads = notifyMaxThreads;
+		return this;
+	}
+
+	public String getDynamicRoute() {
+		return dynamicRoute;
+	}
+
+	public ClientConfig setDynamicRoute(String dynamicRoute) {
+		this.dynamicRoute = dynamicRoute;
 		return this;
 	}		
 }

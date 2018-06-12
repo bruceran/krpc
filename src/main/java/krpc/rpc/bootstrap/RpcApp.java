@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
+import krpc.common.StartStop;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.MockService;
 import krpc.rpc.core.ProxyGenerator;
 import krpc.rpc.core.RegistryManager;
 import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.core.StartStop;
 import krpc.rpc.core.Validator;
 import krpc.rpc.impl.RpcClient;
 import krpc.rpc.impl.RpcServer;

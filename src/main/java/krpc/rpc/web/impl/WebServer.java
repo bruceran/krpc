@@ -31,7 +31,6 @@ import krpc.rpc.core.RpcCallable;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.ServerContext;
 import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.core.StartStop;
 import krpc.rpc.core.Validator;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.util.TypeSafe;
@@ -51,8 +50,9 @@ import krpc.rpc.web.PreParsePlugin;
 import krpc.rpc.web.PreRenderPlugin;
 import krpc.rpc.web.RenderPlugin;
 import krpc.common.RetCodes;
-import krpc.rpc.web.Route;
-import krpc.rpc.web.RouteService;
+import krpc.common.StartStop;
+import krpc.rpc.web.WebRoute;
+import krpc.rpc.web.WebRouteService;
 import krpc.rpc.web.RpcDataConverter;
 import krpc.rpc.web.SessionService;
 import krpc.rpc.web.WebClosure;
@@ -75,7 +75,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	ServiceMetas serviceMetas;
 	ErrorMsgConverter errorMsgConverter;
 
-	RouteService routeService;
+	WebRouteService routeService;
 	HttpTransport httpTransport;
 	RpcDataConverter rpcDataConverter;
 	Validator validator;
@@ -112,7 +112,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		InitCloseUtils.stop(resources);
 	}
 
-	private WebContextData generateCtx(String connId, DefaultWebReq req, Route r) {
+	private WebContextData generateCtx(String connId, DefaultWebReq req, WebRoute r) {
 		int sequence = nextSequence();
 		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST)
 				.setServiceId(r.getServiceId()).setMsgId(r.getMsgId()).setSequence(sequence);
@@ -160,7 +160,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	public void receive(String connId, DefaultWebReq req) {
 
 		// route
-		Route r = routeService.findRoute(req.getHostNoPort(), req.getPath(), req.getMethod().toString());
+		WebRoute r = routeService.findRoute(req.getHostNoPort(), req.getPath(), req.getMethod().toString());
 		if (r == null) {
 			// todo route static file
 			/*
@@ -245,7 +245,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	
 	public void continue1(WebContextData ctx, DefaultWebReq req) {
 		
-		Route r = ctx.getRoute();
+		WebRoute r = ctx.getRoute();
 		
 		if (r.getVariables() != null) {
 			req.getParameters().putAll(r.getVariables());
@@ -328,14 +328,14 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	void continue2(WebContextData ctx, DefaultWebReq req) {
 
-		Route r = ctx.getRoute();
+		WebRoute r = ctx.getRoute();
 
-		if (r.getSessionMode() == Route.SESSION_MODE_ID) {
+		if (r.getSessionMode() == WebRoute.SESSION_MODE_ID) {
 			String sessionId = getOrNewSessionId(req);
 			ctx.setSessionId(sessionId);
 		}
 
-		if (r.getSessionMode() == Route.SESSION_MODE_YES || r.getSessionMode() == Route.SESSION_MODE_OPTIONAL) {
+		if (r.getSessionMode() == WebRoute.SESSION_MODE_YES || r.getSessionMode() == WebRoute.SESSION_MODE_OPTIONAL) {
 
 			SessionService ss = defaultSessionService;
 			if( r.getSessionServicePlugin() != null ) ss = r.getSessionServicePlugin();
@@ -345,7 +345,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 				return;
 			}
 
-			if (!hasSessionId(req) && r.getSessionMode() == Route.SESSION_MODE_YES) {
+			if (!hasSessionId(req) && r.getSessionMode() == WebRoute.SESSION_MODE_YES) {
 				sendErrorResponse(ctx, req, RetCodes.HTTP_NO_LOGIN);
 				return;
 			}
@@ -367,7 +367,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 							return;
 						}
 
-						if (r.getSessionMode() == Route.SESSION_MODE_YES) {
+						if (r.getSessionMode() == WebRoute.SESSION_MODE_YES) {
 							String flag = session.get(LoginFlagName);
 							if (isEmpty(flag) || !flag.equals("1")) {
 								sendErrorResponse(ctx, req, RetCodes.HTTP_NO_LOGIN);
@@ -388,7 +388,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	void continue3(WebContextData ctx, DefaultWebReq req) {
 
-		Route r = ctx.getRoute();
+		WebRoute r = ctx.getRoute();
 		List<PostSessionPlugin> psp = r.getPostSessionPlugins();
 		
 		// postsession
@@ -696,7 +696,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			}
 		}
 
-		Route r = ctx.getRoute();
+		WebRoute r = ctx.getRoute();
 		List<PreRenderPlugin> prp = r.getPreRenderPlugins();
 		
 		// prerender
@@ -818,7 +818,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
     	
     	if( results.contains(SessionMapName) ) {
     		
-    		Route r = ctx.getRoute();
+    		WebRoute r = ctx.getRoute();
 			SessionService ss = defaultSessionService;
 			if( r.getSessionServicePlugin() != null ) ss = r.getSessionServicePlugin();
 			
@@ -982,11 +982,11 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		this.errorMsgConverter = errorMsgConverter;
 	}
 
-	public RouteService getRouteService() {
+	public WebRouteService getRouteService() {
 		return routeService;
 	}
 
-	public void setRouteService(RouteService routeService) {
+	public void setRouteService(WebRouteService routeService) {
 		this.routeService = routeService;
 	}
 

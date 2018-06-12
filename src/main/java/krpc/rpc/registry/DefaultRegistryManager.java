@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
 import krpc.common.Json;
+import krpc.common.StartStop;
 import krpc.rpc.core.Registry;
 import krpc.rpc.core.RegistryManager;
 import krpc.rpc.core.RegistryManagerCallback;
 import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.core.StartStop;
 
 public class DefaultRegistryManager implements RegistryManager,InitClose,StartStop {
 	

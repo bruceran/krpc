@@ -51,12 +51,12 @@ import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
-import krpc.rpc.core.StartStop;
 import krpc.rpc.web.DefaultWebReq;
 import krpc.rpc.web.DefaultWebRes;
 import krpc.rpc.web.HttpTransport;
 import krpc.rpc.web.HttpTransportCallback;
 import krpc.common.RetCodes;
+import krpc.common.StartStop;
 import krpc.rpc.web.WebConstants;
 
 @Sharable

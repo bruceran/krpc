@@ -1,4 +1,4 @@
-package krpc.rpc.core;
+package krpc.common;
 
 public interface StartStop {
 	void start(); // do something after init, for example:  open port to receive request

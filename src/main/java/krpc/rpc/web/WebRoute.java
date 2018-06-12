@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Route {
+public class WebRoute {
 	
 	public static final int SESSION_MODE_NO = 0;
 	public static final int SESSION_MODE_ID = 1;
@@ -30,12 +30,12 @@ public class Route {
 	RenderPlugin renderPlugin;   // only one
 	List<PostRenderPlugin> postRenderPlugins;
 	
-	public Route(int serviceId,int msgId) {
+	public WebRoute(int serviceId,int msgId) {
 		this.serviceId = serviceId;
 		this.msgId = msgId;
 	}
 
-	public Route setPlugins(WebPlugin[] plugins) {
+	public WebRoute setPlugins(WebPlugin[] plugins) {
 		if( plugins != null ) {
 			for(WebPlugin p: plugins) {
 				 if( p instanceof PreParsePlugin ) {
@@ -99,7 +99,7 @@ public class Route {
 		return serviceId;
 	}
 
-	public Route setServiceId(int serviceId) {
+	public WebRoute setServiceId(int serviceId) {
 		this.serviceId = serviceId;
 		return this;
 	}
@@ -108,7 +108,7 @@ public class Route {
 		return msgId;
 	}
 
-	public Route setMsgId(int msgId) {
+	public WebRoute setMsgId(int msgId) {
 		this.msgId = msgId;
 		return this;
 	}
@@ -117,7 +117,7 @@ public class Route {
 		return variables;
 	}
 
-	public Route setVariables(Map<String, String> variables) {
+	public WebRoute setVariables(Map<String, String> variables) {
 		this.variables = variables;
 		return this;
 	}
@@ -125,7 +125,7 @@ public class Route {
 		return sessionMode;
 	}
 
-	public Route setSessionMode(int sessionMode) {
+	public WebRoute setSessionMode(int sessionMode) {
 		this.sessionMode = sessionMode;
 		return this;
 	}

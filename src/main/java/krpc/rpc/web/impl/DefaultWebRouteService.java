@@ -10,13 +10,13 @@ import java.util.Set;
 
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
-import krpc.rpc.web.Route;
-import krpc.rpc.web.RouteService;
+import krpc.rpc.web.WebRoute;
+import krpc.rpc.web.WebRouteService;
 import krpc.rpc.web.WebDir;
 import krpc.rpc.web.WebPlugin;
 import krpc.rpc.web.WebUrl;
 
-public class DefaultRouteService implements RouteService, InitClose {
+public class DefaultWebRouteService implements WebRouteService, InitClose {
 	
 	static class DirMapping {
 		String hosts;
@@ -253,11 +253,11 @@ public class DefaultRouteService implements RouteService, InitClose {
 		}		
 	}
 
-	public Route findRoute(String host, String path, String method) {
+	public WebRoute findRoute(String host, String path, String method) {
 		return findByHost(host, path, method.toLowerCase());
 	}
 
-	private Route findByHost(String host, String path, String method) {
+	private WebRoute findByHost(String host, String path, String method) {
 		HostMapping hm = hostMappings.get(host);
 		if (hm == null)
 			hm = hostMappings.get("*");
@@ -272,7 +272,7 @@ public class DefaultRouteService implements RouteService, InitClose {
 				for (int i=lm.size()-1;i>=0;--i) {
 					ServiceMapping sm = lm.get(i);
 					if (sm.match(path, method, variables)) {
-						Route r = new Route(sm.serviceId, sm.msgId);
+						WebRoute r = new WebRoute(sm.serviceId, sm.msgId);
 						r.setSessionMode(sm.sessionMode);
 						r.setPlugins(sm.plugins);
 						r.setVariables(variables);

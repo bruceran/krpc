@@ -2,9 +2,9 @@ package krpc.test.misc;
 
 import org.junit.Test;
 
-import krpc.rpc.web.Route;
+import krpc.rpc.web.WebRoute;
 import krpc.rpc.web.WebUrl;
-import krpc.rpc.web.impl.DefaultRouteService;
+import krpc.rpc.web.impl.DefaultWebRouteService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +15,7 @@ public class RouteServiceTest {
 	@Test
 	public void test1() throws Exception {
 		
-		DefaultRouteService impl = new DefaultRouteService();
+		DefaultWebRouteService impl = new DefaultWebRouteService();
 
 		WebUrl ws1 = new WebUrl("*","/a/b","get",100,1);
 		WebUrl ws2 = new WebUrl("*","/a/b","post",100,2);
@@ -32,7 +32,7 @@ public class RouteServiceTest {
 		impl.addUrl(ws6);
 		impl.init();
 		
-		Route r = null;
+		WebRoute r = null;
 
 		r = impl.findRoute("a.com", "/c", "post");
 		assertTrue(r == null);
@@ -68,7 +68,7 @@ public class RouteServiceTest {
 	@Test
 	public void test2() throws Exception {
 		
-		DefaultRouteService impl = new DefaultRouteService(); 
+		DefaultWebRouteService impl = new DefaultWebRouteService(); 
 		
 		WebUrl ws1 = new WebUrl("a.com","/a/b","get",100,1);
 		WebUrl ws2 = new WebUrl("a.com","/a/b","post",100,2);
@@ -85,7 +85,7 @@ public class RouteServiceTest {
 		impl.addUrl(ws6);
 		impl.init();
 		
-		Route r = null;
+		WebRoute r = null;
 
 		r = impl.findRoute("a.com", "/c", "post");
 		assertTrue(r == null);

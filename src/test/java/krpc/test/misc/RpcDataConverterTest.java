@@ -14,7 +14,7 @@ import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.impl.DefaultServiceMetas;
 import krpc.rpc.web.DefaultWebReq;
 import krpc.rpc.web.DefaultWebRes;
-import krpc.rpc.web.Route;
+import krpc.rpc.web.WebRoute;
 import krpc.rpc.web.WebContextData;
 import krpc.rpc.web.impl.DefaultRpcDataConverter;
 import krpc.trace.Trace;
@@ -32,7 +32,7 @@ public class RpcDataConverterTest {
 
 		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(500).setMsgId(1).setSequence(1);
 		RpcMeta meta = builder.build();
-		Route route = new Route(500,1).setSessionMode(2);
+		WebRoute route = new WebRoute(500,1).setSessionMode(2);
 		Trace.start("test", "test");
 		WebContextData ctx = new WebContextData("1.2.3.4:1100",meta,route,Trace.currentContext());
 

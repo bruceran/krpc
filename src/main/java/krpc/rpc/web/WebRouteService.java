@@ -1,9 +1,9 @@
 package krpc.rpc.web;
 
-public interface RouteService {
+public interface WebRouteService {
 
 	void addUrl(WebUrl url);
-	Route findRoute(String host,String path,String method);
+	WebRoute findRoute(String host,String path,String method);
 
 	void addDir(WebDir dir);
 	String findStaticFile(String host,String path);
