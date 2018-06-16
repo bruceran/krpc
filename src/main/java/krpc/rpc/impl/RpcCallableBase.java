@@ -5,6 +5,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -23,8 +24,6 @@ import krpc.rpc.core.DataManager;
 import krpc.rpc.core.DataManagerCallback;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.ExecutorManager;
-import krpc.rpc.core.FlowControl;
-import krpc.rpc.core.MockService;
 import krpc.rpc.core.MonitorService;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.RpcCallable;
@@ -33,6 +32,7 @@ import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.RpcData;
 import krpc.rpc.core.RpcException;
 import krpc.rpc.core.RpcFutureFactory;
+import krpc.rpc.core.RpcPlugin;
 import krpc.rpc.core.ServerContext;
 import krpc.rpc.core.ServerContextData;
 import krpc.rpc.core.ServiceMetas;
@@ -65,13 +65,13 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	RpcFutureFactory futureFactory; // must not be null
 	int retryQueueSize = 1000;
 	ThreadPoolExecutor retryPool;
-	MockService mockService;
-	Validator validator;
 	
 	// for server functions: as a service
 	ExecutorManager executorManager;
-	FlowControl flowControl;
-	
+	Validator validator;
+
+	List<RpcPlugin> plugins = new ArrayList<>();
+
 	HashSet<Integer> allowedServices = new HashSet<Integer>();
 	HashSet<Integer> allowedReferers = new HashSet<Integer>();
 	HashMap<String,Integer> timeoutMap = new HashMap<String,Integer>();
@@ -100,7 +100,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		resources.add(dataManager);
 		resources.add(futureFactory);
 		resources.add(executorManager);
-		resources.add(flowControl);
+		
+		for(RpcPlugin p:plugins) {
+			resources.add(p);
+		}
 
 		InitCloseUtils.init(resources);
 	}
@@ -219,7 +222,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			endCall(closure,RetCodes.REFERER_NOT_ALLOWED);
 			return future;		
 		}
-		
+
+		/*
 		if( mockService != null ) { // mock response
 			Message res = mockService.mock(serviceId, msgId, req);
 			if( res != null ) {
@@ -227,12 +231,26 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 				return future;
 			}
 		}
+		*/
 		
 		if( connId == null ) { // no connection, no need to retry
 			endCall(closure,RetCodes.NO_CONNECTION);
 			return future;
 		}
-
+		
+		if( plugins.size() > 0 ) {
+			List<RpcPlugin> calledPlugins = new ArrayList<>();
+			ctx.setAttribute("calledClientPlugins", calledPlugins);
+			for(RpcPlugin p:plugins) {
+				int retCode = p.preCall(ctx, req);
+				if( retCode != 0 ) {
+					endCall(closure,retCode);
+					return future;		
+				}
+				calledPlugins.add(p);
+			}
+		}
+		
 		sendCall(closure,true);
 		return future;
 	}
@@ -298,6 +316,14 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 
 	void endCall(RpcClosure closure,Message res) {
+		
+		List<RpcPlugin> calledPlugins = (List<RpcPlugin>)closure.getCtx().getAttribute("calledClientPlugins");
+		if( calledPlugins != null ) {
+			for(RpcPlugin p:calledPlugins) {
+				 p.postCall(closure.getCtx(), closure.getReq(), closure.getRes());
+			}
+		}	
+				
 		closure.done(res);
 		closure.asClientCtx().getFuture().complete(res);
 		String status = closure.getRetCode() == 0 ? "SUCCESS" : "ERROR";
@@ -361,28 +387,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 				return;
 			}
 
-			if( flowControl != null ) {
-				if( !flowControl.isAsync() ) {
-					boolean exceeded = flowControl.exceedLimit(ctx,data.getBody(),null);
-					if( exceeded ) {
-			        	sendErrorResponse(ctx,data.getBody(),RetCodes.FLOW_LIMIT);
-			        	return;
-					}
-				} else {
-					flowControl.exceedLimit(ctx, data.getBody(), new Continue<Boolean>() {
-	    				public void readyToContinue(Boolean exceeded) {
-	    					ServerContext.set(ctx);
-	    					if( exceeded ) {
-	    						sendErrorResponse(ctx,data.getBody(),RetCodes.FLOW_LIMIT);
-	    	    	    		return;    			
-	    	    	    	}
-	    					continue1(ctx,data);
-	    				}
-	    			});
-					return;
-				}
-			}
-			
 			continue1(ctx,data);
 			
 		} else {
@@ -415,6 +419,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			}				
 		}
 		callService(ctx, data);
+		
 	}
 	
 	private void callServiceInPool(ThreadPoolExecutor pool, ServerContextData ctx,final RpcData data) {
@@ -436,9 +441,11 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	private void callService(ServerContextData ctx,RpcData data) {
 
 		String connId = ctx.getConnId();
+		RpcMeta meta = ctx.getMeta();
+		Message req = data.getBody();
 		
 		if( !isConnected(connId) ) {
-			RpcClosure closure = new RpcClosure(ctx,data.getBody());
+			RpcClosure closure = new RpcClosure(ctx,req);
 			endReq(closure,RetCodes.SERVER_CONNECTION_BROKEN);
 			return;	// connection is broken while waiting in runnable queue, just throw the request, no need to send response
 		}
@@ -446,16 +453,50 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		long ts = ctx.elapsedMillisByNow();
 		int clientTimeout = ctx.getMeta().getTimeout();
 		if( clientTimeout > 0 && ts >= clientTimeout ) {
-			sendErrorResponse(ctx,data.getBody(),RetCodes.QUEUE_TIMEOUT); // waiting too long, fast response with a TIMEOUT_EXPIRED
+			sendErrorResponse(ctx,req,RetCodes.QUEUE_TIMEOUT); // waiting too long, fast response with a TIMEOUT_EXPIRED
 			return;
 		}
-
+		
+    	Object object = serviceMetas.findService(meta.getServiceId());
+    	if( object == null ) {  
+        	sendErrorResponse(ctx,req,RetCodes.NOT_FOUND);
+        	return;
+    	}
+    	Method method = serviceMetas.findMethod(meta.getServiceId(), meta.getMsgId());
+    	if( method == null ) {  
+        	sendErrorResponse(ctx,req,RetCodes.NOT_FOUND);
+        	return;
+    	}
+    	
 		ctx.setContinue(this);
 
 		try {  
-			Message req = data.getBody();
-			Message res = callService(ctx,req);
+
+			if( plugins.size() > 0 ) {
+				List<RpcPlugin> calledPlugins = new ArrayList<>();
+				ctx.setAttribute("calledServerPlugins", calledPlugins);
+				for(RpcPlugin p:plugins) {
+					int retCode = p.preCall(ctx, req);
+					if( retCode != 0 ) {
+						sendErrorResponse(ctx,req,retCode);
+						return;				
+					}
+					calledPlugins.add(p);
+				}
+			}
+			
+			if( validator != null ) {
+				String result = validator.validate(req);
+				if( result != null ) {
+					String message = RetCodes.retCodeText(RetCodes.VALIDATE_ERROR) + result;
+					sendErrorResponse(ctx, req, RetCodes.VALIDATE_ERROR,message);
+					return;
+				}
+			}
+			
+			Message res = (Message)method.invoke(object,new Object[]{req}); 
 			if( res == null ) return; // an async service or exception, do nothing
+			
 			RpcClosure closure = new RpcClosure(ctx,req,res);
 			readyToContinue(closure);
         } catch(Exception e) {  
@@ -464,33 +505,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         	Trace.logException(e);
         	return;
         }   
-	}
-	
-	private Message callService(RpcContextData ctx,Message req) throws Exception {
-		RpcMeta meta = ctx.getMeta();
-
-    	Object object = serviceMetas.findService(meta.getServiceId());
-    	if( object == null ) {  
-        	sendErrorResponse(ctx,req,RetCodes.NOT_FOUND);
-        	return null;
-    	}
-    	Method method = serviceMetas.findMethod(meta.getServiceId(), meta.getMsgId());
-    	if( method == null ) {  
-        	sendErrorResponse(ctx,req,RetCodes.NOT_FOUND);
-        	return null;
-    	}
-
-		if( validator != null ) {
-			String result = validator.validate(req);
-			if( result != null ) {
-				String message = RetCodes.retCodeText(RetCodes.VALIDATE_ERROR) + result;
-				sendErrorResponse(ctx, req, RetCodes.VALIDATE_ERROR,message);
-				return null;
-			}
-		}
-		
-		Message res = (Message)method.invoke(object,new Object[]{req}); 
-        return res;
 	}
 
 	public void readyToContinue(RpcClosure closure) {
@@ -535,7 +549,15 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		endReq(closure,retCode);
 	}
 	
+	@SuppressWarnings("unchecked")
 	void endReq(RpcClosure closure,int retCode) {
+
+		List<RpcPlugin> calledPlugins = (List<RpcPlugin>)closure.getCtx().getAttribute("calledServerPlugins");
+		if( calledPlugins != null ) {
+			for(RpcPlugin p:calledPlugins) {
+				 p.postCall(closure.getCtx(), closure.getReq(), closure.getRes());
+			}
+		}	
 		
 		String status = retCode == 0 ? "SUCCESS" : "ERROR";
 		closure.asServerCtx().getTraceContext().serverSpanStopped(status);
@@ -639,12 +661,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	public void setErrorMsgConverter(ErrorMsgConverter errorMsgConverter) {
 		this.errorMsgConverter = errorMsgConverter;
 	}
-	public FlowControl getFlowControl() {
-		return flowControl;
-	}
-	public void setFlowControl(FlowControl flowControl) {
-		this.flowControl = flowControl;
-	}
+
 	public DataManager getDataManager() {
 		return dataManager;
 	}
@@ -657,17 +674,18 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	public void setRetryQueueSize(int retryQueueSize) {
 		this.retryQueueSize = retryQueueSize;
 	}
-	public MockService getMockService() {
-		return mockService;
-	}
-	public void setMockService(MockService mockService) {
-		this.mockService = mockService;
-	}
+
 	public Validator getValidator() {
 		return validator;
 	}
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
-	
+	public List<RpcPlugin> getPlugins() {
+		return plugins;
+	}
+	public void setPlugins(List<RpcPlugin> plugins) {
+		this.plugins = plugins;
+	}
+
 }

@@ -59,4 +59,15 @@ public class Json {
             return null;
         }
     }    
+    
+    static public <T> T toObject(String s,TypeReference<T> tr) {
+        try {
+        	T results = mapper.readValue(s, tr);
+	    	return results;
+        } catch (Exception e) {
+        	log.error("json convert exception",e);
+            return null;
+        }
+    }        
+    
 }

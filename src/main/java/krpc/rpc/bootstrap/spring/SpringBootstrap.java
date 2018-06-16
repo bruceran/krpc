@@ -20,7 +20,7 @@ import krpc.rpc.bootstrap.Bootstrap.PluginInfo;
 import krpc.rpc.bootstrap.RefererConfig;
 import krpc.rpc.cluster.LoadBalance;
 import krpc.rpc.core.ErrorMsgConverter;
-import krpc.rpc.core.FlowControl;
+import krpc.rpc.core.RpcPlugin;
 import krpc.rpc.core.Registry;
 import krpc.rpc.monitor.LogFormatter;
 import krpc.rpc.web.WebPlugin;
@@ -120,7 +120,7 @@ public class SpringBootstrap {
 		
 		try {
 			loadBean(LoadBalance.class,beanPlugins);
-			loadBean(FlowControl.class,beanPlugins);
+			loadBean(RpcPlugin.class,beanPlugins);
 			loadBean(Registry.class,beanPlugins);
 			loadBean(ErrorMsgConverter.class,beanPlugins);
 			loadBean(LogFormatter.class,beanPlugins);

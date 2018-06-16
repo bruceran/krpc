@@ -427,9 +427,11 @@
             默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
     maxThreads 同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
-    loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,responsetime,hash,
-                      leastactiveweight,roudrobinweight,randomweight 默认为 leastactive
-                      	
+
+    plugins 用来配置插件名，允许多个，用逗号隔开
+    pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，不需要配置参数的插件不用配置
+                          每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
+                          
 ## server	
 
     id 名称 不填则会自动生成
@@ -448,7 +450,9 @@
              可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
     maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
-    flowControl 流量控制策略，默认不启用, 可配置为  memory 或  jedis
+    plugins 用来配置插件名，允许多个，用逗号隔开
+    pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，不需要配置参数的插件不用配置
+                          每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
 
 ## webserver	
 
@@ -475,9 +479,8 @@
     sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录
     
     sampleRate 全链路跟踪采样率, 实际比率为 1/sampleRate, 默认为1
-    flowControl 流量控制策略，默认不启用, 可配置为  memory 或  jedis
     defaultSessionService  会话服务插件, 支持 memorysessionservice,jedissessionservice, 默认为memorysessionservice
-    pluginParams  Web插件参数配置, 类型为List<String>, 所有需要配置参数的web插件通过此参数进行配置，不需要配置参数的web插件不用配置
+    pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，不需要配置参数的插件不用配置
                           每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
     
 ## service
@@ -493,9 +496,6 @@
     threads 服务级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
     maxThreads 服务级别的线程池配置参数, 含义同server
     queueSize 服务级别的线程池配置参数, 含义同server
-    flowControlParams 流量控制参数，前提要server/webserver级别开启了流量控制，
-                格式为：seconds1=allowed1;seconds2=allowed2;... 
-                示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
     
     每个service可配置0个或多个method在消息级别做配置
 
@@ -513,7 +513,7 @@
     retryLevel 重试级别, 默认为 no_retry
     retryCount 重试次数，默认为0
     loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,responsetime,hash,
-                      leastactiveweight,roudrobinweight,randomweight 默认为 空，使用client上的默认配置
+                      leastactiveweight,roudrobinweight,randomweight 默认为leastactive
     zip 压缩方式 0=不压缩 1=zlib 2=snappy
     minSizeToZip 启用压缩所需的最小字节数, 默认为10000
  
@@ -534,9 +534,6 @@
     threads 消息级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
     maxThreads 消息级别的线程池配置参数, 含义同server
     queueSize 消息级别的线程池配置参数, 含义同server
-    flowControlParams 流量控制参数，前提要server/webserver级别开启了流量控制，
-    			格式为：seconds1=allowed1;seconds2=allowed2;... 
-                示例： 1=5;3=20 表示1秒内允许5次调用，3秒内允许20次调用
     
 ## monitor
  

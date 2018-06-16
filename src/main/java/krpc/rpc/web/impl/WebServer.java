@@ -26,7 +26,6 @@ import krpc.common.Json;
 import krpc.rpc.core.Continue;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.ExecutorManager;
-import krpc.rpc.core.FlowControl;
 import krpc.rpc.core.RpcCallable;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.ServerContext;
@@ -80,7 +79,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	RpcDataConverter rpcDataConverter;
 	Validator validator;
 	ExecutorManager executorManager;
-	FlowControl flowControl;
 	WebMonitorService monitorService;
 
 	AtomicInteger seq = new AtomicInteger(0);
@@ -95,7 +93,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		resources.add(httpTransport);
 		resources.add(rpcDataConverter);
 		resources.add(executorManager);
-		resources.add(flowControl);
 
 		InitCloseUtils.init(resources);
 	}
@@ -481,11 +478,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	void callService(WebContextData ctx, DefaultWebReq req, Object service) {
 
 		ExecutorManager em = executorManager;
-		FlowControl fc = flowControl ;
 		RpcCallable callable = serviceMetas.findCallable(service.getClass().getName());
 		if (callable != null) {  // webserver -> server -> service   else:  webserver -> service
 			em = callable.getExecutorManager();
-			fc = callable.getFlowControl();
 		}
 		
 		Message msgReq = rpcDataConverter.generateData(ctx, req, false);
@@ -495,34 +490,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 
 		req.freeMemory();
-
-		if( fc != null ) {
-			if( !fc.isAsync() ) {
-				boolean exceeded = fc.exceedLimit(ctx,msgReq,null);
-				if( exceeded ) {
-		        	sendErrorResponse(ctx,req,RetCodes.FLOW_LIMIT);
-		        	return;
-				}
-			} else {
-				ExecutorManager fem = em;
-				fc.exceedLimit(ctx, msgReq, new Continue<Boolean>() {
-    				public void readyToContinue(Boolean exceeded) {
-    					ServerContext.set(ctx);
-    					if( exceeded ) {
-    						sendErrorResponse(ctx,req,RetCodes.FLOW_LIMIT);
-    	    	    		return;    			
-    	    	    	}
-    					callServiceAfterFlowControl(fem,ctx,req,msgReq);
-    				}
-    			});
-				return;
-			}
-		}
-
-		callServiceAfterFlowControl(em,ctx,req,msgReq);
-	}
-
-	void callServiceAfterFlowControl(ExecutorManager em, WebContextData ctx, DefaultWebReq req, Message msgReq) {
 
 		if (em != null) {
 			ThreadPoolExecutor pool = em.getExecutor(ctx.getMeta().getServiceId(), ctx.getMeta().getMsgId());
@@ -620,7 +587,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		DefaultWebRes res = new DefaultWebRes(req, 200);
 		rpcDataConverter.parseData(ctx, closure.getRes(), res);
 		
-		continue5(ctx, req, res);
+		startRender(ctx, req, res);
 	}
 
 	void callClient(WebContextData ctx, DefaultWebReq req, Object referer) {
@@ -646,7 +613,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			
 			DefaultWebRes res = new DefaultWebRes(req, 200);
 			rpcDataConverter.parseData(ctx, message, res);
-			continue5(ctx, req, res);
+			startRender(ctx, req, res);
 		});
 	}
 
@@ -673,12 +640,12 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			
 			DefaultWebRes res = new DefaultWebRes(req, 200);
 			rpcDataConverter.parseData(ctx, message, res);
-			continue5(ctx, req, res);
+			startRender(ctx, req, res);
 		});
 		
 	}
 
-	void continue5(WebContextData ctx, DefaultWebReq req, DefaultWebRes res) {
+	void startRender(WebContextData ctx, DefaultWebReq req, DefaultWebRes res) {
 		if (res == null) {
 			sendErrorResponse(ctx, req, RetCodes.DECODE_RES_ERROR);
 			return;
@@ -885,15 +852,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	
 	void sendErrorResponse(WebContextData ctx, DefaultWebReq req, int retCode,String retMsg) {
 		DefaultWebRes res = generateError(req, retCode, 200, retMsg);
-		httpTransport.send(ctx.getClientIp(), res);
-		WebClosure closure = new WebClosure(ctx,req,res);
-		ctx.end();
-		
-		String status = retCode == 0 ? "SUCCESS" : "ERROR";
-		ctx.getTraceContext().serverSpanStopped(status);
-		
-		if( monitorService != null)
-			monitorService.webReqDone(closure);
+		startRender(ctx,req,res);
 	}
 
 	void endReq(WebContextData ctx, DefaultWebReq req, int retCode) {
@@ -1036,14 +995,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void setDefaultSessionService(SessionService defaultSessionService) {
 		this.defaultSessionService = defaultSessionService;
-	}
-
-	public FlowControl getFlowControl() {
-		return flowControl;
-	}
-
-	public void setFlowControl(FlowControl flowControl) {
-		this.flowControl = flowControl;
 	}
 
 }

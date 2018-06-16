@@ -127,7 +127,6 @@
   * krpc.common 通用接口和实现类，所有模块依赖此包
   * krpc.trace 全链路跟踪API, 目前krpc.rpc模块依赖此模块
   * krpc.httpclient 基于netty4的http client
-  * krpc.redis 基于netty4的redis client
   * krpc.rpc rpc框架本身
   
   * krpc.rpc.core.proto krpc协议头的proto生成的类文件

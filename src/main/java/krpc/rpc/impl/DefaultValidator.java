@@ -14,7 +14,6 @@ import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Message.Builder;
 
 import krpc.KrpcExt;
-import krpc.rpc.core.FieldValidator;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.Validator;
 import krpc.rpc.util.TypeSafe;

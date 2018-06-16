@@ -13,13 +13,13 @@ import com.google.protobuf.Message;
 
 import krpc.common.InitClose;
 import krpc.rpc.core.ClusterManager;
+import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRouteManagerCallback;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.RegistryManagerCallback;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.TransportChannel;
-import krpc.rpc.core.DynamicRoute.AddrWeight;
-import krpc.rpc.core.DynamicRoute.RouteRule;
+
 
 public class DefaultClusterManager implements ClusterManager, RegistryManagerCallback, DynamicRouteManagerCallback, InitClose {
 	
@@ -48,7 +48,7 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 
 	}
 	
-	public void configChanged(int serviceId,List<AddrWeight> weight,List<RouteRule> rules) {
+	public void routeConfigChanged(DynamicRouteConfig routeConfig) {
 		// todo
 	}
 

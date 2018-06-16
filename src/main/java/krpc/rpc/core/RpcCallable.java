@@ -11,5 +11,5 @@ public interface RpcCallable {
 	CompletableFuture<Message> callAsync(int serviceId,int msgId,Message req);
 	
 	ExecutorManager getExecutorManager();
-	FlowControl getFlowControl();
+
 }

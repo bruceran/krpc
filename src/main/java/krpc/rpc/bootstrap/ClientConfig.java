@@ -1,5 +1,8 @@
 package krpc.rpc.bootstrap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClientConfig  {
 
 	String id;
@@ -12,8 +15,6 @@ public class ClientConfig  {
 	
 	int connections = 1;
 
-	String loadBalance = "leastactive"; // can be random, roundrobin, leastactive, responsetime, ...
-	
 	int notifyThreads = 0; // for future listener, 0=auto -1=no threads
 	int notifyMaxThreads = 0;
 	int notifyQueueSize = 10000;
@@ -21,8 +22,9 @@ public class ClientConfig  {
 	int threads = 0; // for reverse call, worker threads, 0=auto -1=no workthreads,use iothreads n=workthreads
 	int maxThreads = 0;
 	int queueSize = 10000;
-	
-	String dynamicRoute;  // dynamicRoute plugin, only one
+
+	String plugins = ""; // comma seperated RpcPlugin names
+	List<String> pluginParams  = new ArrayList<>(); // config RpcPlugins if needed
 	
 	public ClientConfig() {
 	}
@@ -30,7 +32,11 @@ public class ClientConfig  {
 	public ClientConfig(String id) {
 		this.id = id;
 	}
-		
+	
+	public void addPluginParams(String params) {
+		pluginParams.add(params);
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -104,15 +110,6 @@ public class ClientConfig  {
 		return this;
 	}
 
-	public String getLoadBalance() {
-		return loadBalance;
-	}
-
-	public ClientConfig setLoadBalance(String loadBalance) {
-		this.loadBalance = loadBalance;
-		return this;
-	}
-
 	public int getConnections() {
 		return connections;
 	}
@@ -140,12 +137,22 @@ public class ClientConfig  {
 		return this;
 	}
 
-	public String getDynamicRoute() {
-		return dynamicRoute;
+	public String getPlugins() {
+		return plugins;
 	}
 
-	public ClientConfig setDynamicRoute(String dynamicRoute) {
-		this.dynamicRoute = dynamicRoute;
+	public ClientConfig setPlugins(String plugins) {
+		this.plugins = plugins;
 		return this;
-	}		
+	}
+
+	public List<String> getPluginParams() {
+		return pluginParams;
+	}
+
+	public ClientConfig setPluginParams(List<String> pluginParams) {
+		this.pluginParams = pluginParams;
+		return this;
+	}
+	
 }

@@ -1,5 +1,8 @@
 package krpc.rpc.bootstrap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ServerConfig  {
 
 	String id;
@@ -20,13 +23,18 @@ public class ServerConfig  {
 	int maxThreads = 0;
 	int queueSize = 10000;
 	
-	String flowControl = "";
+	String plugins = ""; // comma seperated RpcPlugin names
+	List<String> pluginParams  = new ArrayList<>(); // config RpcPlugins if needed
 	
 	public ServerConfig() {
 	}
 
 	public ServerConfig(String id) {
 		this.id = id;
+	}
+	
+	public void addPluginParams(String params) {
+		pluginParams.add(params);
 	}
 	
 	public String getId() {
@@ -134,12 +142,21 @@ public class ServerConfig  {
 		return this;
 	}
 
-	public String getFlowControl() {
-		return flowControl;
+	public String getPlugins() {
+		return plugins;
 	}
 
-	public ServerConfig setFlowControl(String flowControl) {
-		this.flowControl = flowControl;
+	public ServerConfig setPlugins(String plugins) {
+		this.plugins = plugins;
+		return this;
+	}
+
+	public List<String> getPluginParams() {
+		return pluginParams;
+	}
+
+	public ServerConfig setPluginParams(List<String> pluginParams) {
+		this.pluginParams = pluginParams;
 		return this;
 	}	
 }

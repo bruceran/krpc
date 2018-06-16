@@ -46,24 +46,32 @@
 	 
 	   负载均衡插件  krpc.rpc.cluster.LoadBalance 接口
 		       用来自定义loadbalance策略
+		       通过RefererConfig.loadBalance配置
 		       框架自带了roundrobin,random,leastactive,hash 插件
 
-	   流量控制插件 krpc.rpc.core.FlowControl 接口
-		        用来自定义流控策略
-		        框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
-		        此插件可用于server和webserver
-		       		       
 	   注册与发现插件  krpc.rpc.core.Registry 接口
 		       用来自定义注册与发现机制
+		       通过RegistryConfig配置
 		       框架自带了 consul, etcd, zookeeper 插件
 
 	   错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口
 		        用来自定义错误码错误消息转换方式
+		        通过ApplicationConfig.errorMsgConverter配置
 		        框架自带了 file (基于文件error.properties) 插件
 		        		        
 	   日志序列化插件  krpc.rpc.monitor.LogFormatter 接口
 		       可对 access log 里的请求和响应实现自己的序列化格式
+		       通过MonitorConfig.logFormatter配置
 		       框架自带了 simple 和  json 插件
+
+	   RPC插件 krpc.rpc.core.RpcPlugin 接口
+		        可用来自定义流控策略
+		        通过ClientConfig.plugins配置或通过ServerConfig.plugins配置
+		        框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
+		       		       
+	   WEB插件 krpc.rpc.web.WebPlugin 接口
+		        可用来自定义流控策略
+		        通过webroutes.xml配置
 
 # HTTP网关插件
 

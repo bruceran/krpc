@@ -45,10 +45,11 @@ import krpc.rpc.cluster.LoadBalance;
 import krpc.rpc.core.ClusterManager;
 import krpc.rpc.core.DataManager;
 import krpc.rpc.core.DataManagerCallback;
+import krpc.rpc.core.DynamicRoutePlugin;
+import krpc.rpc.core.DynamicRouteManager;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.ExecutorManager;
-import krpc.rpc.core.FlowControl;
-import krpc.rpc.core.MockService;
+import krpc.rpc.core.RpcPlugin;
 import krpc.rpc.core.Plugin;
 import krpc.rpc.core.ProxyGenerator;
 import krpc.rpc.core.ReflectionUtils;
@@ -60,9 +61,9 @@ import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.TransportChannel;
 import krpc.rpc.core.Validator;
 import krpc.rpc.core.proto.RpcMetas;
+import krpc.rpc.dynamicroute.DefaultDynamicRouteManager;
 import krpc.rpc.impl.DefaultDataManager;
 import krpc.rpc.impl.DefaultExecutorManager;
-import krpc.rpc.impl.DefaultMockService;
 import krpc.rpc.impl.DefaultProxyGenerator;
 import krpc.rpc.impl.DefaultRpcFutureFactory;
 import krpc.rpc.impl.DefaultServiceMetas;
@@ -187,10 +188,6 @@ public class Bootstrap {
 		return new DefaultProxyGenerator();
 	}
 
-	public MockService newMockService(String file) {
-		return new DefaultMockService(file);
-	}
-
 	public ExecutorManager newExecutorManager() {
 		return new DefaultExecutorManager();
 	}
@@ -226,6 +223,12 @@ public class Bootstrap {
 
 	public RegistryManager newRegistryManager(ServiceMetas serviceMetas,String tempDir) {
 		DefaultRegistryManager m = new DefaultRegistryManager(tempDir);
+		m.setServiceMetas(serviceMetas);
+		return m;
+	}
+	
+	public DynamicRouteManager newDynamicRouteManager(ServiceMetas serviceMetas,String tempDir) {
+		DefaultDynamicRouteManager m = new DefaultDynamicRouteManager(tempDir);
 		m.setServiceMetas(serviceMetas);
 		return m;
 	}
@@ -355,8 +358,19 @@ public class Bootstrap {
 			if (servers.containsKey(c.id))
 				throw new RuntimeException(String.format("server id %s duplicated", c.id));
 
-			if (!isEmpty(c.flowControl) && getFlowControlObj(c.flowControl) == null) {
-				throw new RuntimeException("flow control not registered");
+			if( c.pluginParams != null ) {
+				for(String s:c.pluginParams) {
+					if (getRpcPluginObj(s) == null)
+						throw new RuntimeException(String.format("unknown rpc plugin %s", s));
+				}
+			}
+						
+			if (!isEmpty(c.plugins) ) {
+				String[] ss = c.plugins.split(",");
+				for(String s:ss)  {
+					if (getRpcPluginObj(s) == null)
+						throw new RuntimeException("rpc plugin not registered");
+				}
 			}
 
 			servers.put(c.id, c);
@@ -368,10 +382,6 @@ public class Bootstrap {
 				c.id = "default";
 			if (webServers.containsKey(c.id))
 				throw new RuntimeException(String.format("web server id %s duplicated", c.id));
-			
-			if (!isEmpty(c.flowControl) && getFlowControlObj(c.flowControl) == null) {
-				throw new RuntimeException("flow control not registered");
-			}
 			
 			if (getSessionServiceObj(c.defaultSessionService) == null)
 				throw new RuntimeException(String.format("unknown session service %s", c.defaultSessionService));
@@ -392,12 +402,21 @@ public class Bootstrap {
 				c.id = "default";
 			if (clients.containsKey(c.id))
 				throw new RuntimeException(String.format("client id %s duplicated", c.id));
-
-			if (isEmpty(c.loadBalance))
-				throw new RuntimeException(String.format("default loadbalance policy must be specified"));
 			
-			if ( getLoadBalanceObj(c.loadBalance) == null )
-				throw new RuntimeException(String.format("client id %s loadbalance not specified", c.id));
+			if( c.pluginParams != null ) {
+				for(String s:c.pluginParams) {
+					if (getRpcPluginObj(s) == null)
+						throw new RuntimeException(String.format("unknown rpc plugin %s", s));
+				}
+			}
+			
+			if (!isEmpty(c.plugins) ) {
+				String[] ss = c.plugins.split(",");
+				for(String s:ss)  {
+					if (getRpcPluginObj(s) == null)
+						throw new RuntimeException("rpc plugin not registered");
+				}
+			}
 
 			clients.put(c.id, c);
 			lastClient = c;
@@ -530,8 +549,7 @@ public class Bootstrap {
 				}
 
 				if (isEmpty(c.loadBalance)) {
-					ClientConfig cc = clients.get(c.transport);
-					c.loadBalance = cc.loadBalance;
+					throw new RuntimeException(String.format("client id %s loadbalance not specified", c.id));
 				}
 
 				if (getLoadBalanceObj(c.loadBalance) == null)
@@ -593,6 +611,7 @@ public class Bootstrap {
 		app.codec = newRpcCodec(app.serviceMetas);
 		app.proxyGenerator = newProxyGenerator();
 		app.registryManager = newRegistryManager(app.serviceMetas,appConfig.dataDir);
+		app.dynamicRouteManager = newDynamicRouteManager(app.serviceMetas,appConfig.dataDir);
 		app.monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig);
 
 		if (!isEmpty(appConfig.errorMsgConverter)) {
@@ -601,12 +620,10 @@ public class Bootstrap {
 				throw new RuntimeException("unknown errorMsgConverter type, type=" + appConfig.errorMsgConverter);
 			app.errorMsgConverter = emc;
 		}
-		if (!isEmpty(appConfig.mockFile)) {
-			app.mockService = newMockService(appConfig.mockFile);
-		}
 
 		int processors = Runtime.getRuntime().availableProcessors();
 
+		Map<String,Registry> regMap = new HashMap<>();
 		for (String name : registries.keySet()) {
 			RegistryConfig c = registries.get(name);
 			Registry impl = getRegistryObj(parseType(c.type));
@@ -616,17 +633,35 @@ public class Bootstrap {
 				params += ";" + c.params;
 			impl.config(params);
 			app.registryManager.addRegistry(c.id, impl);
+			regMap.put(parseType(c.type), impl);
+		}
+
+		if (!isEmpty(appConfig.dynamicRoutePlugin)) {
+			
+			Registry regPlugin = regMap.get(parseType(appConfig.dynamicRoutePlugin));
+			if( regPlugin != null && regPlugin instanceof DynamicRoutePlugin ) { // use registry plugin first if the plugin has implemented DynamicRoute interface
+				app.dynamicRouteManager.setDynamicRoutePlugin((DynamicRoutePlugin)regPlugin);
+			} else {
+				DynamicRoutePlugin dynamicRoutePlugin = getDynamicRouteObj(appConfig.dynamicRoutePlugin);
+				if (dynamicRoutePlugin == null)
+					throw new RuntimeException("unknown dynamicRoutePlugin type, type=" + appConfig.dynamicRoutePlugin);
+				app.dynamicRouteManager.setDynamicRoutePlugin(dynamicRoutePlugin);
+			}
 		}
 
 		for (String name : servers.keySet()) {
 			ServerConfig c = servers.get(name);
 			RpcServer server = newRpcServer();
 			server.setServiceMetas(app.serviceMetas);
-			server.setMockService(app.mockService);
 			
-			if (!isEmpty(c.flowControl)) {
-				FlowControl fc = getFlowControlObj(c.flowControl);
-				server.setFlowControl(fc);
+			if (!isEmpty(c.plugins)) {
+				List<RpcPlugin> plugins = new ArrayList<>();
+				String[] ss = c.plugins.split(",");
+				for(String s:ss)  {
+					RpcPlugin p = getRpcPluginObj(s);
+					plugins.add(p);
+				}
+				server.setPlugins(plugins);
 			}
 			
 			server.setErrorMsgConverter(app.errorMsgConverter);
@@ -674,7 +709,6 @@ public class Bootstrap {
 			WebServerConfig c = webServers.get(name);
 
 			SessionService ss = getSessionServiceObj(c.defaultSessionService);
-			FlowControl fc = getFlowControlObj(c.flowControl);
 
 			WebServer server = newWebServer();
 			server.setSampleRate(c.sampleRate);
@@ -684,7 +718,6 @@ public class Bootstrap {
 			server.setRouteService(newRouteService(c));
 			server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
 			server.setDefaultSessionService(ss);
-			server.setFlowControl(fc);
 			server.setSessionIdCookieName(c.sessionIdCookieName);
 			server.setSessionIdCookiePath(c.sessionIdCookiePath);
 			server.setValidator(app.validator);
@@ -718,9 +751,18 @@ public class Bootstrap {
 
 			RpcClient client = newRpcClient();
 			client.setServiceMetas(app.serviceMetas);
-			client.setMockService(app.mockService);
 			client.setValidator(app.validator);
 
+			if (!isEmpty(c.plugins)) {
+				List<RpcPlugin> plugins = new ArrayList<>();
+				String[] ss = c.plugins.split(",");
+				for(String s:ss)  {
+					RpcPlugin p = getRpcPluginObj(s);
+					plugins.add(p);
+				}
+				client.setPlugins(plugins);
+			}
+						
 			NettyClient nc = newNettyClient();
 			nc.setCallback(client);
 			nc.setCodec(app.codec);
@@ -770,26 +812,22 @@ public class Bootstrap {
 
 			ExecutorManager em = null;
 			RpcCallableBase callable = null;
-			FlowControl fc = null;
 			String addr = null;
 			
 			if (c.reverse) {
 				callable = app.clients.get(c.transport);
 				callable.addAllowedService(serviceId);
 				em = callable.getExecutorManager();
-				fc = callable.getFlowControl();
 			} else {
 				callable = app.servers.get(c.transport);
 				if (callable != null) {
 					callable.addAllowedService(serviceId);
 					em = callable.getExecutorManager();
-					fc = callable.getFlowControl();
 					ServerConfig sc = servers.get(c.transport);
 					addr = IpUtils.localIp()+":"+sc.port;
 				} else {
 					WebServer webServer = app.webServers.get(c.transport);
 					em = webServer.getExecutorManager();
-					fc = webServer.getFlowControl();
 					//WebServerConfig wsc = webServers.get(c.transport);
 					//addr = IpUtils.localIp()+":"+wsc.port;
 				}
@@ -809,13 +847,6 @@ public class Bootstrap {
 				em.addPool(serviceId, c.threads, c.maxThreads, c.queueSize);
 			}
 
-			if ( fc != null && !isEmpty(c.flowControlParams)) {
-				HashMap<Integer, Integer> fcParams = parseFlowControlParams(c.flowControlParams);
-				for (Map.Entry<Integer, Integer> entry : fcParams.entrySet()) {
-					fc.addLimit(serviceId, entry.getKey(), entry.getValue());
-				}
-			}
-
 			for (MethodConfig mc : c.getMethods()) {
 				int[] msgIds = patternToMsgIds(serviceId, mc.pattern);
 				if (msgIds == null || msgIds.length == 0)
@@ -824,14 +855,6 @@ public class Bootstrap {
 					if (mc.threads == 0)
 						mc.threads = processors;
 					em.addPool(serviceId, msgIds, mc.threads, mc.maxThreads, mc.queueSize);
-				}
-
-				if ( fc != null && !isEmpty(mc.flowControlParams)) {
-					HashMap<Integer, Integer> fcParams = parseFlowControlParams(mc.flowControlParams);
-					for (Map.Entry<Integer, Integer> entry : fcParams.entrySet()) {
-						for (int msgId : msgIds)
-							fc.addLimit(serviceId, msgId, entry.getKey(), entry.getValue());
-					}
 				}
 			}
 
@@ -891,6 +914,10 @@ public class Bootstrap {
 					app.registryManager.addDirect(serviceId, c.direct, cmi);
 				}
 
+				if( app.dynamicRouteManager != null ) {
+					app.dynamicRouteManager.addConfig(serviceId, c.group, cmi);
+				}
+				
 				for (MethodConfig mc : c.getMethods()) {
 					int[] msgIds = patternToMsgIds(serviceId, mc.pattern);
 					if (msgIds == null || msgIds.length == 0)
@@ -1129,24 +1156,10 @@ public class Bootstrap {
 		}
 	}
 
-	HashMap<Integer, Integer> parseFlowControlParams(String flowControlParams) {
-		HashMap<Integer, Integer> params = new HashMap<Integer, Integer>();
-		Map<String,String> tmp = Plugin.defaultSplitParams(flowControlParams);
-		for (String key : tmp.keySet()) {
-			String value = tmp.get(key);
-			try {
-				params.put(Integer.parseInt(key), Integer.parseInt(value));
-			} catch (Exception e) {
-				throw new RuntimeException("flow control parameter not valid, param=" + flowControlParams);
-			}
-		}
-		return params;
-	}
-
 	void loadSpi() {
 		try {
 			loadSpi(LoadBalance.class);
-			loadSpi(FlowControl.class);
+			loadSpi(RpcPlugin.class);
 			loadSpi(Registry.class);
 			loadSpi(ErrorMsgConverter.class);
 			loadSpi(LogFormatter.class);
@@ -1213,8 +1226,8 @@ public class Bootstrap {
 		}
 	}
 
-	FlowControl getFlowControlObj(String type) {
-		return getPlugin(FlowControl.class,type);
+	RpcPlugin getRpcPluginObj(String type) {
+		return getPlugin(RpcPlugin.class,type);
 	}
 
 	SessionService getSessionServiceObj(String type) {
@@ -1235,6 +1248,10 @@ public class Bootstrap {
 
 	Registry getRegistryObj(String type) {
 		return getPlugin(Registry.class,type);
+	}
+	
+	DynamicRoutePlugin getDynamicRouteObj(String type) {
+		return getPlugin(DynamicRoutePlugin.class,type);
 	}
 
 	LoadBalance getLoadBalanceObj(String type) {
@@ -1757,11 +1774,6 @@ public class Bootstrap {
 
 	public Bootstrap setErrorMsgConverter(String errorMsgConverter) {
 		appConfig.errorMsgConverter = errorMsgConverter;
-		return this;
-	}
-
-	public Bootstrap setMockFile(String mockFile) {
-		appConfig.mockFile = mockFile;
 		return this;
 	}
 

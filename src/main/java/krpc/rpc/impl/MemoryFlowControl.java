@@ -3,14 +3,16 @@ package krpc.rpc.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.protobuf.Message;
 
-import krpc.rpc.core.Continue;
-import krpc.rpc.core.FlowControl;
+import krpc.common.RetCodes;
+import krpc.rpc.core.Plugin;
 import krpc.rpc.core.RpcContextData;
+import krpc.rpc.core.RpcPlugin;
 
-public class MemoryFlowControl implements FlowControl {
+public class MemoryFlowControl extends AbstractFlowControl implements RpcPlugin {
 	
 	static class StatItem {
 		int seconds;
@@ -37,6 +39,11 @@ public class MemoryFlowControl implements FlowControl {
 	HashMap<Integer,List<StatItem>> serviceStats = new HashMap<>();
 	HashMap<String,List<StatItem>> msgStats = new HashMap<>();
 
+	public void config(String paramsStr) {
+		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);			
+		configLimit(params);
+	}
+
 	public void addLimit(int serviceId,int seconds,int limit) {
     	List<StatItem> list = serviceStats.get(serviceId);
     	if( list == null ) {
@@ -55,19 +62,17 @@ public class MemoryFlowControl implements FlowControl {
     	}
     	msgStats.put(key, list);		
 	}
-	
-	
-	public boolean isAsync() { return false; }
 
-    public boolean exceedLimit(RpcContextData ctx,Message req,Continue<Boolean> dummy) {
+	public int preCall(RpcContextData ctx,Message req) {
     	int serviceId = ctx.getMeta().getServiceId();
     	int msgId = ctx.getMeta().getMsgId();
     	long now = System.currentTimeMillis()/1000;
     	boolean failed1 = updateServiceStats(serviceId,now);
     	boolean failed2 = updateMsgStats(serviceId,msgId,now);
-    	return failed1 || failed2;
-    }
-
+    	if( failed1 || failed2 ) return RetCodes.FLOW_LIMIT;
+    	return 0;
+	}
+	
     boolean updateServiceStats(int serviceId,long now) {
     	List<StatItem> list = serviceStats.get(serviceId);
     	if( list == null ) return false;

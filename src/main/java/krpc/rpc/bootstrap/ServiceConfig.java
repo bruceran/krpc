@@ -15,14 +15,12 @@ public class ServiceConfig  {
 	String registryNames; // refer to multiple registry
 	String group;
 
-	String flowControlParams;
-
 	int threads = -1;
 	int maxThreads = 0;
 	int queueSize = 10000;
-	
+
 	List<MethodConfig> methods = new ArrayList<MethodConfig>();
-	
+
 	public ServiceConfig() {
 	}
 
@@ -134,14 +132,4 @@ public class ServiceConfig  {
 		return this;
 	}
 
-	public String getFlowControlParams() {
-		return flowControlParams;
-	}
-
-	public ServiceConfig setFlowControlParams(String flowControlParams) {
-		this.flowControlParams = flowControlParams;
-		return this;
-	}	
-	
-	
 }

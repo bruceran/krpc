@@ -12,7 +12,6 @@
               <attribute name="id" type="string" use="optional"/>
               <attribute name="name" type="string" use="optional"/>
               <attribute name="traceAdapter" type="string" use="optional"/>
-              <attribute name="mockFile" type="string" use="optional"/>
               <attribute name="errorMsgConverter" type="string" use="optional"/>
               <attribute name="dataDir" type="string" use="optional"/>
 	    </complexType>    
@@ -29,8 +28,17 @@
 	    </complexType>    
     </element>
     
+	<element name="plugin">
+	    <complexType>
+              <attribute name="params" type="string" use="optional"/>
+	    </complexType>    
+    </element>
+        
     <element name="client">
 	    <complexType>
+			  <sequence minOccurs="0" maxOccurs="unbounded">
+		            <element ref="krpc:plugin" minOccurs="0" maxOccurs="unbounded"/>
+		      </sequence>	  	 	    
               <attribute name="id" type="string" use="optional"/>
               <attribute name="pingSeconds" type="string" use="optional"/>
               <attribute name="maxPackageSize" type="string" use="optional"/>
@@ -44,12 +52,15 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-              <attribute name="loadBalance" type="string" use="optional"/>
+              <attribute name="plugins" type="string" use="optional"/>
 	    </complexType>    
     </element>
 	
     <element name="server">
 	    <complexType>
+			  <sequence minOccurs="0" maxOccurs="unbounded">
+		            <element ref="krpc:plugin" minOccurs="0" maxOccurs="unbounded"/>
+		      </sequence>	  	 	    
               <attribute name="id" type="string" use="optional"/>
               <attribute name="port" type="string" use="optional"/>
               <attribute name="host" type="string" use="optional"/>
@@ -64,16 +75,10 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-              <attribute name="flowControl" type="string" use="optional"/>
+              <attribute name="plugins" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
-	<element name="plugin">
-	    <complexType>
-              <attribute name="params" type="string" use="optional"/>
-	    </complexType>    
-    </element>
-    
     <element name="webserver">
 	    <complexType>
 			  <sequence minOccurs="0" maxOccurs="unbounded">
@@ -96,7 +101,6 @@
               <attribute name="protoDir" type="string" use="optional"/>
               <attribute name="sampleRate" type="string" use="optional"/>
               <attribute name="defaultSessionService" type="string" use="optional"/>
-              <attribute name="flowControl" type="string" use="optional"/>
 	    </complexType>    
     </element>
     
@@ -109,7 +113,6 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-              <attribute name="flowControlParams" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
@@ -128,7 +131,6 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-              <attribute name="flowControlParams" type="string" use="optional"/>
 	    </complexType>    
     </element>
 

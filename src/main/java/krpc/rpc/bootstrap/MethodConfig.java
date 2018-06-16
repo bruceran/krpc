@@ -8,8 +8,6 @@ public class MethodConfig  {
 	int timeout = 3000;
 	String retryLevel = "no_retry";
 	int retryCount = 0;
-	
-	String flowControlParams;
 
 	// for service's methods
 	int threads = -1;
@@ -72,15 +70,6 @@ public class MethodConfig  {
 
 	public MethodConfig setMaxThreads(int maxThreads) {
 		this.maxThreads = maxThreads;
-		return this;
-	}
-
-	public String getFlowControlParams() {
-		return flowControlParams;
-	}
-
-	public MethodConfig setFlowControlParams(String flowControlParams) {
-		this.flowControlParams = flowControlParams;
 		return this;
 	}
 

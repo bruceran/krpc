@@ -23,16 +23,12 @@ public class WebServerConfig  {
 
 	String routesFile = "webroutes.xml";
 	String protoDir = "proto";
-	
 	String sessionIdCookieName = WebConstants.DefaultSessionIdCookieName;
 	String sessionIdCookiePath = "";
-
 	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
 
-	String flowControl = "";
-	
 	String defaultSessionService = "memorysessionservice";
-	List<String> pluginParams  = new ArrayList<>();
+	List<String> pluginParams  = new ArrayList<>(); // config WebPlugins if needed
 	
 	public void addPluginParams(String params) {
 		pluginParams.add(params);
@@ -195,12 +191,4 @@ public class WebServerConfig  {
 		return this;
 	}
 
-	public String getFlowControl() {
-		return flowControl;
-	}
-
-	public WebServerConfig setFlowControl(String flowControl) {
-		this.flowControl = flowControl;
-		return this;
-	}	
 }

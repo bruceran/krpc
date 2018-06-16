@@ -17,17 +17,17 @@ import com.google.protobuf.Message;
 
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
-import krpc.rpc.core.Continue;
-import krpc.rpc.core.FlowControl;
+import krpc.common.RetCodes;
 import krpc.rpc.core.Plugin;
 import krpc.rpc.core.RpcContextData;
+import krpc.rpc.core.RpcPlugin;
 import krpc.trace.Trace;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 
-public class JedisFlowControl implements FlowControl,InitClose {
+public class JedisFlowControl extends AbstractFlowControl implements RpcPlugin,InitClose {
 	
 	static Logger log = LoggerFactory.getLogger(JedisFlowControl.class);
 	
@@ -40,16 +40,6 @@ public class JedisFlowControl implements FlowControl,InitClose {
 	private String addrs;
 	
 	private String keyPrefix = "FC_";
-		
-	HashMap<Integer,List<StatItem>> serviceStats = new HashMap<>();
-	HashMap<String,List<StatItem>> msgStats = new HashMap<>();
-	
-	int threads = 1;
-	int maxThreads = 0;
-	int queueSize = 10000;
-	
-	NamedThreadFactory threadFactory = new NamedThreadFactory("jedisflowcontrol_threads");
-	ThreadPoolExecutor pool = null;
 	
 	static class StatItem {
 		int seconds;
@@ -60,6 +50,16 @@ public class JedisFlowControl implements FlowControl,InitClose {
 			this.limit = limit;
 		}
 	}
+	
+	HashMap<Integer,List<StatItem>> serviceStats = new HashMap<>();
+	HashMap<String,List<StatItem>> msgStats = new HashMap<>();
+
+	int threads = 1;
+	int maxThreads = 0;
+	int queueSize = 10000;
+	
+	NamedThreadFactory threadFactory = new NamedThreadFactory("jedisflowcontrol_threads");
+	ThreadPoolExecutor pool = null;
 
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);			
@@ -84,6 +84,27 @@ public class JedisFlowControl implements FlowControl,InitClose {
 		s = params.get("syncUpdate");
 		if ( s != null && !s.isEmpty() )
 			syncUpdate = Boolean.parseBoolean(s);		
+		
+		configLimit(params);
+	}
+	
+	public void addLimit(int serviceId,int seconds,int limit) {
+    	List<StatItem> list = serviceStats.get(serviceId);
+    	if( list == null ) {
+    		list = new ArrayList<StatItem>();
+    		list.add( new StatItem(seconds,limit) );
+    	}
+    	serviceStats.put(serviceId, list);
+	}
+	
+	public void addLimit(int serviceId,int msgId,int seconds,int limit) {
+		String key = serviceId + "." + msgId;
+    	List<StatItem> list = msgStats.get(key);
+    	if( list == null ) {
+    		list = new ArrayList<StatItem>();
+    		list.add( new StatItem(seconds,limit) );
+    	}
+    	msgStats.put(key, list);		
 	}
 	
 	public void init() {
@@ -125,36 +146,15 @@ public class JedisFlowControl implements FlowControl,InitClose {
 		}
 	}
 
-	public void addLimit(int serviceId,int seconds,int limit) {
-    	List<StatItem> list = serviceStats.get(serviceId);
-    	if( list == null ) {
-    		list = new ArrayList<StatItem>();
-    		list.add( new StatItem(seconds,limit) );
-    	}
-    	serviceStats.put(serviceId, list);
-	}
-	
-	public void addLimit(int serviceId,int msgId,int seconds,int limit) {
-		String key = serviceId + "." + msgId;
-    	List<StatItem> list = msgStats.get(key);
-    	if( list == null ) {
-    		list = new ArrayList<StatItem>();
-    		list.add( new StatItem(seconds,limit) );
-    	}
-    	msgStats.put(key, list);		
-	}
-	
-	
-	public boolean isAsync() { return false; }
-
-    public boolean exceedLimit(RpcContextData ctx,Message req,Continue<Boolean> dummy) {
+	public int preCall(RpcContextData ctx,Message req) {
     	int serviceId = ctx.getMeta().getServiceId();
     	int msgId = ctx.getMeta().getMsgId();
     	long now = System.currentTimeMillis()/1000;
     	boolean failed1 = updateServiceStats(serviceId,now);
     	boolean failed2 = updateMsgStats(serviceId,msgId,now);
-    	return failed1 || failed2;
-    }
+    	if( failed1 || failed2 ) return RetCodes.FLOW_LIMIT;
+    	return 0;
+	}
 
     boolean updateServiceStats(int serviceId,long now) {
     	List<StatItem> list = serviceStats.get(serviceId);

@@ -3,26 +3,17 @@ package krpc.rpc.bootstrap;
 public class ApplicationConfig  {
 
 	String name = "unknown";
-	String traceAdapter = "default"; // default, skywalking, zipkin, cat
-	String errorMsgConverter = "file";
-	String mockFile = "";
-	
 	String dataDir = ".";
+	String errorMsgConverter = "file";
+
+	String traceAdapter = "default"; // default, skywalking, zipkin, cat
+	String dynamicRoutePlugin;  // dynamicRoute plugin, only one
 
 	public ApplicationConfig() {
 	}
 
 	public ApplicationConfig(String name) {
 		this.name = name;
-	}
-
-	public String getMockFile() {
-		return mockFile;
-	}
-
-	public ApplicationConfig setMockFile(String mockFile) {
-		this.mockFile = mockFile;
-		return this;
 	}
 
 	public String getName() {
@@ -60,6 +51,16 @@ public class ApplicationConfig  {
 		this.dataDir = dataDir;
 		return this;
 	}
+
+	public String getDynamicRoutePlugin() {
+		return dynamicRoutePlugin;
+	}
+
+	public ApplicationConfig setDynamicRoutePlugin(String dynamicRoutePlugin) {
+		this.dynamicRoutePlugin = dynamicRoutePlugin;
+		return this;
+	}
+
 
 }
 

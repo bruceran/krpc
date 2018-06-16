@@ -27,7 +27,7 @@ public class FlowControlTest {
 		impl.addLimit(100, 10, 5);
 		
 		for(int i=0;i<8;++i) {
-			boolean failed = impl.exceedLimit(ctx,null,null);
+			int failed = impl.preCall(ctx,null);
 			System.out.println("failed="+failed);
 			Thread.sleep(100);
 		}
@@ -49,7 +49,7 @@ public class FlowControlTest {
 		
 		
 		for(int i=0;i<8;++i) {
-			boolean failed = impl.exceedLimit(ctx,null,null);
+			int failed = impl.preCall(ctx,null);
 			System.out.println("failed="+failed);
 			Thread.sleep(100);
 		}

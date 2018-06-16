@@ -1,5 +1,8 @@
 package krpc.rpc.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import krpc.rpc.core.proto.RpcMeta;
 
 abstract public class RpcContextData {
@@ -9,6 +12,7 @@ abstract public class RpcContextData {
 	long requestTimeMicros; // in micros
 	long startMicros;
 	long timeUsedMicros;
+	Map<String,Object> attributes;
 
 	public RpcContextData(String connId,RpcMeta meta) {
 		this.connId = connId;
@@ -76,5 +80,23 @@ abstract public class RpcContextData {
 		this.meta = meta;
 	}
 
+	public Map<String, Object> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Map<String, Object> attributes) {
+		if( this.attributes == null ) this.attributes = new HashMap<String, Object>();
+		this.attributes = attributes;
+	}
+
+	public void setAttribute(String key,Object obj) {
+		if( this.attributes == null ) this.attributes = new HashMap<String, Object>();
+		this.attributes.put(key,obj);
+	}	
+	
+	public Object getAttribute(String key) {
+		if( this.attributes == null ) return null;
+		return this.attributes.get(key);
+	}	
 	
 }

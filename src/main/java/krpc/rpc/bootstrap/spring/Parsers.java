@@ -147,8 +147,9 @@ class ClientConfigBeanParser extends BaseParser<ClientConfigBean> {
 		beanClass = ClientConfigBean.class;
 		attributes = new String[] {"pingSeconds","maxPackageSize","connectTimeout",
 				"reconnectSeconds","ioThreads","connections",
-				"notifyThreads","notifyMaxThreads","notifyQueueSize","threads","maxThreads","queueSize","loadBalance",
+				"notifyThreads","notifyMaxThreads","notifyQueueSize","threads","maxThreads","queueSize","plugins"
 				};
+		hasPlugins = true;
 	}
 }
 
@@ -157,9 +158,9 @@ class ServerConfigBeanParser extends BaseParser<ServerConfigBean> {
 		beanClass = ServerConfigBean.class;
 		attributes = new String[] {"port","host","backlog","idleSeconds",
 				"maxPackageSize","maxConns","ioThreads",
-				"notifyThreads","notifyMaxThreads","notifyQueueSize","threads","maxThreads","queueSize",
-				"flowControl",
+				"notifyThreads","notifyMaxThreads","notifyQueueSize","threads","maxThreads","queueSize","plugins"
 				};
+		hasPlugins = true;
 	}
 }
 
@@ -171,7 +172,7 @@ class WebServerConfigBeanParser extends BaseParser<WebServerConfigBean> {
 				"threads","maxThreads","queueSize",
 				"routesFile",
 				"sessionIdCookieName","sessionIdCookiePath","protoDir","sampleRate",
-				"defaultSessionService","flowControl", 
+				"defaultSessionService",
 				};
 		hasPlugins = true;
 	}
@@ -188,7 +189,7 @@ class ServiceConfigBeanParser extends BaseParser<ServiceConfigBean> {
 	ServiceConfigBeanParser() {
 		beanClass = ServiceConfigBean.class;
 		attributes = new String[] { "interfaceName","impl","transport","reverse",
-				"registryNames","group","threads","maxThreads","queueSize","flowControlParams"};
+				"registryNames","group","threads","maxThreads","queueSize"};
 		hasMethods = true;
 	}
 	
@@ -207,7 +208,7 @@ class RefererConfigBeanParser extends BaseParser<RefererConfigBean> {
 class MethodConfigBeanParser extends BaseParser<MethodConfig> {
 	MethodConfigBeanParser() {
 		beanClass = MethodConfig.class;
-		attributes = new String[] {"pattern","timeout","threads","maxThreads","queueSize","retryLevel","retryCount","loadBalance","flowControlParams"};
+		attributes = new String[] {"pattern","timeout","threads","maxThreads","queueSize","retryLevel","retryCount"};
 		hasId = false;
 	}
 }

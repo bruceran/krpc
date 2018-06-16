@@ -6,8 +6,8 @@ import java.util.HashMap;
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
 import krpc.common.StartStop;
+import krpc.rpc.core.DynamicRouteManager;
 import krpc.rpc.core.ErrorMsgConverter;
-import krpc.rpc.core.MockService;
 import krpc.rpc.core.ProxyGenerator;
 import krpc.rpc.core.RegistryManager;
 import krpc.rpc.core.RpcCodec;
@@ -28,9 +28,9 @@ public class RpcApp implements InitClose,StartStop {
 	RpcCodec codec;
 	ProxyGenerator proxyGenerator;
 	ErrorMsgConverter errorMsgConverter;
-	MockService mockService;
 	WebMonitorService monitorService;
 	RegistryManager registryManager;
+	DynamicRouteManager dynamicRouteManager;
 	TraceAdapter traceAdapter;
 	Validator validator;
 	
@@ -92,7 +92,6 @@ public class RpcApp implements InitClose,StartStop {
 		resources.add(proxyGenerator);
 		resources.add(errorMsgConverter);
 		resources.add(monitorService);
-		resources.add(mockService);
 		resources.add(traceAdapter);
 		resources.add(validator);
 
@@ -101,6 +100,7 @@ public class RpcApp implements InitClose,StartStop {
 		}
 
 		resources.add(registryManager);
+		resources.add(dynamicRouteManager);
 
 		for(RpcServer server:servers.values()) {
 			resources.add(server);
