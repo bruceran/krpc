@@ -299,11 +299,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	b.append(sep);
     	b.append(ctx.getTimeUsedMicros());
     	b.append(sep);
-    	String reqStr = closure.getReq() == null ? "" : logFormatter.toLogStr(true,closure.getReq());
+    	String reqStr = closure.getReq() == null ? "" : logFormatter.toLogStr(closure.getReq());
     	if( reqStr.indexOf(sep) >= 0 ) reqStr = reqStr.replace(sep, ",");
     	b.append(reqStr);
     	b.append(sep);
-    	String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(false,closure.getRes());
+    	String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(closure.getRes());
     	if( resStr.indexOf(sep) >= 0 ) resStr = resStr.replace(sep, ",");
     	b.append(resStr);
 
@@ -338,11 +338,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	b.append(sep);
     	b.append(ctx.getTimeUsedMicros());
     	b.append(sep);
-    	String reqStr = closure.getReq() == null ? "" : logFormatter.toLogStr(true,closure.getReq());
+    	String reqStr = closure.getReq() == null ? "" : logFormatter.toLogStr(closure.getReq());
     	if( reqStr.indexOf(sep) >= 0 ) reqStr = reqStr.replace(sep, ",");
     	b.append(reqStr);
     	b.append(sep);
-    	String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(false,closure.getRes());
+    	String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(closure.getRes());
     	if( resStr.indexOf(sep) >= 0 ) resStr = resStr.replace(sep, ",");
     	b.append(resStr);
 

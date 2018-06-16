@@ -6,6 +6,6 @@ import krpc.rpc.core.Plugin;
 import krpc.rpc.web.WebMessage;
 
 public interface LogFormatter extends Plugin {
-    String toLogStr(boolean isServerLog, Message body);
-    String toLogStr(boolean isServerLog, WebMessage body);
+    String toLogStr(Message body);
+    String toLogStr(WebMessage body);
 }

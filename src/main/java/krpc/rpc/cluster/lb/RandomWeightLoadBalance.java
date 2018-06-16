@@ -6,12 +6,13 @@ import com.google.protobuf.Message;
 
 import krpc.rpc.cluster.Addr;
 import krpc.rpc.cluster.LoadBalance;
+import krpc.rpc.core.ClientContextData;
 
 public class RandomWeightLoadBalance implements LoadBalance {
 	
 	Random rand = new Random();
 	
-	public int select(Addr[] addrs,int serviceId,int msgId,Message req) {
+	public int select(Addr[] addrs,ClientContextData ctx,Message req) {
 		
 		int[] weights =new int[addrs.length]; // weight may be changed during select
 		for(int i=0;i<addrs.length;++i) {

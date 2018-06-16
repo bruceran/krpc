@@ -6,6 +6,8 @@ import java.util.Random;
 
 import com.google.protobuf.Message;
 
+import krpc.rpc.core.ClientContextData;
+
 public class ServiceInfo {
 
 	private int serviceId;
@@ -20,7 +22,10 @@ public class ServiceInfo {
 		this.policy = policy;
 	}
 
-	synchronized AddrInfo nextAddr(int msgId, Message req, String excludeConnIds) {
+	synchronized AddrInfo nextAddr(ClientContextData ctx, Message req) {
+		
+		String excludeConnIds = ctx.getRetriedConnIds();
+		
 		if (alive.size() == 0)
 			return null;
 
@@ -32,7 +37,7 @@ public class ServiceInfo {
 		if (excludeConnIds == null || excludeConnIds.isEmpty() ) {
 			if ( policy == null ) return alive.get(0);
 			Addr[] as = alive.toArray(new Addr[0]);
-			int idx = policy.select(as, serviceId, msgId, req);
+			int idx = policy.select(as, ctx, req);
 			return alive.get(idx);
 		}
 

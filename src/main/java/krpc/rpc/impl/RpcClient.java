@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.Message;
 
 import krpc.common.InitCloseUtils;
+import krpc.rpc.core.ClientContextData;
 import krpc.rpc.core.ClusterManager;
 import krpc.rpc.core.RpcClosure;
 
@@ -29,8 +30,8 @@ public class RpcClient extends RpcCallableBase {
 		return false;
 	}
 	
-	String nextConnId(int serviceId,int msgId,Message req,String excludeConnIds) {
-		return clusterManager.nextConnId(serviceId,msgId,req,excludeConnIds);
+	String nextConnId(ClientContextData ctx,Message req) {
+		return clusterManager.nextConnId(ctx,req);
 	}
 	
 	int nextSequence(String connId) {

@@ -81,7 +81,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	ArrayList<Object> resources = new ArrayList<Object>();
 	
 	abstract boolean isServerSide();
-	abstract String nextConnId(int serviceId,int msgId,Message req,String excludeConnIds);
+	abstract String nextConnId(ClientContextData ctx,Message req);
 	abstract int nextSequence(String connId);
 	abstract boolean isConnected(String connId);
 	
@@ -174,12 +174,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		String action = serviceMetas.getName(serviceId, msgId);
 		Span span = Trace.startAsync("RPCCLIENT", action);
 		TraceContext tctx = Trace.currentContext();
-		String connId = nextConnId(serviceId,msgId,req,null); // may be null
-		int sequence = connId == null ? 0 : nextSequence(connId);
-
+		String connId = "no_connection:0:0";
 		span.setRemoteAddr(getAddr(connId));
 		
-		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(serviceId).setMsgId(msgId).setSequence(sequence);
+		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(serviceId).setMsgId(msgId);
 		builder.setTraceId(tctx.getTraceId());
 		builder.setRpcId(span.getRpcId());
 
@@ -212,7 +210,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			builder.setTimeout(getTimeout(serviceId, msgId));
 		
 		RpcMeta meta = builder.build();
-		ClientContextData ctx = new ClientContextData(connId == null ? "no_connection:0:0" : connId,meta, tctx, span);
+		ClientContextData ctx = new ClientContextData("no_connection:0:0",meta, tctx, span);
 		CompletableFuture<Message> future = futureFactory.newFuture(meta.getServiceId(),meta.getMsgId(),isAsync,ctx.getTraceContext());
 		ctx.setFuture(future);
 		ClientContext.set(ctx); // user code can call RpcClientContext.get() to obtain call information
@@ -223,20 +221,16 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			return future;		
 		}
 
-		/*
-		if( mockService != null ) { // mock response
-			Message res = mockService.mock(serviceId, msgId, req);
-			if( res != null ) {
-				endCall(closure,res);
-				return future;
-			}
-		}
-		*/
+		connId = nextConnId(ctx,req); // may be null
 		
 		if( connId == null ) { // no connection, no need to retry
 			endCall(closure,RetCodes.NO_CONNECTION);
 			return future;
 		}
+
+		int sequence = nextSequence(connId);
+		ReflectionUtils.updateSequence(meta, sequence);
+		span.setRemoteAddr(getAddr(connId));
 		
 		if( plugins.size() > 0 ) {
 			List<RpcPlugin> calledPlugins = new ArrayList<>();
@@ -287,11 +281,12 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		String excludeConnIds = closure.asClientCtx().getRetriedConnIds();
 		if( excludeConnIds == null ) excludeConnIds = closure.getCtx().getConnId();
 		else excludeConnIds += "," + closure.getCtx().getConnId();
-		final String newConnId = nextConnId(meta.getServiceId(),meta.getMsgId(),closure.getReq(),excludeConnIds); // may be null
+		closure.asClientCtx().incRetryTimes();
+		closure.asClientCtx().setRetriedConnIds(excludeConnIds);
+		final String newConnId = nextConnId(closure.asClientCtx(),closure.getReq()); // may be null
 		if( newConnId == null ) return false;
 		
 		try { 
-			final String f_excludeConnIds = excludeConnIds;
 			retryPool.execute( new Runnable() {
 				public void run() {
 					
@@ -300,8 +295,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 					RpcMeta newMeta = meta.toBuilder().setSequence(newSequence).build();
 					closure.getCtx().setConnId(newConnId);
 					closure.getCtx().setMeta(newMeta);
-					closure.asClientCtx().incRetryTimes();
-					closure.asClientCtx().setRetriedConnIds(f_excludeConnIds);
 					closure.asClientCtx().getSpan().setRemoteAddr(getAddr(newConnId));
 					
 					sendCall(closure, closure.asClientCtx().getRetryTimes() < retryCount); // recursive call sendClosure

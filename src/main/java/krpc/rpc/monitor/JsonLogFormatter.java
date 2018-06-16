@@ -21,7 +21,7 @@ public class JsonLogFormatter extends AbstractLogFormatter  {
 		configInner(paramsStr);
 	}
 
-    public String toLogStr(boolean isServerLog, Message body) {
+    public String toLogStr(Message body) {
     	try {
     		Map<String,Object> allLog = new HashMap<>();
     		MessageToMap.parseMessage(body, allLog, printDefault, maxRepeatedSizeToLog);
@@ -33,9 +33,9 @@ public class JsonLogFormatter extends AbstractLogFormatter  {
     	}
 	}
 	
-	public String toLogStr(boolean isServerLog, WebMessage body) {
+	public String toLogStr(WebMessage body) {
 		try {
-			Map<String,Object> allLog = getLogData(isServerLog,body,maxRepeatedSizeToLog);
+			Map<String,Object> allLog = getLogData(body,maxRepeatedSizeToLog);
 	  	    adjustLog(allLog);
 	  	    return Json.toJson(allLog);
 	  	} catch(Exception e) {

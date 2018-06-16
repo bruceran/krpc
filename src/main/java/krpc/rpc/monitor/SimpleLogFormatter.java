@@ -38,7 +38,7 @@ public class SimpleLogFormatter extends AbstractLogFormatter  {
 		webPrinter.maskFieldsSet = this.maskFieldsSet;	
 	}
 
-	public String toLogStr(boolean isServerLog, Message body) {
+	public String toLogStr(Message body) {
     	try {
     		  Appender tg = new Appender();
     	      Level level = new Level();
@@ -50,8 +50,8 @@ public class SimpleLogFormatter extends AbstractLogFormatter  {
     	}
 	}
 	
-	public String toLogStr(boolean isServerLog, WebMessage body) {
-		Map<String,Object> allLog = getLogData(isServerLog,body,maxRepeatedSizeToLog);
+	public String toLogStr(WebMessage body) {
+		Map<String,Object> allLog = getLogData(body,maxRepeatedSizeToLog);
 		try {
 			  Appender tg = new Appender();
 	  	      Level level = new Level();

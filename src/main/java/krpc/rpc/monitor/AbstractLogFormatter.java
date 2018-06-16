@@ -46,7 +46,7 @@ abstract class AbstractLogFormatter implements LogFormatter {
 		return s == null || s.isEmpty() ;
 	}
 
-	public static Map<String,Object> getLogData(boolean isServerLog, WebMessage body,int maxRepeatedSizeToLog) {
+	public static Map<String,Object> getLogData(WebMessage body,int maxRepeatedSizeToLog) {
 		HashMap<String,Object> allLog = new HashMap<String,Object>();
 		
 		if( body instanceof DefaultWebReq ) {

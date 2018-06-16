@@ -4,7 +4,7 @@ import com.google.protobuf.Message;
 
 public interface ClusterManager extends RegistryManagerCallback {
 
-	String nextConnId(int serviceId,int msgId,Message req,String excludeConnIds);
+	String nextConnId(ClientContextData ctx,Message req);
     int nextSequence(String connId);
     boolean isConnected(String connId);
     

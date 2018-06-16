@@ -37,6 +37,7 @@ public class ReflectionUtils {
 	public static String retMsgField = "retMsg_";
 	static Map<String,Field> retCodeFields = new HashMap<String,Field>();
 	static Map<String,Field> retMsgFields = new HashMap<String,Field>();
+	static Field metaSequenceField = null;
 	static Field metaPeersField = null;
 	static Field metaCompressField = null;
 	static ConcurrentHashMap<String,Object> errors = new ConcurrentHashMap<String,Object>();
@@ -51,6 +52,8 @@ public class ReflectionUtils {
 			metaPeersField.setAccessible(true);
 			metaCompressField = RpcMeta.class.getDeclaredField("compress_");
 			metaCompressField.setAccessible(true);
+			metaSequenceField = RpcMeta.class.getDeclaredField("sequence_");
+			metaSequenceField.setAccessible(true);
 			retCodeField = retCodeFieldInMap + "_";
 			retMsgField = retMsgFieldInMap + "_";
 		} catch(Exception e) {
@@ -248,7 +251,15 @@ public class ReflectionUtils {
         	log.error("adjustPeers exception");
         }   			
 	}
-	
+
+	public static void updateSequence(RpcMeta meta,int sequence) {
+		try {  
+			metaSequenceField.set(meta,sequence);
+        } catch(Exception e) {  
+        	log.error("adjustPeers exception");
+        }   			
+	}
+		
 	public static void updateCompress(RpcMeta meta,int zip) {
 		try {  
 			metaCompressField.set(meta,zip);

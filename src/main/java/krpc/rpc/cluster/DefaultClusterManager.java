@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.Message;
 
 import krpc.common.InitClose;
+import krpc.rpc.core.ClientContextData;
 import krpc.rpc.core.ClusterManager;
 import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRouteManagerCallback;
@@ -137,10 +138,11 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     	lastAddrs = newAddrs;	
     }
 
-    public String nextConnId(int serviceId,int msgId,Message req,String excludeConnIds) {    	
+    public String nextConnId(ClientContextData ctx,Message req) {    	
+    	int serviceId = ctx.getMeta().getServiceId();
     	ServiceInfo si = serviceMap.get(serviceId);
     	if( si == null ) return null;
-    	AddrInfo ai = si.nextAddr(msgId,req,excludeConnIds); // msgId not used now
+    	AddrInfo ai = si.nextAddr(ctx,req); // msgId not used now
     	if( ai == null ) return null;
     	ai.incPending();
     	int index = ai.nextConnection();

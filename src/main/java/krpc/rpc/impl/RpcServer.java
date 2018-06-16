@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.Message;
 
 import krpc.rpc.core.ClientContext;
+import krpc.rpc.core.ClientContextData;
 
 public class RpcServer extends RpcCallableBase {
 	
@@ -30,7 +31,7 @@ public class RpcServer extends RpcCallableBase {
 	}
 	
 	// user code must specify a connId in RpcContextClient to identify which client to call
-	String nextConnId(int serviceId,int msgId,Message req,String excludeConnIds) {
+	String nextConnId(ClientContextData ctx,Message req) {
 		String connId = ClientContext.removeConnId();
 		return connId;
 	}
