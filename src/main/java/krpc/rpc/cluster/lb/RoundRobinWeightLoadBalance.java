@@ -1,5 +1,6 @@
 package krpc.rpc.cluster.lb;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,13 +14,13 @@ public class RoundRobinWeightLoadBalance implements LoadBalance {
 
 	ConcurrentHashMap<Integer,AtomicInteger> map = new ConcurrentHashMap<>();
 	
-	public int select(Addr[] addrs,ClientContextData ctx,Message req) {
+	public int select(List<Addr> addrs,ClientContextData ctx,Message req) {
 		
 		int serviceId = ctx.getMeta().getServiceId();
 		
-		int[] weights =new int[addrs.length]; // weight may be changed during select
-		for(int i=0;i<addrs.length;++i) {
-			weights[i] = addrs[i].getWeight();
+		int[] weights =new int[addrs.size()]; // weight may be changed during select
+		for(int i=0;i<weights.length;++i) {
+			weights[i] = addrs.get(i).getWeight(ctx.getMeta().getServiceId());
 		}
 		
 		int max = 0;
@@ -36,7 +37,7 @@ public class RoundRobinWeightLoadBalance implements LoadBalance {
 		int index = nextIndex(serviceId);
 		
 		if( max > 0 && min != max ) {
-			return index % addrs.length ;
+			return index % weights.length ;
 		}
 
 		int mod = index % total;

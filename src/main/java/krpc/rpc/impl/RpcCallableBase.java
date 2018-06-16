@@ -279,11 +279,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		final RpcMeta meta = closure.getCtx().getMeta();
 		final int retryCount = getRetryCount(meta.getServiceId(),meta.getMsgId());
 		if( retryCount == 0 || closure.asClientCtx().getRetryTimes() >= retryCount ) return false; // only support one retry
-		String excludeConnIds = closure.asClientCtx().getRetriedConnIds();
-		if( excludeConnIds == null ) excludeConnIds = closure.getCtx().getConnId();
-		else excludeConnIds += "," + closure.getCtx().getConnId();
-		closure.asClientCtx().incRetryTimes();
-		closure.asClientCtx().setRetriedConnIds(excludeConnIds);
+		closure.asClientCtx().incRetryTimes(closure.getCtx().getConnId());
 		final String newConnId = nextConnId(closure.asClientCtx(),closure.getReq()); // may be null
 		if( newConnId == null ) return false;
 		

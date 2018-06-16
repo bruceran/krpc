@@ -1,66 +1,89 @@
 package krpc.rpc.cluster;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Random;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.protobuf.Message;
 
 import krpc.rpc.core.ClientContextData;
+import krpc.rpc.core.DynamicRouteConfig.AddrWeight;
+import krpc.rpc.core.DynamicRouteConfig.RouteRule;
 
 public class ServiceInfo {
 
 	private int serviceId;
+	private AtomicBoolean disabled = new AtomicBoolean(false);
 	private LoadBalance policy;
+	private Router router;
 
-	private Random retryRand = new Random();
 	private HashSet<String> all = new HashSet<String>();
-	private ArrayList<AddrInfo> alive = new ArrayList<AddrInfo>();
+	private List<AddrInfo> alive = new ArrayList<AddrInfo>();
 
-	ServiceInfo(int serviceId, LoadBalance policy) {
+	ServiceInfo(int serviceId, LoadBalance policy,Router router) {
 		this.serviceId = serviceId;
 		this.policy = policy;
+		this.router = router;
 	}
 
-	synchronized AddrInfo nextAddr(ClientContextData ctx, Message req) {
+	public boolean isDisabled() {
+		return disabled.get();
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled.set(disabled);
+	}
+	
+	public void configRules(List<RouteRule> rules) {
+		router.config(rules);
+	}
+	
+	synchronized public void configWeights(List<AddrWeight> weights) {
+		Map<String,Integer> weightMap = new HashMap<>();
+		if( weights != null ) {
+			for(AddrWeight w:weights) {
+				weightMap.put(w.getAddr(), w.getWeight());
+			}
+		}
 		
-		String excludeConnIds = ctx.getRetriedConnIds();
+		for(AddrInfo ai: alive) {
+			Integer w = weightMap.get(ai.getAddr());
+			if( w == null ) w = 0;
+			ai.setWeight(serviceId, w);
+		}
+	}	
+
+	synchronized AddrInfo nextAddr(ClientContextData ctx, Message req) {
 		
 		if (alive.size() == 0)
 			return null;
 
-		// todo router logic
-
-		if (alive.size() == 1)
-			return alive.get(0);
-
-		if (excludeConnIds == null || excludeConnIds.isEmpty() ) {
-			if ( policy == null ) return alive.get(0);
-			Addr[] as = alive.toArray(new Addr[0]);
-			int idx = policy.select(as, ctx, req);
-			return alive.get(idx);
-		}
-
-		ArrayList<AddrInfo> list = null;
-		String[] ss = excludeConnIds.split(",");
-		for (int i = 0; i < ss.length; ++i) {
-			ss[i] = getAddr(ss[i]);
-		}
-
+		Set<String> excludeAddrs = ctx.getExcludeAddrs();
+		
+		List<Addr> candidates = new ArrayList<>();
 		for (AddrInfo ci : alive) {
-			if (found(ss, ci.getAddr()))
+			if ( excludeAddrs != null && excludeAddrs.contains(ci.getAddr() ))
 				continue;
-			if (list == null)
-				list = new ArrayList<AddrInfo>();
-			list.add(ci);
+			candidates.add(ci);
 		}
-		if (list.size() == 0)
+		
+		if (candidates.size() == 0)
 			return null;
-		if (list.size() == 1)
-			return list.get(0);
+		
+		candidates =  router.select( candidates, ctx, req);
+		
+		if (candidates.size() == 0)
+			return null;
+		
+		if (candidates.size() == 1 || policy == null )
+			return (AddrInfo)candidates.get(0);
 
-		int k = retryRand.nextInt(list.size()); // always use random for retry
-		return list.get(k);
+		int idx = policy.select(candidates, ctx, req);
+		return (AddrInfo)candidates.get(idx);
 	}
 
 	String getAddr(String connId) {
@@ -68,11 +91,11 @@ public class ServiceInfo {
 		return connId.substring(0, p);
 	}
 
-	synchronized void copyTo(HashSet<String> newSet) {
+	synchronized void copyTo(Set<String> newSet) {
 		newSet.addAll(all);
 	}
 
-	synchronized HashSet<String> mergeFrom(HashSet<String> newSet) {
+	synchronized HashSet<String> mergeFrom(Set<String> newSet) {
 		HashSet<String> toBeAdded = new HashSet<String>();
 		toBeAdded.addAll(newSet);
 		toBeAdded.removeAll(all);

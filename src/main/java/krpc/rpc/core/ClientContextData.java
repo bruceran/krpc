@@ -1,5 +1,7 @@
 package krpc.rpc.core;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import com.google.protobuf.Message;
@@ -12,7 +14,7 @@ public class ClientContextData extends RpcContextData {
 	
 	CompletableFuture<Message> future;  // used in client side sync/async call
 	int retryTimes = 0;
-	String retriedConnIds = null; 
+	Set<String> excludeAddrs; 
 	TraceContext traceContext;
 	Span span;
 	
@@ -24,10 +26,17 @@ public class ClientContextData extends RpcContextData {
 		requestTimeMicros = traceContext.getRequestTimeMicros() + ( startMicros - traceContext.getStartMicros() );				
 	}
 	
-	public void incRetryTimes() {
+	public void incRetryTimes(String connId) {
 		retryTimes++;
+		if( excludeAddrs == null ) excludeAddrs = new HashSet<>();
+		excludeAddrs.add(getAddr(connId));
 	}
-
+	
+	String getAddr(String connId) {
+		int p = connId.lastIndexOf(":");
+		return connId.substring(0, p);
+	}
+	
 	public CompletableFuture<Message> getFuture() {
 		return future;
 	}
@@ -44,14 +53,6 @@ public class ClientContextData extends RpcContextData {
 		this.retryTimes = retryTimes;
 	}
 
-	public String getRetriedConnIds() {
-		return retriedConnIds;
-	}
-
-	public void setRetriedConnIds(String retriedConnIds) {
-		this.retriedConnIds = retriedConnIds;
-	}
-
 	public TraceContext getTraceContext() {
 		return traceContext;
 	}
@@ -59,5 +60,13 @@ public class ClientContextData extends RpcContextData {
 	public Span getSpan() {
 		return span;
 	}
-	
+
+	public Set<String> getExcludeAddrs() {
+		return excludeAddrs;
+	}
+
+	public void setExcludeAddrs(Set<String> excludeAddrs) {
+		this.excludeAddrs = excludeAddrs;
+	}
+
 }

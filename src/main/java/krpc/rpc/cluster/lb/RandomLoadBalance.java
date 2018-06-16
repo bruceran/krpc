@@ -1,5 +1,6 @@
 package krpc.rpc.cluster.lb;
 
+import java.util.List;
 import java.util.Random;
 
 import com.google.protobuf.Message;
@@ -11,7 +12,7 @@ import krpc.rpc.core.ClientContextData;
 public class RandomLoadBalance implements LoadBalance {
 	Random rand = new Random();
 	
-	public int select(Addr[] addrs,ClientContextData ctx,Message req) {
-		return rand.nextInt(addrs.length);
+	public int select(List<Addr> addrs,ClientContextData ctx,Message req) {
+		return rand.nextInt(addrs.size());
 	}
 }

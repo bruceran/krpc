@@ -1,5 +1,6 @@
 package krpc.rpc.cluster.lb;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.protobuf.Message;
@@ -24,11 +25,11 @@ public class ResponseTimeLoadBalance implements LoadBalance {
 			throw new RuntimeException("ResponseTimeLoadBalance seconds is too large");
 	}
 	
-	public int select(Addr[] addrs,ClientContextData ctx,Message req) {
+	public int select(List<Addr> addrs,ClientContextData ctx,Message req) {
 		long min = Long.MAX_VALUE;
 		int idx = -1;
-		for(int i=0;i<addrs.length;++i) {
-			long t =  addrs[i].getAvgTimeUsedMicros(seconds);
+		for(int i=0;i<addrs.size();++i) {
+			long t =  addrs.get(i).getAvgTimeUsedMicros(seconds);
 			if( t < min ) {
 				min = t;
 				idx = i;

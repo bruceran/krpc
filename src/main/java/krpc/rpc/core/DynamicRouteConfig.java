@@ -7,7 +7,7 @@ public class DynamicRouteConfig {
 
 	int serviceId;
 	boolean disabled; // service is disabled or not
-	List<AddrWeight> weight; // weight for each service instance, addr=ip:port
+	List<AddrWeight> weights; // weight for each service instance, addr=ip:port
 	List<RouteRule> rules; // route rules
 
 	public boolean equals(final java.lang.Object obj) {
@@ -22,14 +22,14 @@ public class DynamicRouteConfig {
 		boolean result = true;
 		result = result && serviceId == other.serviceId;
 		result = result && disabled == other.disabled;
-		result = result && Objects.equals(weight,other.weight);
+		result = result && Objects.equals(weights,other.weights);
 		result = result && Objects.equals(rules,other.rules);
 
 		return result;
 	}
 
 	public int hashCode() {
-		return Objects.hash(serviceId, disabled,weight,rules);
+		return Objects.hash(serviceId, disabled,weights,rules);
 	}
 
 	public int getServiceId() {
@@ -48,12 +48,12 @@ public class DynamicRouteConfig {
 		this.disabled = disabled;
 	}
 
-	public List<AddrWeight> getWeight() {
-		return weight;
+	public List<AddrWeight> getWeights() {
+		return weights;
 	}
 
-	public void setWeight(List<AddrWeight> weight) {
-		this.weight = weight;
+	public void setWeights(List<AddrWeight> weights) {
+		this.weights = weights;
 	}
 
 	public List<RouteRule> getRules() {
@@ -67,7 +67,7 @@ public class DynamicRouteConfig {
 	public static class AddrWeight {
 
 		String addr = "";
-		int weight; // -1 means disable the addr
+		int weight;
 
 		public boolean equals(final java.lang.Object obj) {
 			if (obj == this) {
@@ -106,11 +106,17 @@ public class DynamicRouteConfig {
 
 	}
 
-	public static class RouteRule {
+	public static class RouteRule implements Comparable<RouteRule> {
 
 		String from = "";
 		String to = "";
 		int priority;
+
+		public int compareTo(RouteRule rr) {
+			if( priority < rr.priority ) return -1;
+			if( priority > rr.priority ) return 1;
+			return from.compareTo(rr.from);
+		}
 
 		public boolean equals(final java.lang.Object obj) {
 			if (obj == this) {

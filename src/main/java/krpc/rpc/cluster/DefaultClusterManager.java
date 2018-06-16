@@ -2,7 +2,9 @@ package krpc.rpc.cluster;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -19,6 +21,8 @@ import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.RegistryManagerCallback;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.TransportChannel;
+import krpc.rpc.core.DynamicRouteConfig.AddrWeight;
+import krpc.rpc.core.DynamicRouteConfig.RouteRule;
 
 
 public class DefaultClusterManager implements ClusterManager, RegistryManagerCallback, DynamicRouteManagerCallback, InitClose {
@@ -29,10 +33,11 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 	int connections = 1;
 	TransportChannel transportChannel;
 
-	HashMap<Integer,LoadBalance> lbPolicies = new HashMap<Integer,LoadBalance>(); // serviceId->policy
+	Map<Integer,LoadBalance> lbs = new HashMap<>(); // serviceId->LoadBalance
+	Map<Integer,Router> routers = new HashMap<>(); // serviceId->Router
 		
-	HashSet<String> lastAddrs = new HashSet<String>();
-	HashMap<Integer,ServiceInfo> serviceMap = new HashMap<Integer,ServiceInfo>();
+	Set<String> lastAddrs = new HashSet<String>();
+	Map<Integer,ServiceInfo> serviceMap = new HashMap<Integer,ServiceInfo>();
 	ConcurrentHashMap<String,AddrInfo> addrMap = new ConcurrentHashMap<String,AddrInfo>();
 
 	public DefaultClusterManager(TransportChannel transportChannel) {
@@ -48,8 +53,18 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 
 	}
 	
-	public void routeConfigChanged(DynamicRouteConfig routeConfig) {
-		// todo
+	public void routeConfigChanged(DynamicRouteConfig c) {
+		ServiceInfo si = serviceMap.get(c.getServiceId());
+		
+		if( si == null ) return;
+		
+		si.setDisabled(c.isDisabled());
+
+		List<RouteRule> rules = c.getRules();
+		si.configRules(rules);
+		
+		List<AddrWeight> weights = c.getWeights();
+		si.configWeights(weights);
 	}
 
     public void addrChanged(Map<Integer,String> addrsMap) { 
@@ -76,7 +91,9 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 
     	ServiceInfo si = serviceMap.get(serviceId);
     	if( si == null) {
-    		si = new ServiceInfo(serviceId,getLbPolicy(serviceId));
+    		LoadBalance lb = getLbPolicy(serviceId);
+    		Router r = getRouter(serviceId);
+    		si = new ServiceInfo(serviceId,lb,r);
     		serviceMap.put(serviceId,si);
     	}
     	HashSet<String> newSet = splitAddrs(addrs);
@@ -101,18 +118,18 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 
    	void doRemove(Map<Integer,String> addrsMap) { 
     	
-    	HashSet<String> newAddrs = new HashSet<String>();
+    	Set<String> newAddrs = new HashSet<String>();
     	for(String s:addrsMap.values() ) {
     		newAddrs.addAll( splitAddrs(s) );
     	}
 
-    	HashSet<String> allAddrs = new HashSet<String>();
+    	Set<String> allAddrs = new HashSet<String>();
     	for( ServiceInfo si: serviceMap.values() ) {
     		si.copyTo(allAddrs);
     	}
     	
     	// set removeFlag or removeConn
-    	HashSet<String> toBeRemoved = sub(allAddrs,newAddrs);  // not used by any service
+    	Set<String> toBeRemoved = sub(allAddrs,newAddrs);  // not used by any service
     	for(String addr:toBeRemoved) {
     		AddrInfo ai = addrMap.get(addr);
     		if( ai != null ) {
@@ -125,7 +142,7 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     	}
     	
     	// recover removeFlag if set by last time
-    	HashSet<String> toBeRecover = sub(newAddrs,lastAddrs);
+    	Set<String> toBeRecover = sub(newAddrs,lastAddrs);
     	for(String addr:toBeRecover) {
     		AddrInfo ai = addrMap.get(addr);
     		if( ai != null ) {
@@ -142,7 +159,8 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     	int serviceId = ctx.getMeta().getServiceId();
     	ServiceInfo si = serviceMap.get(serviceId);
     	if( si == null ) return null;
-    	AddrInfo ai = si.nextAddr(ctx,req); // msgId not used now
+    	if( si.isDisabled() ) return null; // todo
+    	AddrInfo ai = si.nextAddr(ctx,req);
     	if( ai == null ) return null;
     	ai.incPending();
     	int index = ai.nextConnection();
@@ -242,20 +260,26 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 		return newSet;
 	}
 
-	public HashSet<String> sub(HashSet<String> a,HashSet<String> b) {
+	public HashSet<String> sub(Set<String> a,Set<String> b) {
 		HashSet<String> result = new HashSet<String>();
 		result.addAll(a);
 		result.removeAll(b);    	
 		return result;
 	}
 	
-    public void addLbPolicy(int serviceId,LoadBalance policy) {
-    	lbPolicies.put(serviceId,policy);
+    public void addLbRouter(int serviceId,LoadBalance policy,Router r) {
+    	lbs.put(serviceId,policy);
+    	routers.put(serviceId, r);
     }
     
     LoadBalance getLbPolicy(int serviceId) {
-    	LoadBalance p = lbPolicies.get(serviceId);
+    	LoadBalance p = lbs.get(serviceId);
     	return p;
+    }
+    
+    Router getRouter(int serviceId) {
+    	Router r = routers.get(serviceId);
+    	return r;
     }
     
 	public TransportChannel getTransportChannel() {

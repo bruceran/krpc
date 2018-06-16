@@ -41,7 +41,9 @@ import com.google.protobuf.UnknownFieldSet.Field;
 
 import krpc.KrpcExt;
 import krpc.rpc.cluster.DefaultClusterManager;
+import krpc.rpc.cluster.DefaultRouter;
 import krpc.rpc.cluster.LoadBalance;
+import krpc.rpc.cluster.Router;
 import krpc.rpc.core.ClusterManager;
 import krpc.rpc.core.DataManager;
 import krpc.rpc.core.DataManagerCallback;
@@ -283,6 +285,10 @@ public class Bootstrap {
 		return new WebServer();
 	}
 
+	public Router newRouter(int serviceId,String application) {
+		return new DefaultRouter(serviceId,application);
+	}
+	
 	public RpcApp build() {
 		prepare();
 		return doBuild();
@@ -905,10 +911,9 @@ public class Bootstrap {
 
 				DefaultClusterManager cmi = (DefaultClusterManager) client.getClusterManager();
 
-				if (!isEmpty(c.loadBalance)) {
-					LoadBalance policy = getLoadBalanceObj(c.loadBalance);
-					cmi.addLbPolicy(serviceId, policy);
-				}
+				LoadBalance lb = getLoadBalanceObj(c.loadBalance);
+				Router r = newRouter(serviceId,appConfig.name);
+				cmi.addLbRouter(serviceId, lb, r);
 
 				if (!isEmpty(c.registryName)) {
 					app.registryManager.addDiscover(serviceId, c.registryName, c.group, cmi);
