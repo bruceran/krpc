@@ -228,6 +228,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			return future;
 		}
 
+		ctx.setConnId(connId);
 		int sequence = nextSequence(connId);
 		ReflectionUtils.updateSequence(meta, sequence);
 		span.setRemoteAddr(getAddr(connId));
