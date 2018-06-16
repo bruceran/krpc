@@ -37,7 +37,7 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager,InitClose
 	private int startInterval = 1000;
 	private int checkInterval = 1000;
 	
-	DynamicRoutePlugin dynamicRoutePlugin; // todo
+	DynamicRoutePlugin dynamicRoutePlugin;
 	ServiceMetas serviceMetas;
 
 	Timer timer;
@@ -64,7 +64,7 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager,InitClose
     		saveToLocal();
     	}		
 		
-    	if( dynamicRoutePlugin != null && configItems.size() > 0 ) {
+    	if( configItems.size() > 0 ) {
     		timer = new Timer();
         	timer.schedule( new TimerTask() {
                 public void run() {

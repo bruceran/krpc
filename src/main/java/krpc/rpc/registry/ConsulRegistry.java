@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,11 @@ import org.slf4j.LoggerFactory;
 import krpc.common.Json;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
+import krpc.rpc.core.DynamicRouteConfig;
+import krpc.rpc.core.DynamicRoutePlugin;
 import krpc.rpc.core.Plugin;
 
-public class ConsulRegistry extends AbstractHttpRegistry {
+public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoutePlugin  {
 
 	static Logger log = LoggerFactory.getLogger(ConsulRegistry.class);
 	
@@ -23,6 +26,8 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 	String keepAliveUrlTemplate;
 	String degisterUrlTemplate;
 	String discoverUrlTemplate;
+	
+	String routesUrlTemplate;
 
 	int ttl = 90;
 	int interval = 15;
@@ -33,11 +38,14 @@ public class ConsulRegistry extends AbstractHttpRegistry {
 	// curl "http://192.168.31.144:8500/v1/catalog/services"
 	// curl "http://192.168.31.144:8500/v1/health/service/100"
 	
+    ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
+    	
     public void init() {
     	registerUrlTemplate = "http://%s/v1/agent/service/register";
     	keepAliveUrlTemplate = "http://%s/v1/agent/check/pass/service:%s";
     	degisterUrlTemplate = "http://%s/v1/agent/service/deregister";
     	discoverUrlTemplate = "http://%s/v1/health/service/%d?passing";
+    	routesUrlTemplate = "http://%s/v1/kv";
 		super.init();
     }	
 
@@ -55,6 +63,59 @@ public class ConsulRegistry extends AbstractHttpRegistry {
     	return interval;
     }
     
+    public int getRefreshIntervalSeconds() {
+    	return interval;
+    }
+	
+    public DynamicRouteConfig getConfig(int serviceId,String serviceName,String group) {
+
+    	String path = routesUrlTemplate+"/"+group+"/"+serviceId+"/routes.json";
+    	String versionPath = path+".version";
+    	
+    	String key = serviceId + "." + group;
+    	String oldVersion = versionCache.get(key);
+    	
+    	String newVersion = getData(versionPath);
+    	if( newVersion == null || newVersion.isEmpty() ) {
+			log.error("cannot get routes json version for service "+serviceName);
+			return null;
+    	}    	
+
+		if( oldVersion != null && newVersion != null && oldVersion.equals(newVersion) ) {
+			return null; // no change
+		}
+		
+		String json = getData(path);
+    	if( json == null  || json.isEmpty()  ) {
+			log.error("cannot get routes json for service "+serviceName);
+			return null;
+    	}
+    	
+    	DynamicRouteConfig config = Json.toObject(json,DynamicRouteConfig.class);			
+    	if( config == null ) return null;
+    	
+		versionCache.put(key,newVersion);
+		return config;
+	}
+
+	public String getData(String path) {	
+
+		if( hc == null ) return null;
+		
+		String url = String.format(path, addr());
+		url += "?raw"; // return json only
+		HttpClientReq req = new HttpClientReq("GET",url);
+		HttpClientRes res = hc.call(req);
+		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
+			log.error("cannot get config "+path);
+			nextAddr();
+			return null;
+		}
+		
+		String json = res.getContent();
+		return json;
+	}
+	
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
 		if( hc == null ) return;

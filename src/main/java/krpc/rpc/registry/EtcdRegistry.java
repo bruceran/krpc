@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,13 +12,16 @@ import org.slf4j.LoggerFactory;
 import krpc.common.Json;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
+import krpc.rpc.core.DynamicRouteConfig;
+import krpc.rpc.core.DynamicRoutePlugin;
 import krpc.rpc.core.Plugin;
 
-public class EtcdRegistry extends AbstractHttpRegistry {
+public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePlugin   {
 
 	static Logger log = LoggerFactory.getLogger(EtcdRegistry.class);
 	
 	String basePathTemplate;
+	String routesPathTemplate;
 	
     int ttl = 90;
     int interval = 15;
@@ -25,8 +29,11 @@ public class EtcdRegistry extends AbstractHttpRegistry {
     // curl "http://192.168.31.144:2379/v2/keys/services"
     // curl "http://192.168.31.144:2379/v2/keys/services/default/100"
     
+    ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
+        
     public void init() {
     	basePathTemplate = "http://%s/v2/keys/services";
+    	routesPathTemplate = "http://%s/v2/keys/dynamicroutes";
 		super.init();
     }	
     
@@ -42,7 +49,88 @@ public class EtcdRegistry extends AbstractHttpRegistry {
     public int getCheckIntervalSeconds() {
     	return interval;
     }
+    
+    public int getRefreshIntervalSeconds() {
+    	return interval;
+    }
+	
+    public DynamicRouteConfig getConfig(int serviceId,String serviceName,String group) {
 
+    	String path = routesPathTemplate+"/"+group+"/"+serviceId+"/routes.json";
+    	String versionPath = path+".version";
+    	
+    	String key = serviceId + "." + group;
+    	String oldVersion = versionCache.get(key);
+    	
+    	String newVersion = getData(versionPath);
+    	if( newVersion == null || newVersion.isEmpty() ) {
+			log.error("cannot get routes json version for service "+serviceName);
+			return null;
+    	}    	
+
+		if( oldVersion != null && newVersion != null && oldVersion.equals(newVersion) ) {
+			return null; // no change
+		}
+		
+		String json = getData(path);
+    	if( json == null  || json.isEmpty()  ) {
+			log.error("cannot get routes json for service "+serviceName);
+			return null;
+    	}
+    	
+    	DynamicRouteConfig config = Json.toObject(json,DynamicRouteConfig.class);			
+    	if( config == null ) return null;
+    	
+		versionCache.put(key,newVersion);
+		return config;
+	}
+
+	public String getData(String path) {	
+
+		if( hc == null ) return null;
+
+		String getPath = String.format(path, addr());
+		HttpClientReq req = new HttpClientReq("GET",getPath);
+
+		HttpClientRes res = hc.call(req);
+		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
+			log.error("cannot get data "+getPath+", content="+res.getContent());
+			nextAddr();
+			return null;
+		} 		
+		
+		String json = res.getContent();
+		Map<String,Object> m = Json.toMap(json);
+		if( m == null ) {
+			nextAddr();
+			return null;
+		}
+		
+        if( m.containsKey("errorCode") || !"get".equals(m.get("action")) ) {
+        	log.error("cannot get data "+getPath+", content="+res.getContent());
+        	return null;
+        }
+        
+        TreeSet<String> set = new TreeSet<>();
+        
+        Map node = (Map)m.get("node");
+        if( node == null || node.size() == 0 ) return "";
+        List nodelist = (List)node.get("nodes");
+        if( nodelist == null || nodelist.size() == 0 ) return "";
+
+        for( Object o : nodelist ) {
+        	if( o instanceof Map ) {
+        		Map mm = (Map)o;
+            	if(mm != null) {
+            		String value = (String)mm.get("value"); 
+            		return value;
+            	}
+        	}
+        }
+
+		return null;        
+	}
+	
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		if( !enableRegist ) return;
 		if( hc == null ) return;

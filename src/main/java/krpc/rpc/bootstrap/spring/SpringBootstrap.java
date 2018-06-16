@@ -19,6 +19,7 @@ import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.bootstrap.Bootstrap.PluginInfo;
 import krpc.rpc.bootstrap.RefererConfig;
 import krpc.rpc.cluster.LoadBalance;
+import krpc.rpc.core.DynamicRoutePlugin;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.RpcPlugin;
 import krpc.rpc.core.Registry;
@@ -125,6 +126,7 @@ public class SpringBootstrap {
 			loadBean(ErrorMsgConverter.class,beanPlugins);
 			loadBean(LogFormatter.class,beanPlugins);
 			loadBean(WebPlugin.class,beanPlugins);
+			loadBean(DynamicRoutePlugin.class,beanPlugins);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

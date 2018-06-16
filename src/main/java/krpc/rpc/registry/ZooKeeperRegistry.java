@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -13,9 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import krpc.common.Json;
+import krpc.rpc.core.DynamicRouteConfig;
+import krpc.rpc.core.DynamicRoutePlugin;
 import krpc.rpc.core.Plugin;
 
-public class ZooKeeperRegistry extends AbstractHttpRegistry  {
+public class ZooKeeperRegistry extends AbstractHttpRegistry implements DynamicRoutePlugin  {
 
 	static Logger log = LoggerFactory.getLogger(ZooKeeperRegistry.class);
 
@@ -23,6 +26,8 @@ public class ZooKeeperRegistry extends AbstractHttpRegistry  {
     
     CuratorFramework client;
 
+    ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
+    
     public void init() {
 		super.init();
 		
@@ -51,6 +56,48 @@ public class ZooKeeperRegistry extends AbstractHttpRegistry  {
     	return interval;
     }
     
+    public int getRefreshIntervalSeconds() {
+    	return interval;
+    }
+	
+    public DynamicRouteConfig getConfig(int serviceId,String serviceName,String group) {
+    	
+    	String path = "/dynamicroutes/"+group+"/"+serviceId+"/routes.json";
+    	String versionPath = path+".version";
+    	
+    	String key = serviceId + "." + group;
+    	String oldVersion = versionCache.get(key);
+    	String newVersion = null;
+    	
+		try {
+			byte[] bytes = client.getData().forPath(versionPath);
+			if( bytes == null ) return null;
+			newVersion = new String(bytes);
+		} catch(Exception e) {
+				log.error("cannot get routes json version for service "+serviceName+", exception="+e.getMessage());
+				return null;
+		}    	
+		if( oldVersion != null && newVersion != null && oldVersion.equals(newVersion) ) {
+			return null; // no change
+		}
+		
+		DynamicRouteConfig config = null;
+		
+		try {
+			byte[] bytes = client.getData().forPath(path);
+			if( bytes == null ) return null;
+	    	String json = new String(bytes);
+	    	config = Json.toObject(json,DynamicRouteConfig.class);			
+	    	if( config == null ) return null;
+		} catch(Exception e) {
+				log.error("cannot get routes json for service "+serviceName+", exception="+e.getMessage());
+				return null;
+		}    	
+		
+		versionCache.put(key,newVersion);
+		return config;
+	}
+	
 	public void register(int serviceId,String serviceName,String group,String addr) {
 		String instanceId = addr ;
 		String path = "/services/"+group+"/"+serviceId+"/"+instanceId;

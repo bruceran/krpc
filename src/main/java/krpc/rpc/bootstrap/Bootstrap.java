@@ -45,6 +45,7 @@ import krpc.rpc.cluster.LoadBalance;
 import krpc.rpc.core.ClusterManager;
 import krpc.rpc.core.DataManager;
 import krpc.rpc.core.DataManagerCallback;
+import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRoutePlugin;
 import krpc.rpc.core.DynamicRouteManager;
 import krpc.rpc.core.ErrorMsgConverter;
@@ -611,7 +612,6 @@ public class Bootstrap {
 		app.codec = newRpcCodec(app.serviceMetas);
 		app.proxyGenerator = newProxyGenerator();
 		app.registryManager = newRegistryManager(app.serviceMetas,appConfig.dataDir);
-		app.dynamicRouteManager = newDynamicRouteManager(app.serviceMetas,appConfig.dataDir);
 		app.monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig);
 
 		if (!isEmpty(appConfig.errorMsgConverter)) {
@@ -637,6 +637,8 @@ public class Bootstrap {
 		}
 
 		if (!isEmpty(appConfig.dynamicRoutePlugin)) {
+			
+			app.dynamicRouteManager = newDynamicRouteManager(app.serviceMetas,appConfig.dataDir);
 			
 			Registry regPlugin = regMap.get(parseType(appConfig.dynamicRoutePlugin));
 			if( regPlugin != null && regPlugin instanceof DynamicRoutePlugin ) { // use registry plugin first if the plugin has implemented DynamicRoute interface
@@ -1164,6 +1166,7 @@ public class Bootstrap {
 			loadSpi(ErrorMsgConverter.class);
 			loadSpi(LogFormatter.class);
 			loadSpi(WebPlugin.class);
+			loadSpi(DynamicRoutePlugin.class);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

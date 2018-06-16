@@ -1,6 +1,7 @@
 package krpc.rpc.core;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DynamicRouteConfig {
 
@@ -8,9 +9,29 @@ public class DynamicRouteConfig {
 	boolean disabled; // service is disabled or not
 	List<AddrWeight> weight; // weight for each service instance, addr=ip:port
 	List<RouteRule> rules; // route rules
-	
-	// todo equals,,hashcode
-	
+
+	public boolean equals(final java.lang.Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof DynamicRouteConfig)) {
+			return false;
+		}
+		DynamicRouteConfig other = (DynamicRouteConfig) obj;
+
+		boolean result = true;
+		result = result && serviceId == other.serviceId;
+		result = result && disabled == other.disabled;
+		result = result && Objects.equals(weight,other.weight);
+		result = result && Objects.equals(rules,other.rules);
+
+		return result;
+	}
+
+	public int hashCode() {
+		return Objects.hash(serviceId, disabled,weight,rules);
+	}
+
 	public int getServiceId() {
 		return serviceId;
 	}
@@ -45,8 +66,27 @@ public class DynamicRouteConfig {
 
 	public static class AddrWeight {
 
-		String addr;
+		String addr = "";
 		int weight; // -1 means disable the addr
+
+		public boolean equals(final java.lang.Object obj) {
+			if (obj == this) {
+				return true;
+			}
+			if (!(obj instanceof AddrWeight)) {
+				return false;
+			}
+			AddrWeight other = (AddrWeight) obj;
+
+			boolean result = true;
+			result = result && Objects.equals(addr, other.addr);
+			result = result && weight == other.weight;
+			return result;
+		}
+
+		public int hashCode() {
+			return Objects.hash(addr, weight);
+		}
 
 		public String getAddr() {
 			return addr;
@@ -68,9 +108,29 @@ public class DynamicRouteConfig {
 
 	public static class RouteRule {
 
-		String from;
-		String to;
+		String from = "";
+		String to = "";
 		int priority;
+
+		public boolean equals(final java.lang.Object obj) {
+			if (obj == this) {
+				return true;
+			}
+			if (!(obj instanceof RouteRule)) {
+				return false;
+			}
+			RouteRule other = (RouteRule) obj;
+
+			boolean result = true;
+			result = result && Objects.equals(from, other.from);
+			result = result && Objects.equals(to, other.to);
+			result = result && priority == other.priority;
+			return result;
+		}
+
+		public int hashCode() {
+			return Objects.hash(from, to, priority);
+		}
 
 		public String getFrom() {
 			return from;
@@ -97,6 +157,5 @@ public class DynamicRouteConfig {
 		}
 
 	}
-
 
 }
