@@ -13,7 +13,7 @@
 	<bean  class="krpc.test.rpc.schema.UserServiceImpl"/>
 	<bean  class="krpc.test.rpc.schema.TestBeanWebPlugin"/>
 
-	<krpc:application name="testapp" mockFile="abc"  />
+	<krpc:application name="testapp"  />
 	
 <!-- 	
 	<krpc:registry type="etcd" addrs="1.1.1.1:1111" />
@@ -28,7 +28,7 @@
 </krpc:webserver>
 		
 	<krpc:service interfaceName="com.xxx.userservice.proto.UserService"  >
-		<krpc:method pattern="login|updateProfile" flowControl="5=10"/>
+		<krpc:method pattern="login|updateProfile"  />
 	</krpc:service>
 	
 </beans>

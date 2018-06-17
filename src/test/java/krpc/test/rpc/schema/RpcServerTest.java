@@ -12,7 +12,7 @@ public class RpcServerTest {
 		
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-schema-server.xml");
 
-		Thread.sleep(3000);
+		Thread.sleep(30000);
 		context.stop();
 		Thread.sleep(1000);
 		
