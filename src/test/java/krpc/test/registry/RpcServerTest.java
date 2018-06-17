@@ -25,6 +25,7 @@ public class RpcServerTest {
 		UserServiceImpl impl = new UserServiceImpl(); // user code is here
 
 		RpcApp app = new Bootstrap() 
+			
 			//.addRegistry(new RegistryConfig().setType("consul").setAddrs("192.168.31.144:8500"))			
 			//.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("consul")) 
 			//.addRegistry(new RegistryConfig().setType("etcd").setAddrs("192.168.31.144:2379"))			
@@ -35,7 +36,7 @@ public class RpcServerTest {
 		
 		app.initAndStart();
 		
-		Thread.sleep(500000);
+		Thread.sleep(5000000);
 
 		app.stopAndClose();
 

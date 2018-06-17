@@ -8,13 +8,14 @@ import com.google.protobuf.Message;
 
 import krpc.rpc.cluster.Addr;
 import krpc.rpc.cluster.LoadBalance;
+import krpc.rpc.cluster.Weights;
 import krpc.rpc.core.ClientContextData;
 
 public class LeastActiveWeightLoadBalance implements LoadBalance {
 
 	Random rand = new Random();
 	
-	public int select(List<Addr> addrs,ClientContextData ctx,Message req) {
+	public int select(List<Addr> addrs,Weights weights, ClientContextData ctx,Message req) {
 		
 		int min = Integer.MAX_VALUE;
 		
@@ -33,7 +34,7 @@ public class LeastActiveWeightLoadBalance implements LoadBalance {
 
 		int[] matchWeights =new int[match.size()]; // weight may be changed during select
 		for(int i=0;i<match.size();++i) {
-			matchWeights[i] = addrs.get(match.get(i)).getWeight(ctx.getMeta().getServiceId());
+			matchWeights[i] = weights.getWeight(addrs.get(match.get(i)).getAddr() );
 		}
 		
 		int total = 0;

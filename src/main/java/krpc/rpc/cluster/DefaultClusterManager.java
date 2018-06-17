@@ -59,12 +59,12 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 		if( si == null ) return;
 		
 		si.setDisabled(c.isDisabled());
-
-		List<RouteRule> rules = c.getRules();
-		si.configRules(rules);
 		
 		List<AddrWeight> weights = c.getWeights();
 		si.configWeights(weights);
+		
+		List<RouteRule> rules = c.getRules();
+		si.configRules(rules);
 	}
 
     public void addrChanged(Map<Integer,String> addrsMap) { 
@@ -85,7 +85,6 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     		}
     	}
 	}
-
 
    	boolean doAdd(int serviceId,String addrs) { 
 

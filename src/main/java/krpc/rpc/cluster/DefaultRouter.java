@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +22,8 @@ public class DefaultRouter implements Router {
 	
 	static Logger log = LoggerFactory.getLogger(DefaultRouter.class);
 
-	FilterExprParser conditionParser;
-	FilterExprParser targetParser;
+	RouterExprParser conditionParser;
+	RouterExprParser targetParser;
 
 	String host;
 	Map<String,String> matchData = new HashMap<>();
@@ -33,8 +32,8 @@ public class DefaultRouter implements Router {
 	
 	public DefaultRouter(int serviceId,String application) {
 		
-		conditionParser = new FilterExprParser("host,application,msgId");
-		targetParser = new FilterExprParser("host");
+		conditionParser = new RouterExprParser("host,application,msgId");
+		targetParser = new RouterExprParser("host,addr");
 		
 		host = IpUtils.localIp();
 		matchData.put("application", application);
@@ -42,6 +41,11 @@ public class DefaultRouter implements Router {
 	}
 	
 	public void config(List<RouteRule> params) {
+		if( params == null ) {
+			rulesList.set(null);
+			return;
+		}
+		
 		Collections.sort(params);
 		
 		List<Rule> rules = new ArrayList<>(params.size());
@@ -83,8 +87,6 @@ public class DefaultRouter implements Router {
 		return newList;
 	}
 
-	// todo 语法写错了如何处理?
-	
 	Rule toRule(RouteRule rr) {
 		String from = rr.getFrom();
 		Condition condition = new Condition(from);
@@ -98,7 +100,7 @@ public class DefaultRouter implements Router {
 	class Rule {
 		
 		Condition condition;
-		FilterExprSimple target; 
+		RouterExprSimple target; 
 		
 		Rule(Condition condition,String to) {
 			this.condition = condition;
@@ -106,7 +108,7 @@ public class DefaultRouter implements Router {
 			if( to == null ) return;
 			to = to.trim();
 			if( to.isEmpty() ) return;
-			to = to.replaceAll("$host",host); // todo regex
+			to = to.replaceAll("\\$host",host);
 			
 			target = targetParser.parseSimple(to);
 			if( target == null ) {
@@ -128,27 +130,21 @@ public class DefaultRouter implements Router {
 		}
 		
 		boolean matchTarget(String addr) {
-			if( target.operator.equals("=") ) {
-				for(Pattern p:target.patterns) {
-					if( p.matcher(addr).matches()) {
-						return true;
-					}
-				}
-				return false;				
-			}  else {
-				for(Pattern p:target.patterns) {
-					if( p.matcher(addr).matches()) {
-						return false;
-					}
-				}
-				return true;					
-			}
+			Map<String,String> data = new HashMap<>();
+			data.put("addr", addr);
+			data.put("host", getIp(addr));
+			return target.eval(data);
+		}
+		
+		String getIp(String addr) {
+			int p = addr.lastIndexOf(":");
+			return addr.substring(0,p);
 		}
 	}
 	
 	class Condition {
 		
-		FilterExpr expr = null;
+		RouterExpr expr = null;
 		
 		Condition(String from) {
 			if( from == null ) return;

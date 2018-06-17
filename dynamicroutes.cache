@@ -1,0 +1,1 @@
+{"100":{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27:5600","weight":50},{"addr":"192.168.31.27:5601","weight":25},{"addr":"192.168.31.27:5602","weight":25}]}}

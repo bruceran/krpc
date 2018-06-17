@@ -8,6 +8,7 @@ import com.google.protobuf.Message;
 
 import krpc.rpc.cluster.Addr;
 import krpc.rpc.cluster.LoadBalance;
+import krpc.rpc.cluster.Weights;
 import krpc.rpc.core.ClientContextData;
 import krpc.rpc.core.Plugin;
 import krpc.rpc.core.ReflectionUtils;
@@ -25,8 +26,8 @@ public class HashLoadBalance implements LoadBalance {
 			getter = "get" + Character.toUpperCase(s.charAt(0)) + s.substring(1);
 	}
 
-	public int select(List<Addr> addrs,ClientContextData ctx,Message req) {
-		int index = getIndex(addrs,req);
+	public int select(List<Addr> addrs,Weights weights, ClientContextData ctx,Message req) {
+		int index = getIndex(addrs,req);	
 		if( index < 0 ) return rand.nextInt(addrs.size());
 		return index;
 	}

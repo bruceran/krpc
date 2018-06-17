@@ -81,14 +81,11 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
     }
 
     public void init() {
-
 		for(Registry r:registries.values()) {
 			InitCloseUtils.init(r);
 		}	
 		
 		loadFromLocal();
-    	
-
     }
     
     public void start() {
@@ -145,8 +142,8 @@ public class DefaultRegistryManager implements RegistryManager,InitClose,StartSt
         	HashMap<Integer,String> results = new HashMap<Integer,String>();
     		for(int serviceId:b.serviceIds) {
     			String addrs = serviceAddrs.get(serviceId);
-    			if( addrs != null && !addrs.isEmpty() )
-    				results.put(serviceId, addrs );
+    			if( addrs == null ) addrs = "";
+  				results.put(serviceId, addrs );
     		}
     		b.callback.addrChanged(results);
     	}

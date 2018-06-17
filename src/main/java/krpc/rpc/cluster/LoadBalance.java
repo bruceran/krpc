@@ -11,7 +11,7 @@ public interface LoadBalance extends Plugin {
 	
 	default boolean needCallStats() {return false;}
 	
-	// addrs have at least 2 items to select
+	// at least 2 addrs to select
 	// need to return the index of addrs
-	int select(List<Addr> addrs,ClientContextData ctx,Message req); 
+	int select(List<Addr> addrs,Weights weights, ClientContextData ctx,Message req); 
 }

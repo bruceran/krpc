@@ -47,7 +47,6 @@ import krpc.rpc.cluster.Router;
 import krpc.rpc.core.ClusterManager;
 import krpc.rpc.core.DataManager;
 import krpc.rpc.core.DataManagerCallback;
-import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRoutePlugin;
 import krpc.rpc.core.DynamicRouteManager;
 import krpc.rpc.core.ErrorMsgConverter;
@@ -1620,6 +1619,11 @@ public class Bootstrap {
 		return this;
 	}
 
+	public Bootstrap setDynamicRoutePlugin(String dynamicRoutePlugin) {
+		appConfig.dynamicRoutePlugin = dynamicRoutePlugin;
+		return this;
+	}
+	
 	public Bootstrap setMonitorServerAddr(String addr) {
 		monitorConfig.serverAddr = addr;
 		return this;

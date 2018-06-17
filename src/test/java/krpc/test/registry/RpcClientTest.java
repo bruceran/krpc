@@ -19,23 +19,29 @@ public class RpcClientTest {
 	public static void main(String[] args) throws Exception {
 		
 		RpcApp app = new Bootstrap() 
+				.setDynamicRoutePlugin("zookeeper")
 				//.addRegistry(new RegistryConfig().setType("consul").setAddrs("192.168.31.144:8500"))			
 				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("consul")) 
 				//.addRegistry(new RegistryConfig().setType("etcd").setAddrs("192.168.31.144:2379"))			
 				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("etcd")) 
 				.addRegistry(new RegistryConfig().setType("zookeeper").setAddrs("192.168.31.144:2181"))			
-				.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("zookeeper")) 				
+				.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).
+						setRegistryName("zookeeper")) 				
 				.build();
 		
 		app.initAndStart();
 
-		UserService us = app.getReferer("us");
+		for(int i=0;i<100;++i) {
+			UserService us = app.getReferer("us");
 
-		LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
-		LoginRes res = us.login(req);
-		log.info("res="+res.getRetCode()+","+res.getRetMsg());
+			LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
+			LoginRes res = us.login(req);
+			log.info("res="+res.getRetCode()+","+res.getRetMsg());
 
-		Thread.sleep(120000);
+			Thread.sleep(500);
+		}
+
+		Thread.sleep(300000);
 		
 		app.stopAndClose();
 	}	

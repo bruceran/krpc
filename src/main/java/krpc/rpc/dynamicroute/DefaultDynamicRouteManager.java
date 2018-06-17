@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -19,6 +20,7 @@ import krpc.common.InitCloseUtils;
 import krpc.common.Json;
 import krpc.common.StartStop;
 import krpc.rpc.core.DynamicRoutePlugin;
+import krpc.rpc.core.Registry;
 import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRouteManager;
 import krpc.rpc.core.DynamicRouteManagerCallback;
@@ -28,7 +30,7 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager,InitClose
 	
 	static Logger log = LoggerFactory.getLogger(DefaultDynamicRouteManager.class);
 	
-	Map<Integer,DynamicRouteConfig> routes;
+	Map<Integer,DynamicRouteConfig> routes = new HashMap<>();
 	List<ConfigItem> configItems = new ArrayList<ConfigItem>();
 
 	private String dataDir;
@@ -52,11 +54,20 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager,InitClose
     
     public void init() {
 
+    	if( !(dynamicRoutePlugin instanceof Registry) ) {
+        	InitCloseUtils.init(dynamicRoutePlugin);
+    	}
+		
 		loadFromLocal();
-		
-		InitCloseUtils.init(dynamicRoutePlugin);
-		
-		boolean changed = refreshConfig();
+    }
+    
+    public void start() {
+    	
+    	if( !(dynamicRoutePlugin instanceof Registry) ) {
+        	InitCloseUtils.start(dynamicRoutePlugin);
+    	}
+
+    	boolean changed = refreshConfig();
 		
 		notifyRouteChanged();
 
@@ -74,22 +85,22 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager,InitClose
     	}    			
     }
     
-    public void start() {
-    	InitCloseUtils.start(dynamicRoutePlugin);
-    }
-    
     public void stop() {
-    	InitCloseUtils.stop(dynamicRoutePlugin);
-    }
-    
-    
-    public void close() {
     	if( timer != null ) {
         	timer.cancel();
         	timer = null;
     	}
+
+    	if( !(dynamicRoutePlugin instanceof Registry) ) {
+        	InitCloseUtils.stop(dynamicRoutePlugin);
+    	}
+    }
+    
+    public void close() {
     	
-    	InitCloseUtils.close(dynamicRoutePlugin);
+    	if( !(dynamicRoutePlugin instanceof Registry) ) {
+        	InitCloseUtils.close(dynamicRoutePlugin);
+    	}
     }
 
     void refresh() {
@@ -127,7 +138,7 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager,InitClose
     		DynamicRouteConfig config = dynamicRoutePlugin.getConfig(item.serviceId, serviceName, item.group);
     		if( config != null ) { // null is failed, not null is success
     			DynamicRouteConfig oldConfig = routes.get(item.serviceId);
-    			if( oldConfig == null || oldConfig.equals(config) ) {
+    			if( oldConfig == null || !oldConfig.equals(config) ) {
     				routes.put(item.serviceId,config);
     				changed = true;
     			}

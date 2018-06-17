@@ -8,19 +8,20 @@ import com.google.protobuf.Message;
 
 import krpc.rpc.cluster.Addr;
 import krpc.rpc.cluster.LoadBalance;
+import krpc.rpc.cluster.Weights;
 import krpc.rpc.core.ClientContextData;
 
-public class RoundRobinWeightLoadBalance implements LoadBalance {
+public class RoundRobinWeightLoadBalance  implements LoadBalance {
 
 	ConcurrentHashMap<Integer,AtomicInteger> map = new ConcurrentHashMap<>();
 	
-	public int select(List<Addr> addrs,ClientContextData ctx,Message req) {
+	public int select(List<Addr> addrs,Weights wts, ClientContextData ctx,Message req) {
 		
 		int serviceId = ctx.getMeta().getServiceId();
-		
+
 		int[] weights =new int[addrs.size()]; // weight may be changed during select
 		for(int i=0;i<weights.length;++i) {
-			weights[i] = addrs.get(i).getWeight(ctx.getMeta().getServiceId());
+			weights[i] = wts.getWeight(addrs.get(i).getAddr());
 		}
 		
 		int max = 0;
@@ -36,7 +37,7 @@ public class RoundRobinWeightLoadBalance implements LoadBalance {
 
 		int index = nextIndex(serviceId);
 		
-		if( max > 0 && min != max ) {
+		if( max == 0 || min == max ) {
 			return index % weights.length ;
 		}
 

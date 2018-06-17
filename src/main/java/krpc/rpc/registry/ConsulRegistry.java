@@ -37,6 +37,8 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 	// curl "http://192.168.31.144:8500/v1/agent/services"
 	// curl "http://192.168.31.144:8500/v1/catalog/services"
 	// curl "http://192.168.31.144:8500/v1/health/service/100"
+	// curl -X PUT http://192.168.31.144:8500/v1/kv/default/100/routes.json.version -d 1
+	// curl -X PUT http://192.168.31.144:8500/v1/kv/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
 	
     ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
     	
@@ -108,12 +110,12 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 		HttpClientRes res = hc.call(req);
 		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
 			log.error("cannot get config "+path);
-			nextAddr();
+			if( res.getHttpCode() != 404 ) nextAddr();
 			return null;
 		}
 		
-		String json = res.getContent();
-		return json;
+		String data = res.getContent();
+		return data;
 	}
 	
 	public void register(int serviceId,String serviceName,String group,String addr) {

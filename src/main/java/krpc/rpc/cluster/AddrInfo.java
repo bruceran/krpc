@@ -1,7 +1,6 @@
 package krpc.rpc.cluster;
 
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,9 +31,8 @@ public class AddrInfo implements Addr {
 	private AtomicInteger current = new AtomicInteger(-1); // current index to get next connect
 	private AtomicInteger seq = new AtomicInteger(0);
 	private AtomicInteger pending = new AtomicInteger(0);
-	private ConcurrentHashMap<Integer,Integer> weights = new ConcurrentHashMap<>(); // todo
 	private AtomicBoolean removeFlag = new AtomicBoolean(false);
-	
+
 	static class SecondStat {
 		long time;
 		int reqs = 0;
@@ -93,17 +91,7 @@ public class AddrInfo implements Addr {
 	public long getAvgTimeUsedMicros(int secondsBefore ) {
 		return allSecondStat.getAvgTimeUsed(secondsBefore);
 	}
-	
-	public int getWeight(int serviceId) {
-		Integer i = weights.get(serviceId);
-		if( i == null ) return 0;
-		return i;
-	}
 
-	public void setWeight(int serviceId,int weight) {
-		this.weights.put(serviceId,weight);
-	}
-	
 	public void incPending() {
 		pending.incrementAndGet();
 	}

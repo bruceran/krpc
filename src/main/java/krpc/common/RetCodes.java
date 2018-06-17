@@ -39,7 +39,7 @@ public class RetCodes {
 	 }
 	 
 	 static public boolean hasExecuted(int retCode) {
-		 return retCode == BUSINESS_ERROR  || retCode  == VALIDATE_ERROR || retCode <= -600;
+		 return retCode == 0 || retCode == BUSINESS_ERROR  || retCode  == VALIDATE_ERROR || retCode <= -600;
 	 }
 
 	 static public boolean canSafeRetry(int retCode) {

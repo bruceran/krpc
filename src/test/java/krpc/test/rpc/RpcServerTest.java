@@ -34,7 +34,7 @@ public class RpcServerTest {
 		
 		app.initAndStart();
 		
-		Thread.sleep(300000);
+		Thread.sleep(3000000);
 
 		app.stopAndClose();
 		

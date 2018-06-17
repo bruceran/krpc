@@ -1,12 +1,11 @@
 package krpc.rpc.cluster;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.protobuf.Message;
 
@@ -16,18 +15,18 @@ import krpc.rpc.core.DynamicRouteConfig.RouteRule;
 
 public class ServiceInfo {
 
-	private int serviceId;
 	private AtomicBoolean disabled = new AtomicBoolean(false);
 	private LoadBalance policy;
 	private Router router;
 
 	private HashSet<String> all = new HashSet<String>();
 	private List<AddrInfo> alive = new ArrayList<AddrInfo>();
+	private AtomicReference<Weights> weights = new AtomicReference<>();
 
 	ServiceInfo(int serviceId, LoadBalance policy,Router router) {
-		this.serviceId = serviceId;
 		this.policy = policy;
 		this.router = router;
+		weights.set(new Weights());
 	}
 
 	public boolean isDisabled() {
@@ -41,20 +40,17 @@ public class ServiceInfo {
 	public void configRules(List<RouteRule> rules) {
 		router.config(rules);
 	}
-	
-	synchronized public void configWeights(List<AddrWeight> weights) {
-		Map<String,Integer> weightMap = new HashMap<>();
+
+	public void configWeights(List<AddrWeight> list) {
+		Weights w = new Weights();
+
 		if( weights != null ) {
-			for(AddrWeight w:weights) {
-				weightMap.put(w.getAddr(), w.getWeight());
+			for(AddrWeight aw:list) {
+				w.addWeight(aw.getAddr(),aw.getWeight());
 			}
 		}
 		
-		for(AddrInfo ai: alive) {
-			Integer w = weightMap.get(ai.getAddr());
-			if( w == null ) w = 0;
-			ai.setWeight(serviceId, w);
-		}
+		weights.set(w);
 	}	
 
 	synchronized AddrInfo nextAddr(ClientContextData ctx, Message req) {
@@ -82,7 +78,8 @@ public class ServiceInfo {
 		if (candidates.size() == 1 || policy == null )
 			return (AddrInfo)candidates.get(0);
 
-		int idx = policy.select(candidates, ctx, req);
+		
+		int idx = policy.select(candidates, weights.get() , ctx, req);
 		return (AddrInfo)candidates.get(idx);
 	}
 

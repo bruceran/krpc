@@ -7,17 +7,18 @@ import com.google.protobuf.Message;
 
 import krpc.rpc.cluster.Addr;
 import krpc.rpc.cluster.LoadBalance;
+import krpc.rpc.cluster.Weights;
 import krpc.rpc.core.ClientContextData;
 
 public class RandomWeightLoadBalance implements LoadBalance {
 	
 	Random rand = new Random();
 	
-	public int select(List<Addr> addrs,ClientContextData ctx,Message req) {
+	public int select(List<Addr> addrs,Weights wts, ClientContextData ctx,Message req) {
 		
 		int[] weights =new int[addrs.size()]; // weight may be changed during select
 		for(int i=0;i<weights.length;++i) {
-			weights[i] = addrs.get(i).getWeight(ctx.getMeta().getServiceId());
+			weights[i] = wts.getWeight(addrs.get(i).getAddr());
 		}
 		
 		int total = 0;
@@ -34,7 +35,9 @@ public class RandomWeightLoadBalance implements LoadBalance {
 			return rand.nextInt(weights.length);
 		}
 
-		return select(weights,total);
+		int k = select(weights,total);
+
+		return k;
 	}
 	
 	public int select(int[] weights,int total) {

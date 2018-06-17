@@ -28,6 +28,8 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
 	
     // curl "http://192.168.31.144:2379/v2/keys/services"
     // curl "http://192.168.31.144:2379/v2/keys/services/default/100"
+    // curl -X PUT "http://192.168.31.144:2379/v2/keys/dynamicroutes/default/100/routes.json.version" -d  value=1
+    // curl -X PUT "http://192.168.31.144:2379/v2/keys/dynamicroutes/default/100/routes.json" -d value=%7B%22serviceId%22%3A100%2C%22disabled%22%3Afalse%2C%22weights%22%3A%5B%7B%22addr%22%3A%22192.168.31.27%22%2C%22weight%22%3A50%7D%2C%7B%22addr%22%3A%22192.168.31.28%22%2C%22weight%22%3A50%7D%5D%2C%22rules%22%3A%5B%7B%22from%22%3A%22host%20%3D%20192.168.31.27%22%2C%22to%22%3A%22host%20%3D%20192.168.31.27%22%2C%22priority%22%3A2%7D%2C%7B%22from%22%3A%22host%20%3D%20192.168.31.28%22%2C%22to%22%3A%22host%20%3D%20%24host%22%2C%22priority%22%3A1%7D%5D%7D
     
     ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
         
@@ -95,7 +97,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
 		HttpClientRes res = hc.call(req);
 		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
 			log.error("cannot get data "+getPath+", content="+res.getContent());
-			nextAddr();
+			if( res.getHttpCode() != 404 ) nextAddr();
 			return null;
 		} 		
 		
@@ -110,25 +112,13 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         	log.error("cannot get data "+getPath+", content="+res.getContent());
         	return null;
         }
-        
-        TreeSet<String> set = new TreeSet<>();
-        
+
         Map node = (Map)m.get("node");
         if( node == null || node.size() == 0 ) return "";
-        List nodelist = (List)node.get("nodes");
-        if( nodelist == null || nodelist.size() == 0 ) return "";
 
-        for( Object o : nodelist ) {
-        	if( o instanceof Map ) {
-        		Map mm = (Map)o;
-            	if(mm != null) {
-            		String value = (String)mm.get("value"); 
-            		return value;
-            	}
-        	}
-        }
-
-		return null;        
+        String value = (String)node.get("value"); 
+        if( value == null ) value = "";
+		return value;
 	}
 	
 	public void register(int serviceId,String serviceName,String group,String addr) {
@@ -206,7 +196,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
 		HttpClientRes res = hc.call(req);
 		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
 			log.error("cannot discover service "+serviceName+", content="+res.getContent());
-			nextAddr();
+			if( res.getHttpCode() != 404 ) nextAddr();
 			return null;
 		} 		
 		

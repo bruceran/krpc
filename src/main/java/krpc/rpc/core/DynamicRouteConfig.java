@@ -69,6 +69,13 @@ public class DynamicRouteConfig {
 		String addr = "";
 		int weight;
 
+		public AddrWeight() {}
+		
+		public AddrWeight(String addr,int weight) {
+			this.addr = addr;
+			this.weight = weight;
+		}
+		
 		public boolean equals(final java.lang.Object obj) {
 			if (obj == this) {
 				return true;
@@ -112,6 +119,15 @@ public class DynamicRouteConfig {
 		String to = "";
 		int priority;
 
+
+		public RouteRule() {}
+		
+		public RouteRule(String from,String to, int priority) {
+			this.from = from;
+			this.to = to;
+			this.priority = priority;
+		}
+				
 		public int compareTo(RouteRule rr) {
 			if( priority < rr.priority ) return -1;
 			if( priority > rr.priority ) return 1;

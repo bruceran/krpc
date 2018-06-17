@@ -24,6 +24,9 @@ public class ZooKeeperRegistry extends AbstractHttpRegistry implements DynamicRo
 
     int interval = 15;
     
+    // create /dynamicroutes/default/100/routes.json.version 1
+    // create /dynamicroutes/default/100/routes.json '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
+    
     CuratorFramework client;
 
     ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
@@ -88,7 +91,10 @@ public class ZooKeeperRegistry extends AbstractHttpRegistry implements DynamicRo
 			if( bytes == null ) return null;
 	    	String json = new String(bytes);
 	    	config = Json.toObject(json,DynamicRouteConfig.class);			
-	    	if( config == null ) return null;
+	    	if( config == null ) {
+	    		log.error("invalid routes json for service "+serviceName+", json="+json);
+	    		return null;
+	    	}
 		} catch(Exception e) {
 				log.error("cannot get routes json for service "+serviceName+", exception="+e.getMessage());
 				return null;
