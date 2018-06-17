@@ -111,8 +111,13 @@
 		网络包压缩；默认为不压缩, 除非配置使用snappy压缩才会用到以下依赖
 			compile 'org.xerial.snappy:snappy-java:1.1.2.3'
 		
-		如果要使用jedis版本的流控服务或http会话服务需要用到jedis
-            compile 'redis.clients:jedis:2.9.0'
+		如果要使用jedis版本的流控服务/http会话服务/注册与发现插件, 需要用到jedis
+            compile 'redis.clients:jedis:2.9.0'   
+            导入此jar包还会传递导入 commons-pool2
+		
+		如果要使用zookeeper版本的注册与发现插件
+			compile ('org.apache.curator:curator-framework:2.12.0')  
+			导入此jar包还会传递导入 guava, zookeeper, curator-client
 				
 		SPRING框架依赖；若使用krpc schema支持需用到以下依赖
 			compile 'org.springframework:spring-core:4.1.6.RELEASE'

@@ -1,4 +1,5 @@
 krpc.rpc.dynamicroute.ConsulDynamicRoutePlugin
 krpc.rpc.dynamicroute.EtcdDynamicRoutePlugin
 krpc.rpc.dynamicroute.ZooKeeperDynamicRoutePlugin
+krpc.rpc.dynamicroute.JedisDynamicRoutePlugin
 

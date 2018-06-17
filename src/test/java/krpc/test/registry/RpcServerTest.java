@@ -30,13 +30,15 @@ public class RpcServerTest {
 			//.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("consul")) 
 			//.addRegistry(new RegistryConfig().setType("etcd").setAddrs("192.168.31.144:2379"))			
 			//.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("etcd")) 
-			.addRegistry(new RegistryConfig().setType("zookeeper").setAddrs("192.168.31.144:2181"))			
-			.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("zookeeper")) 
+			//.addRegistry(new RegistryConfig().setType("zookeeper").setAddrs("192.168.31.144:2181"))			
+			//.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("zookeeper")) 
+			.addRegistry(new RegistryConfig().setType("jedis").setAddrs("127.0.0.1:6379"))			
+			.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("jedis")) 
 			.build();
 		
 		app.initAndStart();
 		
-		Thread.sleep(5000000);
+		Thread.sleep(500000);
 
 		app.stopAndClose();
 

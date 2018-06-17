@@ -398,23 +398,25 @@
     dataDir 数据文件保存目录，默认为当前目录
     errorMsgConverter 错误码错误消息转换文件，默认为file
                                  file 插件参数：location 文件位置，默认为classpath下的error.properties
-    dynamicRoutePlugin 动态路由插件，可配置为 consul,etcd,zookeeper 插件, 如果启动了同名的注册与发现插件，则自动使用同名的注册与发现插件
+    dynamicRoutePlugin 动态路由插件，可配置为 consul,etcd,zookeeper,jedis 插件, 如果启动了同名的注册与发现插件，则自动使用同名的注册与发现插件
                                  动态路由插件可以和注册与发现插件混搭，比如可以使用 eureka 注册插件搭配 zookeeper的动态路由插件  
-    							 consul/etcd/zookeeper 插件参数：addrs 服务器地址, intervalSeconds 刷新间隔时间
+    							 consul/etcd/zookeeper/jedis 插件参数：addrs 服务器地址, intervalSeconds 刷新间隔时间
+    							 jedis插件参数：clusterMode 是否集群模式
     							 如果未设置此值，则不开始动态路由功能
     traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, skywalking(暂未实现), cat(暂未实现)
 
 ## registry
 
     id 名称, 必须填写
-    type 注册与发现服务的类型, 会支持几种常见的: consul, etcd, zookeeper
+    type 注册与发现服务的类型, 会支持几种常见的: consul, etcd, zookeeper, jedis
     addrs 注册与发现服务连接地址
     enableRegist 是否进行注册，默认 true
     enableDiscover 是否进行发现，默认 true
     params 注册与发现服务附加参数，格式为 k=v;k=v;..., 目前支持的key如下：
-        ttlSeconds 多长时间超时，默认 90秒, 适用于 consul, etcd
-        intervalSeconds 多长时间和注册与发现服务做心跳，默认15秒, 适用于 consul, etcd, zookeeper
-
+        ttlSeconds 多长时间超时，默认 90秒, 适用于 consul, etcd, jedis
+        intervalSeconds 多长时间和注册与发现服务做心跳，默认15秒, 适用于 consul, etcd, zookeeper, jedis
+        clusterMode redis是否集群模式, 默认为false, 仅用于 jedis插件
+        
 ## server	
 
     id 名称 不填则会自动生成
@@ -962,7 +964,7 @@
 		HashLoadBalance  根据某个入参进行hash取余
 		ResponseTimeLoadBalance 最近n秒的平均响应时间
 		
-        带权重的版本需和注册与服务插件配合使用，否则等价于不带权重的版本
+        带权重的版本需和动态路由插件 application.dynamicRoutePlugin 配合使用，否则等价于不带权重的版本
         内置插件不支持到method级别的负载均衡, 不过可自己实现插件支持
         
 # 动态路由策略
@@ -1012,7 +1014,7 @@
        		前后台分离 按application配置规则
        		同机部署服务，只访问本机的服务 使用 $host 配置规则
 
-       krpc内置的consul, etcd, zookeeper 插件分别从以下的kv存储位置读取配置数据和配置数据的版本号
+       krpc内置的consul, etcd, zookeeper,jedis 插件分别从以下的kv存储位置读取配置数据和配置数据的版本号
        consul:   
        		/v1/kv/dynamicroutes/{group}/{serviceId}/routes.json.version	值为版本号，版本号不变不会去读取routes.json
        		/v1/kv/dynamicroutes/{group}/{serviceId}/routes.json	值为 DynamicRouteConfig 序列化成json的字符串
@@ -1022,5 +1024,8 @@
 		zookeeper:   
        		/dynamicroutes/{group}/{serviceId}/routes.json.version	  值为版本号，版本号不变不会去读取routes.json
        		/dynamicroutes/{group}/{serviceId}/routes.json 值为 DynamicRouteConfig 序列化成json的字符串	
+		jedis:   
+       		dynamicroutes.default.100.routes.json.version	  值为版本号，版本号不变不会去读取routes.json
+       		dynamicroutes.default.100.routes.json  值为 DynamicRouteConfig 序列化成json的字符串	
 
        		

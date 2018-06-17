@@ -10,13 +10,14 @@ import java.util.Set;
 
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
+import krpc.common.StartStop;
 import krpc.rpc.web.WebRoute;
 import krpc.rpc.web.WebRouteService;
 import krpc.rpc.web.WebDir;
 import krpc.rpc.web.WebPlugin;
 import krpc.rpc.web.WebUrl;
 
-public class DefaultWebRouteService implements WebRouteService, InitClose {
+public class DefaultWebRouteService implements WebRouteService, InitClose,StartStop {
 	
 	static class DirMapping {
 		String hosts;
@@ -244,6 +245,19 @@ public class DefaultWebRouteService implements WebRouteService, InitClose {
 		}
 		
 		lsm.add(sm);
+	}
+	public void start() {
+
+		for( WebPlugin p:plugins.values() ) {
+			InitCloseUtils.start(p);
+		}		
+	}
+	
+	public void stop() {
+
+		for( WebPlugin p:plugins.values() ) {
+			InitCloseUtils.stop(p);
+		}		
 	}
 	
 	public void close() {

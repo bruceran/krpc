@@ -19,14 +19,16 @@ public class RpcClientTest {
 	public static void main(String[] args) throws Exception {
 		
 		RpcApp app = new Bootstrap() 
-				//.setDynamicRoutePlugin("zookeeper:addrs=192.168.31.144:2181")
+				.setDynamicRoutePlugin("zookeeper")
 				//.addRegistry(new RegistryConfig().setType("consul").setAddrs("192.168.31.144:8500"))			
 				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("consul")) 
 				//.addRegistry(new RegistryConfig().setType("etcd").setAddrs("192.168.31.144:2379"))			
 				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("etcd")) 
-				//.addRegistry(new RegistryConfig().setType("zookeeper").setAddrs("192.168.31.144:2181"))			
-				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("zookeeper")) 				
-				.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName())) 				
+				.addRegistry(new RegistryConfig().setType("zookeeper").setAddrs("192.168.31.144:2181"))			
+				.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("zookeeper")) 				
+				//.addRegistry(new RegistryConfig().setType("jedis").setAddrs("127.0.0.1:6379"))			
+				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName()).setRegistryName("jedis")) 				
+				//.addReferer(new RefererConfig("us").setInterfaceName(UserService.class.getName())) 				
 				.build();
 		
 		app.initAndStart();

@@ -1,4 +1,5 @@
 krpc.rpc.registry.ConsulRegistry
 krpc.rpc.registry.EtcdRegistry
 krpc.rpc.registry.ZooKeeperRegistry
+krpc.rpc.registry.JedisRegistry
 

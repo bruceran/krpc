@@ -41,6 +41,7 @@
 	   routes.xml 里的插件要传递参数需在webserver.pluginParams里定义参数。
 	
 	   krpc的插件可以通过实现InitClose接口来在服务启动关闭时做初始化和清理工作。
+	   krpc的大部分插件支持两阶段启动，可通过实现StartStop接口来实现，包括：Registry,DynamicRoutePlugin,RpcPlugin,WebPlugin
 	   如果插件是Spring bean形式的插件，则使用Spring的init,close机制做初始化和清理工作。
 	   krpc所有插件的实现应该都是线程安全的。
 	 
