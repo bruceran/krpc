@@ -24,6 +24,7 @@ import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.RpcPlugin;
 import krpc.rpc.core.Registry;
 import krpc.rpc.monitor.LogFormatter;
+import krpc.rpc.monitor.MonitorPlugin;
 import krpc.rpc.web.WebPlugin;
 
 public class SpringBootstrap {
@@ -127,6 +128,7 @@ public class SpringBootstrap {
 			loadBean(LogFormatter.class,beanPlugins);
 			loadBean(WebPlugin.class,beanPlugins);
 			loadBean(DynamicRoutePlugin.class,beanPlugins);
+			loadBean(MonitorPlugin.class,beanPlugins);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -12,6 +12,7 @@ import com.xxx.userservice.proto.UpdateProfileRes;
 import com.xxx.userservice.proto.UserService;
 
 import krpc.rpc.bootstrap.Bootstrap;
+import krpc.rpc.bootstrap.MonitorConfig;
 import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.RpcContextData;

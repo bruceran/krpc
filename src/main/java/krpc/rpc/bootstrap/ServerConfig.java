@@ -33,8 +33,9 @@ public class ServerConfig  {
 		this.id = id;
 	}
 	
-	public void addPluginParams(String params) {
+	public ServerConfig addPluginParams(String params) {
 		pluginParams.add(params);
+		return this;
 	}
 	
 	public String getId() {

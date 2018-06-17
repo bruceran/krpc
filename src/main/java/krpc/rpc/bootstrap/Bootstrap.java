@@ -78,6 +78,7 @@ import krpc.rpc.impl.transport.NettyClient;
 import krpc.rpc.impl.transport.NettyServer;
 import krpc.rpc.monitor.DefaultMonitorService;
 import krpc.rpc.monitor.LogFormatter;
+import krpc.rpc.monitor.MonitorPlugin;
 import krpc.rpc.registry.DefaultRegistryManager;
 import krpc.rpc.util.IpUtils;
 import krpc.rpc.web.WebRoute;
@@ -248,17 +249,26 @@ public class Bootstrap {
 		m.setLogThreads(c.logThreads);
 		m.setLogQueueSize(c.logQueueSize);
 		m.setAccessLog(c.accessLog);
+		
+		if (!isEmpty(c.serverAddr)) {
+			m.setServerAddr(c.serverAddr);
+		}
 
 		LogFormatter lf = getLogFormatterObj(parseType(monitorConfig.logFormatter));
 		String params = parseParams(monitorConfig.logFormatter);
 		params += "maskFields="+(c.maskFields==null?"":c.maskFields)+ ";maxRepeatedSizeToLog="+c.maxRepeatedSizeToLog+";printDefault="+c.printDefault;
 		lf.config(params);
-
 		m.setLogFormatter(lf);
-		if (!isEmpty(c.serverAddr)) {
-			m.setServerAddr(c.serverAddr);
+		
+		if (!isEmpty(monitorConfig.plugins) ) {
+			String[] ss = monitorConfig.plugins.split(",");
+			List<MonitorPlugin> plugins = new ArrayList<>();
+			for(String s:ss)  {
+				plugins.add( getMonitorPluginObj(s) );
+			}
+			m.setPlugins(plugins);
 		}
-
+		
 		return m;
 	}
 
@@ -330,9 +340,24 @@ public class Bootstrap {
 			monitorConfig.logFormatter = "simple";
 		}
 		
-		if (getLogFormatterObj(monitorConfig.logFormatter) == null) {
+		if (getLogFormatterObj(parseType(monitorConfig.logFormatter)) == null) {
 			throw new RuntimeException("log formatter not registered");
 		}
+		
+		if( monitorConfig.pluginParams != null ) {
+			for(String s:monitorConfig.pluginParams) {
+				if (getMonitorPluginObj(s) == null)
+					throw new RuntimeException(String.format("unknown monitor plugin %s", s));
+			}
+		}
+					
+		if (!isEmpty(monitorConfig.plugins) ) {
+			String[] ss = monitorConfig.plugins.split(",");
+			for(String s:ss)  {
+				if (getMonitorPluginObj(s) == null)
+					throw new RuntimeException("monitor plugin not registered");
+			}
+		}		
 
 		if (serviceList.size() == 0 && refererList.size() == 0 && webServerList.size() == 0)
 			throw new RuntimeException("service or referer or webserver must be specified");
@@ -1171,6 +1196,7 @@ public class Bootstrap {
 			loadSpi(LogFormatter.class);
 			loadSpi(WebPlugin.class);
 			loadSpi(DynamicRoutePlugin.class);
+			loadSpi(MonitorPlugin.class);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -1253,6 +1279,10 @@ public class Bootstrap {
 		return getPlugin(WebPlugin.class,type);
 	}
 
+	MonitorPlugin getMonitorPluginObj(String type) {
+		return getPlugin(MonitorPlugin.class,type);
+	}
+	
 	Registry getRegistryObj(String type) {
 		return getPlugin(Registry.class,type);
 	}

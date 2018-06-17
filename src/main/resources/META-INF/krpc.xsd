@@ -159,6 +159,9 @@
 
     <element name="monitor">
 	    <complexType>
+			  <sequence minOccurs="0" maxOccurs="unbounded">
+		            <element ref="krpc:plugin" minOccurs="0" maxOccurs="unbounded"/>
+		      </sequence>	  	    
               <attribute name="accessLog" type="string" use="optional"/>
               <attribute name="logThreads" type="string" use="optional"/>
               <attribute name="logQueueSize" type="string" use="optional"/>
@@ -167,6 +170,7 @@
               <attribute name="maxRepeatedSizeToLog" type="string" use="optional"/>
               <attribute name="serverAddr" type="string" use="optional"/>
               <attribute name="printDefault" type="string" use="optional"/>
+              <attribute name="plugins" type="string" use="optional"/>
 	    </complexType>    
     </element>
     

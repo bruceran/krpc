@@ -1,5 +1,8 @@
 package krpc.rpc.bootstrap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MonitorConfig  {
 
 	boolean accessLog = true;
@@ -13,6 +16,14 @@ public class MonitorConfig  {
 
     String serverAddr;
     
+	String plugins = ""; // comma seperated MonitorPlugin names
+	List<String> pluginParams  = new ArrayList<>(); // config MonitorPlugin if needed
+	
+	public MonitorConfig addPluginParams(String params) {
+		pluginParams.add(params);
+		return this;
+	}
+	
 	public int getLogThreads() {
 		return logThreads;
 	}
@@ -68,6 +79,20 @@ public class MonitorConfig  {
 	}
 	public MonitorConfig setAccessLog(boolean accessLog) {
 		this.accessLog = accessLog;
+		return this;
+	}
+	public String getPlugins() {
+		return plugins;
+	}
+	public MonitorConfig setPlugins(String plugins) {
+		this.plugins = plugins;
+		return this;
+	}
+	public List<String> getPluginParams() {
+		return pluginParams;
+	}
+	public MonitorConfig setPluginParams(List<String> pluginParams) {
+		this.pluginParams = pluginParams;
 		return this;
 	}
 

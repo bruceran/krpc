@@ -33,8 +33,9 @@ public class ClientConfig  {
 		this.id = id;
 	}
 	
-	public void addPluginParams(String params) {
+	public ClientConfig addPluginParams(String params) {
 		pluginParams.add(params);
+		return this;
 	}
 	
 	public String getId() {

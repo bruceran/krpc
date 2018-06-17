@@ -30,8 +30,9 @@ public class WebServerConfig  {
 	String defaultSessionService = "memorysessionservice";
 	List<String> pluginParams  = new ArrayList<>(); // config WebPlugins if needed
 	
-	public void addPluginParams(String params) {
+	public WebServerConfig addPluginParams(String params) {
 		pluginParams.add(params);
+		return this;
 	}
 	
 	public WebServerConfig() {

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -41,6 +42,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 	static Logger log = LoggerFactory.getLogger(DefaultMonitorService.class);
 	
 	static final String sep = ",   ";
+	static public int[] timeSpans = new int[] {10,25,50,100,250,500,1000,3000};
 
 	String appName;
 	ServiceMetas serviceMetas;
@@ -56,7 +58,6 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     ConcurrentHashMap<String,Logger> webServerLogMap = new ConcurrentHashMap<String,Logger>();
     ConcurrentHashMap<String,Logger> clientLogMap = new ConcurrentHashMap<String,Logger>();
     
-    static public int[] timeSpans = new int[] {10,25,50,100,250,500,1000,3000};
     int statsQueueSize = 10000;
     ThreadPoolExecutor statsPool;
     HashMap<String,StatItem> stats = new HashMap<>();
@@ -66,6 +67,8 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     String serverAddr;
     MonitorClient monitorClient;
 
+    List<MonitorPlugin> plugins;
+    
     DateTimeFormatter logFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     DateTimeFormatter statsFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     ZoneOffset offset = OffsetDateTime.now().getOffset();
@@ -92,6 +95,13 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	
     	resources.add(logFormatter);
     	resources.add(monitorClient);
+    	
+    	if( plugins != null ) {
+    		for(MonitorPlugin p:plugins) {
+    			resources.add(p);
+    		}
+    	}
+    	
     	InitCloseUtils.init(resources);
     	
     	if( accessLog ) {
@@ -153,6 +163,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         	log.error("asyncstats queue is full");
         }
 
+        if( plugins != null ) {
+        	for(MonitorPlugin p:plugins) {
+        		p.webReqDone(closure);
+        	}
+        }
     }
 
     public void reqDone(final RpcClosure closure) {
@@ -187,6 +202,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         	log.error("asyncstats queue is full");
         }
 
+        if( plugins != null ) {
+        	for(MonitorPlugin p:plugins) {
+        		p.rpcReqDone(closure);
+        	}
+        }        
     }
     
     public void callDone(RpcClosure closure) {
@@ -221,6 +241,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         	log.error("asyncstats queue is full");
         }
  
+        if( plugins != null ) {
+        	for(MonitorPlugin p:plugins) {
+        		p.rpcCallDone(closure);
+        	}
+        }                
     }
     
     void doLog(boolean isServerLog, RpcClosure closure) {
@@ -608,6 +633,14 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
 	public void setAccessLog(boolean accessLog) {
 		this.accessLog = accessLog;
+	}
+
+	public List<MonitorPlugin> getPlugins() {
+		return plugins;
+	}
+
+	public void setPlugins(List<MonitorPlugin> plugins) {
+		this.plugins = plugins;
 	}
 
 
