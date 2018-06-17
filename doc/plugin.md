@@ -47,11 +47,16 @@
 	   负载均衡插件  krpc.rpc.cluster.LoadBalance 接口
 		       用来自定义loadbalance策略
 		       通过RefererConfig.loadBalance配置
-		       框架自带了roundrobin,random,leastactive,hash 插件
+		       框架自带了roundrobin,random,leastactive,roundrobinweight,randomweight,leastactiveweight,hash 等插件
 
 	   注册与发现插件  krpc.rpc.core.Registry 接口
 		       用来自定义注册与发现机制
 		       通过RegistryConfig配置
+		       框架自带了 consul, etcd, zookeeper 插件
+
+	   动态路由插件  krpc.rpc.core.DynamicRoutePlugin 接口
+		       用来自定义动态实现
+		       通过ApplicationConfig.dynamicRoutePlugin配置
 		       框架自带了 consul, etcd, zookeeper 插件
 
 	   错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口

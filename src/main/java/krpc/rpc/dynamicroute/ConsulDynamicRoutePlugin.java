@@ -24,19 +24,19 @@ public class ConsulDynamicRoutePlugin extends AbstractHttpDynamicRoutePlugin imp
 	
 	HashSet<Integer> registeredServiceIds = new HashSet<>();
 	
-	// curl -X PUT http://192.168.31.144:8500/v1/kv/default/100/routes.json.version -d 1
-	// curl -X PUT http://192.168.31.144:8500/v1/kv/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
+	// curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json.version -d 1
+	// curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
 	
     ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
     	
     public void init() {
-    	routesUrlTemplate = "http://%s/v1/kv";
+    	routesUrlTemplate = "http://%s/v1/kv/dynamicroutes";
 		super.init();
     }	
 
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		String s = params.get("pingSeconds");
+		String s = params.get("intervalSeconds");
 		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
 		
 		super.config(params);

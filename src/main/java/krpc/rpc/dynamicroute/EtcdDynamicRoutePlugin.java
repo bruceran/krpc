@@ -33,7 +33,7 @@ public class EtcdDynamicRoutePlugin extends AbstractHttpDynamicRoutePlugin imple
     
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		String s = params.get("pingSeconds");
+		String s = params.get("intervalSeconds");
 		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
 		super.config(params);
 	}

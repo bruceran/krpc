@@ -21,7 +21,7 @@ public class RefererConfig  {
 	String retryLevel = "no_retry";
 	int retryCount = 0;
 
-	String loadBalance = "leastactive"; // can be empty (use client default), or random, roundrobin, ...
+	String loadBalance = "roundrobin"; // can be empty (use client default), or random, roundrobin, ...
 	
 	String zip;
 	int minSizeToZip = 10000;

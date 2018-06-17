@@ -60,7 +60,7 @@ public class ZooKeeperRegistry  implements Registry,InitClose,DynamicRoutePlugin
 		s = params.get("enableDiscover");
 		if( !isEmpty(s) ) enableDiscover = Boolean.parseBoolean(s);	
 		
-		s = params.get("pingSeconds");
+		s = params.get("intervalSeconds");
 		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
 	}
     

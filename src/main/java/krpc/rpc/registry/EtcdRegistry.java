@@ -43,7 +43,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
 		String s = params.get("ttlSeconds");
 		if( !isEmpty(s) ) ttl = Integer.parseInt(s);	
-		s = params.get("pingSeconds");
+		s = params.get("intervalSeconds");
 		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
 		super.config(params);
 	}

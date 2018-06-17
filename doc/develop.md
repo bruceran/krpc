@@ -395,11 +395,15 @@
 ## application
 
     name 应用名，用在上报给注册与发现服务时使用, 默认为default_app
-    mockFile 开发阶段可通过此文件来对service做mock, 暂未实现
-    errorMsgConverter 错误码错误消息转换文件，默认为classpath下的error.properties
-    traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, skywalking(暂未实现), cat(暂未实现)
     dataDir 数据文件保存目录，默认为当前目录
-    
+    errorMsgConverter 错误码错误消息转换文件，默认为file
+                                 file 插件参数：location 文件位置，默认为classpath下的error.properties
+    dynamicRoutePlugin 动态路由插件，可配置为 consul,etcd,zookeeper 插件, 如果启动了同名的注册与发现插件，则自动使用同名的注册与发现插件
+                                 动态路由插件可以和注册与发现插件混搭，比如可以使用 eureka 注册插件搭配 zookeeper的动态路由插件  
+    							 consul/etcd/zookeeper 插件参数：addrs 服务器地址, intervalSeconds 刷新间隔时间
+    							 如果未设置此值，则不开始动态路由功能
+    traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, skywalking(暂未实现), cat(暂未实现)
+
 ## registry
 
     id 名称, 必须填写
@@ -408,30 +412,9 @@
     enableRegist 是否进行注册，默认 true
     enableDiscover 是否进行发现，默认 true
     params 注册与发现服务附加参数，格式为 k=v;k=v;..., 目前支持的key如下：
-        ttlSeconds 多长时间超时，默认 90秒, 适用于 consul, etcd 
-        pingSeconds 多长时间和注册与发现服务做心跳，默认15秒, 适用于 consul, etcd, zookeeper
+        ttlSeconds 多长时间超时，默认 90秒, 适用于 consul, etcd
+        intervalSeconds 多长时间和注册与发现服务做心跳，默认15秒, 适用于 consul, etcd, zookeeper
 
-## client
- 
-    id 名称 不填则会自动生成
-    pingSeconds  心跳间隔时间，秒，默认为60
-    maxPackageSize  最大包长，字节， 默认为 1000000
-    connectTimeout 连接超时 毫秒， 默认为15000
-    reconnectSeconds  重连间隔，秒，默认为1
-    ioThreads  netty4内部io读写线程，默认为0，由系统自动分配
-    connections 每个地址建立的连接数， 默认为1, 如果发现netty4单连接已经出现io瓶颈可增打连接数
-    notifyThreads 当使用异步调用时，异步回调的线程池线程数量，默认为0，由系统自动分配
-    notifyMaxThreads 同上，可配置一个大于notifyThreads的值，默认为0，也就是notifyMaxThreads=notifyThreads
-    notifyQueueSize 同上，线程池中固定队列大小，默认为10000
-    threads 当使用PUSH调用时, client可以作为server, 此时收到的请求在此线程池中运行, 
-            默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
-    maxThreads 同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
-    queueSize 同上，线程池中固定队列大小，默认为10000
-
-    plugins 用来配置插件名，允许多个，用逗号隔开
-    pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，不需要配置参数的插件不用配置
-                          每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
-                          
 ## server	
 
     id 名称 不填则会自动生成
@@ -453,7 +436,27 @@
     plugins 用来配置插件名，允许多个，用逗号隔开
     pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，不需要配置参数的插件不用配置
                           每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
-
+						  memoryflowcontrol插件参数：
+						        memoryflowcontrol 只有流控阈值配置参数，格式有两种：
+						        service:{serviceId}:{seconds}={limit}
+						        msg:{serviceId}:{msgId#msgId#...}:{seconds}={limit}
+							        serviceId指服务号
+							        msgId指消息号，可一次指定多个多个，用#分隔
+							        seconds 滑动窗口秒数
+							        limit 允许的调用次
+								示例：
+								   service:100:5=50  服务号100的服务5秒内只允许50个请求
+								   msg:100:1#2#3:10=100  服务号100的服务消息号为1,2,3的消息在10秒内只允许100个请求
+                          jedisflowcontrol插件参数：
+                         		clusterMode 是否是redis cluster, 默认为false
+                         		addrs 连接地址
+                         		keyPrefix key前缀，默认为 FC_       
+                         		threads  后台更新线程数, 默认为1                 
+                         		maxThreads 后台更新最大线程数, 默认为1
+                         		queueSize 后台更新队列数, 默认为10000
+                         		syncUpdate 是否同步累加，默认为false, 如设置为true则所有次数累加同步进行，误差会比false模式小，但会增加请求延迟
+                         		流控阈值配置参数同 memoryflowcontrol 
+                         		
 ## webserver	
 
     id 名称 不填则会自动生成
@@ -479,10 +482,36 @@
     sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录
     
     sampleRate 全链路跟踪采样率, 实际比率为 1/sampleRate, 默认为1
-    defaultSessionService  会话服务插件, 支持 memorysessionservice,jedissessionservice, 默认为memorysessionservice
+    defaultSessionService  会话服务插件, 支持 memorysessionservice, jedissessionservice, 默认为memorysessionservice
+                                     jedissessionservice插件参数：
+                                     		clusterMode 是否是redis cluster, 默认为false
+                                     		addrs 连接地址
+                                     		expireSeconds 过期时间，默认为 600 秒
+                                     		keyPrefix key前缀，默认为 KRW_
+                                     		
     pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，不需要配置参数的插件不用配置
                           每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
-    
+
+## client
+ 
+    id 名称 不填则会自动生成
+    pingSeconds  心跳间隔时间，秒，默认为60
+    maxPackageSize  最大包长，字节， 默认为 1000000
+    connectTimeout 连接超时 毫秒， 默认为15000
+    reconnectSeconds  重连间隔，秒，默认为1
+    ioThreads  netty4内部io读写线程，默认为0，由系统自动分配
+    connections 每个地址建立的连接数， 默认为1, 如果发现netty4单连接已经出现io瓶颈可增打连接数
+    notifyThreads 当使用异步调用时，异步回调的线程池线程数量，默认为0，由系统自动分配
+    notifyMaxThreads 同上，可配置一个大于notifyThreads的值，默认为0，也就是notifyMaxThreads=notifyThreads
+    notifyQueueSize 同上，线程池中固定队列大小，默认为10000
+    threads 当使用PUSH调用时, client可以作为server, 此时收到的请求在此线程池中运行, 
+            默认为0由系统自动分配，可配置为-1不单独建立线程池，直接使用netty io线程；或>0的值
+    maxThreads 同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
+    queueSize 同上，线程池中固定队列大小，默认为10000
+
+    plugins 插件参数说明同server
+    pluginParams  插件参数说明同server
+                                          
 ## service
 
     id 名称 不填则会自动生成
@@ -513,7 +542,10 @@
     retryLevel 重试级别, 默认为 no_retry
     retryCount 重试次数，默认为0
     loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,responsetime,hash,
-                      leastactiveweight,roudrobinweight,randomweight 默认为leastactive
+                      leastactiveweight,roudrobinweight,randomweight 默认为roundrobin
+                      responsetime插件和hash插件可带参数，其他参数无配置参数
+                      responsetime插件参数：seconds 指定滑动窗口秒数，默认为3，最大只允许15
+                      hash插件参数：hashField 指定要做hash的入参的参数名
     zip 压缩方式 0=不压缩 1=zlib 2=snappy
     minSizeToZip 启用压缩所需的最小字节数, 默认为10000
  
@@ -919,10 +951,10 @@
  
 # 负载均衡策略
 
-		负载均衡策略按referer设置(不支持到method级别)，referer级别如未设置，则统一使用client级别的设置
+		负载均衡策略在referer设置
 		
-		LeastActiveLoadBalance  最小活跃请求数，相同最小则随机  (默认)
-		RoundRobinLoadBalance  轮训
+		LeastActiveLoadBalance  最小活跃请求数，相同最小则随机
+		RoundRobinLoadBalance  轮询  (默认)
 		RandomLoadBalance 随机
 		LeastActiveWeightLoadBalance  带权重的LeastActive
 		RoundRobinWeightLoadBalance  带权重的RoundRobin
@@ -931,5 +963,64 @@
 		ResponseTimeLoadBalance 最近n秒的平均响应时间
 		
         带权重的版本需和注册与服务插件配合使用，否则等价于不带权重的版本
+        内置插件不支持到method级别的负载均衡, 不过可自己实现插件支持
         
-		
+# 动态路由策略
+
+		动态路由策略通过 application 的dynamicRoutePlugin 参数设置，每个应用只能设置一个插件
+		krpc动态路由不要求必须与注册与发现服务绑定，非常灵活，如可以如下设置：
+		   注册与发现使用 consul 插件，而动态路由可使用 consul 或 zookeeper 或  spring cloud config 或  其他的分布式配置
+        DynamicRoutePlugin插件接口如下：
+              DynamicRouteConfig getConfig(int serviceId,String serviceName,String group);
+        插件返回的 DynamicRouteConfig 类包含的信息：
+			int serviceId; // 服务号
+			boolean disabled; // 是否强制对服务降级
+			List<AddrWeight> weights; // 权重 addr weight
+			List<RouteRule> rules; // 规则   from to priority     	  
+		       
+       权重信息的 addr 可以是 ip:port形式，也可是 ip形式，也可带*统配符, *匹配0-个数值
+       规则 from 是一个由基本表达式组合而成的复合表达式
+       			组合方式： 支持常见的并或非和括号表达式，分别使用  &&表示并  ||表示或  !表示非  ()表示括号，括号可以多层嵌套  
+       			基本表达式的 格式为: key = values  或 key != values 
+       			     key 只允许使用 application(当前应用名),host(当前主机的IP),msgId(要调用的消息号，如用于读写分离)
+       			     values 为用逗号隔开的多个值, 可用*通配符
+       			     = 的含义是 in, 任意一个值匹配即可
+       			     != 的含义是 not in, 任意一个值都不可匹配     
+       			from 可以为空，表示匹配所有
+       			示例：
+       				host = 192.168.3.1
+       				host = 192.168.3.1,192.168.3.2
+       				host = 192.168.3.*,192.168.4.*
+       				host = 192.168.3.*,192.168.4.* && application = webgate
+       				host = 192.168.3.*,192.168.4.* && host != 192.168.3.1*
+       				msgId = 1,2,3
+       规则 to 只能是基本表达式, 格式为 host = values  或 host != values 或 addr = values 或 addr != values
+                host和addr都表示允许路由到哪些地址上去，host是按ip设定规则，addr是按ip:port设定规则
+                values 为用逗号隔开的多个值, 可用*通配符, values中可使用特殊的$host表示本机IP
+       			= 的含义是 in, 任意一个值匹配即可
+       			!= 的含义是 not in, 任意一个值都不可匹配     
+                to 可以为空，表示禁止所有路由
+       规则的 priority 值越大越先匹配
+       可以用路由规则来实现以下需求：
+       		路由白名单
+       		路由黑名单
+       		排除灰度机器
+       		只暴露部分机器
+       		隔离不同机房网段机器
+       		读写分离 按msgId配置规则
+       		为重要应用提供额外的机器 按application配置规则
+       		前后台分离 按application配置规则
+       		同机部署服务，只访问本机的服务 使用 $host 配置规则
+
+       krpc内置的consul, etcd, zookeeper 插件分别从以下的kv存储位置读取配置数据和配置数据的版本号
+       consul:   
+       		/v1/kv/dynamicroutes/{group}/{serviceId}/routes.json.version	值为版本号，版本号不变不会去读取routes.json
+       		/v1/kv/dynamicroutes/{group}/{serviceId}/routes.json	值为 DynamicRouteConfig 序列化成json的字符串
+       etcd:   
+       		/v2/keys/dynamicroutes/{group}/{serviceId}/routes.json.version	值为版本号，版本号不变不会去读取routes.json
+       		/v2/keys/dynamicroutes/{group}/{serviceId}/routes.json 值为 DynamicRouteConfig 序列化成json的字符串
+		zookeeper:   
+       		/dynamicroutes/{group}/{serviceId}/routes.json.version	  值为版本号，版本号不变不会去读取routes.json
+       		/dynamicroutes/{group}/{serviceId}/routes.json 值为 DynamicRouteConfig 序列化成json的字符串	
+
+       		

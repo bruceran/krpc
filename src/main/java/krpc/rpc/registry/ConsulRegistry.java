@@ -37,8 +37,8 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 	// curl "http://192.168.31.144:8500/v1/agent/services"
 	// curl "http://192.168.31.144:8500/v1/catalog/services"
 	// curl "http://192.168.31.144:8500/v1/health/service/100"
-	// curl -X PUT http://192.168.31.144:8500/v1/kv/default/100/routes.json.version -d 1
-	// curl -X PUT http://192.168.31.144:8500/v1/kv/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
+	// curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json.version -d 1
+	// curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
 	
     ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
     	
@@ -47,7 +47,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
     	keepAliveUrlTemplate = "http://%s/v1/agent/check/pass/service:%s";
     	degisterUrlTemplate = "http://%s/v1/agent/service/deregister";
     	discoverUrlTemplate = "http://%s/v1/health/service/%d?passing";
-    	routesUrlTemplate = "http://%s/v1/kv";
+    	routesUrlTemplate = "http://%s/v1/kv/dynamicroutes";
 		super.init();
     }	
 
@@ -55,7 +55,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
 		String s = params.get("ttlSeconds");
 		if( !isEmpty(s) ) ttl = Integer.parseInt(s);	
-		s = params.get("pingSeconds");
+		s = params.get("intervalSeconds");
 		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
 		
 		super.config(params);

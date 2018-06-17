@@ -47,7 +47,7 @@ public class ZooKeeperDynamicRoutePlugin  implements InitClose,DynamicRoutePlugi
 		
 		addrs = params.get("addrs");
 
-		String s = params.get("pingSeconds");
+		String s = params.get("intervalSeconds");
 		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
 	}
     
