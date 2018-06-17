@@ -1,15 +1,11 @@
-package krpc.rpc.registry;
+package krpc.rpc.dynamicroute;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
-import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,16 +14,13 @@ import krpc.common.Json;
 import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRoutePlugin;
 import krpc.rpc.core.Plugin;
-import krpc.rpc.core.Registry;
 
-public class ZooKeeperRegistry  implements Registry,InitClose,DynamicRoutePlugin  {
+public class ZooKeeperDynamicRoutePlugin  implements InitClose,DynamicRoutePlugin  {
 
-	static Logger log = LoggerFactory.getLogger(ZooKeeperRegistry.class);
+	static Logger log = LoggerFactory.getLogger(ZooKeeperDynamicRoutePlugin.class);
 
 	String addrs;
-	boolean enableRegist = true;
-	boolean enableDiscover = true;
-	
+
     int interval = 15;
     
     // create /dynamicroutes/default/100/routes.json.version 1
@@ -54,13 +47,7 @@ public class ZooKeeperRegistry  implements Registry,InitClose,DynamicRoutePlugin
 		
 		addrs = params.get("addrs");
 
-		String s = params.get("enableRegist");
-		if( !isEmpty(s) ) enableRegist = Boolean.parseBoolean(s);	
-
-		s = params.get("enableDiscover");
-		if( !isEmpty(s) ) enableDiscover = Boolean.parseBoolean(s);	
-		
-		s = params.get("pingSeconds");
+		String s = params.get("pingSeconds");
 		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
 	}
     
@@ -71,11 +58,7 @@ public class ZooKeeperRegistry  implements Registry,InitClose,DynamicRoutePlugin
  	boolean isEmpty(String s) {
  		return s == null || s.isEmpty();
  	}    
-     
-    public int getCheckIntervalSeconds() {
-    	return interval;
-    }
-    
+
     public int getRefreshIntervalSeconds() {
     	return interval;
     }
@@ -120,70 +103,6 @@ public class ZooKeeperRegistry  implements Registry,InitClose,DynamicRoutePlugin
 		versionCache.put(key,newVersion);
 		return config;
 	}
-	
-	public void register(int serviceId,String serviceName,String group,String addr) {
-		if( !enableRegist ) return;
-		
-		String instanceId = addr ;
-		String path = "/services/"+group+"/"+serviceId+"/"+instanceId;
-		
-		HashMap<String,Object> meta = new HashMap<>();
-		meta.put("addr", addr);
-		meta.put("group", group);
-		meta.put("serviceName", serviceName);
-		String data = Json.toJson(meta);
-		
-		try {
-			client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, data.getBytes());
-		} catch(Exception e) {
-			if( e.getMessage().indexOf("NodeExists") < 0 ) {
-				log.error("cannot register service "+serviceName+", exception="+e.getMessage());
-			}
-		}
-	}
-	public void deregister(int serviceId,String serviceName,String group,String addr) {
-		
-		if( !enableRegist ) return;
-		
-		String instanceId = addr;
-		String path = "/services/"+group+"/"+serviceId+"/"+instanceId;
-		
-		try {
-			client.delete().forPath(path);
-		} catch(Exception e) {
-			log.error("cannot deregister service "+serviceName+", exception="+e.getMessage());
-		}
-
-	}	
-	
-	public String discover(int serviceId,String serviceName,String group) {	
-		
-		if( !enableDiscover ) return null;
-		
-		String path = "/services/"+group+"/"+serviceId;
-		
-		List<String> list = null;
-		
-		try {
-			list = client.getChildren().forPath(path);
-		} catch(Exception e) {
-			log.error("cannot discover service "+serviceName+", exception="+e.getMessage());
-			return null;
-		}
-		
-		TreeSet<String> set = new TreeSet<>();
-		for(String  addr:list) {
-			set.add(addr);
-		}
-		
-		StringBuilder b = new StringBuilder();
-		for(String key: set) {
-			if( b.length() > 0 ) b.append(",");
-			b.append(key);
-		}
-		String s = b.toString();
-		return s;
-	}	
 	
 }
 

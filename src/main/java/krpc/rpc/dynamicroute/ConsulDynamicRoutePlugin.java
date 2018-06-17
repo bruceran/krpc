@@ -1,0 +1,100 @@
+package krpc.rpc.dynamicroute;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import krpc.common.Json;
+import krpc.httpclient.HttpClientReq;
+import krpc.httpclient.HttpClientRes;
+import krpc.rpc.core.DynamicRouteConfig;
+import krpc.rpc.core.DynamicRoutePlugin;
+import krpc.rpc.core.Plugin;
+
+public class ConsulDynamicRoutePlugin extends AbstractHttpDynamicRoutePlugin implements DynamicRoutePlugin  {
+
+	static Logger log = LoggerFactory.getLogger(ConsulDynamicRoutePlugin.class);
+	
+	String routesUrlTemplate;
+
+	int interval = 15;
+	
+	HashSet<Integer> registeredServiceIds = new HashSet<>();
+	
+	// curl -X PUT http://192.168.31.144:8500/v1/kv/default/100/routes.json.version -d 1
+	// curl -X PUT http://192.168.31.144:8500/v1/kv/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
+	
+    ConcurrentHashMap<String,String> versionCache = new ConcurrentHashMap<>();
+    	
+    public void init() {
+    	routesUrlTemplate = "http://%s/v1/kv";
+		super.init();
+    }	
+
+	public void config(String paramsStr) {
+		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
+		String s = params.get("pingSeconds");
+		if( !isEmpty(s) ) interval = Integer.parseInt(s);	
+		
+		super.config(params);
+	}
+
+    public int getRefreshIntervalSeconds() {
+    	return interval;
+    }
+	
+    public DynamicRouteConfig getConfig(int serviceId,String serviceName,String group) {
+
+    	String path = routesUrlTemplate+"/"+group+"/"+serviceId+"/routes.json";
+    	String versionPath = path+".version";
+    	
+    	String key = serviceId + "." + group;
+    	String oldVersion = versionCache.get(key);
+    	
+    	String newVersion = getData(versionPath);
+    	if( newVersion == null || newVersion.isEmpty() ) {
+			log.error("cannot get routes json version for service "+serviceName);
+			return null;
+    	}    	
+
+		if( oldVersion != null && newVersion != null && oldVersion.equals(newVersion) ) {
+			return null; // no change
+		}
+		
+		String json = getData(path);
+    	if( json == null  || json.isEmpty()  ) {
+			log.error("cannot get routes json for service "+serviceName);
+			return null;
+    	}
+    	
+    	DynamicRouteConfig config = Json.toObject(json,DynamicRouteConfig.class);			
+    	if( config == null ) return null;
+    	
+		versionCache.put(key,newVersion);
+		return config;
+	}
+
+	public String getData(String path) {	
+
+		if( hc == null ) return null;
+		
+		String url = String.format(path, addr());
+		url += "?raw"; // return json only
+		HttpClientReq req = new HttpClientReq("GET",url);
+		HttpClientRes res = hc.call(req);
+		if( res.getRetCode() != 0 || res.getHttpCode() != 200 ) {
+			log.error("cannot get config "+path);
+			if( res.getHttpCode() != 404 ) nextAddr();
+			return null;
+		}
+		
+		String data = res.getContent();
+		return data;
+	}
+	
+}
+
+
