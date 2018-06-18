@@ -54,7 +54,7 @@ public class RpcClient extends RpcCallableBase {
 	
 	void endCall(RpcClosure closure,Message res) {
 		super.endCall(closure, res);
-		clusterManager.updateStats(closure); // for loadbalance policy
+		clusterManager.updateStats(closure);
 	}
 
 	public ClusterManager getClusterManager() {

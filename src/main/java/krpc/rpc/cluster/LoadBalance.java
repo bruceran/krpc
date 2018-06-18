@@ -9,7 +9,7 @@ import krpc.rpc.core.Plugin;
 
 public interface LoadBalance extends Plugin {
 	
-	default boolean needCallStats() {return false;}
+	default boolean needPendings() { return false; }
 	
 	// at least 2 addrs to select
 	// need to return the index of addrs

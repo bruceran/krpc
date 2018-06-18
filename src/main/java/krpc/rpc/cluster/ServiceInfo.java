@@ -15,20 +15,38 @@ import krpc.rpc.core.DynamicRouteConfig.RouteRule;
 
 public class ServiceInfo {
 
+	private int serviceId;
+	private BreakerInfo bi;
+	
 	private AtomicBoolean disabled = new AtomicBoolean(false);
-	private LoadBalance policy;
+	private LoadBalance lb;
 	private Router router;
 
 	private HashSet<String> all = new HashSet<String>();
 	private List<AddrInfo> alive = new ArrayList<AddrInfo>();
 	private AtomicReference<Weights> weights = new AtomicReference<>();
 
-	ServiceInfo(int serviceId, LoadBalance policy,Router router) {
-		this.policy = policy;
+	
+	ServiceInfo(int serviceId, LoadBalance lb,Router router,BreakerInfo bi ) {
+		this.serviceId = serviceId;
+		this.lb = lb;
 		this.router = router;
+		this.bi = bi;
 		weights.set(new Weights());
 	}
-
+	
+	public int getServiceId() {
+		return serviceId;
+	}
+	
+	public BreakerInfo getBreakerInfo() {
+		return bi;
+	}
+	
+	public LoadBalance getLoadBalance() {
+		return lb;
+	}
+	
 	public boolean isDisabled() {
 		return disabled.get();
 	}
@@ -64,22 +82,29 @@ public class ServiceInfo {
 		for (AddrInfo ci : alive) {
 			if ( excludeAddrs != null && excludeAddrs.contains(ci.getAddr() ))
 				continue;
+			
+			if( bi.isEnabled() ) {
+				if( !ci.selectable(serviceId) ) {
+					continue;
+				}
+			}
+			
 			candidates.add(ci);
 		}
 		
 		if (candidates.size() == 0)
 			return null;
-		
+
 		candidates =  router.select( candidates, ctx, req);
 		
 		if (candidates.size() == 0)
 			return null;
 		
-		if (candidates.size() == 1 || policy == null )
+		if (candidates.size() == 1   )
 			return (AddrInfo)candidates.get(0);
 
 		
-		int idx = policy.select(candidates, weights.get() , ctx, req);
+		int idx = lb.select(candidates, weights.get() , ctx, req);
 		return (AddrInfo)candidates.get(idx);
 	}
 

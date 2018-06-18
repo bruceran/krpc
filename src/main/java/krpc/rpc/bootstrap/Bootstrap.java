@@ -40,6 +40,7 @@ import com.google.protobuf.Descriptors.ServiceDescriptor;
 import com.google.protobuf.UnknownFieldSet.Field;
 
 import krpc.KrpcExt;
+import krpc.rpc.cluster.BreakerInfo;
 import krpc.rpc.cluster.DefaultClusterManager;
 import krpc.rpc.cluster.DefaultRouter;
 import krpc.rpc.cluster.LoadBalance;
@@ -214,7 +215,7 @@ public class Bootstrap {
 	public NettyClient newNettyClient() {
 		return new NettyClient();
 	}
-	
+
 	public RpcFutureFactory newRpcFutureFactory(ServiceMetas metas, int notifyThreads, int notifyMaxThreads,
 			int notifyQueueSize) {
 		DefaultRpcFutureFactory ff = new DefaultRpcFutureFactory();
@@ -282,6 +283,17 @@ public class Bootstrap {
 		return rs;
 	}
 
+	public BreakerInfo newBreakerInfo(RefererConfig c) {
+		BreakerInfo bi = new BreakerInfo();
+		bi.setEnabled(c.breakerEnabled);
+		bi.setWindowSeconds(c.breakerWindowSeconds);
+		bi.setCloseBy(c.breakerCloseBy);
+		bi.setCloseRate(c.breakerCloseRate);
+		bi.setWaitMillis(c.breakerWaitSeconds*1000);
+		bi.setSuccMills(c.breakerSuccMills);
+		return bi;
+	}
+	
 	public RpcDataConverter newRpcDataConverter(ServiceMetas serviceMetas) {
 		return new DefaultRpcDataConverter(serviceMetas);
 	}
@@ -554,6 +566,11 @@ public class Bootstrap {
 				c.transport = "default";
 			}
 
+			if ( c.breakerCloseBy != 1 && c.breakerCloseBy != 2 ) {
+				throw new RuntimeException("breakerCloseBy  not correct");
+			}
+			
+			
 			if (!isEmpty(c.zip) && getZip(c.zip) == -1) {
 				throw new RuntimeException("zip method not correct");
 			}
@@ -937,7 +954,8 @@ public class Bootstrap {
 
 				LoadBalance lb = getLoadBalanceObj(c.loadBalance);
 				Router r = newRouter(serviceId,appConfig.name);
-				cmi.addLbRouter(serviceId, lb, r);
+				BreakerInfo bi = newBreakerInfo(c);
+				cmi.addServiceInfo(serviceId, lb, r,bi);
 
 				if (!isEmpty(c.registryName)) {
 					app.registryManager.addDiscover(serviceId, c.registryName, c.group, cmi);

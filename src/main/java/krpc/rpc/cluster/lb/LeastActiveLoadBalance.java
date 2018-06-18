@@ -15,13 +15,17 @@ public class LeastActiveLoadBalance implements LoadBalance {
 
 	Random rand = new Random();
 	
+	public boolean needPendings() { return true; }
+	
 	public int select(List<Addr> addrs,Weights weights, ClientContextData ctx,Message req) {
+		
+		int serviceId = ctx.getMeta().getServiceId();
 		
 		int min = Integer.MAX_VALUE;
 		
 		int[] pendings =new int[addrs.size()]; // pending may be changed during select
 		for(int i=0;i<pendings.length;++i) {
-			pendings[i] = addrs.get(i).getPendingCalls();	
+			pendings[i] = addrs.get(i).getPendingCalls(serviceId);	
 			if( pendings[i] < min ) min = pendings[i] ;
 		}
 		

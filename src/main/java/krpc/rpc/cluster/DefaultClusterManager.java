@@ -35,6 +35,7 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 
 	Map<Integer,LoadBalance> lbs = new HashMap<>(); // serviceId->LoadBalance
 	Map<Integer,Router> routers = new HashMap<>(); // serviceId->Router
+	Map<Integer,BreakerInfo> breakers = new HashMap<>(); // serviceId->BreakerInfo
 		
 	Set<String> lastAddrs = new HashSet<String>();
 	Map<Integer,ServiceInfo> serviceMap = new HashMap<Integer,ServiceInfo>();
@@ -92,7 +93,8 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     	if( si == null) {
     		LoadBalance lb = getLbPolicy(serviceId);
     		Router r = getRouter(serviceId);
-    		si = new ServiceInfo(serviceId,lb,r);
+    		BreakerInfo bi = getBreakerInfo(serviceId);
+    		si = new ServiceInfo(serviceId,lb,r,bi);
     		serviceMap.put(serviceId,si);
     	}
     	HashSet<String> newSet = splitAddrs(addrs);
@@ -161,7 +163,9 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     	if( si.isDisabled() ) return null; // todo
     	AddrInfo ai = si.nextAddr(ctx,req);
     	if( ai == null ) return null;
-    	ai.incPending();
+    	if( si.getLoadBalance().needPendings() ) {
+    		ai.incPending(serviceId);
+    	}
     	int index = ai.nextConnection();
     	return makeConnId(ai.addr,index);
     }
@@ -220,18 +224,23 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     }
     
     public void updateStats(RpcClosure closure) {
+    	int serviceId = closure.getCtx().getMeta().getServiceId();
+    	ServiceInfo si = serviceMap.get(serviceId);
+    	if( si == null ) return;    	
     	String connId = closure.getCtx().getConnId();
     	String addr = getAddr(connId);
     	AddrInfo ai = addrMap.get(addr);
-    	if( ai == null ) return;    	
-    	ai.decPending();
+    	if( ai == null ) return;
+    	if( si.getLoadBalance().needPendings() ) {
+    		ai.decPending(serviceId);
+    	}
     	
-    	LoadBalance lbPolicy = getLbPolicy(closure.getCtx().getMeta().getServiceId());
-    	if( lbPolicy == null || !lbPolicy.needCallStats() ) return;
-
+		BreakerInfo bi = getBreakerInfo(serviceId);
+		if(!bi.isEnabled()) return;
+		
     	int retCode = ReflectionUtils.getRetCode(closure.getRes());
     	long ts = closure.getCtx().getTimeUsedMicros();
-    	ai.updateResult(retCode, ts);
+    	ai.updateResult(si, retCode, ts);    		
     }
 
 	String getAddr(String connId) {
@@ -266,9 +275,10 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
 		return result;
 	}
 	
-    public void addLbRouter(int serviceId,LoadBalance policy,Router r) {
+    public void addServiceInfo(int serviceId,LoadBalance policy,Router r,BreakerInfo bi) {
     	lbs.put(serviceId,policy);
     	routers.put(serviceId, r);
+    	breakers.put(serviceId, bi);
     }
     
     LoadBalance getLbPolicy(int serviceId) {
@@ -281,6 +291,11 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     	return r;
     }
     
+    BreakerInfo getBreakerInfo(int serviceId) {
+    	BreakerInfo bi = breakers.get(serviceId);
+    	return bi;
+    }
+
 	public TransportChannel getTransportChannel() {
 		return transportChannel;
 	}

@@ -200,7 +200,9 @@ class RefererConfigBeanParser extends BaseParser<RefererConfigBean> {
 	RefererConfigBeanParser() {
 		beanClass = RefererConfigBean.class;
 		attributes = new String[] {"interfaceName","serviceId","transport","reverse",
-				"direct","registryName","group","timeout","retryLevel","retryCount","loadBalance","zip","minSizeToZip"};
+				"direct","registryName","group","timeout","retryLevel","retryCount","loadBalance","zip","minSizeToZip",
+				"breakerEnabled","breakerWindowSeconds","breakerCloseBy","breakerCloseRate","breakerWaitSeconds","breakerSuccMills"
+		};
 		hasMethods = true;
 	}
 }

@@ -543,10 +543,9 @@
     timeout 超时时间, 毫秒，默认为3000
     retryLevel 重试级别, 默认为 no_retry
     retryCount 重试次数，默认为0
-    loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,responsetime,hash,
+    loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,hash,
                       leastactiveweight,roudrobinweight,randomweight 默认为roundrobin
-                      responsetime插件和hash插件可带参数，其他参数无配置参数
-                      responsetime插件参数：seconds 指定滑动窗口秒数，默认为3，最大只允许15
+                      hash插件可带参数，其他参数无配置参数
                       hash插件参数：hashField 指定要做hash的入参的参数名
     zip 压缩方式 0=不压缩 1=zlib 2=snappy
     minSizeToZip 启用压缩所需的最小字节数, 默认为10000
@@ -956,13 +955,12 @@
 		负载均衡策略在referer设置
 		
 		LeastActiveLoadBalance  最小活跃请求数，相同最小则随机
-		RoundRobinLoadBalance  轮询  (默认)
-		RandomLoadBalance 随机
 		LeastActiveWeightLoadBalance  带权重的LeastActive
+		RoundRobinLoadBalance  轮询  (默认)
 		RoundRobinWeightLoadBalance  带权重的RoundRobin
+		RandomLoadBalance 随机
 		RandomWeightLoadBalance  带权重的Random
 		HashLoadBalance  根据某个入参进行hash取余
-		ResponseTimeLoadBalance 最近n秒的平均响应时间
 		
         带权重的版本需和动态路由插件 application.dynamicRoutePlugin 配合使用，否则等价于不带权重的版本
         内置插件不支持到method级别的负载均衡, 不过可自己实现插件支持

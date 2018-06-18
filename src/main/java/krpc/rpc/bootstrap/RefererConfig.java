@@ -23,6 +23,13 @@ public class RefererConfig  {
 
 	String loadBalance = "roundrobin"; // can be empty (use client default), or random, roundrobin, ...
 	
+	boolean breakerEnabled = false ;
+	int breakerWindowSeconds = 5;
+	int breakerCloseBy = 1; // 1=errorRate 2=timeoutRate
+	int breakerCloseRate  = 50; // 50% in 5 seconds to close the addr
+	int breakerWaitSeconds = 5;
+	int breakerSuccMills = 500;
+	
 	String zip;
 	int minSizeToZip = 10000;
 	
@@ -172,6 +179,60 @@ public class RefererConfig  {
 
 	public RefererConfig setServiceId(int serviceId) {
 		this.serviceId = serviceId;
+		return this;
+	}
+
+	public boolean isBreakerEnabled() {
+		return breakerEnabled;
+	}
+
+	public RefererConfig setBreakerEnabled(boolean breakerEnabled) {
+		this.breakerEnabled = breakerEnabled;
+		return this;
+	}
+
+	public int getBreakerWindowSeconds() {
+		return breakerWindowSeconds;
+	}
+
+	public RefererConfig setBreakerWindowSeconds(int breakerWindowSeconds) {
+		this.breakerWindowSeconds = breakerWindowSeconds;
+		return this;
+	}
+
+	public int getBreakerCloseRate() {
+		return breakerCloseRate;
+	}
+
+	public RefererConfig setBreakerCloseRate(int breakerCloseRate) {
+		this.breakerCloseRate = breakerCloseRate;
+		return this;
+	}
+
+	public int getBreakerCloseBy() {
+		return breakerCloseBy;
+	}
+
+	public RefererConfig setBreakerCloseBy(int breakerCloseBy) {
+		this.breakerCloseBy = breakerCloseBy;
+		return this;
+	}
+
+	public int getBreakerWaitSeconds() {
+		return breakerWaitSeconds;
+	}
+
+	public RefererConfig setBreakerWaitSeconds(int breakerWaitSeconds) {
+		this.breakerWaitSeconds = breakerWaitSeconds;
+		return this;
+	}
+
+	public int getBreakerSuccMills() {
+		return breakerSuccMills;
+	}
+
+	public RefererConfig setBreakerSuccMills(int breakerSuccMills) {
+		this.breakerSuccMills = breakerSuccMills;
 		return this;
 	}
 	

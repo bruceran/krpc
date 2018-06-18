@@ -76,7 +76,7 @@ public class DefaultValidator implements Validator {
 	}
 
 	KrpcExt.Validate getVldOption(Descriptors.FieldDescriptor field) {
-		for (Map.Entry<Descriptors.FieldDescriptor, Object> entry : field.getOptions().getAllFields().entrySet()) { // todo
+		for (Map.Entry<Descriptors.FieldDescriptor, Object> entry : field.getOptions().getAllFields().entrySet()) {
 			if (!entry.getKey().getFullName().equals("krpc.vld"))
 				continue;
 			KrpcExt.Validate v = (KrpcExt.Validate) entry.getValue();
