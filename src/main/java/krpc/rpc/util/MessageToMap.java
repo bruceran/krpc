@@ -19,6 +19,10 @@ public class MessageToMap {
 	
 	static Logger log = LoggerFactory.getLogger(MessageToMap.class);
 	
+	static public void parseMessage(Message message,Map<String,Object> results) {
+		parseMessage(message,results,true,Integer.MAX_VALUE);
+	}
+	
 	static public void parseMessage(Message message,Map<String,Object> results,boolean withDefault,int maxRepeatedSizeToGet) {
 		Map<FieldDescriptor, Object> fields = getFields(message,withDefault);
 		for ( Map.Entry<FieldDescriptor, Object> i: fields.entrySet() ) {

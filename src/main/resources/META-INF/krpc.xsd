@@ -15,6 +15,7 @@
               <attribute name="errorMsgConverter" type="string" use="optional"/>
               <attribute name="dataDir" type="string" use="optional"/>
               <attribute name="dynamicRoutePlugin" type="string" use="optional"/>
+              <attribute name="fallbackPlugin" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
@@ -156,9 +157,10 @@
               <attribute name="minSizeToZip" type="string" use="optional"/>
               <attribute name="breakerEnabled" type="string" use="optional"/>
               <attribute name="breakerWindowSeconds" type="string" use="optional"/>
+              <attribute name="breakerWindowMinReqs" type="string" use="optional"/>
               <attribute name="breakerCloseBy" type="string" use="optional"/>
               <attribute name="breakerCloseRate" type="string" use="optional"/>
-              <attribute name="breakerWaitSeconds" type="string" use="optional"/>
+              <attribute name="breakerSleepSeconds" type="string" use="optional"/>
               <attribute name="breakerSuccMills" type="string" use="optional"/>
 	    </complexType>    
     </element>

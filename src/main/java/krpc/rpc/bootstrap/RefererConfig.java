@@ -25,10 +25,12 @@ public class RefererConfig  {
 	
 	boolean breakerEnabled = false ;
 	int breakerWindowSeconds = 5;
+	int breakerWindowMinReqs = 20;
 	int breakerCloseBy = 1; // 1=errorRate 2=timeoutRate
 	int breakerCloseRate  = 50; // 50% in 5 seconds to close the addr
-	int breakerWaitSeconds = 5;
+	int breakerSleepSeconds = 5;
 	int breakerSuccMills = 500;
+	boolean breakerForceClose = false;
 	
 	String zip;
 	int minSizeToZip = 10000;
@@ -218,21 +220,39 @@ public class RefererConfig  {
 		return this;
 	}
 
-	public int getBreakerWaitSeconds() {
-		return breakerWaitSeconds;
-	}
-
-	public RefererConfig setBreakerWaitSeconds(int breakerWaitSeconds) {
-		this.breakerWaitSeconds = breakerWaitSeconds;
-		return this;
-	}
-
 	public int getBreakerSuccMills() {
 		return breakerSuccMills;
 	}
 
 	public RefererConfig setBreakerSuccMills(int breakerSuccMills) {
 		this.breakerSuccMills = breakerSuccMills;
+		return this;
+	}
+
+	public int getBreakerWindowMinReqs() {
+		return breakerWindowMinReqs;
+	}
+
+	public RefererConfig setBreakerWindowMinReqs(int breakerWindowMinReqs) {
+		this.breakerWindowMinReqs = breakerWindowMinReqs;
+		return this;
+	}
+
+	public int getBreakerSleepSeconds() {
+		return breakerSleepSeconds;
+	}
+
+	public RefererConfig setBreakerSleepSeconds(int breakerSleepSeconds) {
+		this.breakerSleepSeconds = breakerSleepSeconds;
+		return this;
+	}
+
+	public boolean isBreakerForceClose() {
+		return breakerForceClose;
+	}
+
+	public RefererConfig setBreakerForceClose(boolean breakerForceClose) {
+		this.breakerForceClose = breakerForceClose;
 		return this;
 	}
 	

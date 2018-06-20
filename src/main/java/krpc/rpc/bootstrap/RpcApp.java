@@ -8,6 +8,7 @@ import krpc.common.InitCloseUtils;
 import krpc.common.StartStop;
 import krpc.rpc.core.DynamicRouteManager;
 import krpc.rpc.core.ErrorMsgConverter;
+import krpc.rpc.core.FallbackPlugin;
 import krpc.rpc.core.ProxyGenerator;
 import krpc.rpc.core.RegistryManager;
 import krpc.rpc.core.RpcCodec;
@@ -33,6 +34,7 @@ public class RpcApp implements InitClose,StartStop {
 	DynamicRouteManager dynamicRouteManager;
 	TraceAdapter traceAdapter;
 	Validator validator;
+	FallbackPlugin fallbackPlugin;
 	
 	HashMap<String,RpcServer> servers = new HashMap<>();
 	HashMap<String,WebServer> webServers = new HashMap<>();
@@ -94,6 +96,7 @@ public class RpcApp implements InitClose,StartStop {
 		resources.add(monitorService);
 		resources.add(traceAdapter);
 		resources.add(validator);
+		resources.add(fallbackPlugin);
 
 		for(RpcClient client:clients.values()) {
 			resources.add(client);

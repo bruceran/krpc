@@ -44,8 +44,7 @@ public class DefaultValidator implements Validator {
 
 	public boolean prepare(Class<?> cls) {
 		Builder b = ReflectionUtils.generateBuilder(cls); 
-		Message m = b.build();
-		Descriptors.Descriptor desc = m.getDescriptorForType();
+		Descriptors.Descriptor desc = b.getDescriptorForType();
 		return prepare(desc);
 	}
 		

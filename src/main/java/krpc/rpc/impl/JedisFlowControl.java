@@ -39,7 +39,7 @@ public class JedisFlowControl extends AbstractFlowControl implements RpcPlugin,I
 		
 	private String addrs;
 	
-	private String keyPrefix = "FC_";
+	private String keyPrefix = "krpc.fc.";
 	
 	static class StatItem {
 		int seconds;

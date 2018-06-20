@@ -209,37 +209,13 @@ public class ReflectionUtils {
 	public static Builder generateBuilder(Class<?> cls) {  
 	    try {  
 		    Method method = cls.getDeclaredMethod("newBuilder",dummyTypes);
-	    	Builder builder = (Builder)method.invoke(null,dummyParameters); // todo cache
+	    	Builder builder = (Builder)method.invoke(null,dummyParameters);
 	        return builder;
 	    } catch(Exception e) {  
 	    	throw new RuntimeException("generateBuilder exception",e);
 	    }   
 	}
-	
-	@SuppressWarnings("all")
-	public static Builder getFieldBuilder(Builder b,String fieldName) {  
-	    try {  
-	    	String methodName = "get"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1)+"Builder";
-		    Method method = b.getClass().getDeclaredMethod(methodName,dummyTypes);
-	    	Builder builder = (Builder)method.invoke(b,dummyParameters); // todo cache
-	        return builder;
-	    } catch(Exception e) {  
-	    	throw new RuntimeException("getFieldBuilder exception",e);
-	    }   
-	}
-	
-	@SuppressWarnings("all")
-	public static Builder getRepeatedFieldBuilder(Builder b,String fieldName) {  
-	    try {  
-	    	String methodName = "add"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1)+"Builder";
-		    Method method = b.getClass().getDeclaredMethod(methodName,dummyTypes);
-		    Object builder = (Object)method.invoke(b,dummyParameters); // todo cache
-	        return (Builder)builder;
-	    } catch(Exception e) {  
-	    	throw new RuntimeException("getFieldBuilder exception",e);
-	    }   
-	}
-	
+
 	public static void adjustPeers(RpcMeta meta,String connId) {
 		try {  
 			int p = connId.lastIndexOf(":");

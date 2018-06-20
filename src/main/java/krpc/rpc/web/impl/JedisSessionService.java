@@ -29,7 +29,7 @@ public class JedisSessionService implements WebPlugin,SessionService, InitClose 
 	private boolean clusterMode = false;
 	private String addrs;
 	
-	private String keyPrefix = "KRW_";
+	private String keyPrefix = "krpc.ss.";
 	
 	// todo more control parameters
 

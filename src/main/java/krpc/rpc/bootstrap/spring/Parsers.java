@@ -138,7 +138,7 @@ class BaseParser<T> implements BeanDefinitionParser {
 class ApplicationConfigBeanParser extends BaseParser<ApplicationConfigBean> {
 	ApplicationConfigBeanParser() {
 		beanClass = ApplicationConfigBean.class;
-		attributes = new String[] {"name","errorMsgConverter","dynamicRoutePlugin","traceAdapter","dataDir"};
+		attributes = new String[] {"name","errorMsgConverter","dynamicRoutePlugin","traceAdapter","dataDir","fallbackPlugin"};
 	}
 }
 
@@ -201,7 +201,8 @@ class RefererConfigBeanParser extends BaseParser<RefererConfigBean> {
 		beanClass = RefererConfigBean.class;
 		attributes = new String[] {"interfaceName","serviceId","transport","reverse",
 				"direct","registryName","group","timeout","retryLevel","retryCount","loadBalance","zip","minSizeToZip",
-				"breakerEnabled","breakerWindowSeconds","breakerCloseBy","breakerCloseRate","breakerWaitSeconds","breakerSuccMills"
+				"breakerEnabled","breakerWindowSeconds","breakerWindowMinReqs",
+				"breakerCloseBy","breakerCloseRate","breakerSleepSeconds","breakerSuccMills"
 		};
 		hasMethods = true;
 	}

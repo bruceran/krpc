@@ -24,7 +24,6 @@ import krpc.rpc.core.TransportChannel;
 import krpc.rpc.core.DynamicRouteConfig.AddrWeight;
 import krpc.rpc.core.DynamicRouteConfig.RouteRule;
 
-
 public class DefaultClusterManager implements ClusterManager, RegistryManagerCallback, DynamicRouteManagerCallback, InitClose {
 	
 	static Logger log = LoggerFactory.getLogger(DefaultClusterManager.class);
@@ -160,7 +159,7 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     	int serviceId = ctx.getMeta().getServiceId();
     	ServiceInfo si = serviceMap.get(serviceId);
     	if( si == null ) return null;
-    	if( si.isDisabled() ) return null; // todo
+    	if( si.isDisabled() ) return null;
     	AddrInfo ai = si.nextAddr(ctx,req);
     	if( ai == null ) return null;
     	if( si.getLoadBalance().needPendings() ) {

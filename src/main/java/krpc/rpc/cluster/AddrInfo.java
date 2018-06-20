@@ -9,7 +9,7 @@ import krpc.common.RetCodes;
 
 public class AddrInfo implements Addr {
 
-	public static final int MAX_CONNECTIONS = 24;
+	public static final int MAX_CONNECTIONS = 24; // max connections per addr
 
 	private static int masks[];
 	private static int revMasks[];
@@ -36,6 +36,7 @@ public class AddrInfo implements Addr {
 															// get next connect
 	private AtomicInteger seq = new AtomicInteger(0);
 	private AtomicBoolean removeFlag = new AtomicBoolean(false);
+	
 	private HashMap<Integer, Integer> pendings = new HashMap<>(); // serviceId->pendings
 	private HashMap<Integer, StatWindow> statWindows = new HashMap<>(); // serviceId->StatWindow
 
@@ -185,8 +186,12 @@ public class AddrInfo implements Addr {
 			if (!closed)
 				return true;
 			
+			if( bi.isForceClose() ) {
+				return false;
+			}
+			
 			long now = System.currentTimeMillis();
-			int n = (int) ((now - closedTs) / bi.getWaitMillis()) ;
+			int n = (int) ((now - closedTs) / bi.getSleepMillis()) ;
 			if (recoverTimes >= n)
 				return false;
 			recoverTimes++;
@@ -210,7 +215,7 @@ public class AddrInfo implements Addr {
 			} else {
 				if (retCode != 0)
 					return;
-				if (now - closedTs < bi.getWaitMillis())
+				if (now - closedTs < bi.getSleepMillis())
 					return;
 				if (timeUsedMicros >= bi.getSuccMills() * 1000 )
 					return;
@@ -255,6 +260,9 @@ public class AddrInfo implements Addr {
 			}
 
 			if (ttlReqs == 0)
+				return 0;
+
+			if (ttlReqs < bi.getWindowMinReqs() )
 				return 0;
 
 			return ttlError * 100 / ttlReqs;

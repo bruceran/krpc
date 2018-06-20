@@ -22,8 +22,17 @@ public class ClientContextData extends RpcContextData {
 		super(connId,meta);
 		this.traceContext = traceContext;
 		this.span = span;
-		startMicros = span.getStartMicros();			
-		requestTimeMicros = traceContext.getRequestTimeMicros() + ( startMicros - traceContext.getStartMicros() );				
+		
+		if( span != null ) {
+			startMicros = span.getStartMicros();		
+		} else {
+			startMicros = System.nanoTime();
+		}
+		if( traceContext != null ) {
+			requestTimeMicros = traceContext.getRequestTimeMicros() + ( startMicros - traceContext.getStartMicros() );
+		} else {
+			requestTimeMicros = System.currentTimeMillis() * 1000 ;
+		}
 	}
 	
 	public void incRetryTimes(String connId) {

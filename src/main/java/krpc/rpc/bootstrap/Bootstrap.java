@@ -52,6 +52,7 @@ import krpc.rpc.core.DynamicRoutePlugin;
 import krpc.rpc.core.DynamicRouteManager;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.ExecutorManager;
+import krpc.rpc.core.FallbackPlugin;
 import krpc.rpc.core.RpcPlugin;
 import krpc.rpc.core.Plugin;
 import krpc.rpc.core.ProxyGenerator;
@@ -61,6 +62,7 @@ import krpc.rpc.core.RegistryManager;
 import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.RpcFutureFactory;
 import krpc.rpc.core.ServiceMetas;
+import krpc.rpc.core.ServiceMetasAware;
 import krpc.rpc.core.TransportChannel;
 import krpc.rpc.core.Validator;
 import krpc.rpc.core.proto.RpcMetas;
@@ -255,7 +257,7 @@ public class Bootstrap {
 			m.setServerAddr(c.serverAddr);
 		}
 
-		LogFormatter lf = getLogFormatterObj(parseType(monitorConfig.logFormatter));
+		LogFormatter lf = getPlugin(LogFormatter.class,parseType(monitorConfig.logFormatter));
 		String params = parseParams(monitorConfig.logFormatter);
 		params += "maskFields="+(c.maskFields==null?"":c.maskFields)+ ";maxRepeatedSizeToLog="+c.maxRepeatedSizeToLog+";printDefault="+c.printDefault;
 		lf.config(params);
@@ -265,7 +267,7 @@ public class Bootstrap {
 			String[] ss = monitorConfig.plugins.split(",");
 			List<MonitorPlugin> plugins = new ArrayList<>();
 			for(String s:ss)  {
-				plugins.add( getMonitorPluginObj(s) );
+				plugins.add( getPlugin(MonitorPlugin.class,s) );
 			}
 			m.setPlugins(plugins);
 		}
@@ -287,10 +289,12 @@ public class Bootstrap {
 		BreakerInfo bi = new BreakerInfo();
 		bi.setEnabled(c.breakerEnabled);
 		bi.setWindowSeconds(c.breakerWindowSeconds);
+		bi.setWindowMinReqs(c.breakerWindowMinReqs);
 		bi.setCloseBy(c.breakerCloseBy);
 		bi.setCloseRate(c.breakerCloseRate);
-		bi.setWaitMillis(c.breakerWaitSeconds*1000);
+		bi.setSleepMillis(c.breakerSleepSeconds*1000);
 		bi.setSuccMills(c.breakerSuccMills);
+		bi.setForceClose(c.breakerForceClose);
 		return bi;
 	}
 	
@@ -340,25 +344,37 @@ public class Bootstrap {
 
 		if (isEmpty(appConfig.name))
 			throw new RuntimeException("app name must be specified");
-
-		if (isEmpty(appConfig.errorMsgConverter))
-			appConfig.errorMsgConverter = "file";
 		
 		if( isEmpty(appConfig.dataDir) ) {
 			appConfig.dataDir = ".";
 		}
+		
+		if (isEmpty(appConfig.errorMsgConverter))
+			appConfig.errorMsgConverter = "file";
 
+		if (!isEmpty(appConfig.errorMsgConverter)) {
+			if (getPlugin(ErrorMsgConverter.class,appConfig.errorMsgConverter) == null) {
+				throw new RuntimeException("unknown errorMsgConverter type, type=" + appConfig.errorMsgConverter);
+			}		
+		}
+		
+		if(!isEmpty(appConfig.fallbackPlugin)) {
+			if (getPlugin(FallbackPlugin.class, appConfig.fallbackPlugin)== null) {
+				throw new RuntimeException("unknown fallback plugin type, type=" + appConfig.fallbackPlugin);
+			}		
+		}
+		
 		if (isEmpty(monitorConfig.logFormatter)) {
 			monitorConfig.logFormatter = "simple";
 		}
 		
-		if (getLogFormatterObj(parseType(monitorConfig.logFormatter)) == null) {
+		if (  getPlugin(LogFormatter.class,  parseType(monitorConfig.logFormatter)) == null) {
 			throw new RuntimeException("log formatter not registered");
 		}
-		
+
 		if( monitorConfig.pluginParams != null ) {
 			for(String s:monitorConfig.pluginParams) {
-				if (getMonitorPluginObj(s) == null)
+				if (getPlugin(MonitorPlugin.class,s) == null)
 					throw new RuntimeException(String.format("unknown monitor plugin %s", s));
 			}
 		}
@@ -366,7 +382,7 @@ public class Bootstrap {
 		if (!isEmpty(monitorConfig.plugins) ) {
 			String[] ss = monitorConfig.plugins.split(",");
 			for(String s:ss)  {
-				if (getMonitorPluginObj(s) == null)
+				if (getPlugin(MonitorPlugin.class,s) == null)
 					throw new RuntimeException("monitor plugin not registered");
 			}
 		}		
@@ -381,7 +397,7 @@ public class Bootstrap {
 		String defaultRegistry  = null;
 		
 		for (RegistryConfig c : registryList) {
-			if (getRegistryObj(c.type) == null)
+			if (  getPlugin(Registry.class, c.type) == null)
 				throw new RuntimeException(String.format("unknown registry type %s", c.type));
 			if (isEmpty(c.id))
 				c.id = c.type;
@@ -403,7 +419,7 @@ public class Bootstrap {
 
 			if( c.pluginParams != null ) {
 				for(String s:c.pluginParams) {
-					if (getRpcPluginObj(s) == null)
+					if ( getPlugin(RpcPlugin.class,s) == null)
 						throw new RuntimeException(String.format("unknown rpc plugin %s", s));
 				}
 			}
@@ -411,7 +427,7 @@ public class Bootstrap {
 			if (!isEmpty(c.plugins) ) {
 				String[] ss = c.plugins.split(",");
 				for(String s:ss)  {
-					if (getRpcPluginObj(s) == null)
+					if ( getPlugin(RpcPlugin.class,s) == null  )
 						throw new RuntimeException("rpc plugin not registered");
 				}
 			}
@@ -426,12 +442,12 @@ public class Bootstrap {
 			if (webServers.containsKey(c.id))
 				throw new RuntimeException(String.format("web server id %s duplicated", c.id));
 			
-			if (getSessionServiceObj(c.defaultSessionService) == null)
+			if ( getPlugin(WebPlugin.class,c.defaultSessionService) == null)
 				throw new RuntimeException(String.format("unknown session service %s", c.defaultSessionService));
 
 			if( c.pluginParams != null ) {
 				for(String s:c.pluginParams) {
-					if (getWebPluginObj(s) == null)
+					if (getPlugin(WebPlugin.class,s) == null)
 						throw new RuntimeException(String.format("unknown web plugin %s", s));
 				}
 			}
@@ -448,7 +464,7 @@ public class Bootstrap {
 			
 			if( c.pluginParams != null ) {
 				for(String s:c.pluginParams) {
-					if (getRpcPluginObj(s) == null)
+					if (getPlugin(RpcPlugin.class,s) == null)
 						throw new RuntimeException(String.format("unknown rpc plugin %s", s));
 				}
 			}
@@ -456,7 +472,7 @@ public class Bootstrap {
 			if (!isEmpty(c.plugins) ) {
 				String[] ss = c.plugins.split(",");
 				for(String s:ss)  {
-					if (getRpcPluginObj(s) == null)
+					if ( getPlugin(RpcPlugin.class,s)  == null )
 						throw new RuntimeException("rpc plugin not registered");
 				}
 			}
@@ -600,7 +616,7 @@ public class Bootstrap {
 					throw new RuntimeException(String.format("client id %s loadbalance not specified", c.id));
 				}
 
-				if (getLoadBalanceObj(c.loadBalance) == null)
+				if (getPlugin(LoadBalance.class,   c.loadBalance) == null)
 					throw new RuntimeException(String.format("client id %s loadbalance not correct", c.id));
 			}
 
@@ -662,10 +678,16 @@ public class Bootstrap {
 		app.monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig);
 
 		if (!isEmpty(appConfig.errorMsgConverter)) {
-			ErrorMsgConverter emc = getErrorMsgConverterObj(appConfig.errorMsgConverter);
-			if (emc == null)
-				throw new RuntimeException("unknown errorMsgConverter type, type=" + appConfig.errorMsgConverter);
-			app.errorMsgConverter = emc;
+			ErrorMsgConverter p = getPlugin(ErrorMsgConverter.class,  appConfig.errorMsgConverter);
+			app.errorMsgConverter = p;
+		}
+
+		if(!isEmpty(appConfig.fallbackPlugin)) {
+			FallbackPlugin p = getPlugin(FallbackPlugin.class, appConfig.fallbackPlugin);
+			if( p instanceof ServiceMetasAware ) {
+				((ServiceMetasAware)p).setServiceMetas(app.serviceMetas);
+			}
+			app.fallbackPlugin = p;
 		}
 
 		int processors = Runtime.getRuntime().availableProcessors();
@@ -673,7 +695,7 @@ public class Bootstrap {
 		Map<String,Registry> regMap = new HashMap<>();
 		for (String name : registries.keySet()) {
 			RegistryConfig c = registries.get(name);
-			Registry impl = getRegistryObj(parseType(c.type));
+			Registry impl = getPlugin(Registry.class,parseType(c.type));
 			String params = parseParams(c.type);
 			params += "instanceId="+app.instanceId+";addrs="+c.addrs+";enableRegist="+c.enableRegist+";enableDiscover="+c.enableDiscover;
 			if(!isEmpty(c.params))
@@ -691,7 +713,7 @@ public class Bootstrap {
 			if( regPlugin != null && regPlugin instanceof DynamicRoutePlugin ) { // use registry plugin first if the plugin has implemented DynamicRoute interface
 				app.dynamicRouteManager.setDynamicRoutePlugin((DynamicRoutePlugin)regPlugin);
 			} else {
-				DynamicRoutePlugin dynamicRoutePlugin = getDynamicRouteObj(appConfig.dynamicRoutePlugin);
+				DynamicRoutePlugin dynamicRoutePlugin = getPlugin(DynamicRoutePlugin.class, appConfig.dynamicRoutePlugin);
 				if (dynamicRoutePlugin == null)
 					throw new RuntimeException("unknown dynamicRoutePlugin type, type=" + appConfig.dynamicRoutePlugin);
 				app.dynamicRouteManager.setDynamicRoutePlugin(dynamicRoutePlugin);
@@ -707,7 +729,7 @@ public class Bootstrap {
 				List<RpcPlugin> plugins = new ArrayList<>();
 				String[] ss = c.plugins.split(",");
 				for(String s:ss)  {
-					RpcPlugin p = getRpcPluginObj(s);
+					RpcPlugin p = getPlugin(RpcPlugin.class,s);
 					plugins.add(p);
 				}
 				server.setPlugins(plugins);
@@ -716,6 +738,7 @@ public class Bootstrap {
 			server.setErrorMsgConverter(app.errorMsgConverter);
 			server.setMonitorService(app.monitorService);
 			server.setValidator(app.validator);
+			server.setFallbackPlugin(app.fallbackPlugin);
 
 			NettyServer ns = newNettyServer();
 			ns.setPort(c.port);
@@ -757,7 +780,7 @@ public class Bootstrap {
 		for (String name : webServers.keySet()) {
 			WebServerConfig c = webServers.get(name);
 
-			SessionService ss = getSessionServiceObj(c.defaultSessionService);
+			SessionService ss = (SessionService)getPlugin(WebPlugin.class,c.defaultSessionService);
 
 			WebServer server = newWebServer();
 			server.setSampleRate(c.sampleRate);
@@ -801,12 +824,13 @@ public class Bootstrap {
 			RpcClient client = newRpcClient();
 			client.setServiceMetas(app.serviceMetas);
 			client.setValidator(app.validator);
+			client.setFallbackPlugin(app.fallbackPlugin);
 
 			if (!isEmpty(c.plugins)) {
 				List<RpcPlugin> plugins = new ArrayList<>();
 				String[] ss = c.plugins.split(",");
 				for(String s:ss)  {
-					RpcPlugin p = getRpcPluginObj(s);
+					RpcPlugin p = getPlugin(RpcPlugin.class,s);
 					plugins.add(p);
 				}
 				client.setPlugins(plugins);
@@ -952,7 +976,7 @@ public class Bootstrap {
 
 				DefaultClusterManager cmi = (DefaultClusterManager) client.getClusterManager();
 
-				LoadBalance lb = getLoadBalanceObj(c.loadBalance);
+				LoadBalance lb = getPlugin(LoadBalance.class,c.loadBalance);
 				Router r = newRouter(serviceId,appConfig.name);
 				BreakerInfo bi = newBreakerInfo(c);
 				cmi.addServiceInfo(serviceId, lb, r,bi);
@@ -1215,6 +1239,7 @@ public class Bootstrap {
 			loadSpi(WebPlugin.class);
 			loadSpi(DynamicRoutePlugin.class);
 			loadSpi(MonitorPlugin.class);
+			loadSpi(FallbackPlugin.class);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -1277,42 +1302,6 @@ public class Bootstrap {
 		}
 	}
 
-	RpcPlugin getRpcPluginObj(String type) {
-		return getPlugin(RpcPlugin.class,type);
-	}
-
-	SessionService getSessionServiceObj(String type) {
-		return (SessionService)getPlugin(WebPlugin.class,type);
-	}
-
-	LogFormatter getLogFormatterObj(String type) {
-		return getPlugin(LogFormatter.class,type);
-	}
-
-	ErrorMsgConverter getErrorMsgConverterObj(String type) {
-		return getPlugin(ErrorMsgConverter.class,type);
-	}
-
-	WebPlugin getWebPluginObj(String type) {
-		return getPlugin(WebPlugin.class,type);
-	}
-
-	MonitorPlugin getMonitorPluginObj(String type) {
-		return getPlugin(MonitorPlugin.class,type);
-	}
-	
-	Registry getRegistryObj(String type) {
-		return getPlugin(Registry.class,type);
-	}
-	
-	DynamicRoutePlugin getDynamicRouteObj(String type) {
-		return getPlugin(DynamicRoutePlugin.class,type);
-	}
-
-	LoadBalance getLoadBalanceObj(String type) {
-		return getPlugin(LoadBalance.class,type);
-	}
-
 	@SuppressWarnings("unchecked")
 	<T> T getPlugin(Class<T> cls, String params) {
 
@@ -1336,17 +1325,6 @@ public class Bootstrap {
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
-	boolean checkPlugin(Class cls, String type) {
-		List<PluginInfo> list = plugins.get(cls.getName());
-		if( list == null ) return false;
-		type = parseType(type);
-		for( PluginInfo pi: list ) {
-			if( pi.matchNames.contains(type) ) return true;
-		}
-		return false;
-	}
-	
 	String parseType(String s) {
 		s = s.toLowerCase();
 		int p = s.indexOf(":");
@@ -1373,6 +1351,7 @@ public class Bootstrap {
 	}
 
 	void loadRoutesFileInternal(DefaultWebRouteService rs, String mappingFile) throws Exception {
+
 		DocumentBuilderFactory docbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docb = docbf.newDocumentBuilder();
 		Document doc = docb.parse(getResource(mappingFile));
@@ -1645,7 +1624,7 @@ public class Bootstrap {
 		String[] ss = plugins.split(",");
 		WebPlugin[] array = new WebPlugin[ss.length];
 		for (int i = 0; i < ss.length; ++i) {
-			array[i] = getWebPluginObj(ss[i]);
+			array[i] = getPlugin(WebPlugin.class,ss[i]);
 			if (array[i] == null)
 				throw new RuntimeException("web plugin not found, name=" + array[i]);
 		}
@@ -1847,6 +1826,10 @@ public class Bootstrap {
 		return this;
 	}
 
+	public Bootstrap setFallbackPlugin(String fallbackPlugin) {
+		this.appConfig.fallbackPlugin = fallbackPlugin;
+		return this;
+	}	
 	
 	public Bootstrap setMonitorConfig(MonitorConfig monitorConfig) {
 		this.monitorConfig = monitorConfig;

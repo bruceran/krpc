@@ -88,27 +88,20 @@ public class DefaultServiceMetas implements ServiceMetas {
 		return map;
 	}
 	
-	public Message generateRes(int serviceId,int msgId, int retCode) {
-		return generateRes(serviceId,msgId,retCode,null);
-	}
-	
-	public Message generateRes(int serviceId,int msgId, int retCode,String retMsg) {
+	public String getServiceIdMsgId(String serviceName,String msgName) {
 
-		Class<?> cls = findResClass(serviceId,msgId);
-		if( cls == null ) {
-			return generateResDynamic(serviceId,msgId,retCode);
-		} 
-
-		Message res = null;
-		try {
-			if( retMsg == null )
-	    		retMsg = RetCodes.retCodeText(retCode);
-			res = (Message)ReflectionUtils.generateResponseObject(cls,retCode,retMsg);
-		} catch(Exception e) {
-			throw new RpcException(RetCodes.ENCODE_RES_ERROR,"generateRes generate object exception");
+		serviceName = serviceName.toLowerCase();
+		msgName = msgName.toLowerCase();
+		
+		String s = serviceName + "." + msgName;
+		for( Map.Entry<String, String> entry: msgNames.entrySet()) {
+			if( entry.getValue().equals(s) ) {
+				return entry.getKey();
+			}
 		}
+		
+		return null;
 
-		return res;
 	}
 
 	private void addImpl(Class<?> intf, Object obj,boolean isService) {
@@ -226,8 +219,31 @@ public class DefaultServiceMetas implements ServiceMetas {
 	public RpcCallable findDynamicCallable(int serviceId) {
 		return dynamicCallableMap.get(serviceId);
 	}
+	
+	public Message generateRes(int serviceId,int msgId, int retCode) {
+		return generateRes(serviceId,msgId,retCode,null);
+	}
+	
+	public Message generateRes(int serviceId,int msgId, int retCode,String retMsg) {
 
-	public Message generateResDynamic(int serviceId,int msgId, int retCode) {
+		Class<?> cls = findResClass(serviceId,msgId);
+		if( cls == null ) {
+			return generateResDynamic(serviceId,msgId,retCode);
+		} 
+
+		Message res = null;
+		try {
+			if( retMsg == null )
+	    		retMsg = RetCodes.retCodeText(retCode);
+			res = (Message)ReflectionUtils.generateResponseObject(cls,retCode,retMsg);
+		} catch(Exception e) {
+			throw new RpcException(RetCodes.ENCODE_RES_ERROR,"generateRes generate object exception");
+		}
+
+		return res;
+	}
+
+	Message generateResDynamic(int serviceId,int msgId, int retCode) {
 	
 		Descriptor desc = findDynamicResDescriptor(serviceId,msgId);
 		if( desc == null ) {
@@ -245,6 +261,7 @@ public class DefaultServiceMetas implements ServiceMetas {
 	
 		return res;
 	}
+	
 	public Validator getValidator() {
 		return validator;
 	}

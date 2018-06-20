@@ -16,17 +16,17 @@ import krpc.rpc.core.DynamicRouteConfig.RouteRule;
 public class ServiceInfo {
 
 	private int serviceId;
-	private BreakerInfo bi;
 	
-	private AtomicBoolean disabled = new AtomicBoolean(false);
 	private LoadBalance lb;
 	private Router router;
+	private BreakerInfo bi;
 
 	private HashSet<String> all = new HashSet<String>();
 	private List<AddrInfo> alive = new ArrayList<AddrInfo>();
+
+	private AtomicBoolean disabled = new AtomicBoolean(false);
 	private AtomicReference<Weights> weights = new AtomicReference<>();
 
-	
 	ServiceInfo(int serviceId, LoadBalance lb,Router router,BreakerInfo bi ) {
 		this.serviceId = serviceId;
 		this.lb = lb;

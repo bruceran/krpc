@@ -1,0 +1,2 @@
+- { for: userservice.login,   match: userName ==abc && password == 123,  results: {retCode: 0, retMsg: abc}  }
+- { for: userservice.login,  match: , results: {retCode: -1000000, retMsg: abc, userId: 111}  }

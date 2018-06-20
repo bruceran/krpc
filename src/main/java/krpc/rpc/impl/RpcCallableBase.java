@@ -24,6 +24,7 @@ import krpc.rpc.core.DataManager;
 import krpc.rpc.core.DataManagerCallback;
 import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.ExecutorManager;
+import krpc.rpc.core.FallbackPlugin;
 import krpc.rpc.core.MonitorService;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.RpcCallable;
@@ -69,6 +70,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	// for server functions: as a service
 	ExecutorManager executorManager;
 	Validator validator;
+	FallbackPlugin fallbackPlugin;
 
 	List<RpcPlugin> plugins = new ArrayList<>();
 
@@ -133,9 +135,11 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	
 	public void addRetryPolicy(int serviceId,int msgId,int timeout,int retryLevel,int retryCount) {
 		String key = serviceId+":"+msgId;
-		timeoutMap.put(key, timeout);
-		retryLevelMap.put(key, retryLevel);
-		retryCountMap.put(key, retryCount);
+		if( timeoutMap.get(key) == null ) {
+			timeoutMap.put(key, timeout);
+			retryLevelMap.put(key, retryLevel);
+			retryCountMap.put(key, retryCount);
+		}
 	}
 	
 	public void connected(String connId,String localAddr) {
@@ -222,8 +226,16 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		}
 
 		connId = nextConnId(ctx,req); // may be null
-		
 		if( connId == null ) { // no connection, no need to retry
+			
+			if( fallbackPlugin != null ) {
+				Message res = fallbackPlugin.fallback(ctx, req);
+				if( res != null ) {
+					endCall(closure,res);
+					return future;
+				}
+			}
+			
 			endCall(closure,RetCodes.NO_CONNECTION);
 			return future;
 		}
@@ -676,6 +688,12 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 	public void setPlugins(List<RpcPlugin> plugins) {
 		this.plugins = plugins;
+	}
+	public FallbackPlugin getFallbackPlugin() {
+		return fallbackPlugin;
+	}
+	public void setFallbackPlugin(FallbackPlugin fallbackPlugin) {
+		this.fallbackPlugin = fallbackPlugin;
 	}
 
 }

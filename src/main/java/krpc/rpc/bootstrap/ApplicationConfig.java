@@ -8,6 +8,7 @@ public class ApplicationConfig  {
 
 	String traceAdapter = "default"; // default, skywalking, zipkin, cat
 	String dynamicRoutePlugin;  // dynamicRoute plugin, only one
+	String fallbackPlugin;
 
 	public ApplicationConfig() {
 	}
@@ -61,6 +62,14 @@ public class ApplicationConfig  {
 		return this;
 	}
 
+	public String getFallbackPlugin() {
+		return fallbackPlugin;
+	}
+
+	public ApplicationConfig setFallbackPlugin(String fallbackPlugin) {
+		this.fallbackPlugin = fallbackPlugin;
+		return this;
+	}
 
 }
 

@@ -41,7 +41,9 @@ public class DefaultExecutorManager implements ExecutorManager, InitClose {
     	else
     		pool = new ThreadPoolExecutor(threads, threads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize),threadFactory);
         for(int msgId:msgIds) {
-        	pools.put(serviceId+"."+msgId, pool);
+        	String key = serviceId+"."+msgId;
+        	if(pools.get(key) == null )
+        		pools.put(key, pool);
         }
 	}    
 	

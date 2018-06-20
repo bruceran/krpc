@@ -42,7 +42,7 @@ public class Weights {
 		}
 		
 		String ip = getIp(addr);
-		if( ip == null ) return 0;
+		if( ip == null ) return 100;
 		
 		i = weights.get(ip);
 		if( i != null )  return i;
@@ -51,7 +51,7 @@ public class Weights {
 			if( pw.p.matcher(ip).matches() ) return pw.weight;
 		}
 		
-		return 0;
+		return 100;
 	}    
 
 	String getIp(String addr) {

@@ -25,6 +25,7 @@ public class RpcClientTest {
 	public static void main(String[] args) throws Exception {
 		
 		RpcApp app = new Bootstrap() 
+				.setFallbackPlugin("default")
 				.addClient(new ClientConfig().setConnections(1))
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
 				.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))

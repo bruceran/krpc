@@ -1,9 +1,8 @@
-package krpc.rpc.cluster;
+package krpc.rpc.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,25 +10,15 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import krpc.rpc.impl.DefaultDataManager;
+public class FallbackExprParser {
 
-public class RouterExprParser {
+	static Logger log = LoggerFactory.getLogger(FallbackExprParser.class);
+	
+	static final Pattern reg1 = Pattern.compile("^([a-zA-Z0-9_.]+)( +in +| +not_in +) *(.+)$");
+	static final Pattern reg2 = Pattern.compile("^([a-zA-Z0-9_.]+)( *== *| *!= *) *(.+)$");
+	static final Pattern reg3 = Pattern.compile("^([a-zA-Z0-9_.]+)( *=~ *| *!~ *) *(.+)$");
 
-	static Logger log = LoggerFactory.getLogger(RouterExprParser.class);
-	
-	static final Pattern reg1 = Pattern.compile("^([a-zA-Z]+)( *!= *| *== *) *(.+)$");
-
-	Set<String> allowedKeySet = new HashSet<>();
-	
-	public RouterExprParser() {
-	}
-	
-	public RouterExprParser(String allowedKeys) {
-		String[] ss = allowedKeys.split(",");
-		for(String s:ss) allowedKeySet.add(s);
-	}
-	
-	public RouterExpr parse(String s) {
+	public FallbackExpr parse(String s) {
 		String ns = s.replace("\n", " ").replace("\r", " ").replace("\t", " ");
 		char[] chs = ns.toCharArray();
 
@@ -40,21 +29,10 @@ public class RouterExprParser {
 			return null;
 		}
 	}
-
-	public RouterExprSimple parseSimple(String s) {
-		String ns = s.replace("\n", " ").replace("\r", " ").replace("\t", " ");
-
-		try {
-			return parseSimpleInner(ns);
-		} catch (Exception e) {
-			log.error("invalid expr: s="+s);
-			return null;
-		}
-	}
 	
-	private RouterExpr parse(char[] chs, int s, int e) {
+	private FallbackExpr parse(char[] chs, int s, int e) {
 		int i = s;
-		RouterExprBuilder builder = new RouterExprBuilder();
+		FallbackExprBuilder builder = new FallbackExprBuilder();
 		while (i < e) {
 			char ch = chs[i];
 			switch (ch) {
@@ -81,7 +59,7 @@ public class RouterExprParser {
 				int p = findMatchBracket(chs, i, e);
 				if (p < 0)
 					throw new RuntimeException("() not match ");
-				RouterExpr expr = parse(chs, i + 1, p - 1);
+				FallbackExpr expr = parse(chs, i + 1, p - 1);
 				builder.add(expr);
 				i = p;
 				break;
@@ -90,7 +68,7 @@ public class RouterExprParser {
 				int p = findExprEnd(chs, i, e);
 				if (p < 0)
 					throw new RuntimeException("expr not end");
-				RouterExpr expr = parseSimpleInner(new String(chs, i, p - i + 1));
+				FallbackExpr expr = parseSimpleInner(new String(chs, i, p - i + 1));
 				if (expr != null)
 					builder.add(expr);
 				i = p;
@@ -147,7 +125,7 @@ public class RouterExprParser {
 			case '!':
 				if (!inQuota) {
 					if (ch == '!') {
-						if (i < e && chs[i + 1] != '=')
+						if (i < e && chs[i + 1] != '=' && chs[i + 1] != '~' )
 							return i - 1;
 					} else {
 						return i - 1;
@@ -161,7 +139,7 @@ public class RouterExprParser {
 		return e - 1;
 	}
 
-	private RouterExprSimple parseSimpleInner(String s)  {
+	private FallbackExpr parseSimpleInner(String s)  {
 		s = s.trim();
 		if( s == null || s.isEmpty() ) return null;
 		
@@ -170,21 +148,38 @@ public class RouterExprParser {
 			String key = m.group(1).trim();
 			String operator = m.group(2).trim();
 			String values = removeQuota(m.group(3).trim());
-			if( !checkKey(key) || !checkOperator(operator) ) 
+			if( !checkOperator(operator) ) 
 				throw new RuntimeException("expr not valid: expr="+s);
-			return new RouterExprSimple(key,operator,values);
+			return new FallbackExprIn(key,operator,values);
 		}
-
+		
+		m =  reg2.matcher(s);
+		if( m.matches() ) {
+			String key = m.group(1).trim();
+			String operator = m.group(2).trim();
+			String values = removeQuota(m.group(3).trim());
+			if( !checkOperator(operator) ) 
+				throw new RuntimeException("expr not valid: expr="+s);
+			return new FallbackExprEqual(key,operator,values);
+		}
+ 
+		m =  reg3.matcher(s);
+		if( m.matches() ) {
+			String key = m.group(1).trim();
+			String operator = m.group(2).trim();
+			String values = removeQuota(m.group(3).trim());
+			if( !checkOperator(operator) ) 
+				throw new RuntimeException("expr not valid: expr="+s);
+			return new FallbackExprPattern(key,operator,values);
+		}
+		
 		return null;
 	}
 
-	private boolean checkKey(String key) {
-		if( allowedKeySet.size() == 0 ) return true;
-		return allowedKeySet.contains(key);
-	}
-	
 	private boolean checkOperator(String operator) {
+		if( operator.equals("in") || operator.equals("not_in")  ) return true;
 		if( operator.equals("==") || operator.equals("!=")  ) return true;
+		if( operator.equals("=~") || operator.equals("!~")  ) return true;
 		return false;
 	}
 	
@@ -200,13 +195,13 @@ public class RouterExprParser {
 }
 
 
-class RouterExprBuilder {
+class FallbackExprBuilder {
 
-	RouterExprOr or;
-	RouterExprAnd and;
+	FallbackExprOr or;
+	FallbackExprAnd and;
 	boolean not;
 	boolean orand;
-	RouterExpr last;
+	FallbackExpr last;
 
 	void addOr() {
 		if (not)
@@ -214,7 +209,7 @@ class RouterExprBuilder {
 		if (last == null)
 			throw new RuntimeException("'||' operator not valid");
 		if (or == null)
-			or = new RouterExprOr();
+			or = new FallbackExprOr();
 		if (last != null) {
 			if (and != null) {
 				and.list.add(last);
@@ -239,7 +234,7 @@ class RouterExprBuilder {
 		if (last == null)
 			throw new RuntimeException("'&&' operator not valid");
 		if (and == null)
-			and = new RouterExprAnd();
+			and = new FallbackExprAnd();
 		and.list.add(last);
 		last = null;
 		orand = true;
@@ -251,18 +246,18 @@ class RouterExprBuilder {
 		not = true;
 	}
 
-	void add(RouterExpr e) {
+	void add(FallbackExpr e) {
 		if (last != null)
 			throw new RuntimeException("expr duplicated");
 		if (not)
-			last = new RouterExprNot(e);
+			last = new FallbackExprNot(e);
 		else
 			last = e;
 		not = false;
 		orand = false;
 	}
 
-	RouterExpr get() {
+	FallbackExpr get() {
 		if (not)
 			throw new RuntimeException("'!' operator is last");
 		if (orand)
@@ -296,70 +291,101 @@ class RouterExprBuilder {
 }
 
 
-class RouterExprAnd implements RouterExpr {
-	List<RouterExpr> list = new ArrayList<>();
+class FallbackExprAnd implements FallbackExpr {
+	List<FallbackExpr> list = new ArrayList<>();
 
-	public boolean eval(Map<String, String> data) {
-		for (RouterExpr expr : list) {
+	public boolean eval(DataProvider data) {
+		for (FallbackExpr expr : list) {
 			if (!expr.eval(data))
 				return false;
 		}
 		return true;
 	}
-	
-	public void getKeys(Set<String> keys) {
-		for (RouterExpr expr : list) {
-			expr.getKeys(keys);
-		}
-	}
+
 }
 
-class RouterExprOr implements RouterExpr {
-	List<RouterExpr> list = new ArrayList<>();
+class FallbackExprOr implements FallbackExpr {
+	List<FallbackExpr> list = new ArrayList<>();
 
-	public boolean eval(Map<String, String> data) {
-		for (RouterExpr expr : list) {
+	public boolean eval(DataProvider data) {
+		for (FallbackExpr expr : list) {
 			if (expr.eval(data))
 				return true;
 		}
 		return false;
 	}
-	
-	public void getKeys(Set<String> keys) {
-		for (RouterExpr expr : list) {
-			expr.getKeys(keys);
-		}
-	}	
+
 }
 
-class RouterExprNot implements RouterExpr {
-	RouterExpr expr;
+class FallbackExprNot implements FallbackExpr {
+	FallbackExpr expr;
 
-	RouterExprNot(RouterExpr expr) {
+	FallbackExprNot(FallbackExpr expr) {
 		this.expr = expr;
 	}
 
-	public boolean eval(Map<String, String> data) {
+	public boolean eval(DataProvider data) {
 		return !expr.eval(data);
 	}
-	
-	public void getKeys(Set<String> keys) {
-			expr.getKeys(keys);
-	}	
+
 }
 
-class RouterExprSimple implements RouterExpr {
+class FallbackExprEqual implements FallbackExpr {
+
+	String key;
+	String operator;
+	String value;
+
+	FallbackExprEqual(String key, String operator, String value) {
+		this.key = key;
+		this.operator = operator;
+		this.value = value;
+		if( this.value == null ) this.value = "";
+	}
+
+	public boolean eval(DataProvider data) {
+		String v = data.get(key);
+		if (v == null) // invalid key
+			return false;
+		
+		boolean ok = v.equals(value);
+		if( operator.equals("==") ) return ok;
+		else return !ok;
+	}
+}
+
+
+class FallbackExprPattern implements FallbackExpr {
+
+	String key;
+	String operator;
+	Pattern pattern;
+
+	FallbackExprPattern(String key, String operator, String value) {
+		this.key = key;
+		this.operator = operator;
+		pattern = Pattern.compile(value);
+	}
+
+	public boolean eval(DataProvider data) {
+		String v = data.get(key);
+		if (v == null) // invalid key
+			return false;
+		
+		boolean ok = pattern.matcher(v).matches();
+		if( operator.equals("=~") ) return ok;
+		else return !ok;		
+	}
+	
+}
+
+class FallbackExprIn implements FallbackExpr {
 
 	String key;
 	String operator;
 	Set<String> strs = new HashSet<>();
-	List<Pattern> patterns = new ArrayList<>();
 
-	public void getKeys(Set<String> keys) {
-		keys.add(key);
-	}	
-	
-	RouterExprSimple(String key, String operator, String values) {
+	FallbackExprIn(String key, String operator, String values) {
 		this.key = key;
 		this.operator = operator;
 		String[] toss = values.split(",");
@@ -367,49 +393,18 @@ class RouterExprSimple implements RouterExpr {
 			s = s.trim();
 			if (s.isEmpty())
 				continue;
-
-			if( s.indexOf("*") < 0 ) {
-				strs.add(s);
-			} else {
-				s = s.replaceAll("\\*", "[0-9]*");
-				s = s.replaceAll("\\.", "[.]");
-				Pattern p = Pattern.compile(s);
-				patterns.add(p);
-			}				
- 
+			strs.add(s);
 		}
 	}
 
-	public boolean eval(Map<String, String> data) {
-		String value = data.get(key);
-		if (value == null || value.isEmpty())
+	public boolean eval(DataProvider data) {
+		String v = data.get(key);
+		if ( v == null)
 			return false;
 
-		if (operator.equals("==") ) {
-			
-			if( strs.contains(value)) return true;
-			
-			for (Pattern p : patterns) {
-				if (p.matcher(value).matches()) {
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		if (operator.equals("!=") ) {
-			
-			if( strs.contains(value)) return false;
-			
-			for (Pattern p : patterns) {
-				if (p.matcher(value).matches()) {
-					return false;
-				}
-			}
-			return true;
-		}
-		
-		return false;
+		boolean ok = strs.contains(v);
+		if( operator.equals("in") ) return ok;
+		else return !ok;		
 	}
 
 }

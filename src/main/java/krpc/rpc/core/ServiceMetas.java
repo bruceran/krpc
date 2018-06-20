@@ -1,7 +1,6 @@
 package krpc.rpc.core;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.protobuf.Message;
@@ -22,6 +21,7 @@ public interface ServiceMetas {
     String getServiceName(int serviceId);
 	String getName(int serviceId,int msgId);
 	Map<Integer, String> getMsgNames(int serviceId);
+	String getServiceIdMsgId(String serviceName,String msgName);
 	
 	RpcCallable findCallable(String implClsName);
     

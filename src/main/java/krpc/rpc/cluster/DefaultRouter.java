@@ -100,7 +100,7 @@ public class DefaultRouter implements Router {
 	class Rule {
 		
 		Condition condition;
-		RouterExprSimple target; 
+		RouterExpr target; 
 		
 		Rule(Condition condition,String to) {
 			this.condition = condition;
