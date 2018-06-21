@@ -53,12 +53,17 @@
 	   注册与发现插件  krpc.rpc.core.Registry 接口
 		       用来自定义注册与发现机制
 		       通过RegistryConfig配置
-		       框架自带了 consul, etcd, zookeeper 插件
+		       框架自带了 consul, etcd, zookeeper, jedis 插件
 
 	   动态路由插件  krpc.rpc.core.DynamicRoutePlugin 接口
 		       用来自定义动态实现
 		       通过ApplicationConfig.dynamicRoutePlugin配置
-		       框架自带了 consul, etcd, zookeeper 插件
+		       框架自带了 consul, etcd, zookeeper, jedis 插件
+
+	   FALLBACK插件  krpc.rpc.core.FallbackPlugin 接口
+		       可实现自己的服务降级策略
+		       通过ApplicationConfig.fallbackPlugin配置
+		       框架自带了 default 插件, 可通过classpath下的 fallback.yaml文件来灵活配置降级策略
 
 	   错误消息插件  krpc.rpc.core.ErrorMsgConverter 接口
 		        用来自定义错误码错误消息转换方式
@@ -70,10 +75,18 @@
 		       通过MonitorConfig.logFormatter配置
 		       框架自带了 simple 和  json 插件
 
+	   监控插件  krpc.rpc.monitor.MonitorPlugin 接口
+		       可实现自己的日志，统计等功能
+		       注意不可在此插件中做同步的耗时操作(如打日志)，否则会影响到服务的性能
+		       通过MonitorConfig.plugins配置, 如有参数需用pluginParams配置参数
+
 	   RPC插件 krpc.rpc.core.RpcPlugin 接口
 		        可用来自定义流控策略
 		        通过ClientConfig.plugins配置或通过ServerConfig.plugins配置
-		        框架自带了 memory（单进程）和 jedis （分布式，依赖jedis） 插件
+		        框架自带
+		         memoryflowcontrol（单进程）
+				 jedisflowcontrol （分布式，依赖jedis） 插件
+				 memoryconcurrentflowcontrol (单进程, 并行执行的请求数) 
 		       		       
 	   WEB插件 krpc.rpc.web.WebPlugin 接口
 		        可用来自定义流控策略
