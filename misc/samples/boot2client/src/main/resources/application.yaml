@@ -10,5 +10,5 @@ krpc:
           port: 8888          
     referer:
         interfaceName: com.xxx.userservice.proto.UserService
-        direct: 127.0.0.1:6500
+#        direct: 127.0.0.1:6500
         
