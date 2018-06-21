@@ -77,7 +77,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	HashSet<Integer> allowedServices = new HashSet<Integer>();
 	HashSet<Integer> allowedReferers = new HashSet<Integer>();
 	HashMap<String,Integer> timeoutMap = new HashMap<String,Integer>();
-	HashMap<String,Integer> retryLevelMap = new HashMap<String,Integer>();
 	HashMap<String,Integer> retryCountMap = new HashMap<String,Integer>();
 
 	ArrayList<Object> resources = new ArrayList<Object>();
@@ -133,11 +132,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		allowedReferers.add(serviceId);
 	}
 	
-	public void addRetryPolicy(int serviceId,int msgId,int timeout,int retryLevel,int retryCount) {
+	public void addRetryPolicy(int serviceId,int msgId,int timeout,int retryCount) {
 		String key = serviceId+":"+msgId;
 		if( timeoutMap.get(key) == null ) {
 			timeoutMap.put(key, timeout);
-			retryLevelMap.put(key, retryLevel);
 			retryCountMap.put(key, retryCount);
 		}
 	}
@@ -290,7 +288,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		
 		final RpcMeta meta = closure.getCtx().getMeta();
 		final int retryCount = getRetryCount(meta.getServiceId(),meta.getMsgId());
-		if( retryCount == 0 || closure.asClientCtx().getRetryTimes() >= retryCount ) return false; // only support one retry
+		if( retryCount == 0 || closure.asClientCtx().getRetryTimes() >= retryCount ) return false;
 		closure.asClientCtx().incRetryTimes(closure.getCtx().getConnId());
 		final String newConnId = nextConnId(closure.asClientCtx(),closure.getReq()); // may be null
 		if( newConnId == null ) return false;
@@ -317,6 +315,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	void endCall(RpcClosure closure,Message res) {
 		
 		List<RpcPlugin> calledPlugins = (List<RpcPlugin>)closure.getCtx().getAttribute("calledClientPlugins");
@@ -342,23 +341,11 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 	
 	public void timeout(RpcClosure closure) {
-		
-		int retryLevel = getRetryLevel(closure.getCtx().getMeta().getServiceId(),closure.getCtx().getMeta().getMsgId());
-		if( retryLevel >= 4 ) {		
-			if( retryCall(closure) ) return;
-		}
-		
 		RpcMeta meta = closure.getCtx().getMeta();
 		Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), RetCodes.RPC_TIMEOUT);
 		endCall(closure,res);
 	}
 	public void disconnected(RpcClosure closure) {
-	
-		int retryLevel = getRetryLevel(closure.getCtx().getMeta().getServiceId(),closure.getCtx().getMeta().getMsgId());
-		if( retryLevel >= 3 ) {		
-			if( retryCall(closure) ) return;
-		}
-		
 		RpcMeta meta = closure.getCtx().getMeta();
 		Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), RetCodes.CONNECTION_BROKEN);
 		endCall(closure,res);
@@ -397,12 +384,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			RpcClosure closure = dataManager.remove(connId, data.getMeta().getSequence());
 			if( closure == null ) return; // data removed, ignore 
 			
-			int retryLevel = getRetryLevel(data.getMeta().getServiceId(),data.getMeta().getMsgId());
 			int retCode = data.getMeta().getRetCode();
-			if( RetCodes.canSafeRetry(retCode)) {
-				if( retryCall(closure) ) return;
-			}
-			if( retryLevel == 4 && RetCodes.canRetryTimeout(retCode)) {
+			if( RetCodes.canRetry(retCode)) {
 				if( retryCall(closure) ) return;
 			}
 
@@ -607,13 +590,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     	if( retryCount == null ) retryCount = retryCountMap.get(serviceId+".-1");
     	if( retryCount == null ) retryCount = retryCountMap.get("-1.-1");
     	return retryCount == null ? 0 : retryCount;		
-	}
-
-	int getRetryLevel(int serviceId,int msgId) {
-    	Integer retryLevel = retryLevelMap.get(serviceId+"."+msgId);
-    	if( retryLevel == null ) retryLevel = retryLevelMap.get(serviceId+".-1");
-    	if( retryLevel == null ) retryLevel = retryLevelMap.get("-1.-1");
-    	return retryLevel == null ? 0 : retryLevel;		
 	}
 
 	boolean isEmpty(String s) {

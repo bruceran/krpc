@@ -152,7 +152,7 @@ public class JedisFlowControl extends AbstractFlowControl implements RpcPlugin,I
     	long now = System.currentTimeMillis()/1000;
     	boolean failed1 = updateServiceStats(serviceId,now);
     	boolean failed2 = updateMsgStats(serviceId,msgId,now);
-    	if( failed1 || failed2 ) return RetCodes.FLOW_LIMIT;
+    	if( failed1 || failed2 ) return RetCodes.DIST_FLOW_LIMIT;
     	return 0;
 	}
 

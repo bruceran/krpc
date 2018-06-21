@@ -22,9 +22,10 @@ public class RetCodes {
 	 static public final int ENCODE_RES_ERROR = -553;
 	 static public final int NOT_FOUND = -554;
 	 static public final int FLOW_LIMIT = -555;
-	 static public final int SERVICE_NOT_ALLOWED = -556;
-	 static public final int SERVER_CONNECTION_BROKEN = -557; // just for server log, not returned to client
-	 static public final int VALIDATE_ERROR = -558;
+	 static public final int DIST_FLOW_LIMIT = -556;
+	 static public final int SERVICE_NOT_ALLOWED = -557;
+	 static public final int SERVER_CONNECTION_BROKEN = -558; // just for server log, not returned to client
+	 static public final int VALIDATE_ERROR = -559;
 	 
 	 // http client side
 	 static public final int HTTP_NOT_FOUND = -404;  
@@ -38,18 +39,16 @@ public class RetCodes {
 		 return retCode == RPC_TIMEOUT || retCode == QUEUE_TIMEOUT;
 	 }
 	 
+	 /*
 	 static public boolean hasExecuted(int retCode) {
-		 return retCode == 0 || retCode == BUSINESS_ERROR  || retCode  == VALIDATE_ERROR || retCode <= -600;
+		 return retCode == 0 || retCode == BUSINESS_ERROR  || retCode  == VALIDATE_ERROR || retCode <= -1000;
 	 }
+	 */
 
-	 static public boolean canSafeRetry(int retCode) {
+	 static public boolean canRetry(int retCode) {
 		 return retCode == QUEUE_FULL || retCode == SERVER_SHUTDOWN || retCode == FLOW_LIMIT;
 	 }
-	 
-	 static public boolean canRetryTimeout(int retCode) {
-		 return retCode == QUEUE_TIMEOUT;
-	 }
-	 
+
 	 static public String retCodeText(int retCode) {
 		 switch(retCode) {
 		 	case 0: return "";

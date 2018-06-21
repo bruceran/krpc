@@ -6,7 +6,6 @@ public class MethodConfig  {
 	
 	// for referer's methods
 	int timeout = 3000;
-	String retryLevel = "no_retry";
 	int retryCount = 0;
 
 	// for service's methods
@@ -33,13 +32,6 @@ public class MethodConfig  {
 	}
 	public MethodConfig setTimeout(int timeout) {
 		this.timeout = timeout;
-		return this;
-	}
-	public String getRetryLevel() {
-		return retryLevel;
-	}
-	public MethodConfig setRetryLevel(String retryLevel) {
-		this.retryLevel = retryLevel;
 		return this;
 	}
 	public int getRetryCount() {

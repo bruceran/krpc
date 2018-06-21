@@ -18,7 +18,6 @@ public class RefererConfig  {
 	String group;
 
 	int timeout = 3000;
-	String retryLevel = "no_retry";
 	int retryCount = 0;
 
 	String loadBalance = "roundrobin"; // can be empty (use client default), or random, roundrobin, ...
@@ -91,15 +90,6 @@ public class RefererConfig  {
 
 	public RefererConfig setTimeout(int timeout) {
 		this.timeout = timeout;
-		return this;
-	}
-
-	public String getRetryLevel() {
-		return retryLevel;
-	}
-
-	public RefererConfig setRetryLevel(String retryLevel) {
-		this.retryLevel = retryLevel;
 		return this;
 	}
 

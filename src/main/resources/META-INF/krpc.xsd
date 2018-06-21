@@ -110,7 +110,6 @@
 	    <complexType>
               <attribute name="pattern" type="string" use="optional"/>
               <attribute name="timeout" type="string" use="optional"/>
-              <attribute name="retryLevel" type="string" use="optional"/>
               <attribute name="retryCount" type="string" use="optional"/>
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
@@ -150,7 +149,6 @@
               <attribute name="registryName" type="string" use="optional"/>
               <attribute name="group" type="string" use="optional"/>
               <attribute name="timeout" type="string" use="optional"/>
-              <attribute name="retryLevel" type="string" use="optional"/>
               <attribute name="retryCount" type="string" use="optional"/>
               <attribute name="loadBalance" type="string" use="optional"/>
               <attribute name="zip" type="string" use="optional"/>

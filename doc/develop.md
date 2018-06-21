@@ -557,7 +557,6 @@
     registryName  注册与发现服务名, 只能填一个
     group  册与发现服务里的分组
     timeout 超时时间, 毫秒，默认为3000
-    retryLevel 重试级别, 默认为 no_retry
     retryCount 重试次数，默认为0
     loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,hash,
                       leastactiveweight,roudrobinweight,randomweight 默认为roundrobin
@@ -585,7 +584,6 @@
     
     以下3个参数只用于referer
     timeout 消息级别的超时时间，毫秒，默认为3000
-    retryLevel 消息级别的重试级别, 默认为 no_retry
     retryCount 消息级别的试次数，默认为0
     
     以下4个参数只用于service
@@ -1053,6 +1051,8 @@
 
 # 熔断和降级
 
+        krpc目前支持的只支持熔断后的降级(连接断开，强制降级，动态降级)，如果服务可以访问但出错不走降级策略。
+        
 		krpc支持以下几种熔断策略：
 		
 		1)  所有的长连接一旦断开，该地址会自动从路由中排除并走降级策略； 
@@ -1087,7 +1087,7 @@
 		熔断后的降级策略：
 		
 				用户可实现krpc.rpc.core.FallbackPlugin接口来自定义降级策略
-				建议使用框架内置的 default 降级策略插件
+				建议使用框架内置的 default 降级策略插件, 可以模拟成功或失败的任意结果
 		
 		default 降级策略插件：
 		
@@ -1143,6 +1143,18 @@
 		
 		fallbackPlugin="default:file=mock.yaml"  来使用 mock.yaml 作为 mock 文件
 		
-		
+# 重试策略
+
+       krpc通过 referer 或 method上的 retryCount 来控制重试次数
+       retryCount = 0 不重试   (等价于 failfast 策略)
+       retryCount > 0 则最多重试指定次数, 若累计时间已超时则不再重试 (等价于failover策略)
+       
+       krpc的重试指的是有可用服务的情况下对调用过程中(包括未发出，发送中，已收到响应)出现的错误进行重试
+       如无可用服务，则直接走降级策略，不会走重试策略
+       
+       krpc的retry一定是会更换不同的服务器地址来重试，如无可用的候选服务器，则放弃重试
+       对重试肯定会失败的错误也不会进行重试 （如编解码错误，参数验证错误等 )
+       
+
 								
 		   		

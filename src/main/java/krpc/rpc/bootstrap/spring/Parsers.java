@@ -200,7 +200,7 @@ class RefererConfigBeanParser extends BaseParser<RefererConfigBean> {
 	RefererConfigBeanParser() {
 		beanClass = RefererConfigBean.class;
 		attributes = new String[] {"interfaceName","serviceId","transport","reverse",
-				"direct","registryName","group","timeout","retryLevel","retryCount","loadBalance","zip","minSizeToZip",
+				"direct","registryName","group","timeout","retryCount","loadBalance","zip","minSizeToZip",
 				"breakerEnabled","breakerWindowSeconds","breakerWindowMinReqs",
 				"breakerCloseBy","breakerCloseRate","breakerSleepSeconds","breakerSuccMills"
 		};
@@ -211,7 +211,7 @@ class RefererConfigBeanParser extends BaseParser<RefererConfigBean> {
 class MethodConfigBeanParser extends BaseParser<MethodConfig> {
 	MethodConfigBeanParser() {
 		beanClass = MethodConfig.class;
-		attributes = new String[] {"pattern","timeout","threads","maxThreads","queueSize","retryLevel","retryCount"};
+		attributes = new String[] {"pattern","timeout","threads","maxThreads","queueSize","retryCount"};
 		hasId = false;
 	}
 }

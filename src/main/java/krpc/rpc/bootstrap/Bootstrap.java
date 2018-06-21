@@ -642,14 +642,9 @@ public class Bootstrap {
 				}
 			}
 
-			if (getRetryLevel(c.retryLevel) < 0)
-				throw new RuntimeException(String.format("referer retry level %s not valid", c.retryLevel));
-
 			for (MethodConfig mc : c.getMethods()) {
 				if (isEmpty(mc.pattern))
 					throw new RuntimeException(String.format("method pattern not specified"));
-				if (getRetryLevel(mc.retryLevel) < 0)
-					throw new RuntimeException(String.format("referer retry level %s not valid", c.retryLevel));
 			}
 
 			refererInterfaces.add(c.interfaceName);
@@ -969,7 +964,7 @@ public class Bootstrap {
 			
 			if (callable instanceof RpcClient) {
 				RpcClient client = (RpcClient) callable;
-				client.addRetryPolicy(serviceId, -1, c.timeout, getRetryLevel(c.retryLevel), c.retryCount);
+				client.addRetryPolicy(serviceId, -1, c.timeout, c.retryCount);
 
 				DefaultClusterManager cmi = (DefaultClusterManager) client.getClusterManager();
 
@@ -994,7 +989,7 @@ public class Bootstrap {
 						throw new RuntimeException(String.format("no msgId match method pattern " + mc.pattern));
 
 					for (int msgId : msgIds) {
-						client.addRetryPolicy(serviceId, msgId, mc.timeout, getRetryLevel(mc.retryLevel),
+						client.addRetryPolicy(serviceId, msgId, mc.timeout, 
 								mc.retryCount);
 					}
 				}
@@ -1194,23 +1189,6 @@ public class Bootstrap {
 
 	boolean isEmpty(String s) {
 		return s == null || s.isEmpty();
-	}
-
-	int getRetryLevel(String s) {
-		switch (s.toLowerCase()) {
-		case "no_retry":
-			return 0;
-		case "send_failed":
-			return 1;
-		case "not_available":
-			return 2;
-		case "disconnect":
-			return 3;
-		case "timeout":
-			return 4;
-		default:
-			return -1;
-		}
 	}
 
 	int getZip(String s) {
