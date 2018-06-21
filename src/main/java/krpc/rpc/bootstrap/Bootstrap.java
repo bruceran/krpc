@@ -349,9 +349,6 @@ public class Bootstrap {
 			appConfig.dataDir = ".";
 		}
 		
-		if (isEmpty(appConfig.errorMsgConverter))
-			appConfig.errorMsgConverter = "file";
-
 		if (!isEmpty(appConfig.errorMsgConverter)) {
 			if (getPlugin(ErrorMsgConverter.class,appConfig.errorMsgConverter) == null) {
 				throw new RuntimeException("unknown errorMsgConverter type, type=" + appConfig.errorMsgConverter);

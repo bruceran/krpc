@@ -161,6 +161,9 @@ public class DefaultFallbackPlugin implements FallbackPlugin , InitClose, Servic
 		try {
 			Yaml yaml = new Yaml();
 			in = getResource(file);
+			if( in == null ) {
+				return;
+			}
 			Object result= yaml.load(in);
 			if( !(result instanceof List) ) {
 				throw new RuntimeException("invalid fallback file, not a list");

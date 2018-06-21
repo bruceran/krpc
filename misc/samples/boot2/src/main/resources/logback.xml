@@ -9,9 +9,9 @@
 </appender>
 
 <appender name="ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/krpc/log/root.log</file>
+  <file>/opt/logs/boot2/log/root.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/krpc/log/root.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot2/log/root.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -21,9 +21,9 @@
 </appender>
 
 <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/krpc/log/all.log</file>
+  <file>/opt/logs/boot2/log/all.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/krpc/log/all.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot2/log/all.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -32,10 +32,10 @@
   </encoder>
 </appender>
 
-<appender name="REQLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/krpc/auditlog/req.log</file>
+<appender name="SERVERLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/boot2/auditlog/server.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/krpc/auditlog/req.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot2/auditlog/server.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -43,10 +43,10 @@
       <charset>UTF-8</charset>
   </encoder>
 </appender>
-<appender name="WEBLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/krpc/auditlog/web.log</file>
+<appender name="WEBSERVERLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/boot2/auditlog/webserver.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/krpc/auditlog/web.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot2/auditlog/webserver.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -54,10 +54,10 @@
       <charset>UTF-8</charset>
   </encoder>
 </appender>
-<appender name="CALLLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/krpc/auditlog/call.log</file>
+<appender name="CLIENTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/boot2/auditlog/client.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/krpc/auditlog/call.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot2/auditlog/client.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -66,9 +66,9 @@
   </encoder>
 </appender>
 <appender name="STATSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/krpc/auditlog/stats.log</file>
+  <file>/opt/logs/boot2/auditlog/stats.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/krpc/auditlog/stats.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot2/auditlog/stats.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -77,11 +77,11 @@
   </encoder>
 </appender>
 
-<logger name="krpc" level="info" additivity="false"><appender-ref ref="STDOUT" /></logger>
-<logger name="krpc.reqlog" level="error" additivity="false"><appender-ref ref="REQLOG" /></logger>
-<logger name="krpc.weblog" level="error" additivity="false"><appender-ref ref="WEBLOG" /></logger>
-<logger name="krpc.calllog" level="error" additivity="false"><appender-ref ref="CALLLOG" /></logger>
-<logger name="krpc.statslog" level="error" additivity="false"><appender-ref ref="STATSLOG" /></logger>
+<logger name="krpc" level="debug" additivity="false"><appender-ref ref="STDOUT" /></logger>
+<logger name="krpc.serverlog" level="info" additivity="false"><appender-ref ref="SERVERLOG" /></logger>
+<logger name="krpc.webserverlog" level="info" additivity="false"><appender-ref ref="WEBSERVERLOG" /></logger>
+<logger name="krpc.clientlog" level="info" additivity="false"><appender-ref ref="CLIENTLOG" /></logger>
+<logger name="krpc.statslog" level="info" additivity="false"><appender-ref ref="STATSLOG" /></logger>
 
 <root level="info"><appender-ref ref="ROOT" /></root>
 

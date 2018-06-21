@@ -1,0 +1,14 @@
+spring:
+    application:
+        name: boot2client
+krpc:
+    enabled: true
+    registry:
+          type: consul
+          addrs: 127.0.0.1:8500    
+    webserver:
+          port: 8888          
+    referer:
+        interfaceName: com.xxx.userservice.proto.UserService
+        direct: 127.0.0.1:6500
+        

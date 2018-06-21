@@ -4,11 +4,11 @@ public class ApplicationConfig  {
 
 	String name = "unknown";
 	String dataDir = ".";
-	String errorMsgConverter = "file";
-
+	
 	String traceAdapter = "default"; // default, skywalking, zipkin, cat
-	String dynamicRoutePlugin;  // dynamicRoute plugin, only one
-	String fallbackPlugin;
+	String errorMsgConverter = "file";
+	String fallbackPlugin = "default"; 
+	String dynamicRoutePlugin;  // consul,etcd,zookeeper,jedis,...
 
 	public ApplicationConfig() {
 	}

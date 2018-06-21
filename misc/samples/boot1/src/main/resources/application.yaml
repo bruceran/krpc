@@ -3,15 +3,15 @@ spring:
         name: boot1
 krpc:
     enabled: true
-#    service:
-#        interfaceName: com.xxx.userservice.proto.UserService
+    service:
+        interfaceName: com.xxx.userservice.proto.UserService
 #    referer:
 #        interfaceName: com.xxx.userservice.proto.PushService
 #        direct: 127.0.0.1:5600
-    referers:
-    -
-        interfaceName: com.xxx.userservice.proto.UserService
-        direct: 127.0.0.1:5600
-    -
-        interfaceName: com.xxx.userservice.proto.PushService
-        direct: 127.0.0.1:5600    
+#    referers:
+#    -
+#        interfaceName: com.xxx.userservice.proto.UserService
+#        direct: 127.0.0.1:5600
+#    -
+#        interfaceName: com.xxx.userservice.proto.PushService
+#        direct: 127.0.0.1:5600    

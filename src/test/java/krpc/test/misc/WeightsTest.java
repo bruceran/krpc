@@ -17,7 +17,7 @@ public class WeightsTest {
 		w.addWeight("192.168.1.5", 20);
 		
 		int v = w.getWeight("1.1.1.1:80");
-		Assert.assertEquals(0,v);
+		Assert.assertEquals(100,v);
 		v = w.getWeight("192.168.1.3:80");
 		Assert.assertEquals(15,v);
 		v = w.getWeight("192.168.1.5:1800");
@@ -35,7 +35,7 @@ public class WeightsTest {
 		w.addWeight("192.168.1.*", 20);
 		
 		int v = w.getWeight("1.1.1.1:80");
-		Assert.assertEquals(0,v);
+		Assert.assertEquals(100,v);
 		v = w.getWeight("192.168.1.3:80");
 		Assert.assertEquals(15,v);
 		v = w.getWeight("192.168.1.5:1800");
