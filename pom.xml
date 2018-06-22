@@ -139,7 +139,20 @@
             </configuration>  
         	</plugin>   
         	
-        </plugins>          
+			<plugin>  
+			    <groupId>org.apache.maven.plugins</groupId>  
+			    <artifactId>maven-jar-plugin</artifactId>  
+			    <configuration>  
+			        <archive>  
+			            <manifestEntries>  
+			                <Premain-Class>krpc.trace.sniffer.TraceSniffer</Premain-Class>  
+			            </manifestEntries>  
+			        </archive>  
+			    </configuration>  
+			</plugin>          
+		
+		</plugins>        
+		
 </build>  
 
 <distributionManagement>  
