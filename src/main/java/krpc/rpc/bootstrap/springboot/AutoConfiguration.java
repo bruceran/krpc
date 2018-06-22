@@ -45,6 +45,44 @@ public class AutoConfiguration  implements ApplicationListener<ApplicationEvent>
 		return new BootPostProcessor();
 	}
 
+	private boolean checkBeanExisted(String beanName,ApplicationContext context) {
+		try {
+			Object bean = context.getBean(beanName);
+			return bean != null;
+		} catch(Throwable e) {
+			return false;
+		}
+	}
+	private boolean checkConsulEnabled(Environment environment,ApplicationContext context) {
+		if( !checkBeanExisted("consulClient",context) || !checkBeanExisted("consulProperties",context)  ) return false;
+		
+		String host = environment.getProperty("spring.cloud.consul.host","localhost");
+		String port = environment.getProperty("spring.cloud.consul.port","8500");
+		String addr = host+":"+port;
+		
+		RegistryConfig c = new RegistryConfig();
+		c.setType("consul");
+		c.setAddrs(addr);
+		
+		Bootstrap bootstrap = SpringBootstrap.instance.getBootstrap();
+		bootstrap.addRegistry(c);
+		return true;
+	}
+
+	private boolean checkZooKeeperEnabled(Environment environment,ApplicationContext context) {
+		if( !checkBeanExisted("curatorFramework",context) || !checkBeanExisted("zookeeperProperties",context)  ) return false;
+		
+		String addr = environment.getProperty("spring.cloud.zookeeper.connectString","localhost:2181");
+		
+		RegistryConfig c = new RegistryConfig();
+		c.setType("zookeeper");
+		c.setAddrs(addr);
+		
+		Bootstrap bootstrap = SpringBootstrap.instance.getBootstrap();
+		bootstrap.addRegistry(c);
+		return true;
+	}
+
     @Bean(initMethod="init", destroyMethod = "close") 
     @ConditionalOnMissingBean(RpcApp.class)
     public RpcApp rpcApp(BootProperties bootProperties,Environment environment,ApplicationContext context) {	
@@ -71,6 +109,11 @@ public class AutoConfiguration  implements ApplicationListener<ApplicationEvent>
     	if( bootProperties.registries != null ) {
     		for(RegistryConfig c: bootProperties.registries)
     			bootstrap.addRegistry(c);
+    	}
+    	
+    	if( bootstrap.getRegistryList().size() == 0 ) {
+    		boolean loaded = checkConsulEnabled(environment,context);
+    		if( !loaded ) loaded = checkZooKeeperEnabled(environment,context);
     	}
 
     	if( bootProperties.server != null ) {
