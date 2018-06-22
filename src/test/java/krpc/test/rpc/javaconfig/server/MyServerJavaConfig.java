@@ -13,15 +13,14 @@ import krpc.rpc.bootstrap.RpcApp;
 
 @Configuration
 @ComponentScan(basePackages = "krpc.test.rpc.javaconfig.server", excludeFilters = { @Filter(type = FilterType.ANNOTATION, value = Configuration.class) })
-public class MyServerJavaConfig   {
+public class MyServerJavaConfig  {
 
-    @Bean(destroyMethod = "stopAndClose")
+    @Bean(initMethod = "init", destroyMethod = "close")
     public RpcApp rpcApp(UserService userService) {
 		RpcApp app = new Bootstrap() 
 				.addService(UserService.class,userService) 
 				.addReverseReferer("push",PushService.class)
 				.build();
-		app.initAndStart();
 		return app;
     }
     

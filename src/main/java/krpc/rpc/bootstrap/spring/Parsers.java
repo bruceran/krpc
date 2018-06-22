@@ -1,9 +1,14 @@
 package krpc.rpc.bootstrap.spring;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -13,10 +18,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import krpc.rpc.bootstrap.ApplicationConfig;
+import krpc.rpc.bootstrap.ClientConfig;
 import krpc.rpc.bootstrap.MethodConfig;
 import krpc.rpc.bootstrap.MonitorConfig;
+import krpc.rpc.bootstrap.RefererConfig;
+import krpc.rpc.bootstrap.RegistryConfig;
+import krpc.rpc.bootstrap.ServerConfig;
+import krpc.rpc.bootstrap.ServiceConfig;
+import krpc.rpc.bootstrap.WebServerConfig;
 
 public class Parsers extends NamespaceHandlerSupport {
+	
     @Override
     public void init() {
         registerBeanDefinitionParser("application", new ApplicationConfigBeanParser());
@@ -32,24 +45,58 @@ public class Parsers extends NamespaceHandlerSupport {
 
 class BaseParser<T> implements BeanDefinitionParser {
 
-    Class<T> beanClass;
-    
+	static RootBeanDefinition rpcAppBeanDefinition;
+	static List<String> beanIds = new ArrayList<>();
+
+    Class<T> beanClass;    
     String[] attributes;
     boolean hasMethods = false;
     boolean hasPlugins = false;
-    boolean hasId = true;
-    
+
+    String idValue;
     String beanId;
 
+    public void init(Class<?> cls) {
+    	Field[] fields = cls.getDeclaredFields();
+    	List<String> attrs = new ArrayList<>();
+    	for(Field f: fields) {
+    		String name = f.getName();
+    		if( name.equals("methods")) {
+    			hasMethods = true;
+    		} else if( name.equals("pluginParams")) {
+    			hasPlugins = true;
+    		} else {
+    			attrs.add(name);
+    		}
+    	}
+    	attributes = attrs.toArray(new String[0]);
+    }
+    
     public BeanDefinition parse(Element root, ParserContext parserContext) {
 
-        RootBeanDefinition bd = new RootBeanDefinition();
+    	RootBeanDefinition bd = new RootBeanDefinition();
         bd.setBeanClass(beanClass);
         bd.setLazyInit(false);
+        idValue = root.getAttribute("id");
+        
+        if( this instanceof RefererConfigBeanParser )
+        	beanId = generateBeanId(null,parserContext); // idValue will be used by referer proxy
+        else
+        	beanId = generateBeanId(idValue,parserContext);     
+        parserContext.getRegistry().registerBeanDefinition(beanId, bd);
+        
+        beanIds.add(beanId);
+        
+    	if( rpcAppBeanDefinition == null ) {
+    		rpcAppBeanDefinition = new RootBeanDefinition();
+    		rpcAppBeanDefinition.setBeanClass(RpcAppFactory.class);
+    		rpcAppBeanDefinition.setLazyInit(false);
+    		rpcAppBeanDefinition.setInitMethodName("init");
+    		rpcAppBeanDefinition.setDestroyMethodName("close");
 
-        if( hasId ) {
-            beanId = parseId(root, parserContext, bd);        	
-        }
+            parserContext.getRegistry().registerBeanDefinition("rpcApp", rpcAppBeanDefinition);
+    	} 
+    	rpcAppBeanDefinition.setDependsOn(beanIds.toArray(new String[0]));
 
         if( attributes != null ) {
             for(String name:attributes) {
@@ -65,8 +112,21 @@ class BaseParser<T> implements BeanDefinitionParser {
         if( hasPlugins ) 
         	parsePlugin(root,parserContext,bd);
         
+
         return bd;
     }
+
+	String generateBeanId(String initValue,ParserContext parserContext) {
+		String id = initValue;
+        if ( id == null || id.isEmpty() ) {
+            id = beanClass.getName();
+            int counter = 2;
+            while (parserContext.getRegistry().containsBeanDefinition(id)) {
+                id = beanClass.getName() + (counter++);
+            }
+        }
+        return id;
+	}
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	void parseMethod(Element root, ParserContext parserContext, RootBeanDefinition bd) {
@@ -119,109 +179,110 @@ class BaseParser<T> implements BeanDefinitionParser {
 		 }	
     }
 
-	String parseId(Element element, ParserContext parserContext, RootBeanDefinition bd) {
-		String id = element.getAttribute("id");
-        if ( id == null || id.isEmpty() ) {
-            id = beanClass.getName();
-            int counter = 2;
-            while (parserContext.getRegistry().containsBeanDefinition(id)) {
-                id = beanClass.getName() + (counter++);
-            }
-        }
-        
-        parserContext.getRegistry().registerBeanDefinition(id, bd);
-        return id;
-	}
-
 }
 
 class ApplicationConfigBeanParser extends BaseParser<ApplicationConfigBean> {
 	ApplicationConfigBeanParser() {
 		beanClass = ApplicationConfigBean.class;
-		attributes = new String[] {"name","errorMsgConverter","dynamicRoutePlugin","traceAdapter","dataDir","fallbackPlugin"};
+		init(ApplicationConfig.class);
 	}
 }
 
 class ClientConfigBeanParser extends BaseParser<ClientConfigBean> {
 	ClientConfigBeanParser() {
 		beanClass = ClientConfigBean.class;
-		attributes = new String[] {"pingSeconds","maxPackageSize","connectTimeout",
-				"reconnectSeconds","ioThreads","connections",
-				"notifyThreads","notifyMaxThreads","notifyQueueSize","threads","maxThreads","queueSize","plugins"
-				};
-		hasPlugins = true;
+		init(ClientConfig.class);
 	}
 }
 
 class ServerConfigBeanParser extends BaseParser<ServerConfigBean> {
 	ServerConfigBeanParser() {
 		beanClass = ServerConfigBean.class;
-		attributes = new String[] {"port","host","backlog","idleSeconds",
-				"maxPackageSize","maxConns","ioThreads",
-				"notifyThreads","notifyMaxThreads","notifyQueueSize","threads","maxThreads","queueSize","plugins"
-				};
-		hasPlugins = true;
+		init(ServerConfig.class);
 	}
 }
 
 class WebServerConfigBeanParser extends BaseParser<WebServerConfigBean> {
 	WebServerConfigBeanParser() {
 		beanClass = WebServerConfigBean.class;
-		attributes = new String[] {"port","host","backlog","idleSeconds",
-				"maxContentLength","maxConns","ioThreads",
-				"threads","maxThreads","queueSize",
-				"routesFile",
-				"sessionIdCookieName","sessionIdCookiePath","protoDir","sampleRate",
-				"defaultSessionService",
-				};
-		hasPlugins = true;
+		init(WebServerConfig.class);
 	}
 }
 
 class RegistryConfigBeanParser extends BaseParser<RegistryConfigBean> {
 	RegistryConfigBeanParser() {
 		beanClass = RegistryConfigBean.class;
-		attributes = new String[] {"type","addrs","enableRegist","enableDiscover","params"};
+		init(RegistryConfig.class);
 	}
 }
 
 class ServiceConfigBeanParser extends BaseParser<ServiceConfigBean> {
 	ServiceConfigBeanParser() {
 		beanClass = ServiceConfigBean.class;
-		attributes = new String[] { "interfaceName","impl","transport","reverse",
-				"registryNames","group","threads","maxThreads","queueSize"};
-		hasMethods = true;
+		init(ServiceConfig.class);
 	}
 	
 }
 
-@SuppressWarnings("rawtypes")
 class RefererConfigBeanParser extends BaseParser<RefererConfigBean> {
+	
+	static Logger log = LoggerFactory.getLogger(Parsers.class);
+	
 	RefererConfigBeanParser() {
 		beanClass = RefererConfigBean.class;
-		attributes = new String[] {"interfaceName","serviceId","transport","reverse",
-				"direct","registryName","group","timeout","retryCount","loadBalance","zip","minSizeToZip",
-				"breakerEnabled","breakerWindowSeconds","breakerWindowMinReqs",
-				"breakerCloseBy","breakerCloseRate","breakerSleepSeconds","breakerSuccMills"
-		};
-		hasMethods = true;
+		init(RefererConfig.class);
+	}
+	
+	public BeanDefinition parse(Element root, ParserContext parserContext) {
+		BeanDefinition bd = super.parse(root, parserContext);
+		String interfaceName = bd.getPropertyValues().getPropertyValue("interfaceName").getValue().toString();
+		registerReferer(idValue,interfaceName,parserContext);
+		return bd;
+	}
+
+	void registerReferer(String id,String interfaceName,ParserContext parserContext) {
+		String beanName = generateBeanName(id,interfaceName);
+		//log.info("register referer "+interfaceName+", beanName="+beanName);
+        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(RefererFactory.class);
+        beanDefinitionBuilder.addConstructorArgValue(beanName);
+        beanDefinitionBuilder.addConstructorArgValue(interfaceName);
+        beanDefinitionBuilder.addDependsOn("rpcApp");
+        beanDefinitionBuilder.setLazyInit(true);
+        parserContext.getRegistry().registerBeanDefinition(beanName, beanDefinitionBuilder.getRawBeanDefinition());	
+        
+        registerAsyncReferer(beanName+"Async",interfaceName+"Async",parserContext);
+	}
+	
+	void registerAsyncReferer(String beanName,String interfaceName,ParserContext parserContext) {
+		//log.info("register referer "+interfaceName+", beanName="+beanName);
+        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(RefererFactory.class);
+        beanDefinitionBuilder.addConstructorArgValue(beanName);
+        beanDefinitionBuilder.addConstructorArgValue(interfaceName);
+        beanDefinitionBuilder.addDependsOn("rpcApp");
+        beanDefinitionBuilder.setLazyInit(true);
+        parserContext.getRegistry().registerBeanDefinition(beanName, beanDefinitionBuilder.getRawBeanDefinition());			
+	}		
+
+	String generateBeanName(String id, String interfaceName) {
+		if( id != null && !id.isEmpty()) return id;
+		int p = interfaceName.lastIndexOf(".");
+		String name = interfaceName.substring(p+1);
+		name = name.substring(0,1).toLowerCase()+name.substring(1);
+		return name;
+	}
+		
+}
+
+class MonitorConfigBeanParser extends BaseParser<MonitorConfigBean> {
+	MonitorConfigBeanParser() {
+		beanClass = MonitorConfigBean.class;
+		init(MonitorConfig.class);
 	}
 }
 
 class MethodConfigBeanParser extends BaseParser<MethodConfig> {
 	MethodConfigBeanParser() {
 		beanClass = MethodConfig.class;
-		attributes = new String[] {"pattern","timeout","threads","maxThreads","queueSize","retryCount"};
-		hasId = false;
+		init(MethodConfig.class);
 	}
 }
-
-class MonitorConfigBeanParser extends BaseParser<MonitorConfig> {
-	MonitorConfigBeanParser() {
-		beanClass = MonitorConfig.class;
-		attributes = new String[] {"accessLog","maskFields","maxRepeatedSizeToLog","logThreads","logQueueSize","logFormatter","serverAddr","printDefault","plugins"};
-		hasId = false;
-		hasPlugins = true;
-	}
-}
-

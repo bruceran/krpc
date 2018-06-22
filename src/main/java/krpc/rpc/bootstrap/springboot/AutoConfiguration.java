@@ -13,9 +13,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
 
 import krpc.rpc.bootstrap.Bootstrap;
@@ -33,7 +36,7 @@ import krpc.rpc.bootstrap.spring.SpringBootstrap;
 @EnableConfigurationProperties(BootProperties.class)
 @ConditionalOnClass(Bootstrap.class) 
 @ConditionalOnProperty  ( prefix = "krpc", value = "enabled", matchIfMissing = false )
-public class AutoConfiguration  {
+public class AutoConfiguration  implements ApplicationListener<ApplicationEvent>  {
 
 	static Logger log = LoggerFactory.getLogger(AutoConfiguration.class);
 	
@@ -42,10 +45,9 @@ public class AutoConfiguration  {
 		return new BootPostProcessor();
 	}
 
-    @Bean(destroyMethod = "stopAndClose")
+    @Bean(initMethod="init", destroyMethod = "close") 
     @ConditionalOnMissingBean(RpcApp.class)
     public RpcApp rpcApp(BootProperties bootProperties,Environment environment,ApplicationContext context) {	
-
 		SpringBootstrap.instance.spring = (ConfigurableApplicationContext)context;
 		
     	Bootstrap bootstrap = SpringBootstrap.instance.getBootstrap();
@@ -153,17 +155,20 @@ public class AutoConfiguration  {
     	bootstrap.mergePlugins(SpringBootstrap.instance.loadSpiBeans());
     	
 		RpcApp app = bootstrap.build();
-		app.init();
-		
-		SpringBootstrap.instance.setRpcApp(app);
 
-		if( bootProperties.autoStart ) {
-			app.start();
-		}
+		SpringBootstrap.instance.setRpcApp(app);
 		
 		return app;
     }
-
+    
+    public void onApplicationEvent(ApplicationEvent event) {
+// System.out.println("boot onApplicationEvent called, event = " + event);
+    	if( event instanceof ContextRefreshedEvent ) {
+    		int delayStart = SpringBootstrap.instance.getBootstrap().getAppConfig().getDelayStart();
+    		SpringBootstrap.instance.getRpcApp().start(delayStart);   		
+    	}
+    }
+	
     Object loadBean(String impl, String interfaceName,BeanFactory beanFactory) {
     	if( interfaceName == null ) return null;
     	
@@ -183,7 +188,7 @@ public class AutoConfiguration  {
 			try {
 				Object o = beanFactory.getBean(Class.forName(interfaceName));
 				return o;
-			} catch(Exception e2) {
+			} catch(Throwable e2) {
 				return null;
 			}
 		}
@@ -220,7 +225,7 @@ public class AutoConfiguration  {
 		
 		void registerReferer(String id,String interfaceName,DefaultListableBeanFactory beanFactory) {
 			String beanName = generateBeanName(id,interfaceName);
-			log.info("register referer "+interfaceName+", beanName="+beanName);
+			//log.info("register referer "+interfaceName+", beanName="+beanName);
 	        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(RefererFactory.class);
 	        beanDefinitionBuilder.addConstructorArgValue(beanName);
 	        beanDefinitionBuilder.addConstructorArgValue(interfaceName);
@@ -231,7 +236,7 @@ public class AutoConfiguration  {
 	        registerAsyncReferer(beanName+"Async",interfaceName+"Async",beanFactory);
 		}
 		void registerAsyncReferer(String beanName,String interfaceName,DefaultListableBeanFactory beanFactory) {
-			log.info("register referer "+interfaceName+", beanName="+beanName);
+			//log.info("register referer "+interfaceName+", beanName="+beanName);
 	        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(RefererFactory.class);
 	        beanDefinitionBuilder.addConstructorArgValue(beanName);
 	        beanDefinitionBuilder.addConstructorArgValue(interfaceName);

@@ -1255,7 +1255,7 @@ public class Bootstrap {
 					Class implCls = Class.forName(s);
 					PluginInfo pi = new PluginInfo(cls,implCls);
 					list.add(pi);
-				} catch(Exception e) {
+				} catch(Throwable e) {
 					log.info("cannot load plugin: "+s);
 				}
 				

@@ -2,9 +2,7 @@ package krpc.test.rpc.javaconfig.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.xxx.userservice.proto.*;
@@ -14,10 +12,11 @@ import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.ServerContext;
 
 @Component("userService")
-class UserServiceImpl implements UserService, ApplicationContextAware {
+class UserServiceImpl implements UserService {
 	
 	static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 	
+	@Autowired
 	private PushService ps;
 		
 	int i = 0;
@@ -40,9 +39,4 @@ class UserServiceImpl implements UserService, ApplicationContextAware {
 		return UpdateProfileRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
 	}
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		ps = (PushService)applicationContext.getBean("push");
-	}
-	
 }

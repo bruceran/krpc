@@ -139,7 +139,7 @@ public class ReflectionUtils {
     public static Class<?> getClass(String s) {
 		try {
 			return Class.forName(s);
-		} catch(Exception e) {
+		} catch(Throwable e) {
 			return null;
 		}
 	}
@@ -158,7 +158,7 @@ public class ReflectionUtils {
 			Class<?> cls = Class.forName(clsName);
 			Constructor<?> cons = cls.getDeclaredConstructor();
 	    	return cons.newInstance(new Object[]{});
-	    } catch(Exception e) {  
+	    } catch(Throwable e) {  
 	    	throw new RuntimeException("newObject exception",e);
 	    }       	
 	}
@@ -254,7 +254,7 @@ public class ReflectionUtils {
 			Class<?> intf = Class.forName(intfName);
 			if( intf.isAssignableFrom(obj.getClass()) ) return;
 			throw new RuntimeException("not a valid service object");
-		} catch(Exception e) {
+		} catch(Throwable e) {
 			throw new RuntimeException("interface not found, cls="+intfName);
 		}
 	}

@@ -8,6 +8,8 @@ import com.xxx.userservice.proto.LoginReq;
 import com.xxx.userservice.proto.LoginRes;
 import com.xxx.userservice.proto.UserService;
 
+import krpc.rpc.bootstrap.RpcApp;
+
 public class RpcClientTest {
 
 	static Logger log = LoggerFactory.getLogger(RpcClientTest.class);
@@ -16,7 +18,9 @@ public class RpcClientTest {
 		
 	    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyClientJavaConfig.class);
 
-
+	    RpcApp rpcApp = (RpcApp)context.getBean("rpcApp");
+	    rpcApp.start();
+	    
 		// user code
 		
 		UserService us = (UserService)context.getBean("userService");
@@ -29,6 +33,8 @@ public class RpcClientTest {
 		
 		Thread.sleep(5000);
 
+		rpcApp.stop();
+		
 		context.close();
         ((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();	
 	}	

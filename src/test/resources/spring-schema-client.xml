@@ -6,16 +6,13 @@
   
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
        http://krpc.org/schema/krpc
        http://krpc.org/schema/krpc.xsd ">
 
 	<krpc:application id="app" name="app" />
-<!--  
-	<krpc:registry type="etcd" addrs="1.1.1.1:1111" />
-  -->
 
-	<krpc:referer id="userService" interfaceName="com.xxx.userservice.proto.UserService"/>
-	<krpc:referer id="pushService" interfaceName="com.xxx.userservice.proto.PushService"/>
+	<krpc:referer interfaceName="com.xxx.userservice.proto.UserService" />
+
  
 </beans>

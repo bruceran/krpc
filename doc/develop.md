@@ -318,11 +318,11 @@
         @ComponentScan(basePackages = "krpc.test.rpc.javaconfig.server" })
         public class MyServerJavaConfig   {
         
-          @Bean(destroyMethod = "stopAndClose")
+          @Bean(initMethod = "init", destroyMethod = "close")
           public RpcApp rpcApp(UserService userService) { // 自动注入该服务
             RpcApp app = new Bootstrap() 
             		.addService(UserService.class,userService) 
-            		.build().initAndStart();
+            		.build();
             return app;
           }
           
@@ -333,11 +333,11 @@
       
         客户端： 在java config文件里启动krpc：
       
-            @Bean(destroyMethod = "stopAndClose")
+    		@Bean(initMethod = "init", destroyMethod = "close")
             public RpcApp rpcApp() {
               RpcApp app = new Bootstrap() 
                 .addReferer("us",UserService.class,"127.0.0.1:5600")     			
-                .build().initAndStart();
+                .build();
               return app;
             }
             
@@ -382,9 +382,6 @@
 		krpc.service 和 krpc.services 对应 krpc:service, 当只有一个时使用 service, 多个时使用services
 		krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个时使用 referer, 多个时使用referers
 
-	 spring boot 特有开关：
-         krpc.autoStart 是否在初始化后自动打开对外的服务接口, 默认为true; 可设置为false,然后调用rpcApp.start()方法打开对外的端口
-     
     referer 的 id 可不配置，若不配置则自动根据接口名的SimpleName自动生成
     无需对客户端异步代理做配置, 只要配置了同步代理，框架会自动生成一个名称为同步代理BeanName+Async的异步代理Bean，程序里直接引用该异步代理就可以
 
@@ -396,6 +393,7 @@
 
     name 应用名，用在上报给注册与发现服务时使用, 默认为default_app
     dataDir 数据文件保存目录，默认为当前目录
+    delayStart 延迟调用start(),  0=容器启动完成后立即调用start(), n>0 =容器启动完成后再延迟n秒调用start(), n<0 用户代码手工调用start()
     
     errorMsgConverter 错误码错误消息转换文件，默认为file
                                  file 插件参数：location 文件位置，默认为classpath下的error.properties
@@ -1155,6 +1153,59 @@
        krpc的retry一定是会更换不同的服务器地址来重试，如无可用的候选服务器，则放弃重试
        对重试肯定会失败的错误也不会进行重试 （如编解码错误，参数验证错误等 )
        
+# 启动和关闭
 
-								
-		   		
+      krpc的启动支持2阶段启动 对应  init() start() 方法:
+                init() 方法初始化但不打开端口，避免依赖的外部服务还不可用就对外提供服务, 也不对外注册；
+                start() 方法打开对外接口, 对外进行注册等
+                initAndStart()方法可将两步合成一步
+                
+      krpc的关闭支持2阶段关闭 stop() close() 方法，和启动阶段的 start() init() 方法对应
+                stop() 方法可设置关闭标志，禁止接收外部新请求, 这时有新请求直接返回SERVER_SHUTDOWN错误
+                          referer 如设置了retryCount>0，会自动改调用其它服务, 服务端的关闭可对客户端透明
+                          stop() 方法如果没有被显式调用，也会在close()的时候被自动调用
+                close() 方法进行真正的关闭动作；老的请求继续处理, 直到全部处理完毕
+                stopAndClose()方法可将两步合成一步
+                
+      根据对krpc的使用方式大致可分为以下几种形式：
+      
+      1) 不使用 spring 框架 
+
+          init,start,stop,close调用时机完全由用户代码自己控制
+          krpc并未绑定shutdown hook, 如果进程退出时未调用close()方法进程会卡住无法关闭
+          
+      2) 使用spring java config
+      
+          建议定义rpcApp bean时只定义 init() 和 close() 方法, 但不调用start(), stop()方法
+          在main函数里等容器完全启动后调用 start()，进程接收到退出信号后立即调用stop()再关闭spring容器
+          自己创建的rpcApp bean若漏了close() 方法进程退出时会卡住无法关闭
+          
+          示例： krpc.test.rpc.javaconfig.server
+                    krpc.test.rpc.javaconfig.client
+                    
+      3) 使用spring schema
+          
+          框架会自动创建rpcApp bean并绑定好init(),close()方法
+          
+		  使用 krpc:application的delayStart属性 可控制Spring启动时是否调用start()
+		       	 delayStart=0 (默认) , 容器启动后自动调用start()
+		       	 delayStart=n , 容器启动后通过定时器等待n秒后调用start()
+		       	 delayStart<0, 用户需手工调用start()方法
+		  框架不会自动调用stop()方法， 建议在进程接收到退出信号后立即调用stop()再关闭spring容器
+          
+          示例： krpc.test.rpc.schema
+      
+      4) 使用spring boot
+		 
+		  框架会自动创建rpcApp bean并绑定好init(),close()方法
+		  
+		  使用 krpc.application.delayStart 可控制SpringBoot启动时是否调用start()
+		       	 delayStart=0 (默认) , 容器启动后自动调用start()
+		       	 delayStart=n , 容器启动后通过定时器等待n秒后调用start()
+		       	 delayStart<0, 用户需手工调用start()方法
+		  框架不会自动调用stop()方法， 建议在进程接收到退出信号后立即调用stop()再关闭spring容器
+          
+          示例： misc\samples\boot1
+                                        	
+	  
+

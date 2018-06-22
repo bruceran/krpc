@@ -21,9 +21,12 @@ public class RpcClientTest {
 
 		// user code
  
-		RpcApp app = (RpcApp)context.getBean("app");
+		RpcApp app = (RpcApp)context.getBean("rpcApp");
 		UserService us = (UserService)context.getBean("userService");
 		UserServiceAsync usa = (UserServiceAsync)context.getBean("userServiceAsync");
+		
+		//UserService us = (UserService)context.getBean("abc");
+		//UserServiceAsync usa = (UserServiceAsync)context.getBean("abcAsync");
 
 		LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
 		LoginRes res = us.login(req);
@@ -31,7 +34,7 @@ public class RpcClientTest {
 
 		// user code end
 		
-		Thread.sleep(3000);
+		Thread.sleep(300000);
  
 		context.close();
         ((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();		

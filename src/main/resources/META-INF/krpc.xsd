@@ -16,6 +16,7 @@
               <attribute name="dataDir" type="string" use="optional"/>
               <attribute name="dynamicRoutePlugin" type="string" use="optional"/>
               <attribute name="fallbackPlugin" type="string" use="optional"/>
+              <attribute name="delayStart" type="string" use="optional"/>
 	    </complexType>    
     </element>
 

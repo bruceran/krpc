@@ -290,7 +290,7 @@ public class DefaultRpcCodec implements RpcCodec {
 		try {
 			Class<?> cls = Class.forName("krpc.rpc.util.SnappyTool");
 			return (ZipUnzip)cls.newInstance();
-		} catch(Exception e) {
+		} catch(Throwable e) {
 			log.error("snappy not loaded");
 			return null;
 		}

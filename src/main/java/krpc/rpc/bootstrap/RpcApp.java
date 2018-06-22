@@ -2,6 +2,8 @@ package krpc.rpc.bootstrap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
@@ -24,6 +26,10 @@ public class RpcApp implements InitClose,StartStop {
 
 	String name;
 	String instanceId;
+	boolean started;
+	boolean stopped;
+	boolean closed;
+	Object sync = new Object();
 	
 	ServiceMetas serviceMetas;
 	RpcCodec codec;
@@ -120,7 +126,11 @@ public class RpcApp implements InitClose,StartStop {
 	}
 	
 	public void start() {
-		InitCloseUtils.start(resources);
+		synchronized( sync ) {
+			if( started ) return;
+			InitCloseUtils.start(resources);
+			started = true;
+		}
 	}
 
 	public RpcApp initAndStart() {
@@ -129,17 +139,51 @@ public class RpcApp implements InitClose,StartStop {
 		return this;
 	}
 	
+	public void start(int delayStart) {
+
+		if( delayStart == 0 ) {
+			start();
+			return;
+		}
+		
+		if( delayStart > 0 ) {
+			Timer t = new Timer();
+			t.schedule(new TimerTask() {
+				public void run() {
+					start();
+					t.cancel();
+				}
+			}, delayStart*1000);
+		}    			
+	}
+	
 	public void stop() {
-		InitCloseUtils.stop(resources);
+		synchronized( sync )  {
+			if( !started ) return;
+			if( stopped ) return;
+			InitCloseUtils.stop(resources);
+			stopped = true;
+		}
 	}	
 	
 	public void close() {
-		InitCloseUtils.close(resources);
+		synchronized( sync )  {
+			if( !stopped ) {
+				stop();
+			}
+			if( closed ) return;
+			InitCloseUtils.close(resources);
+			closed = true;
+		}
 	}	
 	
 	public void stopAndClose() {
 		stop();
 		close();
+	}
+
+	public boolean isClosed() {
+		return closed;
 	}
 
 }

@@ -11,11 +11,8 @@ public class RpcServerTest {
 	public static void main(String[] args) throws Exception {
 		
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-schema-server.xml");
-
 		Thread.sleep(30000);
-		context.stop();
-		Thread.sleep(1000);
-		
+
 		context.close();
         ((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();		
 	}	

@@ -17,8 +17,7 @@ import krpc.rpc.bootstrap.WebServerConfig;
 public class BootProperties {
 
 	boolean enabled = false;
-	boolean autoStart = true;
-	
+
 	ApplicationConfig application;
 	MonitorConfig monitor;
 
@@ -107,12 +106,7 @@ public class BootProperties {
 	public void setReferer(RefererConfig referer) {
 		this.referer = referer;
 	}
-	public boolean isAutoStart() {
-		return autoStart;
-	}
-	public void setAutoStart(boolean autoStart) {
-		this.autoStart = autoStart;
-	}
+
 	public boolean isEnabled() {
 		return enabled;
 	}

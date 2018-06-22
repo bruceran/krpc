@@ -1,19 +1,11 @@
 package krpc.rpc.bootstrap.spring;
 
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
-
 import krpc.rpc.bootstrap.ClientConfig;
 
-public class ClientConfigBean extends ClientConfig implements InitializingBean, BeanNameAware {
-	
-    public void setBeanName(String name) {
-    	if( !name.startsWith(ClientConfigBean.class.getName()) )
-    		setId(name);
-    }
-    
-    public void afterPropertiesSet() throws Exception {
-        SpringBootstrap.instance.getBootstrap().addClient(this);
-    }
+public class ClientConfigBean extends ClientConfig {
 
+	public ClientConfigBean() {
+		SpringBootstrap.instance.getBootstrap().addClient(this);
+	}
+ 
 }

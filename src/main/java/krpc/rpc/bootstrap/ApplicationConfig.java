@@ -2,6 +2,7 @@ package krpc.rpc.bootstrap;
 
 public class ApplicationConfig  {
 
+	int delayStart = 0; // -1=manually call start,  0=start after application context, n=start after n seconds
 	String name = "unknown";
 	String dataDir = ".";
 	
@@ -68,6 +69,15 @@ public class ApplicationConfig  {
 
 	public ApplicationConfig setFallbackPlugin(String fallbackPlugin) {
 		this.fallbackPlugin = fallbackPlugin;
+		return this;
+	}
+
+	public int getDelayStart() {
+		return delayStart;
+	}
+
+	public ApplicationConfig setDelayStart(int delayStart) {
+		this.delayStart = delayStart;
 		return this;
 	}
 

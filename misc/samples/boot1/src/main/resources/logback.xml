@@ -9,9 +9,9 @@
 </appender>
 
 <appender name="ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/boot2/log/root.log</file>
+  <file>/opt/logs/boot1/log/root.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/boot2/log/root.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot1/log/root.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -21,9 +21,9 @@
 </appender>
 
 <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/boot2/log/all.log</file>
+  <file>/opt/logs/boot1/log/all.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/boot2/log/all.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot1/log/all.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -33,9 +33,9 @@
 </appender>
 
 <appender name="SERVERLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/boot2/auditlog/req.log</file>
+  <file>/opt/logs/boot1/auditlog/req.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/boot2/auditlog/req.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot1/auditlog/req.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -44,9 +44,9 @@
   </encoder>
 </appender>
 <appender name="WEBSERVERLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/boot2/auditlog/web.log</file>
+  <file>/opt/logs/boot1/auditlog/web.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/boot2/auditlog/web.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot1/auditlog/web.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -55,9 +55,9 @@
   </encoder>
 </appender>
 <appender name="CLIENTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/boot2/auditlog/call.log</file>
+  <file>/opt/logs/boot1/auditlog/call.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/boot2/auditlog/call.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot1/auditlog/call.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>
@@ -66,9 +66,9 @@
   </encoder>
 </appender>
 <appender name="STATSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/boot2/auditlog/stats.log</file>
+  <file>/opt/logs/boot1/auditlog/stats.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/boot2/auditlog/stats.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <fileNamePattern>/opt/logs/boot1/auditlog/stats.log.%d{yyyy-MM-dd}</fileNamePattern>
     <maxHistory>5</maxHistory>
   </rollingPolicy>
   <encoder>

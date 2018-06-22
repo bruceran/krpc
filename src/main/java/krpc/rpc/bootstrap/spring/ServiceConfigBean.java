@@ -2,27 +2,24 @@ package krpc.rpc.bootstrap.spring;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.core.env.Environment;
 
 import krpc.rpc.bootstrap.ServiceConfig;
 
-public class ServiceConfigBean extends ServiceConfig implements InitializingBean, BeanNameAware,  ApplicationContextAware,
-		ApplicationListener<ApplicationEvent>  {
+public class ServiceConfigBean extends ServiceConfig implements InitializingBean, ApplicationContextAware  {
 
-    public void setBeanName(String name) {
-    	if( !name.startsWith(ServiceConfigBean.class.getName()) )
-    		setId(name);
+    public ServiceConfigBean()   {
+        SpringBootstrap.instance.getBootstrap().addService(this);
     }
+    
+	@Override
+	public void setApplicationContext(ApplicationContext beanFactory) throws BeansException {
+		SpringBootstrap.instance.spring = (ConfigurableApplicationContext)beanFactory;
+	}
     
     public void afterPropertiesSet() throws Exception {
     	
@@ -37,8 +34,6 @@ public class ServiceConfigBean extends ServiceConfig implements InitializingBean
 		Object bean = loadBean(impl,this.getInterfaceName(),SpringBootstrap.instance.spring);
 		if( bean == null ) throw new RuntimeException("bean not found for service "+ this.getInterfaceName() );
 		this.setImpl(bean);
-		
-        SpringBootstrap.instance.getBootstrap().addService(this);
     }
 	
     Object loadBean(String impl, String interfaceName,BeanFactory beanFactory) {
@@ -60,27 +55,10 @@ public class ServiceConfigBean extends ServiceConfig implements InitializingBean
 			try {
 				Object o = beanFactory.getBean(Class.forName(interfaceName));
 				return o;
-			} catch(Exception e2) {
+			} catch(Throwable e2) {
 				return null;
 			}
 		}
 	}
-    
-    public void onApplicationEvent(ApplicationEvent event) {
-    	if( event instanceof ContextRefreshedEvent ) {
-        	SpringBootstrap.instance.build();
-    	}
-    	if( event instanceof ContextStoppedEvent ) {
-        	SpringBootstrap.instance.stop();
-    	}
-    	if( event instanceof ContextClosedEvent ) {
-        	SpringBootstrap.instance.close();
-    	}
-    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext beanFactory) throws BeansException {
-		SpringBootstrap.instance.spring = (ConfigurableApplicationContext)beanFactory;
-	}
-    
 }

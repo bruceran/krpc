@@ -1,12 +1,10 @@
 package krpc.rpc.bootstrap.spring;
 
-import org.springframework.beans.factory.InitializingBean;
-
 import krpc.rpc.bootstrap.MonitorConfig;
 
-public class MonitorConfigBean extends MonitorConfig implements InitializingBean {
+public class MonitorConfigBean extends MonitorConfig   {
 	
-    public void afterPropertiesSet() throws Exception {
+    public MonitorConfigBean()   {
         SpringBootstrap.instance.getBootstrap().setMonitorConfig(this);
     }
 

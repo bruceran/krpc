@@ -13,7 +13,7 @@ public class RefererFactory<T>  implements FactoryBean<T>  {
 	}
 	
     @Override
-    public T getObject() throws Exception {
+    public T getObject() throws Exception {	
         return SpringBootstrap.instance.getRpcApp().getReferer(id);
     }
 
@@ -21,7 +21,7 @@ public class RefererFactory<T>  implements FactoryBean<T>  {
     public Class<?> getObjectType() {
     	try {
     		return Class.forName(interfaceName);
-    	} catch(Exception e) {
+    	} catch(Throwable e) {
     		throw new RuntimeException(e);
     	}
     }

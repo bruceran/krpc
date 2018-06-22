@@ -15,13 +15,12 @@ import krpc.rpc.bootstrap.RpcApp;
 @ComponentScan(basePackages = "krpc.test.rpc.javaconfig.client", excludeFilters = { @Filter(type = FilterType.ANNOTATION, value = Configuration.class) })
 public class MyClientJavaConfig   {
 
-    @Bean(destroyMethod = "stopAndClose")
+    @Bean(initMethod = "init", destroyMethod = "close")
     public RpcApp rpcApp(PushService pushService) {
 		RpcApp app = new Bootstrap() 
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
 				.addReverseService(PushService.class,pushService)	
 				.build();
-		app.initAndStart();
 		return app;
     }
     
