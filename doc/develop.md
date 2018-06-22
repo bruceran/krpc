@@ -882,16 +882,38 @@
 
 	 * 支持的验证规则目前不提供扩展机制
 	 
-# 业务层手工打点  
+# 打点和跟踪
 
     * 通过application配置参数 traceAdapter 来配置使用的全链路跟踪系统
 
         配置示例："traceAdapter"="skywalking:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
     
     * 打点范围
-    
-        一般情况下业务层不需自己打点, 如数据库访问，缓存访问, 外部http调用这类由trace框架统一解决
-        业务层只应该对一些特殊代码段打点，记录一些信息，所有打点的信息都可以在全链路跟踪系统里查询到
+        
+        业务层一般情况下不需自己打点, 对如数据库访问，缓存访问, 外部http调用这类都可通过配置探针自动采集数据，
+        业务层如果确实有需要也可手工打点，记录一些信息或度量数据
+        krpc的rpc框架本身已集成了trace框架，不需要采用探针技术来配置
+        所有打点的信息都可以在全链路跟踪系统里查询到
+
+    * 探针配置
+
+         只有对业务层或第三方框架（如httpclient, mybatis, hibernate等）才需要使用探针
+         探针采用的是javasssit字节码技术，只需配置tracesniffer.cfg文件即可采集数据，对业务层或第三方框架的代码零侵入
+
+         要使用探针功能，需在启动应用程序的时候增加 -javaagent:/path_to_krpc_jar/krpc-0.1.0.jar   main-class
+         探针会自动读取当前目录下的tracesniffer.cfg配置文件, tracesniffer.cfg配置文件格式如下：
+         
+         1) log.file 指定日志文件，未指定则为当前目录下的 tracesniffer.log
+         2) log.level 指定日志级别，未指定则为error (默认)，只支持 error, info两个级别
+         3) 类名#方法名正则表达式=操作类别
+         
+         示例：
+         
+         log.level=info
+         krpc.test.misc.TraceObj#say.*=DB 
+         
+         表示: 对 krpc.test.misc.TraceObj 类的匹配正则表达式(say.*)的方法自动增加探针，记录调用该方法的Span
+         Span的type为DB, span的action为类名+消息名
 
      * 模型
     
