@@ -35,7 +35,7 @@
         运行 >mvn install 若无错误则表示编译成功
         运行 >mvn deploy 上传jar包到自己搭建的私服，需先设置私服的用户名和密码才能上传成功
 	    
-	    进入misc/starters/springboot1x/
+	    进入misc/starters/springboot/
 	    运行 >mvn install 完成对starter的编译和本地安装,   运行misc/samples/boot1  misc/samples/boot2需要此依赖
 	    		
 	* gradle 安装
@@ -80,7 +80,7 @@
     		boot1/  使用spring boot 1.x的示例  
     		boot2/  使用spring boot 2.x的示例, 注意： 此工程要求gradle 4.x (spring boot 2.x的最低要求)才能编译运行
     	starters/ spring boot starter
-    		springboot1x/  目前 spring boot 1.x / 2.x  starter通用
+    		springboot/  目前 spring boot 1.x / 2.x  starter通用
     dist/
     dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
     dist/tools/ protoc工具

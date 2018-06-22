@@ -11,6 +11,7 @@
     	<url path="/test4" msgId="4"/>  
 	</group>
 	
+	<!--  sample: import  other files -->
 	<import file="webroutes2.xml" />  
 	
 </routes>  
