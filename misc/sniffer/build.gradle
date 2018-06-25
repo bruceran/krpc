@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'krpc'
+version = '1.0.0'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+	baseName = 'krpc-sniffer'
+	
+	manifest {
+		attributes 'Premain-Class': 'krpc.trace.sniffer.Agent'
+		attributes 'Can-Redefine-Classes': true
+		attributes 'Can-Retransform-Classes': true
+		attributes 'Boot-Class-Path': 'javassist-3.12.1.GA.jar'
+	}
+}
+   
+dependencies {
+		compile 'javassist:javassist:3.12.1.GA'
+}
+
+repositories {
+     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+}

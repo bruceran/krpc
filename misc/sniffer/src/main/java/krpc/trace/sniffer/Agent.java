@@ -2,10 +2,10 @@ package krpc.trace.sniffer;
 
 import java.lang.instrument.Instrumentation;
 
-public class TraceSniffer  {
-	
+public class Agent  {
+
     public static void premain(String agentArgs,Instrumentation inst){
-        inst.addTransformer(new TraceTransformer(agentArgs));
+        inst.addTransformer(new Transformer(agentArgs));
     }
     
 } 

@@ -6,3 +6,6 @@ bin/
 build/
 target/
 
+krpcsniffer.cfg
+tracesniffer.cfg
+tracesniffer.cfg

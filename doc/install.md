@@ -74,15 +74,17 @@
       test/
     doc/ 文档目录
     misc/  杂项
+    	sniffer/ krpc的探针代理源码
+    	springbootstarter/ spring boot starter, 仅一个pom文件，spring boot 1.x / 2.x  starter通用
     	protos/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件  
     	samples/  示例代码目录
     		sample1/ 不使用spring的示例
-    		boot1/  使用spring boot 1.x的示例  
-    		boot2/  使用spring boot 2.x的示例, 注意： 此工程要求gradle 4.x (spring boot 2.x的最低要求)才能编译运行
-    	starters/ spring boot starter
-    		springboot/  目前 spring boot 1.x / 2.x  starter通用
+    		boot1/  spring boot 1.x的示例  
+    		boot2/  注意： 此工程要求gradle 4.x (spring boot 2.x的最低要求)才能编译运行
+    		boot2client/  boot2对应的一个客户端，对外提供http服务，通过发现机制查找boot2
+
     dist/
-    dist/krpc-x.x.x.jar 编译后输出的krpc框架的allinone的jar文件, 不包括第三方依赖
+    dist/sniffer 使用krpc的探针所需的jar包和配置文件
     dist/tools/ protoc工具
                  changed_code.zip 修改后的源码文件以及diff文件, 原始文件位置：/src/google/protobuf/compiler/java
                  test.proto 用来测试工具的proto文件

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>krpc</groupId>
+  <artifactId>krpc-sniffer</artifactId>
+  <version>1.0.0</version>
+	  
+  <dependencies>
+    <dependency>
+      <groupId>javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.12.1.GA</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  
+<build>  
+        <plugins>  
+  
+            <plugin>  
+            <groupId>org.apache.maven.plugins</groupId>  
+            <artifactId>maven-compiler-plugin</artifactId>  
+            <configuration>  
+                <source>1.8</source>  
+                <target>1.8</target>  
+            </configuration>  
+        	</plugin>   
+		
+		<plugin>  
+			    <groupId>org.apache.maven.plugins</groupId>  
+			    <artifactId>maven-jar-plugin</artifactId>  
+			    <configuration>  
+			        <archive>  
+			            <manifestEntries>  
+			                <Premain-Class>krpc.trace.sniffer.Agent</Premain-Class>
+			                <Can-Redefine-Classes>true</Can-Redefine-Classes>
+			                <Can-Retransform-Classes>true</Can-Retransform-Classes>
+			                <Boot-Class-Path>javassist-3.12.1.GA.jar</Boot-Class-Path>  	                
+			            </manifestEntries>  
+			        </archive>  
+			    </configuration>  
+			</plugin>      		
+		</plugins>        
+		
+</build>  
+
+<!-- 
+<distributionManagement>  
+   <repository>  
+     <id>releases</id>  
+     <name>Internal Releases</name>  
+     <url>http://localhost:8081/nexus/content/repositories/thirdparty</url>  
+   </repository>  
+ </distributionManagement> 
+-->
+
+<repositories>  
+    <repository>  
+      <id>maven-net-cn</id>  
+      <name>aliyun Mirror</name>  
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>  
+      <releases>  
+        <enabled>true</enabled>  
+      </releases>  
+      <snapshots>  
+        <enabled>false</enabled>  
+      </snapshots>  
+    </repository>  
+</repositories>  
+<pluginRepositories>  
+    <pluginRepository>  
+      <id>maven-net-cn</id>  
+      <name>aliyun Mirror</name>  
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>  
+      <releases>  
+        <enabled>true</enabled>  
+      </releases>  
+      <snapshots>  
+        <enabled>false</enabled>  
+      </snapshots>      
+    </pluginRepository>  
+</pluginRepositories>  
+  
+</project>

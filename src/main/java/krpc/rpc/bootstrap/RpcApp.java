@@ -21,6 +21,8 @@ import krpc.rpc.impl.RpcServer;
 import krpc.rpc.web.WebMonitorService;
 import krpc.rpc.web.impl.WebServer;
 import krpc.trace.TraceAdapter;
+import krpc.trace.sniffer.Advice;
+import krpc.trace.sniffer.AdviceInstance;
 
 public class RpcApp implements InitClose,StartStop {
 

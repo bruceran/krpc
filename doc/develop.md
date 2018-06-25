@@ -884,26 +884,27 @@
 	 
 # 打点和跟踪
 
-    * 通过application配置参数 traceAdapter 来配置使用的全链路跟踪系统
+    * krpc支持多种全链路跟踪系统, 可通过application配置参数 traceAdapter 来配置
 
-        配置示例："traceAdapter"="skywalking:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
+         配置示例："traceAdapter"="skywalking:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
+         所有打点的信息都可以在全链路跟踪系统里查询到
+
+    * 数据采集
     
-    * 打点范围
-        
-        业务层一般情况下不需自己打点, 对如数据库访问，缓存访问, 外部http调用这类都可通过配置探针自动采集数据，
-        业务层如果确实有需要也可手工打点，记录一些信息或度量数据
-        krpc的rpc框架本身已集成了trace框架，不需要采用探针技术来配置
-        所有打点的信息都可以在全链路跟踪系统里查询到
+    	 krpc的rpc框架本身已集成了全链路跟踪所需的各种打点，如果仅仅使用krpc的rpc功能无需配置探针
+    	 只有对业务层或第三方框架（如httpclient, mybatis, hibernate等）才需要配置krpc的javaagent探针
+    	 探针采用的是javasssit字节码技术，只需配置krpcsniffer.cfg文件即可采集数据，对业务层或第三方框架的代码零侵入
+    
+         建议业务层总是通过配置krpc的探针来采集数据， 确实有必要再手工通过代码打点采集数据
 
-    * 探针配置
+    * krpc探针配置
 
-         只有对业务层或第三方框架（如httpclient, mybatis, hibernate等）才需要使用探针
-         探针采用的是javasssit字节码技术，只需配置tracesniffer.cfg文件即可采集数据，对业务层或第三方框架的代码零侵入
-
-         要使用探针功能，需在启动应用程序的时候增加 -javaagent:/path_to_krpc_jar/krpc-0.1.0.jar   main-class
-         探针会自动读取当前目录下的tracesniffer.cfg配置文件, tracesniffer.cfg配置文件格式如下：
+         要使用探针功能，需在启动应用程序的时候增加 java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar   your-main-class
+         如果使用spring boot1/boot2,  则是 java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar  -jar  your-boot-application-jar
+         在 krpc-sniffer-1.0.0.jar 的相同目录下，还必须存在 javassist-3.12.1.GA.jar， 否则探针无法加载
+         探针会自动读取当前目录下的krpcsniffer.cfg配置文件, krpcsniffer.cfg配置文件格式如下：
          
-         1) log.file 指定日志文件，未指定则为当前目录下的 tracesniffer.log
+         1) log.file 指定日志文件，未指定则为当前目录下的 krpcsniffer.log
          2) log.level 指定日志级别，未指定则为error (默认)，只支持 error, info两个级别
          3) 类名#方法名正则表达式=操作类别
          

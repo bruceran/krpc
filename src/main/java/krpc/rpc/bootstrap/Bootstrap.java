@@ -102,6 +102,8 @@ import krpc.trace.TraceAdapter;
 import krpc.trace.adapter.CatTraceAdapter;
 import krpc.trace.adapter.SkyWalkingTraceAdapter;
 import krpc.trace.adapter.ZipkinTraceAdapter;
+import krpc.trace.sniffer.Advice;
+import krpc.trace.sniffer.AdviceInstance;
 
 public class Bootstrap {
 
@@ -164,6 +166,7 @@ public class Bootstrap {
 	RpcApp app = newRpcApp();
 	
 	public Bootstrap() {
+		initSniffer();
 		loadSpi();
 	}
 
@@ -315,10 +318,32 @@ public class Bootstrap {
 	}
 	
 	public RpcApp build() {
+		initSniffer();
 		prepare();
 		return doBuild();
 	}
 
+	public void initSniffer() {
+		AdviceInstance.instance  = new Advice() {
+	
+			public void start(String type, String action) {
+	System.out.println("TraceSniffer start called in app");			
+				Trace.start(type, action);
+			}
+	
+			public long stop(boolean ok) {
+	System.out.println("TraceSniffer stop called in app");			
+				return Trace.stop(ok);
+			}
+	
+			public void logException(Throwable e) {
+	System.out.println("TraceSniffer logException called in app");		
+				Trace.logException(e);
+			}
+			
+		};
+	}
+	
 	public TraceAdapter newTraceAdapter() {
 		Trace.setAppName(appConfig.name);
 		

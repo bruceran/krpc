@@ -11,6 +11,10 @@ import krpc.rpc.bootstrap.RpcApp;
 public class Boot1Application {
 
 	public static void main(String[] args) throws Exception {
+		
+    	System.out.println("in Boot1Application: "+Boot1Application.class.getClassLoader().getClass().getName());
+    	System.out.println("in Boot1Application: "+Boot1Application.class.getClassLoader());
+    	
 		SpringApplication a = new SpringApplication();
 		AnnotationConfigApplicationContext  ctx = (AnnotationConfigApplicationContext)a.run(Boot1Application.class, args);
 		
