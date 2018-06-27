@@ -11,17 +11,17 @@ import krpc.rpc.web.WebRes;
 
 public class HtmlWebPlugin implements WebPlugin, RenderPlugin {
 	
-	String key = "html";
+	String htmlField = "html";
 	
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		String s = params.get("key");
+		String s = params.get("htmlField");
 		if ( s != null && !s.isEmpty() )
-			key = s;				
+			htmlField = s;				
 	}
 	
 	public void render(WebContextData ctx,WebReq req,WebRes res) {
-		String content = res.getStringResult(key);
+		String content = res.getStringResult(htmlField);
 		if( content == null ) content = "";
 		res.setContent(content);
 		res.setContentType("text/html; charset=utf-8");

@@ -130,9 +130,9 @@ public class DefaultWebReq implements WebReq {
 		if( parameters == null ) parameters = new HashMap<String,Object>();
 		
 		Object o = parameters.get(name);
-		if( o == null )
+		if( o == null ) {
 			parameters.put(name, value);
-		else if( o instanceof List ) {
+		} else if( o instanceof List ) {
 			((List)o).add(value);
 		} else {
 			List l = new ArrayList();

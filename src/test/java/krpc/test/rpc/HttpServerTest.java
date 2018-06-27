@@ -18,6 +18,7 @@ import com.xxx.userservice.proto.UserService;
 
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.RpcApp;
+import krpc.rpc.bootstrap.WebServerConfig;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.ServerContext;
@@ -32,7 +33,7 @@ public class HttpServerTest {
 		HttpPluginTestService impl2 = new HttpPluginTestServiceImpl(); // user code is here
 
 		RpcApp app = new Bootstrap()
-			.addWebServer(8890) 
+			.addWebServer(new WebServerConfig(8890)) 
 			// .addServer(5600) 
 			.addService(UserService.class,impl) 
 			.addService(HttpPluginTestService.class,impl2) 

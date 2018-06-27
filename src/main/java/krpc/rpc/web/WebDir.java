@@ -5,7 +5,6 @@ public class WebDir {
 	String hosts;
 	String path;
 
-	String baseDir;
 	String staticDir;
 	String uploadDir;
 	String templateDir;
@@ -25,13 +24,6 @@ public class WebDir {
 		return this;
 	}
 
-	public String getBaseDir() {
-		return baseDir;
-	}
-	public WebDir setBaseDir(String baseDir) {
-		this.baseDir = baseDir;
-		return this;
-	}
 	public String getStaticDir() {
 		return staticDir;
 	}

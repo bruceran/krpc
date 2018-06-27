@@ -1,0 +1,8 @@
+<html>
+<head>
+<title>welcome</title>
+</head>
+<body>
+your username is ${res.plainText} retCode:$!{retCode}  ccc:${res.retCode}  ${req.abc}  ${session.ddd}
+</body>
+</html>    

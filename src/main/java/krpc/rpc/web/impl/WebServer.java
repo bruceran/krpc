@@ -170,7 +170,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 				String file = routeService.findStaticFile(req.getHost(), req.getPath());	
 				if (file != null) {
 					File f = new File(file);
-					if( f.exists()) {
+					if( f.exists() && !f.isDirectory() ) {
 						routeStaticFile(connId, req, f);
 						return;
 					}

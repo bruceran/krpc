@@ -94,7 +94,7 @@ public class WebRoute {
 		if( attrs == null ) return null;
 		return attrs.get(name);
 	}
-	
+
 	public int getServiceId() {
 		return serviceId;
 	}
@@ -174,6 +174,14 @@ public class WebRoute {
 
 	public List<AsyncPreParsePlugin> getAsyncPreParsePlugins() {
 		return asyncPreParsePlugins;
+	}
+
+	public Map<String, String> getAttrs() {
+		return attrs;
+	}
+
+	public void setAttrs(Map<String, String> attrs) {
+		this.attrs = attrs;
 	}
  
 }

@@ -1547,13 +1547,10 @@ public class Bootstrap {
 		if (isEmpty(path))
 			throw new RuntimeException("path can not be empty");
 
-		String baseDir = attrs.get("baseDir");
 		String staticDir = attrs.get("staticDir");
 		String uploadDir = attrs.get("uploadDir");
 		String templateDir = attrs.get("templateDir");
 
-		if (!isEmpty(baseDir) && !checkExist(baseDir))
-			throw new RuntimeException("baseDir is not correct, baseDir=" + baseDir);
 		if (!isEmpty(staticDir) && !checkExist(staticDir))
 			throw new RuntimeException("staticDir is not correct, staticDir=" + staticDir);
 		if (!isEmpty(uploadDir) && !checkExist(uploadDir))
@@ -1561,11 +1558,11 @@ public class Bootstrap {
 		//if (!isEmpty(templateDir) && !checkExist(templateDir)) // todo can be resource
 			//throw new RuntimeException("templateDir is not correct, templateDir=" + templateDir);
 
-		if (isEmpty(baseDir) && isEmpty(staticDir) && isEmpty(uploadDir) && isEmpty(templateDir))
+		if ( isEmpty(staticDir) && isEmpty(uploadDir) && isEmpty(templateDir))
 			throw new RuntimeException("not a valid dir");
 
 		WebDir dir = new WebDir(hosts, path);
-		dir.setBaseDir(baseDir).setStaticDir(staticDir).setUploadDir(uploadDir).setTemplateDir(templateDir);
+		dir.setStaticDir(staticDir).setUploadDir(uploadDir).setTemplateDir(templateDir);
 		rs.addDir(dir);
 	}
 

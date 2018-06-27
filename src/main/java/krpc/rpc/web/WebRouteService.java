@@ -8,7 +8,7 @@ public interface WebRouteService {
 	void addDir(WebDir dir);
 	
 	String findStaticFile(String host,String path);
-	String findTemplate(String host,String path,String templateName);
+	String findTemplateDir(String host,String path);
 	String findUploadDir(String host,String path);
 	
 }

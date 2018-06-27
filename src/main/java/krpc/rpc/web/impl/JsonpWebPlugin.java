@@ -12,18 +12,22 @@ import krpc.rpc.web.WebRes;
 
 public class JsonpWebPlugin implements WebPlugin, RenderPlugin {
 	
-	String defaultCallback = "callback";
+	String jsonpField = "jsonp";
+	String callbackFunction = "callback";
 	
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		String s = params.get("callback");
+		String s = params.get("jsonpField");
 		if ( s != null && !s.isEmpty() )
-			defaultCallback = s;				
+			jsonpField = s;			
+		s = params.get("callback");
+		if ( s != null && !s.isEmpty() )
+			callbackFunction = s;				
 	}
 	
 	public void render(WebContextData ctx,WebReq req,WebRes res) {
-		String callback = req.getParameter("jsonp");
-		if( callback == null || callback.isEmpty() ) callback = defaultCallback;
+		String callback = req.getParameter(jsonpField);
+		if( callback == null || callback.isEmpty() ) callback = this.callbackFunction;
 		String json = Json.toJson(res.getResults());
 		String javascript = callback+"("+json+")";
 		res.setContent(javascript);

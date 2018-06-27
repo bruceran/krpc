@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import javax.activation.MimetypesFileTypeMap;
+
 import krpc.rpc.util.CryptHelper;
 
 public class WebConstants {
@@ -43,6 +45,8 @@ public class WebConstants {
     final static String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
     final static String HTTP_DATE_GMT_TIMEZONE = "GMT";
     
+    final static MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();
+    
     final static ThreadLocal<SimpleDateFormat> df_tl = new ThreadLocal<SimpleDateFormat>() {
         public  SimpleDateFormat initialValue() {
         	SimpleDateFormat df = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
@@ -51,6 +55,10 @@ public class WebConstants {
         }
     };
 
+    static public String getContentType(String filename) {
+    	return mimeTypes.getContentType(filename);
+    }
+    
     static public Date parseDate(String ifModifiedSince) {
     	try {
     		return df_tl.get().parse(ifModifiedSince);

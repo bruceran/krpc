@@ -13,8 +13,6 @@ import java.util.GregorianCalendar;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.activation.MimetypesFileTypeMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,8 +86,6 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 	int maxHeaderSize = 8192;
 	int maxChunkSize = 8192;
 	int maxContentLength = 1000000;
-	
-    MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();
 
 	NamedThreadFactory bossThreadFactory = new NamedThreadFactory("web_boss");
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("web_work");
@@ -399,7 +395,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		
 		res.headers().set(HttpHeaderNames.SERVER, WebConstants.Server);
     	res.headers().set(HttpHeaderNames.DATE, WebConstants.formatDate(new GregorianCalendar().getTime()));
-		res.headers().set(HttpHeaderNames.CONTENT_TYPE, mimeTypes.getContentType(downloadFile));
+		res.headers().set(HttpHeaderNames.CONTENT_TYPE, WebConstants.getContentType(downloadFile.getName()));
 		res.headers().set(HttpHeaderNames.LAST_MODIFIED, WebConstants.formatDate(new Date(downloadFile.lastModified())));
     	res.headers().set(HttpHeaderNames.ETAG,WebConstants.generateEtag(downloadFile));
 		setCacheControl(data,res);
@@ -525,7 +521,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		
 		res.headers().set(HttpHeaderNames.SERVER, WebConstants.Server);
     	res.headers().set(HttpHeaderNames.DATE, WebConstants.formatDate(new GregorianCalendar().getTime()));
-		res.headers().set(HttpHeaderNames.CONTENT_TYPE, mimeTypes.getContentType(filename));
+		res.headers().set(HttpHeaderNames.CONTENT_TYPE, WebConstants.getContentType(filename));
 		res.headers().set(HttpHeaderNames.LAST_MODIFIED, WebConstants.formatDate(new Date()));
 		res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
 		setAttachment(data,res,filename);

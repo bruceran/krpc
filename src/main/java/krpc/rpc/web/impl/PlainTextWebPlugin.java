@@ -11,17 +11,17 @@ import krpc.rpc.web.WebRes;
 
 public class PlainTextWebPlugin implements WebPlugin, RenderPlugin {
 	
-	String key = "plainText";
+	String plainTextField = "plainText";
 	
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		String s = params.get("key");
+		String s = params.get("plainTextField");
 		if ( s != null && !s.isEmpty() )
-			key = s;				
+			plainTextField = s;				
 	}
 	
 	public void render(WebContextData ctx,WebReq req,WebRes res) {
-		String content = res.getStringResult(key);
+		String content = res.getStringResult(plainTextField);
 		if( content == null ) content = "";
 		res.setContent(content);
 		res.setContentType("text/plain");

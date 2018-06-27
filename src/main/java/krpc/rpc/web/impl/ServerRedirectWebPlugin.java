@@ -11,17 +11,17 @@ import krpc.rpc.web.WebRes;
 
 public class ServerRedirectWebPlugin implements WebPlugin, RenderPlugin {
 	
-	String key = "redirectUrl";
+	String redirectUrlField = "redirectUrl";
 	
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		String s = params.get("key");
+		String s = params.get("redirectUrlField");
 		if ( s != null && !s.isEmpty() )
-			key = s;				
+			redirectUrlField = s;				
 	}
 
 	public void render(WebContextData ctx,WebReq req,WebRes res) {
-		String redirectUrl = res.getStringResult(key);
+		String redirectUrl = res.getStringResult(redirectUrlField);
 		if( redirectUrl == null ) redirectUrl = "";
 		res.setHeader("location",redirectUrl);
 		res.setHttpCode(302);

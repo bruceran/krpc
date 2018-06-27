@@ -158,7 +158,26 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	}
 	
 	public void init() {
+		
+		for(WebDir wd: dirList) {
 
+			if( !isEmpty(wd.getStaticDir())) {
+				String dir = wd.getStaticDir();
+				staticDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
+			}
+			
+			if( !isEmpty(wd.getUploadDir())) {
+				String dir = wd.getUploadDir();
+				uploadDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
+			}
+			
+			if( !isEmpty(wd.getTemplateDir())) {
+				String dir = wd.getTemplateDir();
+				templateDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
+			}
+
+		}
+	
 		for(WebUrl url: urlList) {
 			
 			if( isEmpty(url.getHosts()) ) {
@@ -183,6 +202,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 					plugins.put(p.getClass().getName(), p);
 				}
 			}
+
 		}
 		
 		for( HostMapping hm: hostMappings.values() ) {
@@ -194,41 +214,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		for( WebPlugin p:plugins.values() ) {
 			InitCloseUtils.init(p);
 		}
-		
-		for(WebDir wd: dirList) {
 
-			if( !isEmpty(wd.getBaseDir()) || !isEmpty(wd.getStaticDir())) {
-				String dir = null;
-				if(  !isEmpty(wd.getStaticDir() ) ) {
-					dir = wd.getStaticDir();
-				} else {
-					dir = wd.getBaseDir() + "/static";
-				}
-				staticDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
-			}
-			
-			if( !isEmpty(wd.getBaseDir()) || !isEmpty(wd.getUploadDir())) {
-				String dir = null;
-				if(  !isEmpty(wd.getUploadDir() ) ) {
-					dir = wd.getUploadDir();
-				} else {
-					dir = wd.getBaseDir() + "/upload";
-				}
-				uploadDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
-			}
-			
-			if( !isEmpty(wd.getBaseDir()) || !isEmpty(wd.getTemplateDir())) {
-				String dir = null;
-				if(  !isEmpty(wd.getTemplateDir() ) ) {
-					dir = wd.getTemplateDir();
-				} else {
-					dir = wd.getBaseDir() + "/template";
-				}
-				templateDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
-			}
-
-		}
-	
 	}
 
 	void addHostMapping(String host,ServiceMapping sm) {
@@ -293,6 +279,26 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 						r.setSessionMode(sm.sessionMode);
 						r.setPlugins(sm.plugins);
 						r.setVariables(variables);
+						
+						// transfer attributes to plugins 
+						
+						Map<String,String>  attrs = null;
+						String templateDir = findTemplateDir(host,path);
+						if( !isEmpty(templateDir) ) {
+							attrs = new HashMap<>();
+							attrs.put("templateDir", templateDir);
+						}
+						
+						if( sm.attrs != null && sm.attrs.size() > 0 ) {
+							if( attrs == null )
+								attrs = sm.attrs;
+							else
+								attrs.putAll(sm.attrs);
+						}
+						
+						if( attrs != null )
+							r.setAttrs(attrs);
+						
 						return r;
 					}
 				}
@@ -320,18 +326,18 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 				if( t.startsWith("/") )
 					return dm.dir +  t ;
 				else 
-				return dm.dir + "/" + t ;
+					return dm.dir + "/" + t ;
 			}
 		}
 		return null;
 	}
 	
-	public String findTemplate(String host,String path,String templateName) {
+	public String findTemplateDir(String host,String path) {
 		path = sanitizePath(path);
 		if( path == null ) return null;
 		for(DirMapping dm: templateDir ) {
 			if( match(dm,host,path) ) {
-				return dm.dir + "/" + templateName;
+				return dm.dir;
 			}
 		}
 		return null;
@@ -353,6 +359,10 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		if( p >= 0 ) {
 			path = path.substring(0,p);
 		}
+		p = path.indexOf("#");
+		if( p >= 0 ) {
+			path = path.substring(0,p);
+		}		
 		p = path.lastIndexOf("/");
 		if( p < 0 ) return null;
 		String dir = path.substring(0,p);

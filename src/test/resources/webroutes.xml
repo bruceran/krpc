@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>    
 <routes>    
 
-    <dir hosts="*" path="/site" baseDir="c:\ws\site"/>  
- 
     <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" sessionMode="0"  plugins="logOnly"/>  
     <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
 
@@ -17,8 +15,13 @@
 	<url hosts="*" path="/plugin/test3" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="htmlRedirect"/>  
 	<url hosts="*" path="/plugin/test4" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="serverRedirect"/>  
 	<url hosts="*" path="/plugin/test5" methods="get,post" serviceId="104" msgId="2" sessionMode="0"  />  
+	<url hosts="*" path="/plugin/test6" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="velocity" template="d"/>  
 	
 	<!--  sample: import  other files -->
 	<import file="webroutes2.xml" />  
 	
+    <dir hosts="*" path="/site" staticDir="c:\ws\site\static"/>
+    <!--  <dir hosts="*" path="/plugin" templateDir="c:\ws\site\template"/> -->
+    <dir hosts="*" path="/plugin" templateDir="classpath:vm"/>
+
 </routes>  
