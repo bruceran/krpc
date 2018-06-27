@@ -3,7 +3,6 @@ package krpc.rpc.web;
 import java.util.Map;
 
 import krpc.rpc.core.Continue;
-import krpc.rpc.core.Plugin;
 
 public interface SessionService {
 	void load(String sessionId,Map<String,String> values,Continue<Integer> cont);

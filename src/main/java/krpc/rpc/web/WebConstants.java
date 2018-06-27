@@ -1,5 +1,13 @@
 package krpc.rpc.web;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import krpc.rpc.util.CryptHelper;
+
 public class WebConstants {
 
 	static public final String DefaultCharSet = "utf-8";
@@ -22,10 +30,46 @@ public class WebConstants {
 
 	static public final String ContentFormat = "{\"retCode\":%d,\"retMsg\":\"%s\"}";	
 
-	static public final String Server = "krpc webserver/1.0";
+	static public final String Server = "krpc webserver 1.0";
 	
 	static private final String CHARSET_TAG = "charset=";
 	
+	static public final String DOWNLOAD_FILE_FIELD = "downloadFile";
+	static public final String DOWNLOAD_FILE_RANGE_FIELD = "downloadFileRange";
+	static public final String DOWNLOAD_EXPIRES_FIELD = "expires";
+	static public final String DOWNLOAD_STREAM_FIELD = "downloadStream";
+	
+
+    final static String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
+    final static String HTTP_DATE_GMT_TIMEZONE = "GMT";
+    
+    final static ThreadLocal<SimpleDateFormat> df_tl = new ThreadLocal<SimpleDateFormat>() {
+        public  SimpleDateFormat initialValue() {
+        	SimpleDateFormat df = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
+            df.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
+            return df;
+        }
+    };
+
+    static public Date parseDate(String ifModifiedSince) {
+    	try {
+    		return df_tl.get().parse(ifModifiedSince);
+    	} catch(Exception e) {
+    		return null;
+    	}
+    }
+    static public String formatDate(Date dt) {
+		return df_tl.get().format(dt);
+    }
+        
+    static public String generateEtag(File file) {
+		long lastModified = file.lastModified();
+		long size = file.length();
+		String s = lastModified+":"+size;
+		String etag = "\""+CryptHelper.md5(s) + "\"";
+		return etag;
+	}	
+
 	static public String toHeaderName(String s) {
 		StringBuilder b = new StringBuilder();
 		for(int i=0;i<s.length();++i) {

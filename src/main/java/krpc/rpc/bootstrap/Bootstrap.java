@@ -801,6 +801,7 @@ public class Bootstrap {
 
 			WebServer server = newWebServer();
 			server.setSampleRate(c.sampleRate);
+			server.setExpireSeconds(c.expireSeconds);
 			server.setServiceMetas(app.serviceMetas);
 			server.setErrorMsgConverter(app.errorMsgConverter);
 			server.setMonitorService(app.monitorService);
@@ -1556,9 +1557,9 @@ public class Bootstrap {
 		if (!isEmpty(staticDir) && !checkExist(staticDir))
 			throw new RuntimeException("staticDir is not correct, staticDir=" + staticDir);
 		if (!isEmpty(uploadDir) && !checkExist(uploadDir))
-			throw new RuntimeException("staticDir is not correct, uploadDir=" + uploadDir);
-		if (!isEmpty(templateDir) && !checkExist(templateDir))
-			throw new RuntimeException("staticDir is not correct, templateDir=" + templateDir);
+			throw new RuntimeException("uploadDir is not correct, uploadDir=" + uploadDir);
+		//if (!isEmpty(templateDir) && !checkExist(templateDir)) // todo can be resource
+			//throw new RuntimeException("templateDir is not correct, templateDir=" + templateDir);
 
 		if (isEmpty(baseDir) && isEmpty(staticDir) && isEmpty(uploadDir) && isEmpty(templateDir))
 			throw new RuntimeException("not a valid dir");

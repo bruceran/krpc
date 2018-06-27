@@ -272,6 +272,9 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	}
 
 	private WebRoute findByHost(String host, String path, String method) {
+		
+		if( method.equals("head") ) method = "get";
+		
 		HostMapping hm = hostMappings.get(host);
 		if (hm == null)
 			hm = hostMappings.get("*");
@@ -310,9 +313,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 
 	public String findStaticFile(String host,String path) {
 		path = sanitizePath(path);
+		if( path == null ) return null;
 		for(DirMapping dm: staticDir ) {
 			if( match(dm,host,path) ) {
-				return dm.dir + "/" + path.substring(dm.path.length());
+				String t = path.substring(dm.path.length());
+				if( t.startsWith("/") )
+					return dm.dir +  t ;
+				else 
+				return dm.dir + "/" + t ;
 			}
 		}
 		return null;
@@ -320,6 +328,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	
 	public String findTemplate(String host,String path,String templateName) {
 		path = sanitizePath(path);
+		if( path == null ) return null;
 		for(DirMapping dm: templateDir ) {
 			if( match(dm,host,path) ) {
 				return dm.dir + "/" + templateName;
@@ -330,6 +339,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	
 	public String findUploadDir(String host,String path) {
 		path = sanitizePath(path);
+		if( path == null ) return null;
 		for(DirMapping dm: uploadDir ) {
 			if( match(dm,host,path) ) {
 				return dm.dir;
@@ -339,7 +349,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	}
 	
 	String sanitizePath(String path) {
-		// todo
+		int p = path.indexOf("?");
+		if( p >= 0 ) {
+			path = path.substring(0,p);
+		}
+		p = path.lastIndexOf("/");
+		if( p < 0 ) return null;
+		String dir = path.substring(0,p);
+		if( dir.indexOf(".") >= 0 ) return null; // . is not allowed in path
 		return path;
 	}
 

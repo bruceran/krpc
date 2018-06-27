@@ -104,6 +104,7 @@
               <attribute name="protoDir" type="string" use="optional"/>
               <attribute name="sampleRate" type="string" use="optional"/>
               <attribute name="defaultSessionService" type="string" use="optional"/>
+              <attribute name="expireSeconds" type="string" use="optional"/>
 	    </complexType>    
     </element>
     

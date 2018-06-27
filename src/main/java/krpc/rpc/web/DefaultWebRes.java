@@ -1,8 +1,11 @@
 package krpc.rpc.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.protobuf.ByteString;
 
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -31,6 +34,24 @@ public class DefaultWebRes implements WebRes {
 		this.keepAlive = req.isKeepAlive();
 		this.isHeadMethod = req.isHeadMethod();
 		this.httpCode = httpCode;
+		
+		if (!keepAlive) setHeader("Connection", "close");
+	}
+	
+	public String getStringResult(String key) {
+		if( results == null ) return null;
+		Object o = results.get(key);
+		if( o == null ) return null;
+		if( (o instanceof String) ) return (String)o;
+		return o.toString();
+	}
+	
+	public ByteString getByteStringResult(String key) {
+		if( results == null ) return null;
+		Object o = results.get(key);
+		if( o == null ) return null;
+		if( (o instanceof ByteString ) ) return (ByteString)o;
+		return null;
 	}
 	
 	public String getCookie(String name) {
@@ -46,7 +67,7 @@ public class DefaultWebRes implements WebRes {
 	}
 
 	public DefaultWebRes setRetCode(int code) {
-		if( results == null ) return null;
+		if( results == null ) results = new HashMap<>();
 		results.put(ReflectionUtils.retCodeFieldInMap,code);
 		return this;
 	}
@@ -57,7 +78,7 @@ public class DefaultWebRes implements WebRes {
 	}
 
 	public DefaultWebRes setRetMsg(String msg) {
-		if( results == null ) return null;
+		if( results == null ) results = new HashMap<>();
 		results.put(ReflectionUtils.retMsgFieldInMap,msg);
 		return this;
 	}
@@ -171,6 +192,7 @@ public class DefaultWebRes implements WebRes {
 	}
 
 	public Map<String, Object> getResults() {
+		if( results == null ) results = new HashMap<>();
 		return results;
 	}
 

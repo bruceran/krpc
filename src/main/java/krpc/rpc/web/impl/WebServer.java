@@ -2,9 +2,11 @@ package krpc.rpc.web.impl;
 
 import static krpc.rpc.web.WebConstants.*;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.Message;
 
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
@@ -55,6 +59,7 @@ import krpc.rpc.web.WebRouteService;
 import krpc.rpc.web.RpcDataConverter;
 import krpc.rpc.web.SessionService;
 import krpc.rpc.web.WebClosure;
+import krpc.rpc.web.WebConstants;
 import krpc.rpc.web.WebContextData;
 import krpc.rpc.web.WebMonitorService;
 import krpc.trace.TraceContext;
@@ -67,6 +72,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	String sessionIdCookieName = DefaultSessionIdCookieName;
 	String sessionIdCookiePath = "";
+	int expireSeconds = 0;
 	int sampleRate = 1;
 
 	SessionService defaultSessionService;
@@ -153,23 +159,23 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		WebContextData ctx = new WebContextData(connId, meta, r, tctx);
 		return ctx;
 	}
-	
+
 	public void receive(String connId, DefaultWebReq req) {
 
 		// route
 		WebRoute r = routeService.findRoute(req.getHostNoPort(), req.getPath(), req.getMethod().toString());
 		if (r == null) {
-			// todo route static file
-			/*
-			if (req.getMethod() == HttpMethod.GET || req.getMethod() == HttpMethod.HEAD) {
-				String sr = routeService.findStaticFile(req.getHost(), req.getPath());
-				if (sr != null) {
-					routeStaticFile(connId, req, sr);
 
-					return;
+			if (req.getMethod() == HttpMethod.GET || req.getMethod() == HttpMethod.HEAD) {
+				String file = routeService.findStaticFile(req.getHost(), req.getPath());	
+				if (file != null) {
+					File f = new File(file);
+					if( f.exists()) {
+						routeStaticFile(connId, req, f);
+						return;
+					}
 				}
 			}
-			*/
 
 			DefaultWebRes res = generateError(req, RetCodes.HTTP_NOT_FOUND, 404,null);
 			httpTransport.send(connId, res);
@@ -887,6 +893,77 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		return v;
 	}
 
+	public void routeStaticFile(String connId, DefaultWebReq req, File file) {
+
+		DefaultWebRes res = new DefaultWebRes(req, 200);
+		res.getResults().put(WebConstants.DOWNLOAD_FILE_FIELD, file.getAbsolutePath()); // special key for file
+		res.getResults().put(WebConstants.DOWNLOAD_EXPIRES_FIELD, expireSeconds);
+
+		boolean send304 = check304(req,file); 
+		if( send304 ) {
+			res.setHttpCode(304);
+			httpTransport.send(connId, res);
+			return;
+		} 
+
+		String range = checkPartial(req, file);
+		if( range != null ) {
+			res.setHttpCode(206);
+			res.getResults().put(WebConstants.DOWNLOAD_FILE_RANGE_FIELD,range);	
+			res.getResults().remove(WebConstants.DOWNLOAD_EXPIRES_FIELD);
+			httpTransport.send(connId, res);
+			return;
+		}  
+		
+		httpTransport.send(connId, res);
+	}
+
+	String checkPartial(DefaultWebReq req, File file) {
+		
+		String range = req.getHeaders().get(HttpHeaderNames.RANGE);
+		if( isEmpty(range) ) return null;
+		
+		long fileLength = file.length();
+
+		try {
+            String[] ss = range.trim().split("=");
+            if( ss.length != 2) return null;
+            if( !ss[0].equals("bytes")) return null;
+            
+            int p = ss[1].indexOf("-");
+            if( p == -1 ) return null;
+            
+            String min = ss[1].substring(0,p);
+            String max = ss[1].substring(p+1);
+            if( isEmpty(min) && isEmpty(max) ) return null;
+            
+            if( isEmpty(min) )  min = "0";
+            if( isEmpty(max)  ) max = String.valueOf(fileLength - 1);
+
+            if( Long.parseLong(min) > Long.parseLong(max) ) return null;
+            return min+"-"+max;
+        } catch(Throwable e) {
+                return null;
+        }
+    }
+    
+	boolean check304(DefaultWebReq req, File f) {
+		String ifModifiedSince = req.getHeaders().get(HttpHeaderNames.IF_MODIFIED_SINCE);
+		if( isEmpty(ifModifiedSince) ) return check304Etag(req,f);
+		Date ifModifiedSinceDate = parseDate(ifModifiedSince);
+		if( ifModifiedSinceDate == null ) return false;
+        long ifModifiedSinceDateSeconds = ifModifiedSinceDate.getTime() / 1000;
+        long fileLastModifiedSeconds = f.lastModified() / 1000;
+        return (ifModifiedSinceDateSeconds == fileLastModifiedSeconds);	
+	}
+	
+	boolean check304Etag(DefaultWebReq req, File f) {
+		String ifNoneMatch = req.getHeaders().get(HttpHeaderNames.IF_NONE_MATCH);
+		if( isEmpty(ifNoneMatch) ) return false;
+		String etag = generateEtag(f);
+        return etag.equals(ifNoneMatch);	
+	}
+
 	String getRemoteAddr(String connId) {
 		int p = connId.lastIndexOf(":");
 		return connId.substring(0, p);
@@ -995,6 +1072,14 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void setDefaultSessionService(SessionService defaultSessionService) {
 		this.defaultSessionService = defaultSessionService;
+	}
+
+	public int getExpireSeconds() {
+		return expireSeconds;
+	}
+
+	public void setExpireSeconds(int expireSeconds) {
+		this.expireSeconds = expireSeconds;
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
 
 import com.google.protobuf.Descriptors.EnumDescriptor;
@@ -91,6 +92,20 @@ public class MapToMessage {
 				return TypeSafe.anyToString(value);
 
 			case BYTES:
+				{
+					if( value instanceof ByteString) {
+						return (ByteString)value;
+					}
+					if( value instanceof String ) {
+						byte[] bb = getBytes((String)value);
+						if( bb == null ) return null;
+						return ByteString.copyFrom(bb);
+					}
+					if( value instanceof byte[] ) {
+						ByteString.copyFrom((byte[])value);
+					}
+				}				
+				
 				return null; // todo
 
 			case ENUM:
@@ -136,7 +151,16 @@ public class MapToMessage {
 		}
 		return params.get(name);
 	}
-	
+
+	static byte[] getBytes(String s) {
+		if( s == null ) return null;
+		try {
+			return s.getBytes("utf-8");
+		} catch(Exception e) {
+			return null;
+		}
+	}
+		
 	static Class<?>[] dummyTypes = new Class<?>[0];
 	static Object[] dummyParameters = new Object[0];
 	

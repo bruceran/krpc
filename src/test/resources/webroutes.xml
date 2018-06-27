@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>    
 <routes>    
 
-    <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
+    <dir hosts="*" path="/site" baseDir="c:\ws\site"/>  
  
     <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" sessionMode="0"  plugins="logOnly"/>  
     <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
@@ -10,6 +10,13 @@
     	<url path="/test3" msgId="3"/>  
     	<url path="/test4" msgId="4"/>  
 	</group>
+
+	<url hosts="*" path="/plugin/test0" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  />  
+	<url hosts="*" path="/plugin/test1" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="plainText"/>  
+	<url hosts="*" path="/plugin/test2" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="jsonp"/>  
+	<url hosts="*" path="/plugin/test3" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="htmlRedirect"/>  
+	<url hosts="*" path="/plugin/test4" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="serverRedirect"/>  
+	<url hosts="*" path="/plugin/test5" methods="get,post" serviceId="104" msgId="2" sessionMode="0"  />  
 	
 	<!--  sample: import  other files -->
 	<import file="webroutes2.xml" />  

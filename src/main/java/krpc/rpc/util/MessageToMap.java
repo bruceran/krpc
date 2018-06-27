@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 
@@ -103,7 +104,20 @@ public class MessageToMap {
 			break;
 
 		case BYTES:
-			// donot print bytes  // todo
+			{
+				if( value instanceof ByteString) {
+					addToResults(name, (ByteString) value,results, isArray);
+				}
+				if( value instanceof String ) {
+					byte[] bb = getBytes((String)value);
+					if( bb != null ) {
+						addToResults(name, ByteString.copyFrom(bb),results, isArray);
+					}
+				}
+				if( value instanceof byte[] ) {
+					addToResults(name, ByteString.copyFrom((byte[])value),results, isArray);
+				}
+			}
 			break;
 
 		case ENUM:
@@ -144,6 +158,15 @@ public class MessageToMap {
 		return fieldsToPrint;
 	}
 
+	static byte[] getBytes(String s) {
+		if( s == null ) return null;
+		try {
+			return s.getBytes("utf-8");
+		} catch(Exception e) {
+			return null;
+		}
+	}
+	
 	static public Long unsignedToLong(final int value) {
 		if (value >= 0) {
 			return Long.valueOf(value);

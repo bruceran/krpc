@@ -5,6 +5,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.protobuf.ByteString;
+import com.xxx.userservice.proto.HttpDownloadStaticRes;
+import com.xxx.userservice.proto.HttpPluginTestReq;
+import com.xxx.userservice.proto.HttpPluginTestRes;
+import com.xxx.userservice.proto.HttpPluginTestService;
 import com.xxx.userservice.proto.LoginReq;
 import com.xxx.userservice.proto.LoginRes;
 import com.xxx.userservice.proto.UpdateProfileReq;
@@ -24,16 +29,18 @@ public class HttpServerTest {
 	public static void main(String[] args) throws Exception {
 		
 		UserServiceImpl2 impl = new UserServiceImpl2(); // user code is here
+		HttpPluginTestService impl2 = new HttpPluginTestServiceImpl(); // user code is here
 
 		RpcApp app = new Bootstrap()
-			.addWebServer(8888) 
-			.addServer(5600) 
+			.addWebServer(8890) 
+			// .addServer(5600) 
 			.addService(UserService.class,impl) 
+			.addService(HttpPluginTestService.class,impl2) 
 			.build();
 		
 		app.initAndStart();
 		
-		Thread.sleep(120000);
+		Thread.sleep(12000000);
 
 		app.stopAndClose();
 		
@@ -41,6 +48,30 @@ public class HttpServerTest {
 		
 	}	
 		
+}
+
+class HttpPluginTestServiceImpl implements HttpPluginTestService {
+
+	public HttpPluginTestRes test1(HttpPluginTestReq req) {
+		HttpPluginTestRes.Builder builder = HttpPluginTestRes.newBuilder().setRetCode(0);
+		builder.setEmail("test@a.com").setMobile("13100001111").setGender("mail");
+		builder.setPlainText("abc").setRedirectUrl("http://www.baidu.com");
+		return builder.build();
+	}
+	
+	public HttpDownloadStaticRes test2(HttpPluginTestReq req) {
+		HttpDownloadStaticRes.Builder builder = HttpDownloadStaticRes.newBuilder().setRetCode(0);
+		//builder.setDownloadFile("c:\\ws\\site\\static\\hello.html");
+		//builder.setDownloadFile("c:\\ws\\site\\static\\中文.html"); // existed file or generated file
+		builder.setAttachment(1);
+		//builder.setAutoDelete("true"); // used to delete generated file
+		
+		ByteString bs = ByteString.copyFrom("abc".getBytes());
+		builder.setDownloadStream(bs);
+		builder.setFilename("中文.html");
+		
+		return builder.build();		
+	}
 }
 
 class UserServiceImpl2 implements UserService {

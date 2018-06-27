@@ -25,6 +25,8 @@ public class WebServerConfig  {
 	String protoDir = "proto";
 	String sessionIdCookieName = WebConstants.DefaultSessionIdCookieName;
 	String sessionIdCookiePath = "";
+	int expireSeconds = 0;
+	
 	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
 
 	String defaultSessionService = "memorysessionservice";
@@ -189,6 +191,15 @@ public class WebServerConfig  {
 
 	public WebServerConfig setPluginParams(List<String> pluginParams) {
 		this.pluginParams = pluginParams;
+		return this;
+	}
+
+	public int getExpireSeconds() {
+		return expireSeconds;
+	}
+
+	public WebServerConfig setExpireSeconds(int expireSeconds) {
+		this.expireSeconds = expireSeconds;
 		return this;
 	}
 

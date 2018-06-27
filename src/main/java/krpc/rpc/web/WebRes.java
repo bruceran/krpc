@@ -23,4 +23,6 @@ public interface WebRes extends WebMessage {
 	Map<String, Object> getResults();
 	WebRes setResults(Map<String, Object> results);
 
+	String getStringResult(String key);
+	
 }

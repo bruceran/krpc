@@ -94,6 +94,21 @@ public final class UserServiceMetas {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_HttpTestRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpPluginTestReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpPluginTestReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpPluginTestRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpPluginTestRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpDownloadStaticRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpDownloadStaticRes_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -157,7 +172,16 @@ public final class UserServiceMetas {
       "\t\022\031\n\007session\030\004 \001(\0132\010.Session\022\020\n\010httpCode" +
       "\030\005 \001(\005\022\027\n\017httpContentType\030\006 \001(\t\022\026\n\016heade" +
       "rLocation\030\007 \001(\t\022\027\n\017headerXmmDddCcc\030\010 \001(\t" +
-      "\022\021\n\tcookieTnk\030\t \001(\t\022\022\n\ntotalPrice\030\n \001(\005*" +
+      "\022\021\n\tcookieTnk\030\t \001(\t\022\022\n\ntotalPrice\030\n \001(\005\"" +
+      "%\n\021HttpPluginTestReq\022\020\n\010username\030\001 \001(\t\"\213" +
+      "\001\n\021HttpPluginTestRes\022\017\n\007retCode\030\001 \001(\005\022\016\n" +
+      "\006retMsg\030\002 \001(\t\022\021\n\tplainText\030\003 \001(\t\022\023\n\013redi" +
+      "rectUrl\030\004 \001(\t\022\016\n\006gender\030\005 \001(\t\022\016\n\006mobile\030" +
+      "\006 \001(\t\022\r\n\005email\030\007 \001(\t\"\260\001\n\025HttpDownloadSta" +
+      "ticRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\022" +
+      "\024\n\014downloadFile\030\003 \001(\t\022\022\n\nautoDelete\030\004 \001(" +
+      "\t\022\022\n\nattachment\030\005 \001(\005\022\016\n\006expire\030\006 \001(\005\022\026\n" +
+      "\016downloadStream\030\007 \001(\014\022\020\n\010filename\030\010 \001(\t*" +
       ",\n\006Status\022\r\n\tNOT_READY\020\000\022\t\n\005READY\020\001\022\010\n\004P" +
       "AID\020\0022u\n\013UserService\022#\n\005login\022\t.LoginReq" +
       "\032\t.LoginRes\"\004\220\265\030\001\022;\n\rupdateProfile\022\021.Upd" +
@@ -166,9 +190,12 @@ public final class UserServiceMetas {
       "estReq\032\020.ValidateTestRes\"\004\220\265\030\001\032\004\210\265\030e25\n\013" +
       "PushService\022 \n\004push\022\010.PushReq\032\010.PushRes\"" +
       "\004\220\265\030\001\032\004\210\265\030f29\n\rPushServicev2\022\"\n\006pushv2\022\010" +
-      ".PushReq\032\010.PushRes\"\004\220\265\030\001\032\004\210\265\030gB2\n\031com.xx" +
-      "x.userservice.protoB\020UserServiceMetasP\001\210" +
-      "\001\001b\006proto3"
+      ".PushReq\032\010.PushRes\"\004\220\265\030\001\032\004\210\265\030g2\217\001\n\025HttpP" +
+      "luginTestService\0225\n\005test1\022\022.HttpPluginTe" +
+      "stReq\032\022.HttpPluginTestRes\"\004\220\265\030\001\0229\n\005test2" +
+      "\022\022.HttpPluginTestReq\032\026.HttpDownloadStati" +
+      "cRes\"\004\220\265\030\002\032\004\210\265\030hB2\n\031com.xxx.userservice." +
+      "protoB\020UserServiceMetasP\001\210\001\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -279,6 +306,24 @@ public final class UserServiceMetas {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_HttpTestRes_descriptor,
         new java.lang.String[] { "RetCode", "RetMsg", "UserId", "Session", "HttpCode", "HttpContentType", "HeaderLocation", "HeaderXmmDddCcc", "CookieTnk", "TotalPrice", });
+    internal_static_HttpPluginTestReq_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_HttpPluginTestReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpPluginTestReq_descriptor,
+        new java.lang.String[] { "Username", });
+    internal_static_HttpPluginTestRes_descriptor =
+      getDescriptor().getMessageTypes().get(17);
+    internal_static_HttpPluginTestRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpPluginTestRes_descriptor,
+        new java.lang.String[] { "RetCode", "RetMsg", "PlainText", "RedirectUrl", "Gender", "Mobile", "Email", });
+    internal_static_HttpDownloadStaticRes_descriptor =
+      getDescriptor().getMessageTypes().get(18);
+    internal_static_HttpDownloadStaticRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpDownloadStaticRes_descriptor,
+        new java.lang.String[] { "RetCode", "RetMsg", "DownloadFile", "AutoDelete", "Attachment", "Expire", "DownloadStream", "Filename", });
     com.google.protobuf.ExtensionRegistry registry =
         com.google.protobuf.ExtensionRegistry.newInstance();
     registry.add(krpc.KrpcExt.msgId);
