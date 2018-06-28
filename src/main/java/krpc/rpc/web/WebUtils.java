@@ -127,6 +127,7 @@ public class WebUtils {
 			}
             InputStream in = jarFile.getInputStream(entry);  
             Files.copy(in, tarFile.toPath());
+            in.close();
             
 			long lastModified = entry.getLastModifiedTime().toMillis();
 			tarFile.setLastModified(lastModified);

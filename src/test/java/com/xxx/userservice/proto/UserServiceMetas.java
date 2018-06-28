@@ -109,6 +109,21 @@ public final class UserServiceMetas {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_HttpDownloadStaticRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_UploadFile_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_UploadFile_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpUploadTestReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpUploadTestReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpUploadTestRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpUploadTestRes_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -181,21 +196,29 @@ public final class UserServiceMetas {
       "ticRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\022" +
       "\024\n\014downloadFile\030\003 \001(\t\022\022\n\nautoDelete\030\004 \001(" +
       "\t\022\022\n\nattachment\030\005 \001(\005\022\016\n\006expire\030\006 \001(\005\022\026\n" +
-      "\016downloadStream\030\007 \001(\014\022\020\n\010filename\030\010 \001(\t*" +
-      ",\n\006Status\022\r\n\tNOT_READY\020\000\022\t\n\005READY\020\001\022\010\n\004P" +
-      "AID\020\0022u\n\013UserService\022#\n\005login\022\t.LoginReq" +
-      "\032\t.LoginRes\"\004\220\265\030\001\022;\n\rupdateProfile\022\021.Upd" +
-      "ateProfileReq\032\021.UpdateProfileRes\"\004\220\265\030\002\032\004" +
-      "\210\265\030d2F\n\013TestService\0221\n\005test1\022\020.ValidateT" +
-      "estReq\032\020.ValidateTestRes\"\004\220\265\030\001\032\004\210\265\030e25\n\013" +
-      "PushService\022 \n\004push\022\010.PushReq\032\010.PushRes\"" +
-      "\004\220\265\030\001\032\004\210\265\030f29\n\rPushServicev2\022\"\n\006pushv2\022\010" +
-      ".PushReq\032\010.PushRes\"\004\220\265\030\001\032\004\210\265\030g2\217\001\n\025HttpP" +
-      "luginTestService\0225\n\005test1\022\022.HttpPluginTe" +
-      "stReq\032\022.HttpPluginTestRes\"\004\220\265\030\001\0229\n\005test2" +
-      "\022\022.HttpPluginTestReq\032\026.HttpDownloadStati" +
-      "cRes\"\004\220\265\030\002\032\004\210\265\030hB2\n\031com.xxx.userservice." +
-      "protoB\020UserServiceMetasP\001\210\001\001b\006proto3"
+      "\016downloadStream\030\007 \001(\014\022\020\n\010filename\030\010 \001(\t\"" +
+      "\\\n\nUploadFile\022\014\n\004file\030\001 \001(\t\022\020\n\010filename\030" +
+      "\002 \001(\t\022\014\n\004size\030\003 \001(\003\022\013\n\003ext\030\004 \001(\t\022\023\n\013cont" +
+      "entType\030\005 \001(\t\"s\n\021HttpUploadTestReq\022\027\n\017ht" +
+      "tpContentType\030\001 \001(\t\022\023\n\013httpContent\030\002 \001(\t" +
+      "\022\t\n\001a\030\003 \001(\t\022\t\n\001b\030\004 \001(\t\022\032\n\005files\030\005 \003(\0132\013." +
+      "UploadFile\"4\n\021HttpUploadTestRes\022\017\n\007retCo" +
+      "de\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t*,\n\006Status\022\r\n\tNO" +
+      "T_READY\020\000\022\t\n\005READY\020\001\022\010\n\004PAID\020\0022u\n\013UserSe" +
+      "rvice\022#\n\005login\022\t.LoginReq\032\t.LoginRes\"\004\220\265" +
+      "\030\001\022;\n\rupdateProfile\022\021.UpdateProfileReq\032\021" +
+      ".UpdateProfileRes\"\004\220\265\030\002\032\004\210\265\030d2F\n\013TestSer" +
+      "vice\0221\n\005test1\022\020.ValidateTestReq\032\020.Valida" +
+      "teTestRes\"\004\220\265\030\001\032\004\210\265\030e25\n\013PushService\022 \n\004" +
+      "push\022\010.PushReq\032\010.PushRes\"\004\220\265\030\001\032\004\210\265\030f29\n\r" +
+      "PushServicev2\022\"\n\006pushv2\022\010.PushReq\032\010.Push" +
+      "Res\"\004\220\265\030\001\032\004\210\265\030g2\307\001\n\025HttpPluginTestServic" +
+      "e\0225\n\005test1\022\022.HttpPluginTestReq\032\022.HttpPlu" +
+      "ginTestRes\"\004\220\265\030\001\0229\n\005test2\022\022.HttpPluginTe" +
+      "stReq\032\026.HttpDownloadStaticRes\"\004\220\265\030\002\0226\n\006u" +
+      "pload\022\022.HttpUploadTestReq\032\022.HttpUploadTe" +
+      "stRes\"\004\220\265\030\003\032\004\210\265\030hB2\n\031com.xxx.userservice" +
+      ".protoB\020UserServiceMetasP\001\210\001\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -324,6 +347,24 @@ public final class UserServiceMetas {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_HttpDownloadStaticRes_descriptor,
         new java.lang.String[] { "RetCode", "RetMsg", "DownloadFile", "AutoDelete", "Attachment", "Expire", "DownloadStream", "Filename", });
+    internal_static_UploadFile_descriptor =
+      getDescriptor().getMessageTypes().get(19);
+    internal_static_UploadFile_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_UploadFile_descriptor,
+        new java.lang.String[] { "File", "Filename", "Size", "Ext", "ContentType", });
+    internal_static_HttpUploadTestReq_descriptor =
+      getDescriptor().getMessageTypes().get(20);
+    internal_static_HttpUploadTestReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpUploadTestReq_descriptor,
+        new java.lang.String[] { "HttpContentType", "HttpContent", "A", "B", "Files", });
+    internal_static_HttpUploadTestRes_descriptor =
+      getDescriptor().getMessageTypes().get(21);
+    internal_static_HttpUploadTestRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpUploadTestRes_descriptor,
+        new java.lang.String[] { "RetCode", "RetMsg", });
     com.google.protobuf.ExtensionRegistry registry =
         com.google.protobuf.ExtensionRegistry.newInstance();
     registry.add(krpc.KrpcExt.msgId);

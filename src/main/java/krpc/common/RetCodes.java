@@ -30,6 +30,8 @@ public class RetCodes {
 	 // http client side
 	 static public final int HTTP_NOT_FOUND = -404;  
 	 static public final int HTTP_METHOD_NOT_ALLOWED = -405;  
+	 static public final int HTTP_TOO_LARGE = -413;  
+	 
 	 // http server side
 	 static public final int HTTP_NO_LOGIN = -560;  
 	 static public final int HTTP_NO_SESSIONSERVICE = -561;  
@@ -76,6 +78,7 @@ public class RetCodes {
 		 	
 		 	
 		 	case HTTP_NOT_FOUND: return "not found";
+		 	case HTTP_TOO_LARGE: return "too large";
 		 	case HTTP_METHOD_NOT_ALLOWED: return "method not allowed";
 		 	case HTTP_NO_SESSIONSERVICE: return "session service not found";
 		 	case HTTP_NO_LOGIN: return "not login yet";

@@ -86,6 +86,9 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 	int maxHeaderSize = 8192;
 	int maxChunkSize = 8192;
 	int maxContentLength = 1000000;
+	
+	String dataDir = ".";
+	long maxUploadLength = 5000000;
 
 	NamedThreadFactory bossThreadFactory = new NamedThreadFactory("web_boss");
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("web_work");
@@ -111,6 +114,9 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 	
 	public void init() {
 
+		String uploadDir = dataDir + "/upload";
+		new File(uploadDir).mkdirs();
+		
 		bossGroup = new NioEventLoopGroup(1, bossThreadFactory);
 		workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
 
@@ -123,9 +129,9 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 						pipeline.addLast("timeout", new IdleStateHandler(0, 0, idleSeconds));
 						pipeline.addLast("codec", new HttpServerCodec(maxInitialLineLength,maxHeaderSize,maxChunkSize));
 						pipeline.addLast("expectContinue", new HttpServerExpectContinueHandler());						
-						// pipeline.addLast("uploader2", new HttpFileUploadAggregator2(uploadDir, maxUploadLength)) // todo
+						pipeline.addLast("upload", new NettyHttpUploadHandler(uploadDir, maxUploadLength));
 						pipeline.addLast("aggregator", new HttpObjectAggregator(maxContentLength));
-			            //pipeline.addLast("chunkedWriter", new ChunkedWriteHandler()); // use FileRegion instead
+			            //pipeline.addLast("chunkedWriter", new ChunkedWriteHandler()); // use ZeroCopy FileRegion instead
 			            pipeline.addLast("compressor", new HttpContentCompressor());
 						pipeline.addLast("handler", NettyHttpServer.this);
 					}
@@ -714,6 +720,46 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 
 	public void setBacklog(int backlog) {
 		this.backlog = backlog;
+	}
+
+	public String getDataDir() {
+		return dataDir;
+	}
+
+	public void setDataDir(String dataDir) {
+		this.dataDir = dataDir;
+	}
+
+	public long getMaxUploadLength() {
+		return maxUploadLength;
+	}
+
+	public void setMaxUploadLength(long maxUploadLength) {
+		this.maxUploadLength = maxUploadLength;
+	}
+
+	public int getMaxInitialLineLength() {
+		return maxInitialLineLength;
+	}
+
+	public void setMaxInitialLineLength(int maxInitialLineLength) {
+		this.maxInitialLineLength = maxInitialLineLength;
+	}
+
+	public int getMaxHeaderSize() {
+		return maxHeaderSize;
+	}
+
+	public void setMaxHeaderSize(int maxHeaderSize) {
+		this.maxHeaderSize = maxHeaderSize;
+	}
+
+	public int getMaxChunkSize() {
+		return maxChunkSize;
+	}
+
+	public void setMaxChunkSize(int maxChunkSize) {
+		this.maxChunkSize = maxChunkSize;
 	}
 
 }

@@ -78,7 +78,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	int expireSeconds = 0;
 	int sampleRate = 1;
 	boolean autoTrim = true;
-	String dataDir;
+	String dataDir = ".";
 	String jarCacheDir;
 
 	SessionService defaultSessionService;

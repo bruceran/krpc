@@ -821,9 +821,15 @@ public class Bootstrap {
 			ns.setHost(c.host);
 			ns.setBacklog(c.backlog);
 			ns.setIdleSeconds(c.idleSeconds);
-			ns.setMaxContentLength(c.maxContentLength);
+			ns.setDataDir(appConfig.dataDir);
 			ns.setMaxConns(c.maxConns);
 			ns.setWorkerThreads(c.ioThreads);
+			ns.setMaxContentLength(c.maxContentLength);
+			ns.setMaxUploadLength(c.maxUploadLength);
+			ns.setMaxInitialLineLength(c.maxInitialLineLength);
+			ns.setMaxHeaderSize(c.maxHeaderSize);
+			ns.setMaxChunkSize(c.maxChunkSize);
+
 			server.setHttpTransport(ns);
 
 			ExecutorManager em = newExecutorManager();
@@ -1401,7 +1407,7 @@ public class Bootstrap {
 		String defaultMsgId = defaultAttrs.getOrDefault("msgId", "");
 		if (!isEmpty(defaultMsgId))
 			throw new RuntimeException("mapping msgid in group is not allowed");
-		String defaultSessionMode = defaultAttrs.getOrDefault("sessionMode", "");
+		String defaultSessionMode = defaultAttrs.getOrDefault("sessionMode", "0");
 		WebPlugins defaultPlugins = loadWebPlugins(defaultAttrs.getOrDefault("plugins", ""));
 
 		defaultAttrs.remove("hosts");

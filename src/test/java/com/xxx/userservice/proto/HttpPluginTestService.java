@@ -13,5 +13,8 @@ public interface HttpPluginTestService {
     com.xxx.userservice.proto.HttpDownloadStaticRes test2(com.xxx.userservice.proto.HttpPluginTestReq req);
     static final public int test2MsgId = 2;
 
+    com.xxx.userservice.proto.HttpUploadTestRes upload(com.xxx.userservice.proto.HttpUploadTestReq req);
+    static final public int uploadMsgId = 3;
+
 }
 

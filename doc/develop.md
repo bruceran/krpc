@@ -480,7 +480,6 @@
     host  绑定的IP, 默认为*， 绑定所有IP
     backlog 监听队列backlog数量 默认128
     idleSeconds  允许的最大读写超时时间，秒，默认为60
-    maxContentLength 最大包长，字节， 默认为 1000000 (文件上传会有单独的配置参数控制大小)
     maxConns 服务端允许的同时的客户端连接数，默认为500000
     ioThreads  netty4内部io读写线程，默认为0，由系统自动分配
     notifyThreads  当使用PUSH调用时, server可以作为client, 这时若采用异步方式调用客户端，
@@ -492,6 +491,12 @@
     maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
          
+    maxContentLength 最大包长，字节， 默认为 1000000 (1M)
+    maxUploadLength 上传时允许最大长度，字节， 默认为 5000000 (5M)
+	maxInitialLineLength HTTP初始行最大长度，字节， 默认为 4096
+	maxHeaderSize  HTTP header最大长度，字节， 默认为 8192
+	maxChunkSize  HTTP chunk最大长度，字节， 默认为 8192
+
     protoDir proto文件所在目录，默认为 proto, 会自动搜索classpath下的proto/子目录下的所有xxx.proto.pb文件
     routesFile 路由配置文件， 默认为 webroutes.xml，会自动搜索classpath下的webroutes.xml配置文件
     sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID

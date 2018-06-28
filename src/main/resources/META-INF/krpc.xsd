@@ -92,7 +92,6 @@
               <attribute name="host" type="string" use="optional"/>
               <attribute name="backlog" type="string" use="optional"/>
               <attribute name="idleSeconds" type="string" use="optional"/>
-              <attribute name="maxContentLength" type="string" use="optional"/>
               <attribute name="maxConns" type="string" use="optional"/>
               <attribute name="ioThreads" type="string" use="optional"/>
               <attribute name="threads" type="string" use="optional"/>
@@ -106,6 +105,11 @@
               <attribute name="defaultSessionService" type="string" use="optional"/>
               <attribute name="expireSeconds" type="string" use="optional"/>
               <attribute name="autoTrim" type="string" use="optional"/>
+              <attribute name="maxInitialLineLength" type="string" use="optional"/>
+              <attribute name="maxHeaderSize" type="string" use="optional"/>
+              <attribute name="maxChunkSize" type="string" use="optional"/>
+              <attribute name="maxContentLength" type="string" use="optional"/>
+              <attribute name="maxUploadLength" type="string" use="optional"/>    
 	    </complexType>    
     </element>
     

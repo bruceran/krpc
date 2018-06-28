@@ -13,10 +13,15 @@ public class WebServerConfig  {
 	String host = "*";
 	int backlog = 128;
 	int idleSeconds = 30;
-	int maxContentLength = 1000000;
 	int maxConns = 500000;
 	int ioThreads = 0;	// auto
 
+	int maxInitialLineLength = 4096;
+	int maxHeaderSize = 8192;
+	int maxChunkSize = 8192;
+	int maxContentLength = 1000000;
+	long maxUploadLength = 5000000;
+	
 	int threads = 0; // workthreads, 0=auto -1=no workthreads,use iothreads n=workthreads
 	int maxThreads = 0;
 	int queueSize = 10000;
@@ -27,7 +32,7 @@ public class WebServerConfig  {
 	String sessionIdCookiePath = "";
 	int expireSeconds = 0;
 	boolean autoTrim = true;
-	
+
 	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
 
 	String defaultSessionService = "memorysessionservice";
@@ -210,6 +215,42 @@ public class WebServerConfig  {
 
 	public WebServerConfig setAutoTrim(boolean autoTrim) {
 		this.autoTrim = autoTrim;
+		return this;
+	}
+
+	public int getMaxInitialLineLength() {
+		return maxInitialLineLength;
+	}
+
+	public WebServerConfig setMaxInitialLineLength(int maxInitialLineLength) {
+		this.maxInitialLineLength = maxInitialLineLength;
+		return this;
+	}
+
+	public int getMaxHeaderSize() {
+		return maxHeaderSize;
+	}
+
+	public WebServerConfig setMaxHeaderSize(int maxHeaderSize) {
+		this.maxHeaderSize = maxHeaderSize;
+		return this;
+	}
+
+	public int getMaxChunkSize() {
+		return maxChunkSize;
+	}
+
+	public WebServerConfig setMaxChunkSize(int maxChunkSize) {
+		this.maxChunkSize = maxChunkSize;
+		return this;
+	}
+
+	public long getMaxUploadLength() {
+		return maxUploadLength;
+	}
+
+	public WebServerConfig setMaxUploadLength(long maxUploadLength) {
+		this.maxUploadLength = maxUploadLength;
 		return this;
 	}
 

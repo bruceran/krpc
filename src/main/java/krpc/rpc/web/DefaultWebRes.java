@@ -61,7 +61,9 @@ public class DefaultWebRes implements WebRes {
 	}
 	public int getRetCode() {
 		if( results == null ) return 0;
-		return (Integer)results.get(ReflectionUtils.retCodeFieldInMap);
+		Integer i = (Integer)results.get(ReflectionUtils.retCodeFieldInMap);
+		if( i == null ) return 0;
+		return i;
 	}
 
 	public DefaultWebRes setRetCode(int code) {

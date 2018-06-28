@@ -1,5 +1,6 @@
 package krpc.test.rpc;
 
+import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.slf4j.Logger;
@@ -10,10 +11,13 @@ import com.xxx.userservice.proto.HttpDownloadStaticRes;
 import com.xxx.userservice.proto.HttpPluginTestReq;
 import com.xxx.userservice.proto.HttpPluginTestRes;
 import com.xxx.userservice.proto.HttpPluginTestService;
+import com.xxx.userservice.proto.HttpUploadTestReq;
+import com.xxx.userservice.proto.HttpUploadTestRes;
 import com.xxx.userservice.proto.LoginReq;
 import com.xxx.userservice.proto.LoginRes;
 import com.xxx.userservice.proto.UpdateProfileReq;
 import com.xxx.userservice.proto.UpdateProfileRes;
+import com.xxx.userservice.proto.UploadFile;
 import com.xxx.userservice.proto.UserService;
 
 import krpc.rpc.bootstrap.Bootstrap;
@@ -73,6 +77,22 @@ class HttpPluginTestServiceImpl implements HttpPluginTestService {
 		
 		return builder.build();		
 	}
+	
+	public HttpUploadTestRes upload(HttpUploadTestReq req) {
+
+		if( req.getFilesCount() > 0 ) {
+			for(UploadFile f: req.getFilesList()) {
+				System.out.println("upload filename="+f.getFilename());
+				System.out.println("upload file="+f.getFile());
+				System.out.println("upload size="+f.getSize());
+				System.out.println("upload ext="+f.getExt());
+				System.out.println("upload contentType="+f.getContentType());
+				// new File(f.getFile()).delete();
+			}
+		}
+		return HttpUploadTestRes.newBuilder().setRetCode(0).build();
+	}
+
 }
 
 class UserServiceImpl2 implements UserService {

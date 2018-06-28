@@ -214,9 +214,31 @@ message HttpDownloadStaticRes {
 	string filename = 8;
 }
 
+message UploadFile {
+	string file = 1;
+	string filename = 2;
+	int64 size = 3;
+	string ext = 4;
+	string contentType = 5;
+}
+
+message HttpUploadTestReq {
+	string httpContentType = 1;
+	string httpContent = 2;
+	string a = 3;
+	string b = 4;
+	repeated UploadFile files = 5;
+}
+				
+message HttpUploadTestRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+}
+
 service HttpPluginTestService {
   option (krpc.serviceId) = 104;
 	rpc test1(HttpPluginTestReq) returns (HttpPluginTestRes)  { option (krpc.msgId) = 1; };
 	rpc test2(HttpPluginTestReq) returns (HttpDownloadStaticRes)  { option (krpc.msgId) = 2; };
+	rpc upload(HttpUploadTestReq) returns (HttpUploadTestRes)  { option (krpc.msgId) = 3; };
 }
 	
