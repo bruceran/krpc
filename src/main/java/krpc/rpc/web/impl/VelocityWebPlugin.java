@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
 
 import krpc.rpc.core.Plugin;
 import krpc.rpc.web.RenderPlugin;
-import krpc.rpc.web.WebConstants;
 import krpc.rpc.web.WebContextData;
 import krpc.rpc.web.WebPlugin;
 import krpc.rpc.web.WebReq;
 import krpc.rpc.web.WebRes;
+import krpc.rpc.web.WebUtils;
 
 public class VelocityWebPlugin implements WebPlugin, RenderPlugin {
 
@@ -150,7 +150,7 @@ public class VelocityWebPlugin implements WebPlugin, RenderPlugin {
 	String getContentType(String templateName) {
 		int p = templateName.lastIndexOf(".");
 		String s = templateName.substring(0,p);
-		return WebConstants.getContentType(s);
+		return WebUtils.getContentType(s);
 	}
 	
 	String getTemplateName(String templateDir, String templateName) {
@@ -177,8 +177,7 @@ public class VelocityWebPlugin implements WebPlugin, RenderPlugin {
 	String getTemplateNameClassPath(String templateDir, String templateName) {
 		
 		if( !templateDir.isEmpty() ) {
-			if( templateDir.startsWith("/") ) templateDir = templateDir.substring(1);
-			if( !templateDir.isEmpty() && !templateDir.endsWith("/") ) templateDir = templateDir + "/";
+			templateDir = templateDir + "/";
 		}
 		
 		String file = templateDir + templateName + ".vm";

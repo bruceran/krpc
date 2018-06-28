@@ -6,11 +6,8 @@ public class WebDir {
 	String path;
 
 	String staticDir;
-	String uploadDir;
 	String templateDir;
 
-	// todo maxUploadSize
-	
 	public WebDir(String hosts,String path) {
 		this.hosts = hosts;
 		this.path = path;
@@ -31,13 +28,7 @@ public class WebDir {
 		this.staticDir = staticDir;
 		return this;
 	}
-	public String getUploadDir() {
-		return uploadDir;
-	}
-	public WebDir setUploadDir(String uploadDir) {
-		this.uploadDir = uploadDir;
-		return this;
-	}
+
 	public String getTemplateDir() {
 		return templateDir;
 	}

@@ -4,6 +4,7 @@ import static krpc.rpc.web.WebConstants.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +57,8 @@ import krpc.common.RetCodes;
 import krpc.common.StartStop;
 import krpc.rpc.web.WebRoute;
 import krpc.rpc.web.WebRouteService;
+import krpc.rpc.web.WebRouteStatic;
+import krpc.rpc.web.WebUtils;
 import krpc.rpc.web.RpcDataConverter;
 import krpc.rpc.web.SessionService;
 import krpc.rpc.web.WebClosure;
@@ -74,6 +77,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	String sessionIdCookiePath = "";
 	int expireSeconds = 0;
 	int sampleRate = 1;
+	boolean autoTrim = true;
+	String dataDir;
+	String jarCacheDir;
 
 	SessionService defaultSessionService;
 
@@ -92,8 +98,13 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	ArrayList<Object> resources = new ArrayList<Object>();
 
+	ConcurrentHashMap<String,String> staticClassPathFileCache = new ConcurrentHashMap<>();
+	ConcurrentHashMap<String,String> jarDirExtracted = new ConcurrentHashMap<>();
+		
 	public void init() {
 
+		jarCacheDir = dataDir + "/jarcache";
+		
 		resources.add(defaultSessionService);
 		resources.add(routeService);
 		resources.add(httpTransport);
@@ -167,13 +178,10 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		if (r == null) {
 
 			if (req.getMethod() == HttpMethod.GET || req.getMethod() == HttpMethod.HEAD) {
-				String file = routeService.findStaticFile(req.getHost(), req.getPath());	
+				WebRouteStatic file = routeService.findStaticFile(req.getHost(), req.getPath());	
 				if (file != null) {
-					File f = new File(file);
-					if( f.exists() && !f.isDirectory() ) {
-						routeStaticFile(connId, req, f);
-						return;
-					}
+						boolean done = routeStaticFile(connId, req, file);
+						if( done ) return;
 				}
 			}
 
@@ -269,6 +277,10 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			parseJsonContent(req);
 		}
 
+		if( autoTrim ) {
+			trimReq(req);
+		}
+		
 		// postparse
 		List<PostParsePlugin> popps = r.getPostParsePlugins();
 		if (popps != null) {
@@ -658,12 +670,21 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 
 		int retCode = res.getRetCode();
+		
+		if( retCode == 0 && res.getHttpCode() == 200 ) { // change the http code if defined in webroutes.xml, for restful 201 ...
+			int httpCode = TypeSafe.anyToInt( ctx.getRoute().getAttribute("httpCode") ) ;
+			if( httpCode != 0 ) res.setHttpCode(httpCode);
+		}
+		
 		String retMsg = res.getRetMsg();
 
 		if (retCode < 0 && isEmpty(retMsg) ) {
 			if (errorMsgConverter != null) {
 				retMsg = errorMsgConverter.getErrorMsg(retCode);
 			}
+			if ( isEmpty(retMsg) ) {
+				retMsg = RetCodes.retCodeText(retCode);
+			}			
 			if ( !isEmpty(retMsg) ) {
 				res.setRetMsg(retMsg);
 			}
@@ -699,6 +720,8 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 
 		httpTransport.send(ctx.getConnId(), res);
+		
+		res.setRetCode(retCode); // may be removed by plugin
 		
 		WebClosure closure = new WebClosure(ctx,req,res);
 		ctx.end();
@@ -765,7 +788,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			if (key.startsWith(HeaderPrefix)) {
 				String name0 = key.substring(HeaderPrefix.length());
 				if( !name0.equalsIgnoreCase("contenttype") && !name0.equalsIgnoreCase("contentlength")  ) {
-					String name = toHeaderName(name0);
+					String name = WebUtils.toHeaderName(name0);
 					String value = results.stringValue(key);
 					res.setHeader(name, value);
 					results.remove(key);
@@ -873,6 +896,63 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			monitorService.webReqDone(closure);
 	}
 	
+	void trimReq(DefaultWebReq req) {
+		Map<String, Object> m = req.getParameters();
+		trimMap(m);
+	}
+	
+	@SuppressWarnings("unchecked")
+	void trimMap(Map<String, Object> m) {
+		for( Map.Entry<String, Object> entry: m.entrySet()) {
+			Object value = entry.getValue();
+			if( value == null ) continue;
+			
+			if( value instanceof String ) {
+				value = ((String)value).trim();
+				entry.setValue(value);
+				continue;
+			}
+			
+			if( value instanceof Map ) {
+				Map<String, Object> sub = (Map<String, Object>)value;
+				trimMap(sub);
+				continue;
+			}
+			
+			if( value instanceof List ) {
+				List< Object> sub = (List< Object>)value;
+				trimList(sub);
+				continue;
+			}
+
+		}
+	}	
+	@SuppressWarnings("unchecked")
+	void trimList(List<Object> list) {
+		for(int i=0,size=list.size();i<size;++i) {
+			Object item = list.get(i);
+			if( item == null ) continue;
+			
+			if( item instanceof String ) {
+				item = ((String)item).trim();
+				list.set(i, item);
+				continue;
+			}
+			
+			if( item instanceof Map ) {
+				Map<String, Object> sub = (Map<String, Object>)item;
+				trimMap(sub);
+				continue;
+			}					
+			
+			if( item instanceof List ) {
+				List< Object> sub = (List< Object>)item;
+				trimList(sub);
+				continue;
+			}			
+		}		
+	}
+	
 	DefaultWebRes generateError(DefaultWebReq req, int retCode) {
 		return generateError(req, retCode, 200, null);
 	}
@@ -880,7 +960,12 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	DefaultWebRes generateError(DefaultWebReq req, int retCode, int httpCode,String retMsg) {
 		DefaultWebRes res = new DefaultWebRes(req, httpCode);
 		res.setContentType(MIMETYPE_JSON);
-		if(  retMsg == null ) retMsg =  RetCodes.retCodeText(retCode) ;
+		if (errorMsgConverter != null) {
+			retMsg = errorMsgConverter.getErrorMsg(retCode);
+		}
+		if ( isEmpty(retMsg) ) {
+			retMsg = RetCodes.retCodeText(retCode);
+		}		
 		String content = String.format(ContentFormat, retCode, retMsg );
 		res.setContent(content);
 		return res;
@@ -893,7 +978,92 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		return v;
 	}
 
-	public void routeStaticFile(String connId, DefaultWebReq req, File file) {
+	boolean checkResourceExist(String file) {
+		return getClass().getClassLoader().getResource(file) != null;
+	}
+
+	private File findFile(WebRouteStatic route) {
+		
+		String dir = route.getDir();
+		
+		if( !dir.startsWith("classpath:") ) {
+			File file = new File( route.getFilename() );
+			if( !file.exists() || file.isDirectory() ) {
+				return null;
+			}
+			return file;
+		}
+
+		String filename = route.getFilename();
+		
+		String realFile = staticClassPathFileCache.get(filename);
+		if( realFile != null ) {
+			if( realFile.equals(NOT_EXISTED_FILE)) return null;
+			return new File( realFile );
+		}
+		
+		String classpathFilename = filename.substring(10);
+		if( classpathFilename.startsWith("/")) classpathFilename = classpathFilename.substring(1);
+		URL url = getClass().getClassLoader().getResource(classpathFilename); // should be cached
+		if( url == null ) {
+			staticClassPathFileCache.put(filename,NOT_EXISTED_FILE);
+			return null;
+		}
+		
+		String path = url.getPath(); 
+		
+		if (url.getProtocol().equals("file")) { 
+			path = path.substring(path.indexOf("/"));
+			path = WebUtils.decodeUrl(path);
+			File file = new File(path); 
+			if( file.isDirectory() ) {
+				staticClassPathFileCache.put(filename,NOT_EXISTED_FILE);
+				return null;
+			}
+			
+			staticClassPathFileCache.put(filename,file.getAbsolutePath());
+			return file;
+		} 
+		
+		if (url.getProtocol().equals("jar")) {
+			
+			int p = path.indexOf("!");
+			String jarPath = path.substring(path.indexOf("/"), p); 
+			jarPath = WebUtils.decodeUrl(jarPath);
+			
+			try { 
+
+				File jarFile = new File(jarPath);
+				String targetDir = jarCacheDir+"/"+jarFile.getName();
+				if( !jarDirExtracted.containsKey(targetDir)) {
+					WebUtils.extractJarDir(jarPath,targetDir,dir.substring(10));  // should be cached
+					jarDirExtracted.put(targetDir, "1");
+				}
+				
+				String itemPath = path.substring(p+1); 
+				File file = new File(targetDir + itemPath); 
+				if( file.isDirectory() ) {
+					staticClassPathFileCache.put(filename,NOT_EXISTED_FILE);
+					return null;
+				}
+				
+				staticClassPathFileCache.put(filename,file.getAbsolutePath());
+				return file;
+				
+            } catch (Exception e) {  
+                log.error("load jar exception, exception="+e.getMessage()+", url="+url);
+                staticClassPathFileCache.put(filename,NOT_EXISTED_FILE);
+				return null;
+            } 
+		}
+
+		return null;
+	}
+	
+	public boolean routeStaticFile(String connId, DefaultWebReq req, WebRouteStatic route ) {
+		
+		File file = findFile(route);
+		if( file == null ) return false;
 
 		DefaultWebRes res = new DefaultWebRes(req, 200);
 		res.getResults().put(WebConstants.DOWNLOAD_FILE_FIELD, file.getAbsolutePath()); // special key for file
@@ -903,7 +1073,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		if( send304 ) {
 			res.setHttpCode(304);
 			httpTransport.send(connId, res);
-			return;
+			return true;
 		} 
 
 		String range = checkPartial(req, file);
@@ -912,10 +1082,12 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			res.getResults().put(WebConstants.DOWNLOAD_FILE_RANGE_FIELD,range);	
 			res.getResults().remove(WebConstants.DOWNLOAD_EXPIRES_FIELD);
 			httpTransport.send(connId, res);
-			return;
+			return true;
 		}  
 		
 		httpTransport.send(connId, res);
+		
+		return true;
 	}
 
 	String checkPartial(DefaultWebReq req, File file) {
@@ -950,7 +1122,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	boolean check304(DefaultWebReq req, File f) {
 		String ifModifiedSince = req.getHeaders().get(HttpHeaderNames.IF_MODIFIED_SINCE);
 		if( isEmpty(ifModifiedSince) ) return check304Etag(req,f);
-		Date ifModifiedSinceDate = parseDate(ifModifiedSince);
+		Date ifModifiedSinceDate = WebUtils.parseDate(ifModifiedSince);
 		if( ifModifiedSinceDate == null ) return false;
         long ifModifiedSinceDateSeconds = ifModifiedSinceDate.getTime() / 1000;
         long fileLastModifiedSeconds = f.lastModified() / 1000;
@@ -960,7 +1132,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	boolean check304Etag(DefaultWebReq req, File f) {
 		String ifNoneMatch = req.getHeaders().get(HttpHeaderNames.IF_NONE_MATCH);
 		if( isEmpty(ifNoneMatch) ) return false;
-		String etag = generateEtag(f);
+		String etag = WebUtils.generateEtag(f);
         return etag.equals(ifNoneMatch);	
 	}
 
@@ -1080,6 +1252,22 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void setExpireSeconds(int expireSeconds) {
 		this.expireSeconds = expireSeconds;
+	}
+
+	public boolean isAutoTrim() {
+		return autoTrim;
+	}
+
+	public void setAutoTrim(boolean autoTrim) {
+		this.autoTrim = autoTrim;
+	}
+
+	public String getDataDir() {
+		return dataDir;
+	}
+
+	public void setDataDir(String dataDir) {
+		this.dataDir = dataDir;
 	}
 
 }

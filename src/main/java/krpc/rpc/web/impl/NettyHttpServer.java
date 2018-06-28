@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,6 +68,7 @@ import krpc.rpc.web.HttpTransportCallback;
 import krpc.common.RetCodes;
 import krpc.common.StartStop;
 import krpc.rpc.web.WebConstants;
+import krpc.rpc.web.WebUtils;
 
 @Sharable
 public class NettyHttpServer extends ChannelDuplexHandler implements HttpTransport,InitClose,StartStop {
@@ -292,21 +292,6 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		}
 	}
 
-	String decodeUrl(String s) {
-		try {
-			return URLDecoder.decode(s,"utf-8");
-		} catch(Exception e) {
-			return s;
-		}
-	}
-	String encodeUrl(String s) {
-		try {
-			return URLEncoder.encode(s,"utf-8");
-		} catch(Exception e) {
-			return s;
-		}
-	}
-	
     DefaultWebReq convertReq(FullHttpRequest data) {
 		DefaultWebReq req = new DefaultWebReq();
 		
@@ -318,7 +303,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 	
 		int p1 = findPathEndIndex(uri);
 		String path = p1 >= 0 ? uri.substring(0,p1) : uri;
-		path = decodeUrl(path);
+		path = WebUtils.decodeUrl(path);
 		int p2 = uri.indexOf('?');
 		String queryString = p2 >= 0 ? uri.substring(p2+1) : "";
 		req.setPath(path);
@@ -394,10 +379,10 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		}
 		
 		res.headers().set(HttpHeaderNames.SERVER, WebConstants.Server);
-    	res.headers().set(HttpHeaderNames.DATE, WebConstants.formatDate(new GregorianCalendar().getTime()));
-		res.headers().set(HttpHeaderNames.CONTENT_TYPE, WebConstants.getContentType(downloadFile.getName()));
-		res.headers().set(HttpHeaderNames.LAST_MODIFIED, WebConstants.formatDate(new Date(downloadFile.lastModified())));
-    	res.headers().set(HttpHeaderNames.ETAG,WebConstants.generateEtag(downloadFile));
+    	res.headers().set(HttpHeaderNames.DATE, WebUtils.formatDate(new GregorianCalendar().getTime()));
+		res.headers().set(HttpHeaderNames.CONTENT_TYPE, WebUtils.getContentType(downloadFile.getName()));
+		res.headers().set(HttpHeaderNames.LAST_MODIFIED, WebUtils.formatDate(new Date(downloadFile.lastModified())));
+    	res.headers().set(HttpHeaderNames.ETAG,WebUtils.generateEtag(downloadFile));
 		setCacheControl(data,res);
 		setAttachment(data,res,downloadFile.getName());
 		
@@ -520,9 +505,9 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		String filename = data.getStringResult("filename"); // todo
 		
 		res.headers().set(HttpHeaderNames.SERVER, WebConstants.Server);
-    	res.headers().set(HttpHeaderNames.DATE, WebConstants.formatDate(new GregorianCalendar().getTime()));
-		res.headers().set(HttpHeaderNames.CONTENT_TYPE, WebConstants.getContentType(filename));
-		res.headers().set(HttpHeaderNames.LAST_MODIFIED, WebConstants.formatDate(new Date()));
+    	res.headers().set(HttpHeaderNames.DATE, WebUtils.formatDate(new GregorianCalendar().getTime()));
+		res.headers().set(HttpHeaderNames.CONTENT_TYPE, WebUtils.getContentType(filename));
+		res.headers().set(HttpHeaderNames.LAST_MODIFIED, WebUtils.formatDate(new Date()));
 		res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
 		setAttachment(data,res,filename);
 		
@@ -638,7 +623,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		GregorianCalendar time = new GregorianCalendar();
 	    time.add(Calendar.SECOND, Integer.parseInt(expires));
 	    
-	    res.headers().set(HttpHeaderNames.EXPIRES, WebConstants.formatDate(time.getTime()));
+	    res.headers().set(HttpHeaderNames.EXPIRES, WebUtils.formatDate(time.getTime()));
 	    
 		if( expires.equals("0") || expires.equals("-1") )
 			res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
@@ -650,7 +635,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 		String attachment = data.getStringResult("attachment");
 		if( attachment == null || attachment.isEmpty() ) return;
 		if( isTrue(attachment) ) {
-	    	String name = encodeUrl(filename);
+	    	String name = WebUtils.encodeUrl(filename);
 	    	String v = String.format("attachment; filename=\"%s\"",name);
 	    	res.headers().set(HttpHeaderNames.CONTENT_DISPOSITION,v);
 		}

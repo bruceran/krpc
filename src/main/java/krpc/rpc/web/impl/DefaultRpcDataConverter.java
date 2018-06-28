@@ -20,6 +20,7 @@ import krpc.rpc.web.DefaultWebReq;
 import krpc.rpc.web.DefaultWebRes;
 import krpc.rpc.web.RpcDataConverter;
 import krpc.rpc.web.WebContextData;
+import krpc.rpc.web.WebUtils;
 
 public class DefaultRpcDataConverter implements RpcDataConverter {
 	
@@ -93,7 +94,7 @@ public class DefaultRpcDataConverter implements RpcDataConverter {
 					return ctx.getSessionId(); 
 				}
 				if( name.startsWith(HeaderPrefix)) {
-					return req.getHeader(toHeaderName(name.substring(HeaderPrefix.length())));
+					return req.getHeader(WebUtils.toHeaderName(name.substring(HeaderPrefix.length())));
 				}
 				if( name.startsWith(CookiePrefix)) {
 					return req.getCookie( name.substring(CookiePrefix.length())) ;

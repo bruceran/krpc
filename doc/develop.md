@@ -497,6 +497,7 @@
     sessionIdCookieName  SESSIONID 采用的 COOKIE 名，默认为 JSESSIONID
     sessionIdCookiePath  输出 SESSIONID cookie 的路径，默认为空，表示当前目录
     expireSeconds 静态资源在浏览器中的的过期时间，单位：秒， 默认为0秒表示立即过期
+    autoTrim 自动对所有参数值做trim, 默认为true
     
     sampleRate 全链路跟踪采样率, 实际比率为 1/sampleRate, 默认为1
     defaultSessionService  会话服务插件, 支持 memorysessionservice, jedissessionservice, 默认为memorysessionservice

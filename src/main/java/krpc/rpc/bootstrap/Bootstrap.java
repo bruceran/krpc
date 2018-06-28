@@ -91,6 +91,7 @@ import krpc.rpc.web.SessionService;
 import krpc.rpc.web.WebDir;
 import krpc.rpc.web.WebMonitorService;
 import krpc.rpc.web.WebPlugin;
+import krpc.rpc.web.WebPlugins;
 import krpc.rpc.web.WebUrl;
 import krpc.rpc.web.impl.DefaultWebRouteService;
 import krpc.rpc.web.impl.DefaultRpcDataConverter;
@@ -802,6 +803,8 @@ public class Bootstrap {
 			WebServer server = newWebServer();
 			server.setSampleRate(c.sampleRate);
 			server.setExpireSeconds(c.expireSeconds);
+			server.setAutoTrim(c.autoTrim);
+			server.setDataDir(appConfig.dataDir);
 			server.setServiceMetas(app.serviceMetas);
 			server.setErrorMsgConverter(app.errorMsgConverter);
 			server.setMonitorService(app.monitorService);
@@ -1114,7 +1117,7 @@ public class Bootstrap {
             
         } else if (url.getProtocol().equals("jar")) {
  
-            String jarPath = path.substring(path.indexOf("/"), url.getPath().indexOf("!")); 
+            String jarPath = path.substring(path.indexOf("/"), path.indexOf("!")); 
             try { 
                 JarFile jarFile = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));  
                 Enumeration<JarEntry> jarEntries = jarFile.entries(); 
@@ -1389,7 +1392,7 @@ public class Bootstrap {
 		String t = defaultAttrs.getOrDefault("path", "");
 		if (!t.isEmpty() )
 			throw new RuntimeException("mapping path in group is not allowed, use prefix instead");
-		String prefix = sanitizePath(defaultAttrs.getOrDefault("prefix", ""));
+		String prefix = normalizePath(defaultAttrs.getOrDefault("prefix", ""));
 		if (prefix.equals("/"))
 			prefix = "";
 
@@ -1399,7 +1402,7 @@ public class Bootstrap {
 		if (!isEmpty(defaultMsgId))
 			throw new RuntimeException("mapping msgid in group is not allowed");
 		String defaultSessionMode = defaultAttrs.getOrDefault("sessionMode", "");
-		WebPlugin[] defaultPlugins = loadPlugins(defaultAttrs.getOrDefault("plugins", ""));
+		WebPlugins defaultPlugins = loadWebPlugins(defaultAttrs.getOrDefault("plugins", ""));
 
 		defaultAttrs.remove("hosts");
 		defaultAttrs.remove("prefix");
@@ -1422,7 +1425,7 @@ public class Bootstrap {
 				if (isEmpty(hosts))
 					hosts = "*";
 
-				String path = sanitizePath(attrs.get("path"));
+				String path = normalizePath(attrs.get("path"));
 				if (isEmpty(path))
 					throw new RuntimeException("mapping path can not be empty");
 				if (!isEmpty(prefix))
@@ -1462,7 +1465,7 @@ public class Bootstrap {
 					throw new RuntimeException("sessionMode is not valid");
 
 				String plugins = attrs.get("plugins");
-				WebPlugin[] pluginsList = loadPlugins(plugins);
+				WebPlugins pluginsList = loadWebPlugins(plugins);
 				if (pluginsList == null)
 					pluginsList = defaultPlugins;
 
@@ -1492,7 +1495,7 @@ public class Bootstrap {
 		String hosts = attrs.getOrDefault("hosts", "*");
 		if (isEmpty(hosts))
 			throw new RuntimeException("hosts can not be empty");
-		String path = sanitizePath(attrs.get("path"));
+		String path = normalizePath(attrs.get("path"));
 		if (isEmpty(path))
 			throw new RuntimeException("path can not be empty");
 
@@ -1521,7 +1524,7 @@ public class Bootstrap {
 		if (sessionMode < WebRoute.SESSION_MODE_NO || sessionMode > WebRoute.SESSION_MODE_OPTIONAL)
 			throw new RuntimeException("sessionMode is not valid");
 
-		WebPlugin[] pluginList = loadPlugins(attrs.get("plugins"));
+		WebPlugins pluginList = loadWebPlugins(attrs.get("plugins"));
 
 		attrs.remove("hosts");
 		attrs.remove("path");
@@ -1543,26 +1546,28 @@ public class Bootstrap {
 		String hosts = attrs.getOrDefault("hosts", "*");
 		if (isEmpty(hosts))
 			throw new RuntimeException("hosts can not be empty");
-		String path = sanitizePath(attrs.get("path"));
+		String path = normalizePath(attrs.get("path"));
 		if (isEmpty(path))
 			throw new RuntimeException("path can not be empty");
 
-		String staticDir = attrs.get("staticDir");
-		String uploadDir = attrs.get("uploadDir");
-		String templateDir = attrs.get("templateDir");
+		String staticDir = normalizeDir(attrs.get("staticDir"));
+		String templateDir = normalizeDir(attrs.get("templateDir"));
 
-		if (!isEmpty(staticDir) && !checkExist(staticDir))
-			throw new RuntimeException("staticDir is not correct, staticDir=" + staticDir);
-		if (!isEmpty(uploadDir) && !checkExist(uploadDir))
-			throw new RuntimeException("uploadDir is not correct, uploadDir=" + uploadDir);
-		//if (!isEmpty(templateDir) && !checkExist(templateDir)) // todo can be resource
-			//throw new RuntimeException("templateDir is not correct, templateDir=" + templateDir);
+		if (!isEmpty(staticDir) ) {
+			if( staticDir.equals("classpath:") ) // too dangerous, can download any file in the jar
+				throw new RuntimeException("root classpath is not allowed for staticDir, staticDir=" + staticDir);
+			if( !checkExist(staticDir) )
+				throw new RuntimeException("staticDir is not correct, staticDir=" + staticDir);
+		}
+		if (!isEmpty(templateDir) && !checkExist(templateDir)) {
+			throw new RuntimeException("templateDir is not correct, templateDir=" + templateDir);
+		}
 
-		if ( isEmpty(staticDir) && isEmpty(uploadDir) && isEmpty(templateDir))
+		if ( isEmpty(staticDir) && isEmpty(templateDir))
 			throw new RuntimeException("not a valid dir");
 
 		WebDir dir = new WebDir(hosts, path);
-		dir.setStaticDir(staticDir).setUploadDir(uploadDir).setTemplateDir(templateDir);
+		dir.setStaticDir(staticDir).setTemplateDir(templateDir);
 		rs.addDir(dir);
 	}
 
@@ -1579,7 +1584,13 @@ public class Bootstrap {
 	}
 
 	boolean checkExist(String dir) {
-		return Files.exists(Paths.get(dir));
+		if( dir.startsWith("classpath:")) {
+			dir = dir.substring(10);
+			if( dir.isEmpty() ) return true;
+			return getClass().getClassLoader().getResource(dir) != null;
+		} else {
+			return Files.exists(Paths.get(dir));
+		}
 	}
 	
 	String generateBeanName(String interfaceName) {
@@ -1589,7 +1600,7 @@ public class Bootstrap {
 		return name;
 	}
 	
-	String sanitizePath(String path) {
+	String normalizePath(String path) {
 		if (!path.startsWith("/"))
 			path = "/" + path;
 		if (path.endsWith("/") && !path.equals("/"))
@@ -1597,6 +1608,18 @@ public class Bootstrap {
 		return path;
 	}
 
+	String normalizeDir(String dir) {
+		if( isEmpty(dir) ) return dir;
+		dir = dir.replace('\\', '/'); // always linux style
+		if( dir.startsWith("classpath:")) {
+			dir = dir.substring(10);
+			if( dir.startsWith("/")) dir = dir.substring(1);	
+			dir = "classpath:" + dir;
+		}
+		if( dir.endsWith("/")) dir = dir.substring(0, dir.length() - 1);	
+		return dir;
+	}
+	
 	boolean checkMethod(String methods) {
 		if (isEmpty(methods))
 			return false;
@@ -1616,7 +1639,7 @@ public class Bootstrap {
 		return true;
 	}
 
-	WebPlugin[] loadPlugins(String plugins) {
+	WebPlugins loadWebPlugins(String plugins) {
 		if (isEmpty(plugins))
 			return null;
 		String[] ss = plugins.split(",");
@@ -1626,7 +1649,7 @@ public class Bootstrap {
 			if (array[i] == null)
 				throw new RuntimeException("web plugin not found, name=" + array[i]);
 		}
-		return array;
+		return new WebPlugins(array);
 	}
 
 	Map<String, String> getAttrs(Node node) {

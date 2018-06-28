@@ -82,7 +82,7 @@ public class DefaultWebReq implements WebReq {
 		String contentTypeStr = headers.get(HttpHeaderNames.CONTENT_TYPE);
 		if( contentTypeStr == null ) return WebConstants.DefaultCharSet;
 		int p = contentTypeStr.indexOf(";");
-		return p >= 0 ? WebConstants.parseCharSet(contentTypeStr.substring(p+1)) : WebConstants.DefaultCharSet;
+		return p >= 0 ? WebUtils.parseCharSet(contentTypeStr.substring(p+1)) : WebConstants.DefaultCharSet;
 	}
 
 	public String getHost() {

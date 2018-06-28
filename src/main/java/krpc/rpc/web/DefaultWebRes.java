@@ -34,8 +34,6 @@ public class DefaultWebRes implements WebRes {
 		this.keepAlive = req.isKeepAlive();
 		this.isHeadMethod = req.isHeadMethod();
 		this.httpCode = httpCode;
-		
-		if (!keepAlive) setHeader("Connection", "close");
 	}
 	
 	public String getStringResult(String key) {
@@ -117,7 +115,7 @@ public class DefaultWebRes implements WebRes {
 		String contentTypeStr = headers.get(HttpHeaderNames.CONTENT_TYPE);
 		if( contentTypeStr == null ) return WebConstants.DefaultCharSet;
 		int p = contentTypeStr.indexOf(";");
-		return p >= 0 ? WebConstants.parseCharSet(contentTypeStr.substring(p+1)) : WebConstants.DefaultCharSet;
+		return p >= 0 ? WebUtils.parseCharSet(contentTypeStr.substring(p+1)) : WebConstants.DefaultCharSet;
 	}
 
 	public DefaultWebRes addCookie(String name, String value) {

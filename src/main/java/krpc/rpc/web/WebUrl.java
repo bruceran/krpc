@@ -10,7 +10,7 @@ public class WebUrl {
 	int serviceId;
 	int msgId;
 	int sessionMode = WebRoute.SESSION_MODE_NO ;
-	WebPlugin[] plugins;
+	WebPlugins plugins;
 	Map<String,String>  attrs;
 	
 	public WebUrl(String hosts,String path) {
@@ -75,11 +75,11 @@ public class WebUrl {
 		return this;
 	}
 
-	public WebPlugin[] getPlugins() {
+	public WebPlugins getPlugins() {
 		return plugins;
 	}
 
-	public WebUrl setPlugins(WebPlugin[] plugins) {
+	public WebUrl setPlugins(WebPlugins plugins) {
 		this.plugins = plugins;
 		return this;
 	}

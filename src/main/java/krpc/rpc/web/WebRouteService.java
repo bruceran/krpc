@@ -6,9 +6,7 @@ public interface WebRouteService {
 	WebRoute findRoute(String host,String path,String method);
 
 	void addDir(WebDir dir);
-	
-	String findStaticFile(String host,String path);
+	WebRouteStatic findStaticFile(String host,String path);
 	String findTemplateDir(String host,String path);
-	String findUploadDir(String host,String path);
 	
 }

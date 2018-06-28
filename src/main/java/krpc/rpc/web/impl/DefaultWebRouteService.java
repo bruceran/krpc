@@ -13,13 +13,15 @@ import krpc.common.InitCloseUtils;
 import krpc.common.StartStop;
 import krpc.rpc.web.WebRoute;
 import krpc.rpc.web.WebRouteService;
+import krpc.rpc.web.WebRouteStatic;
 import krpc.rpc.web.WebDir;
 import krpc.rpc.web.WebPlugin;
+import krpc.rpc.web.WebPlugins;
 import krpc.rpc.web.WebUrl;
 
 public class DefaultWebRouteService implements WebRouteService, InitClose,StartStop {
 	
-	static class DirMapping {
+	static class DirMapping implements Comparable<DirMapping>  {
 		String hosts;
 		Set<String> hostSet;
 		String path;
@@ -36,6 +38,10 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 			this.path = path;
 			this.dir = dir;
 		}
+		
+		public int compareTo(DirMapping other) {
+			return other.path.compareTo(this.path); // reverse order
+		}		
 	}
 
 	static class ServiceMapping implements Comparable<ServiceMapping> {
@@ -51,11 +57,11 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		int serviceId;
 		int msgId;
 		int sessionMode;
-		WebPlugin[] plugins;
+		WebPlugins plugins;
 		Map<String,String>  attrs;
 		
 		ServiceMapping(String hosts,String path,String methods,int serviceId,int msgId,
-				int sessionMode,WebPlugin[] plugins,Map<String,String>  attrs) {
+				int sessionMode,WebPlugins plugins,Map<String,String>  attrs) {
 			
 			this.hosts = hosts;
 			this.originalPath = path;
@@ -142,7 +148,6 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	private List<WebDir> dirList = new ArrayList<WebDir>();
 	
 	private List<DirMapping> staticDir = new ArrayList<DirMapping>();
-	private List<DirMapping> uploadDir = new ArrayList<DirMapping>();
 	private List<DirMapping> templateDir = new ArrayList<DirMapping>();
 
 	private Map<String,HostMapping> hostMappings = new HashMap<String,HostMapping>();
@@ -165,18 +170,15 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 				String dir = wd.getStaticDir();
 				staticDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
 			}
-			
-			if( !isEmpty(wd.getUploadDir())) {
-				String dir = wd.getUploadDir();
-				uploadDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
-			}
-			
+
 			if( !isEmpty(wd.getTemplateDir())) {
 				String dir = wd.getTemplateDir();
 				templateDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
 			}
 
 		}
+		Collections.sort(staticDir);
+		Collections.sort(templateDir);
 	
 		for(WebUrl url: urlList) {
 			
@@ -198,7 +200,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 			}
 			
 			if( url.getPlugins() != null ) {
-				for(WebPlugin p:url.getPlugins()) {
+				for(WebPlugin p:url.getPlugins().getPlugins()) {
 					plugins.put(p.getClass().getName(), p);
 				}
 			}
@@ -317,16 +319,13 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		return "";
 	}
 
-	public String findStaticFile(String host,String path) {
+	public WebRouteStatic findStaticFile(String host,String path) {
 		path = sanitizePath(path);
 		if( path == null ) return null;
 		for(DirMapping dm: staticDir ) {
 			if( match(dm,host,path) ) {
 				String t = path.substring(dm.path.length());
-				if( t.startsWith("/") )
-					return dm.dir +  t ;
-				else 
-					return dm.dir + "/" + t ;
+				return new WebRouteStatic(dm.dir,t);
 			}
 		}
 		return null;
@@ -336,17 +335,6 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		path = sanitizePath(path);
 		if( path == null ) return null;
 		for(DirMapping dm: templateDir ) {
-			if( match(dm,host,path) ) {
-				return dm.dir;
-			}
-		}
-		return null;
-	}
-	
-	public String findUploadDir(String host,String path) {
-		path = sanitizePath(path);
-		if( path == null ) return null;
-		for(DirMapping dm: uploadDir ) {
 			if( match(dm,host,path) ) {
 				return dm.dir;
 			}
@@ -370,8 +358,8 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		return path;
 	}
 
-	boolean match(DirMapping dir,String hosts,String path) {
-		if(dir.hosts.equals("*") || dir.hostSet.contains(hosts) ) {
+	boolean match(DirMapping dir,String host,String path) {
+		if(dir.hosts.equals("*") || dir.hostSet.contains(host) ) {
 			if( path.startsWith(dir.path)) return true;
 		}
 		return false;

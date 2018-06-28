@@ -26,6 +26,7 @@ public class WebServerConfig  {
 	String sessionIdCookieName = WebConstants.DefaultSessionIdCookieName;
 	String sessionIdCookiePath = "";
 	int expireSeconds = 0;
+	boolean autoTrim = true;
 	
 	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
 
@@ -200,6 +201,15 @@ public class WebServerConfig  {
 
 	public WebServerConfig setExpireSeconds(int expireSeconds) {
 		this.expireSeconds = expireSeconds;
+		return this;
+	}
+
+	public boolean isAutoTrim() {
+		return autoTrim;
+	}
+
+	public WebServerConfig setAutoTrim(boolean autoTrim) {
+		this.autoTrim = autoTrim;
 		return this;
 	}
 

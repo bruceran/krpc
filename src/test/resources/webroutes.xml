@@ -15,13 +15,18 @@
 	<url hosts="*" path="/plugin/test3" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="htmlRedirect"/>  
 	<url hosts="*" path="/plugin/test4" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="serverRedirect"/>  
 	<url hosts="*" path="/plugin/test5" methods="get,post" serviceId="104" msgId="2" sessionMode="0"  />  
-	<url hosts="*" path="/plugin/test6" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="velocity" template="d"/>  
+	<url hosts="*" path="/template1/test6" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="velocity" template="a"/> 
+	<url hosts="*" path="/template2/test6" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="velocity" template="d"/>  
+	<url hosts="*" path="/template3/test6" methods="get,post" serviceId="104" msgId="1" sessionMode="0"  plugins="velocity" template="template/a"/>  
 	
 	<!--  sample: import  other files -->
 	<import file="webroutes2.xml" />  
 	
-    <dir hosts="*" path="/site" staticDir="c:\ws\site\static"/>
-    <!--  <dir hosts="*" path="/plugin" templateDir="c:\ws\site\template"/> -->
-    <dir hosts="*" path="/plugin" templateDir="classpath:vm"/>
+    <dir hosts="*" path="/site" staticDir="c:\ws\site\static\"/>
+    <dir hosts="*" path="/assets1" staticDir="classpath:assets1/"/>
+    <dir hosts="*" path="/assets2" staticDir="classpath:assets2/static/"/>
+    <dir hosts="*" path="/template1" templateDir="c:\ws\site\template"/>
+    <dir hosts="*" path="/template2" templateDir="classpath:vm/"/>
+    <dir hosts="*" path="/template3" templateDir="classpath:assets2/"/>
 
 </routes>  
