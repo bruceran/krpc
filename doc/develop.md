@@ -333,7 +333,7 @@
       
         客户端： 在java config文件里启动krpc：
       
-    		@Bean(initMethod = "init", destroyMethod = "close")
+            @Bean(initMethod = "init", destroyMethod = "close")
             public RpcApp rpcApp() {
               RpcApp app = new Bootstrap() 
                 .addReferer("us",UserService.class,"127.0.0.1:5600")     			
@@ -361,7 +361,8 @@
     spring-schema-client.xml
 
     referer 的 id 可不配置，若不配置则自动根据接口名的SimpleName自动生成
-    无需对客户端异步代理做配置, 只要配置了同步代理，框架会自动生成一个名称为同步代理BeanName+Async的异步代理Bean，程序里直接引用该异步代理就可以
+    无需对客户端异步代理做配置, 只要配置了同步代理，框架会自动生成一个名称为
+    同步代理BeanName+Async的异步代理Bean，程序里直接引用该异步代理就可以
 
 # 和spring框架集成(spring boot方式)
   
@@ -383,7 +384,8 @@
 		krpc.referer 和 krpc.referers 对应 krpc:referer, 当只有一个时使用 referer, 多个时使用referers
 
     referer 的 id 可不配置，若不配置则自动根据接口名的SimpleName自动生成
-    无需对客户端异步代理做配置, 只要配置了同步代理，框架会自动生成一个名称为同步代理BeanName+Async的异步代理Bean，程序里直接引用该异步代理就可以
+    无需对客户端异步代理做配置, 只要配置了同步代理，框架会自动生成一个名称为
+    同步代理BeanName+Async的异步代理Bean，程序里直接引用该异步代理就可以
 
 # 配置参数详解				  
 
@@ -393,18 +395,21 @@
 
     name 应用名，用在上报给注册与发现服务时使用, 默认为default_app
     dataDir 数据文件保存目录，默认为当前目录
-    delayStart 延迟调用start(),  0=容器启动完成后立即调用start(), n>0 =容器启动完成后再延迟n秒调用start(), n<0 用户代码手工调用start()
+    delayStart 延迟调用start(),  
+        0=容器启动完成后立即调用start(), 
+        n>0 =容器启动完成后再延迟n秒调用start(), 
+        n<0 用户代码手工调用start()
     
     errorMsgConverter 错误码错误消息转换文件，默认为file
-                                 file 插件参数：location 文件位置，默认为classpath下的error.properties
+        file 插件参数：location 文件位置，默认为classpath下的error.properties
     dynamicRoutePlugin 动态路由插件，可配置为 consul,etcd,zookeeper,jedis 插件, 如果启动了同名的注册与发现插件，
-                                  则自动使用同名的注册与发现插件
-                                 动态路由插件可以和注册与发现插件混搭，比如可以使用 eureka 注册插件搭配 zookeeper的动态路由插件  
-    							 consul/etcd/zookeeper/jedis 插件参数：addrs 服务器地址, intervalSeconds 刷新间隔时间
-    							 jedis插件参数：clusterMode 是否集群模式
-    							 如果未设置此值，则不开启动态路由功能
+        则自动使用同名的注册与发现插件
+        动态路由插件可以和注册与发现插件混搭，比如可以使用 eureka 注册插件搭配 zookeeper的动态路由插件  
+        consul/etcd/zookeeper/jedis 插件参数：addrs 服务器地址, intervalSeconds 刷新间隔时间
+        jedis插件参数：clusterMode 是否集群模式
+        如果未设置此值，则不开启动态路由功能
     fallbackPlugin  降级策略插件, 可配置为 default(默认), 如果未配置， 则不开启降级策略	
-    					  default 插件参数：file 文件位置，默认为classpath下的 fallback.yaml						 
+        default 插件参数：file 文件位置，默认为classpath下的 fallback.yaml						 
     traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, skywalking(暂未实现), cat(暂未实现)
 
 ## registry
@@ -439,39 +444,39 @@
     queueSize 同上，线程池中固定队列大小，默认为10000
     plugins 用来配置插件名，允许多个，用逗号隔开
     pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，不需要配置参数的插件不用配置
-                          每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
-						  memoryflowcontrol插件参数：
-						        memoryflowcontrol 只有流控阈值配置参数，格式有两种：
-						        service:{serviceId}:{seconds}={limit}
-						        msg:{serviceId}:{msgId#msgId#...}:{seconds}={limit}
-							        serviceId指服务号
-							        msgId指消息号，可一次指定多个多个，用#分隔
-							        seconds 滑动窗口秒数
-							        limit 允许的调用次
-								示例：
-								   service:100:5=50  服务号100的服务5秒内只允许50个请求
-								   msg:100:1#2#3:10=100  服务号100的服务消息号为1,2,3的消息在10秒内只允许100个请求
-                          jedisflowcontrol插件参数：
-                         		clusterMode 是否是redis cluster, 默认为false
-                         		addrs 连接地址
-                         		keyPrefix key前缀，默认为 FC_       
-                         		threads  后台更新线程数, 默认为1                 
-                         		maxThreads 后台更新最大线程数, 默认为1
-                         		queueSize 后台更新队列数, 默认为10000
-                         		syncUpdate 是否同步累加，默认为false, 如设置为true则所有次数累加同步进行，误差会比false模式小，
-                         		                  但会增加请求延迟
-                         		流控阈值配置参数同 memoryflowcontrol 
-                         memoryconcurrentflowcontrol插件参数：
-						       格式有两种：
-						        service:{serviceId}={limit}
-						        msg:{serviceId}:{msgId#msgId#...}={limit}
-							        serviceId指服务号
-							        msgId指消息号，可一次指定多个多个，用#分隔
-							        limit 可同时执行的请求数
-								示例：
-								   service:100=500  服务号100的服务允许同时执行500个请求
-								   msg:100:1#2#3=100  服务号100的服务消息号为1,2,3的消息每个允许同时执行100个请求                   
-                         		注意：服务端异步实现的服务需注意必须要有返回(不可丢弃请求), 如果不返回可能导致并发数用完后停止服务
+	      每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
+		  memoryflowcontrol插件参数：
+		        memoryflowcontrol 只有流控阈值配置参数，格式有两种：
+		        service:{serviceId}:{seconds}={limit}
+		        msg:{serviceId}:{msgId#msgId#...}:{seconds}={limit}
+			        serviceId指服务号
+			        msgId指消息号，可一次指定多个多个，用#分隔
+			        seconds 滑动窗口秒数
+			        limit 允许的调用次
+				示例：
+				   service:100:5=50  服务号100的服务5秒内只允许50个请求
+				   msg:100:1#2#3:10=100  服务号100的服务消息号为1,2,3的消息在10秒内只允许100个请求
+	      jedisflowcontrol插件参数：
+	     		clusterMode 是否是redis cluster, 默认为false
+	     		addrs 连接地址
+	     		keyPrefix key前缀，默认为 FC_       
+	     		threads  后台更新线程数, 默认为1                 
+	     		maxThreads 后台更新最大线程数, 默认为1
+	     		queueSize 后台更新队列数, 默认为10000
+	     		syncUpdate 是否同步累加，默认为false, 如设置为true则所有次数累加同步进行，误差会比false模式小，
+	     		                  但会增加请求延迟
+	     		流控阈值配置参数同 memoryflowcontrol 
+	     memoryconcurrentflowcontrol插件参数：
+		       格式有两种：
+		        service:{serviceId}={limit}
+		        msg:{serviceId}:{msgId#msgId#...}={limit}
+			        serviceId指服务号
+			        msgId指消息号，可一次指定多个多个，用#分隔
+			        limit 可同时执行的请求数
+				示例：
+				   service:100=500  服务号100的服务允许同时执行500个请求
+				   msg:100:1#2#3=100  服务号100的服务消息号为1,2,3的消息每个允许同时执行100个请求                   
+	     		注意：服务端异步实现的服务需注意必须要有返回(不可丢弃请求), 如果不返回可能导致并发数用完后停止服务
                          		
 ## webserver	
 
@@ -609,8 +614,7 @@
     
 # webroutes.xml配置				  
 
-	启动webserver需要一个配套的rouets.xml, 否则webserver不知道如何路由
-	webroutes.xml 必须放在classpath目录下
+	启动webserver需要一个配套的webroutes.xml,  webroutes.xml 必须放在classpath目录下
 	
 	示例：
 	
@@ -628,7 +632,7 @@
             <url path="/test4" msgId="4"/>  
           </group>
       
-          <dir hosts="*" path="/test1" baseDir="c:\ws"/>  
+          <dir hosts="*" path="/test1" staticDir="c:\ws\web\static" templateDir="c:\ws\web\template"/>  
                 
       </routes>
       
