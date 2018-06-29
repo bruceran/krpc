@@ -1154,35 +1154,35 @@
 	1) 自动查找classpath下的 fallback.yaml 文件，通过 fallback.yaml 可为每个消息配置策略
 	2) fallback.yaml 示例：
 	
-		- { for: userservice.login,  match: userName ==abc && password == 123,  results: {retCode: 0, retMsg: abc}  }
-		- { for: userservice.login,  match: , results: {retCode: -1000000, retMsg: abc, userId: 111}  }
+	- { for: userservice.login,  match: userName ==abc && password == 123,  results: {retCode: 0, retMsg: abc}  }
+	- { for: userservice.login,  match: , results: {retCode: -1000000, retMsg: abc, userId: 111}  }
 		
-	3) 	fallback.yaml 语法：
+	3) fallback.yaml 语法：
 	
 	    遵循 yaml 语法，能不用引号的地方都可以不用引号
 	    整个fallback文件是一个数组, 数组每一项由3个属性组成：
 	        for  针对哪个服务哪个消息，可以用服务名消息名形式，也可以用服务号消息号形式，每一项只能针对一个消息
 	        match  条件表达式, 对同一个消息，可以设定不同的消息返回不同的内容, 此表达式和动态路由的from表达式语法类似
-	                   插件会按顺序比较match是否一致，如果一致，则返回results对应的message, 否则继续比较下一项
-	                   如果没有符合条件的项，则返回默认的错误码： -451  no connection
-	                   
-				       match 是一个由基本表达式组合而成的复合表达式
-				       			组合方式： 支持常见的并或非和括号表达式，分别使用  &&表示并  ||表示或  !表示非 
-				       			                ()表示括号，括号可以多层嵌套  
-				       			基本表达式的 格式为: key operator values 
-				       			     key 是request message的属性，支持嵌套消息，但不支持数组，如
-				       			              a   a.b.c
-				       			     operator 是操作符，目前支持的是  == !=  =~ !~ in not_in
-				       			     values 是值，值的格式取决于operator， 不管入参类型，所有值都转成字符串再做比较
-				       			     == !=, 值为字符串, 做字符串的完全匹配, 
-				       			     =~ !~, 值为正则表达式，做正则匹配
-				       			     in not_in , 值为逗号隔开的多个值
-
-				       			match 可以为空或不写，表示匹配所有输入
-				       			示例：
-				       				a == abc
-				       				a == abc || b == 123
-				       				!(a == abc || b == 123) && c in 1,2,3
+               插件会按顺序比较match是否一致，如果一致，则返回results对应的message, 否则继续比较下一项
+               如果没有符合条件的项，则返回默认的错误码： -451  no connection
+               
+		   match 是一个由基本表达式组合而成的复合表达式
+				组合方式： 支持常见的并或非和括号表达式，分别使用  &&表示并  ||表示或  !表示非 
+				                ()表示括号，括号可以多层嵌套  
+				基本表达式的 格式为: key operator values 
+				     key 是request message的属性，支持嵌套消息，但不支持数组，如
+				              a   a.b.c
+				     operator 是操作符，目前支持的是  == !=  =~ !~ in not_in
+				     values 是值，值的格式取决于operator， 不管入参类型，所有值都转成字符串再做比较
+				     == !=, 值为字符串, 做字符串的完全匹配, 
+				     =~ !~, 值为正则表达式，做正则匹配
+				     in not_in , 值为逗号隔开的多个值
+		
+				match 可以为空或不写，表示匹配所有输入
+				示例：
+					a == abc
+					a == abc || b == 123
+					!(a == abc || b == 123) && c in 1,2,3
 				       				
 	        results  返回的对象,  results 为一个map，和该消息的response message完全对应，支持消息嵌套和数组
 	                    可以只设定要返回的值，没有的值会自动使用默认值
