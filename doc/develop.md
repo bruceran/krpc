@@ -443,7 +443,8 @@
     maxThreads  同上，可配置一个大于threads的值，默认为0，也就是maxThreads=threads
     queueSize 同上，线程池中固定队列大小，默认为10000
     plugins 用来配置插件名，允许多个，用逗号隔开
-    pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，不需要配置参数的插件不用配置
+    pluginParams  插件参数配置, 类型为List<String>, 所有需要配置参数的插件通过此参数进行配置，
+                         不需要配置参数的插件不用配置
 	      每行配置一个插件，格式为 插件名:插件参数，  插件参数的格式自定义，标准风格是 a=b;c=d;...
 		  memoryflowcontrol插件参数：
 		        memoryflowcontrol 只有流控阈值配置参数，格式有两种：
@@ -476,7 +477,8 @@
 				示例：
 				   service:100=500  服务号100的服务允许同时执行500个请求
 				   msg:100:1#2#3=100  服务号100的服务消息号为1,2,3的消息每个允许同时执行100个请求                   
-	     		注意：服务端异步实现的服务需注意必须要有返回(不可丢弃请求), 如果不返回可能导致并发数用完后停止服务
+	     		注意：服务端异步实现的服务需注意必须要有返回(不可丢弃请求), 如果不返回可能导致并发数用完后
+	     		         停止服务
                          		
 ## webserver	
 
@@ -644,15 +646,21 @@
   
         hosts 允许的域名，*表示不限制，默认为*; 通用网关支持按不同的域名分开配置
         path 访问路径,  path中支持变量， 如 /abc/{region}/{userId}, 以支持纯rest风格的开发
-        methods 访问方法，支持get,post,put,delete, 默认为get,post; 如果body是json格式，默认也会直接做解析，无需额外配置
+        methods 访问方法，支持get,post,put,delete, 默认为get,post;  
+                      如果body是json格式，默认也会直接做解析，无需额外配置
         serviceId path对应的服务号
         msgId path对应的消息号
         plugins 用来配置插件名，允许多个，用逗号隔开
-        sessionMode 会话模式 0=不需要会话 1=只需要会话ID 2=有会话则把会话信息传给后端，但不强制登录 2=必须要登录, 默认为0
+        sessionMode 会话模式 
+             0=不需要会话 (默认)
+             1=只需要会话ID 
+             2=有会话则把会话信息传给后端，但不强制登录 
+             3=必须要登录
 
         每个url里的其它属性也会保存下来，如果自定义插件需要一些扩展属性，也可以从context中获取到这些自定义的属性
         
-        对插件的引用只能使用名称，不可带参数； 如参数需要参数，需在webserver的pluginParams里申明, 不带参数的插件不要申明，直接引用即可
+        对插件的引用只能使用名称，不可带参数； 如参数需要参数，需在webserver的pluginParams里申明, 
+        不带参数的插件不要申明，直接引用即可
         
   * group用来配置一组url公共的属性，简化url配置
   
@@ -665,7 +673,11 @@
                 如果post body是json格式，默认也会直接做解析，无需额外配置
         serviceId path对应的服务号
         plugins 用来配置插件名，允许多个，用逗号隔开
-        sessionMode 会话模式 0=不需要会话 1=只需要会话ID 2=有会话则把会话信息传给后端，但不强制登录 2=必须要登录, 默认为0
+       sessionMode 会话模式 
+             0=不需要会话 (默认)
+             1=只需要会话ID 
+             2=有会话则把会话信息传给后端，但不强制登录 
+             3=必须要登录
   
   * 可通过dir定义静态资源目录，上传目录等
 
@@ -834,15 +846,15 @@
 
     服务端推送代码：
 		
-      线程1：		
-      RpcContextData ctx = ServerContext.get(); // 获取调用上下文，上下文中包含tcp连接标识connId
-      String connId = ctx.getConnId(); // connId可以任意传递，保存到缓存中或持久化到db中
-      
-      线程2：
-      // 从内存，缓存或db中获取到之前保存的connId
-      ClientContext.setConnId(connId); // 推送前需要调用此函数确定此消息是推送到那个连接上
-      PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
-      ps.push(req); // 完成推送
+	      线程1：		
+	      RpcContextData ctx = ServerContext.get(); // 获取调用上下文，上下文中包含tcp连接标识connId
+	      String connId = ctx.getConnId(); // connId可以任意传递，保存到缓存中或持久化到db中
+	      
+	      线程2：
+	      // 从内存，缓存或db中获取到之前保存的connId
+	      ClientContext.setConnId(connId); // 推送前需要调用此函数确定此消息是推送到那个连接上
+	      PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
+	      ps.push(req); // 完成推送
 
 # 参数验证
 
@@ -852,13 +864,13 @@
 	
 		string s1 = 1  [  (krpc.vld).required = true  ] ;
 		string s2 = 2  [  (krpc.vld).match="date" ] ;	
-	    string s3 = 3  [  (krpc.vld).match="a.*c" ] ;			
+		string s3 = 3  [  (krpc.vld).match="a.*c" ] ;			
 		string s4 = 4  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
 		repeated string s5 = 5  [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
 		
 		一个field多个规则的时候protobuffer允许用两种等价形式编写规则：
 		
-			[  (krpc.vld).arrlen = "1,-", (krpc.vld).values = "111,222" ];
+		    [  (krpc.vld).arrlen = "1,-", (krpc.vld).values = "111,222" ];
 		    [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
 		
     * 支持的验证规则
@@ -910,8 +922,10 @@
 
     * krpc探针配置
 
-         要使用探针功能，需在启动应用程序的时候增加 java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar   your-main-class
-         如果使用spring boot1/boot2,  则是 java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar  -jar  your-boot-application-jar
+         要使用探针功能，需在启动应用程序的时候增加 
+               java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar   your-main-class
+         如果使用spring boot1/boot2,  则是 
+               java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar  -jar  your-boot-application-jar
          在 krpc-sniffer-1.0.0.jar 的相同目录下，还必须存在 javassist-3.12.1.GA.jar， 否则探针无法加载
          探针会自动读取当前目录下的krpcsniffer.cfg配置文件, krpcsniffer.cfg配置文件格式如下：
          
@@ -1007,7 +1021,7 @@
  
 # 负载均衡策略
 
-		负载均衡策略在referer设置
+        负载均衡策略在referer设置
 		
 		LeastActiveLoadBalance  最小活跃请求数，相同最小则随机
 		LeastActiveWeightLoadBalance  带权重的LeastActive
@@ -1022,8 +1036,8 @@
         
 # 动态路由策略
 
-		动态路由策略通过 application 的dynamicRoutePlugin 参数设置，每个应用只能设置一个插件
-		krpc动态路由不要求必须与注册与发现服务绑定，非常灵活，如可以如下设置：
+        动态路由策略通过 application 的dynamicRoutePlugin 参数设置，每个应用只能设置一个插件
+        krpc动态路由不要求必须与注册与发现服务绑定，非常灵活，如可以如下设置：
 		   注册与发现使用 consul 插件，而动态路由可使用 consul 或 zookeeper 或  spring cloud config 或  其他的分布式配置
         DynamicRoutePlugin插件接口如下：
               DynamicRouteConfig getConfig(int serviceId,String serviceName,String group);
@@ -1033,30 +1047,30 @@
 			List<AddrWeight> weights; // 权重 addr weight   默认为100
 			List<RouteRule> rules; // 规则   from to priority     	  
 		       
-       权重信息的 addr 可以是 ip:port形式，也可是 ip形式，也可带*统配符, *匹配0到n个数值
-       规则 from 是一个由基本表达式组合而成的复合表达式
-       			组合方式： 支持常见的并或非和括号表达式，分别使用  &&表示并  ||表示或  !表示非  ()表示括号，括号可以多层嵌套  
-       			基本表达式的 格式为: key == values  或 key != values 
-       			     key 只允许使用 application(当前应用名),host(当前主机的IP),msgId(要调用的消息号，如用于读写分离)
-       			     values 为用逗号隔开的多个值, 可用*通配符
-       			     == 的含义是 in, 任意一个值匹配即可
-       			     != 的含义是 not in, 任意一个值都不可匹配     
-       			from 可以为空，表示匹配所有
-       			示例：
-       				host == 192.168.3.1
-       				host == 192.168.3.1,192.168.3.2
-       				host == 192.168.3.*,192.168.4.*
-       				host == 192.168.3.*,192.168.4.* && application == webgate
-       				host == 192.168.3.*,192.168.4.* && host != 192.168.3.1*
-       				msgId == 1,2,3
-       规则 to 只能是基本表达式, 格式为 host == values  或 host != values 或 addr == values 或 addr != values
-                host和addr都表示允许路由到哪些地址上去，host是按ip设定规则，addr是按ip:port设定规则
-                values 为用逗号隔开的多个值, 可用*通配符, values中可使用特殊的$host表示本机IP
-       			== 的含义是 in, 任意一个值匹配即可
-       			!= 的含义是 not in, 任意一个值都不可匹配     
-                values 可以为空，表示禁止所有路由
-       规则的 priority 值越大越先匹配
-       可以用路由规则来实现以下需求：
+        权重信息的 addr 可以是 ip:port形式，也可是 ip形式，也可带*统配符, *匹配0到n个数值
+        规则 from 是一个由基本表达式组合而成的复合表达式
+			组合方式： 支持常见的并或非和括号表达式，分别使用  &&表示并  ||表示或  !表示非  ()表示括号，括号可以多层嵌套  
+			基本表达式的 格式为: key == values  或 key != values 
+			     key 只允许使用 application(当前应用名),host(当前主机的IP),msgId(要调用的消息号，如用于读写分离)
+			     values 为用逗号隔开的多个值, 可用*通配符
+			     == 的含义是 in, 任意一个值匹配即可
+			     != 的含义是 not in, 任意一个值都不可匹配     
+			from 可以为空，表示匹配所有
+			示例：
+				host == 192.168.3.1
+				host == 192.168.3.1,192.168.3.2
+				host == 192.168.3.*,192.168.4.*
+				host == 192.168.3.*,192.168.4.* && application == webgate
+				host == 192.168.3.*,192.168.4.* && host != 192.168.3.1*
+				msgId == 1,2,3
+        规则 to 只能是基本表达式, 格式为 host == values  或 host != values 或 addr == values 或 addr != values
+            host和addr都表示允许路由到哪些地址上去，host是按ip设定规则，addr是按ip:port设定规则
+            values 为用逗号隔开的多个值, 可用*通配符, values中可使用特殊的$host表示本机IP
+   			== 的含义是 in, 任意一个值匹配即可
+   			!= 的含义是 not in, 任意一个值都不可匹配     
+            values 可以为空，表示禁止所有路由
+        规则的 priority 值越大越先匹配
+        可以用路由规则来实现以下需求：
        		路由白名单
        		路由黑名单
        		排除灰度机器
@@ -1067,19 +1081,33 @@
        		前后台分离 按application配置规则
        		同机部署服务，只访问本机的服务 使用 $host 配置规则
 
-       krpc内置的consul, etcd, zookeeper,jedis 插件分别从以下的kv存储位置读取配置数据和配置数据的版本号
-       consul:   
-       		/v1/kv/dynamicroutes/{group}/{serviceId}/routes.json.version	值为版本号，版本号不变不会去读取routes.json
-       		/v1/kv/dynamicroutes/{group}/{serviceId}/routes.json	值为 DynamicRouteConfig 序列化成json的字符串
-       etcd:   
-       		/v2/keys/dynamicroutes/{group}/{serviceId}/routes.json.version	值为版本号，版本号不变不会去读取routes.json
-       		/v2/keys/dynamicroutes/{group}/{serviceId}/routes.json 值为 DynamicRouteConfig 序列化成json的字符串
-		zookeeper:   
-       		/dynamicroutes/{group}/{serviceId}/routes.json.version	  值为版本号，版本号不变不会去读取routes.json
-       		/dynamicroutes/{group}/{serviceId}/routes.json 值为 DynamicRouteConfig 序列化成json的字符串	
-		jedis:   
-       		dynamicroutes.default.100.routes.json.version	  值为版本号，版本号不变不会去读取routes.json
-       		dynamicroutes.default.100.routes.json  值为 DynamicRouteConfig 序列化成json的字符串	
+        krpc内置的consul, etcd, zookeeper,jedis 插件分别从以下的kv存储位置读取配置数据和配置数据的版本号
+        consul:   
+       		/v1/kv/dynamicroutes/{group}/{serviceId}/routes.json.version	
+       		值为版本号，版本号不变不会去读取routes.json
+       		
+       		/v1/kv/dynamicroutes/{group}/{serviceId}/routes.json	
+       		值为 DynamicRouteConfig 序列化成json的字符串
+       		
+        etcd:   
+       		/v2/keys/dynamicroutes/{group}/{serviceId}/routes.json.version	
+       		值为版本号，版本号不变不会去读取routes.json
+       		
+       		/v2/keys/dynamicroutes/{group}/{serviceId}/routes.json 
+       		值为 DynamicRouteConfig 序列化成json的字符串
+       		
+        zookeeper:   
+       		/dynamicroutes/{group}/{serviceId}/routes.json.version	  
+       		值为版本号，版本号不变不会去读取routes.json
+       		
+       		/dynamicroutes/{group}/{serviceId}/routes.json 
+       		值为 DynamicRouteConfig 序列化成json的字符串	
+        jedis:   
+       		dynamicroutes.default.100.routes.json.version	  
+       		值为版本号，版本号不变不会去读取routes.json
+       		
+       		dynamicroutes.default.100.routes.json  
+       		值为 DynamicRouteConfig 序列化成json的字符串	
 
 # 熔断和降级
 
@@ -1093,28 +1121,28 @@
 		2)  强制对服务降级： 若动态路由插件返回的 服务的 disabled = true, 则该服务所有请求不做路由直接走降级策略
 		
 		3)  动态熔断: 在referer 上开启 breakerEnabled = true, 则根据referer上设定的策略动态熔断和恢复，描述如下：
+
+        breakerEnabled 需要设置为 true 才会开启动态熔断
+        
+        在 breakerWindowSeconds 秒内请求数至少需要达到 breakerWindowMinReqs 个请求才会进入熔断状态判断
+        可按 超时率 (breakerCloseBy=2) 或 错误率(breakerCloseBy=1)判断是否是否需要熔断
+        若比率达到  breakerCloseRate 则熔断
+        熔断后该地址将会停止提供服务 breakerSleepSeconds 秒 
+        在 breakerSleepSeconds 秒后会每隔 breakerSleepSeconds 秒 放一个请求到该地址测试是否已恢复
+        如果测试请求返回成功(retCode==0)且耗时<=breakerSuccMills毫秒，则认为服务已恢复，解除熔断状态
+        
+        如果配置 breakerForceClose = true, 则不做判断直接认为已处于熔断状态
 		
-		        breakerEnabled 需要设置为 true 才会开启动态熔断
-		        
-		        在 breakerWindowSeconds 秒内请求数至少需要达到 breakerWindowMinReqs 个请求才会进入熔断状态判断
-		        可按 超时率 (breakerCloseBy=2) 或 错误率(breakerCloseBy=1)判断是否是否需要熔断
-		        若比率达到  breakerCloseRate 则熔断
-		        熔断后该地址将会停止提供服务 breakerSleepSeconds 秒 
-		        在 breakerSleepSeconds 秒后会每隔 breakerSleepSeconds 秒 放一个请求到该地址测试是否已恢复
-		        如果测试请求返回成功(retCode==0)且耗时<=breakerSuccMills毫秒，则认为服务已恢复，解除熔断状态
-		        
-		        如果配置 breakerForceClose = true, 则不做判断直接认为已处于熔断状态
-				
-				以下是各参数的默认值：
-					        
-				boolean breakerEnabled = false ;
-				int breakerWindowSeconds = 5;
-				int breakerWindowMinReqs = 20;
-				int breakerCloseBy = 1; // 1=errorRate 2=timeoutRate
-				int breakerCloseRate  = 50; // 50% in 5 seconds to close the addr
-				int breakerSleepSeconds = 5;
-				int breakerSuccMills = 500;
-				boolean breakerForceClose = false;		    
+		以下是各参数的默认值：
+			        
+		boolean breakerEnabled = false ;
+		int breakerWindowSeconds = 5;
+		int breakerWindowMinReqs = 20;
+		int breakerCloseBy = 1; // 1=errorRate 2=timeoutRate
+		int breakerCloseRate  = 50; // 50% in 5 seconds to close the addr
+		int breakerSleepSeconds = 5;
+		int breakerSuccMills = 500;
+		boolean breakerForceClose = false;		    
 					
 		熔断后的降级策略：
 		
@@ -1122,56 +1150,59 @@
 				建议使用框架内置的 default 降级策略插件, 可以模拟成功或失败的任意结果
 		
 		default 降级策略插件：
+	
+		1) 自动查找classpath下的 fallback.yaml 文件，通过 fallback.yaml 可为每个消息配置策略
+		2) fallback.yaml 示例：
 		
-				1) 自动查找classpath下的 fallback.yaml 文件，通过 fallback.yaml 可为每个消息配置策略
-				2) fallback.yaml 示例：
-				
-					- { for: userservice.login,  match: userName ==abc && password == 123,  results: {retCode: 0, retMsg: abc}  }
-					- { for: userservice.login,  match: , results: {retCode: -1000000, retMsg: abc, userId: 111}  }
-					
-				3) 	fallback.yaml 语法：
-				
-				    遵循 yaml 语法，能不用引号的地方都可以不用引号
-				    整个fallback文件是一个数组, 数组每一项由3个属性组成：
-				        for  针对哪个服务哪个消息，可以用服务名消息名形式，也可以用服务号消息号形式，每一项只能针对一个消息
-				        match  条件表达式, 对同一个消息，可以设定不同的消息返回不同的内容, 此表达式和动态路由的from表达式语法类似
-				                   插件会按顺序比较match是否一致，如果一致，则返回results对应的message, 否则继续比较下一项
-				                   如果没有符合条件的项，则返回默认的错误码： -451  no connection
-				                   
-							       match 是一个由基本表达式组合而成的复合表达式
-							       			组合方式： 支持常见的并或非和括号表达式，分别使用  &&表示并  ||表示或  !表示非 
-							       			                ()表示括号，括号可以多层嵌套  
-							       			基本表达式的 格式为: key operator values 
-							       			     key 是request message的属性，支持嵌套消息，但不支持数组，如
-							       			              a   a.b.c
-							       			     operator 是操作符，目前支持的是  == !=  =~ !~ in not_in
-							       			     values 是值，值的格式取决于operator， 不管入参类型，所有值都转成字符串再做比较
-							       			     == !=, 值为字符串, 做字符串的完全匹配, 
-							       			     =~ !~, 值为正则表达式，做正则匹配
-							       			     in not_in , 值为逗号隔开的多个值
-
-							       			match 可以为空或不写，表示匹配所有输入
-							       			示例：
-							       				a == abc
-							       				a == abc || b == 123
-							       				!(a == abc || b == 123) && c in 1,2,3
-							       				
-				        results  返回的对象,  results 为一个map，和该消息的response message完全对应，支持消息嵌套和数组
-				                    可以只设定要返回的值，没有的值会自动使用默认值
+			- { for: userservice.login,  match: userName ==abc && password == 123,  results: {retCode: 0, retMsg: abc}  }
+			- { for: userservice.login,  match: , results: {retCode: -1000000, retMsg: abc, userId: 111}  }
+			
+		3) 	fallback.yaml 语法：
+		
+		    遵循 yaml 语法，能不用引号的地方都可以不用引号
+		    整个fallback文件是一个数组, 数组每一项由3个属性组成：
+		        for  针对哪个服务哪个消息，可以用服务名消息名形式，也可以用服务号消息号形式，每一项只能针对一个消息
+		        match  条件表达式, 对同一个消息，可以设定不同的消息返回不同的内容, 此表达式和动态路由的from表达式语法类似
+		                   插件会按顺序比较match是否一致，如果一致，则返回results对应的message, 否则继续比较下一项
+		                   如果没有符合条件的项，则返回默认的错误码： -451  no connection
+		                   
+					       match 是一个由基本表达式组合而成的复合表达式
+					       			组合方式： 支持常见的并或非和括号表达式，分别使用  &&表示并  ||表示或  !表示非 
+					       			                ()表示括号，括号可以多层嵌套  
+					       			基本表达式的 格式为: key operator values 
+					       			     key 是request message的属性，支持嵌套消息，但不支持数组，如
+					       			              a   a.b.c
+					       			     operator 是操作符，目前支持的是  == !=  =~ !~ in not_in
+					       			     values 是值，值的格式取决于operator， 不管入参类型，所有值都转成字符串再做比较
+					       			     == !=, 值为字符串, 做字符串的完全匹配, 
+					       			     =~ !~, 值为正则表达式，做正则匹配
+					       			     in not_in , 值为逗号隔开的多个值
+	
+					       			match 可以为空或不写，表示匹配所有输入
+					       			示例：
+					       				a == abc
+					       				a == abc || b == 123
+					       				!(a == abc || b == 123) && c in 1,2,3
+					       				
+		        results  返回的对象,  results 为一个map，和该消息的response message完全对应，支持消息嵌套和数组
+		                    可以只设定要返回的值，没有的值会自动使用默认值
 		
 		default 降级策略插件有一个file参数，可以用来指定非默认的yaml文件
 				                   
 # MOCK 测试
 
         当开发微服务时，如果依赖的服务端尚未完成，或需做不依赖外部的测试， 或希望测试特定的返回场景，
-        都需要框架提供MOCK功能方便开发, 框架内置的 default fallback 插件除了做降级策略外，也可以用来满足此需求
+        都需要框架提供MOCK功能方便开发, 框架内置的 default fallback 插件除了做降级策略外，
+        也可以用来满足此需求
 		
 		1) applicaiton config里的 fallbackPlugin 必须是 default
 		2) 在 fallback.yaml里定义mock返回, 可根据不同输入提供不同输出
 		3) 如果服务连不通，无需配置自动就会走fallback插件
-		4) 如果服务能连通，可以强制在referer config设置 breakerEnabled = true, breakerForceClose = true 走fallback策略
+		4) 如果服务能连通，可以强制在referer config设置 
+		                breakerEnabled = true, breakerForceClose = true 走fallback策略
 		
-		由于正式环境的降级策略和测试时的mock都需要编辑 fallback.yaml 文件，可以在测试时指定文件名参数使用不同文件
+		由于正式环境的降级策略和测试时的mock都需要编辑 fallback.yaml 文件，
+		可以在测试时指定文件名参数使用不同文件
 		
 		fallbackPlugin="default:file=mock.yaml"  来使用 mock.yaml 作为 mock 文件
 		
