@@ -20,7 +20,8 @@
 # 自定义Bootstrap类
 
      启动类必须继承  krpc.rpc.bootstrap.Bootstrap
-     可以在启动程序前通过 -DKRPC_BOOTSTRAP=自定义启动类 或在 容器启动前使用 System.setProperty("KRPC_BOOTSTRAP","自定义启动类") 指定启动类
+     可以在启动程序前通过 -DKRPC_BOOTSTRAP=自定义启动类 或
+          在 容器启动前使用 System.setProperty("KRPC_BOOTSTRAP","自定义启动类") 指定启动类
      Bootstrap 里创建的对象都可重载newXxx方法进行替换
 
 # 插件查找和插件参数
@@ -131,7 +132,7 @@
       		  krpc.rpc.web.PostParseWebPlugin  适用于在对参数解析完毕后进一步处理
       		  krpc.rpc.web.AsyncPostParseWebPlugin  同上，异步形式
       		  krpc.rpc.web.SessionService 会话服务扩展接口, 用于会话信息的存储更新读取 
-      		  				框架自带了 memorysessionservice（单进程）和 jedissessionservice （分布式，依赖jedis） 插件
+                     框架自带了 memorysessionservice（单进程）和 jedissessionservice （分布式，依赖jedis） 插件
       		  krpc.rpc.web.PostSessionWebPlugin  适用于在获取到会话信息后做进一步处理
       		  krpc.rpc.web.AsyncPostSessionWebPlugin  同上，异步形式
       		  krpc.rpc.web.PreRenderWebPlugin  适用于在渲染前调整map对象为符合要求的渲染数据格式

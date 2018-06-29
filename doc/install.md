@@ -104,9 +104,10 @@
 		compile 'com.google.protobuf:protobuf-java:3.5.1'   -- protobuff 支持
 		compile 'io.netty:netty-all:4.1.16.Final'     -- netty 4
 		compile 'javassist:javassist:3.12.1.GA'    -- 字节码生成
-        compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'   -- json框架
-        compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'   -- json框架
-        compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'   -- json框架
+		compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'   -- json框架
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'   -- json框架
+		compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'   -- json框架
+		compile 'org.yaml:snakeyaml:1.17'   -- 解析yaml格式的fallback配置文件
 
 	可选依赖：
 	
@@ -114,13 +115,16 @@
 			compile 'org.xerial.snappy:snappy-java:1.1.2.3'
 		
 		如果要使用jedis版本的流控服务/http会话服务/注册与发现插件, 需要用到jedis
-            compile 'redis.clients:jedis:2.9.0'   
+			compile 'redis.clients:jedis:2.9.0'   
             导入此jar包还会传递导入 commons-pool2
 		
 		如果要使用zookeeper版本的注册与发现插件
 			compile ('org.apache.curator:curator-framework:2.12.0')  
 			导入此jar包还会传递导入 guava, zookeeper, curator-client
 				
+		如果要使用velocity模板
+			compile 'org.apache.velocity:velocity:1.7'
+
 		SPRING框架依赖；若使用krpc schema支持需用到以下依赖
 			compile 'org.springframework:spring-core:4.1.6.RELEASE'
 			compile 'org.springframework:spring-beans:4.1.6.RELEASE'
