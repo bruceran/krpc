@@ -9,7 +9,7 @@ import krpc.rpc.web.WebPlugin;
 import krpc.rpc.web.WebReq;
 import krpc.rpc.web.WebRes;
 
-public class HtmlRedirectWebPlugin implements WebPlugin, RenderPlugin {
+public class JsRedirectWebPlugin implements WebPlugin, RenderPlugin {
 	
 	String redirectUrlField = "redirectUrl";
 	

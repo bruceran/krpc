@@ -4,6 +4,6 @@ krpc.rpc.web.impl.LogOnlyWebPlugin
 krpc.rpc.web.impl.PlainTextWebPlugin
 krpc.rpc.web.impl.HtmlWebPlugin
 krpc.rpc.web.impl.JsonpWebPlugin
-krpc.rpc.web.impl.HtmlRedirectWebPlugin
+krpc.rpc.web.impl.JsRedirectWebPlugin
 krpc.rpc.web.impl.ServerRedirectWebPlugin
 krpc.rpc.web.impl.VelocityWebPlugin

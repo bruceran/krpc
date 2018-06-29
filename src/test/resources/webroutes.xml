@@ -12,7 +12,7 @@
 	<url hosts="*" path="/plugin/test0" methods="get,post" serviceId="104" msgId="1"   />  
 	<url hosts="*" path="/plugin/test1" methods="get,post" serviceId="104" msgId="1"    plugins="plainText"/>  
 	<url hosts="*" path="/plugin/test2" methods="get,post" serviceId="104" msgId="1"    plugins="jsonp"/>  
-	<url hosts="*" path="/plugin/test3" methods="get,post" serviceId="104" msgId="1"    plugins="htmlRedirect"/>  
+	<url hosts="*" path="/plugin/test3" methods="get,post" serviceId="104" msgId="1"    plugins="jsRedirect"/>  
 	<url hosts="*" path="/plugin/test4" methods="get,post" serviceId="104" msgId="1"    plugins="serverRedirect"/>  
 	<url hosts="*" path="/plugin/test5" methods="get,post" serviceId="104" msgId="2"   />  
 	<url hosts="*" path="/template1/test6" methods="get,post" serviceId="104" msgId="1"   plugins="velocity" template="a"/> 

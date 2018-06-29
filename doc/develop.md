@@ -1236,6 +1236,119 @@
 		  框架不会自动调用stop()方法， 建议在进程接收到退出信号后立即调用stop()再关闭spring容器
           
           示例： misc\samples\boot1
-                                        	
-	  
 
+# Web渲染插件
+	  
+	  框架默认的渲染格式为json, 如需渲染为其它格式，可通过内置的如下插件来配置：
+	  
+	    serverredirect插件，取结果中的redirectUrl值作为重定向的目标，通过302进行跳转
+	    	<url ...    plugins="serverRedirect"/>  
+	    	
+	    html 插件，取结果中的html值作为输出内容, 需通过代码生成html内容
+	    	<url ...    plugins="html"/>  
+	    	
+	    jsredirect插件，取结果中的redirectUrl值作为重定向的目标，通过js形式跳转
+	    	<url ...    plugins="jsRedirect"/>  
+	    	
+	    plainText 插件，取结果中的plainText值作为输出内容
+	    	<url ...    plugins="plainText"/>  
+	    	
+	    jsonp 插件, 将结果json串改成javascript, 形如callback(json)，可通过jsonp入参来修改callback函数
+	    	<url ...    plugins="jsonp"/>
+	    	
+	    velocity插件，渲染为任意格式：
+		    <dir hosts="*" path="/template1" templateDir="c:\ws\site\template"/>
+		    <dir hosts="*" path="/template2" templateDir="classpath:vm"/>
+	    	<url ...   plugins="velocity" template="a"/> 
+            通过dir的templateDir来定义velocity模板所在的目录，可以是本地目录，也可以是classpath目录
+            可通过url中的template属性来指定模板或结果中的template值(优先级更高)来指定模板
+            
+            模板文件名格式：模板文件名+后缀+vm
+            文件的格式由后缀决定，可设置后缀为 .html  .xml  等
+            在url中指定模板名的时候，无需带.vm后缀, 如果是html后缀，html也可忽略，其它格式不能忽略后缀
+            模板如果在子目录中，需带子目录名，可多级
+
+	       velocity插件参数:
+	       		cache 是否启用cache, 默认为false
+	       	    checkInterval 检查模板是否发生变化的间隔，单位秒，默认为10
+	       	    version 人为设定的版本值，用于生成url
+	       	    toolClass 人为设定的自定义工具类, 用于扩展模板功能
+	       	    
+	       velocity模板中如何取值：
+	       
+	           req.xxx  从入参中取值，支持多级嵌套, 和该消息的入参类型的属性
+	           res.xxx  从结果中取值，支持多级嵌套, 和该消息的出参类型的属性
+	           session.xxx  从会话信息中取值，支持多级嵌套
+	           version 插件参数
+	           tool  插件参数, 可通过tool调用各种辅助方法
+                                        	
+# 静态文件下载
+	  
+      在webroutes.xml中增加如下配置即可将web server作为静态文件服务器
+      
+          <dir hosts="*" path="/site" staticDir="c:\ws\site\static\"/>
+          <dir hosts="*" path="/assets1" staticDir="classpath:assets1"/>
+    	
+    	  staticDir 可以是本地目录形式或者classpath:前缀的格式
+    	  classpath:前缀的资源文件可以是在本地目录中，也可以在jar文件中，webserver每次启动的时候会自动将jar文件
+    	  里的资源展开到 {application.dataDir}/jarcache 子目录下
+    	  
+      文件下载使用netty的zero copy技术, 不占内存。
+      
+      可通过配置webserver.expireSeconds控制静态资源在浏览器中的缓存时间，默认为0，不缓存
+
+# 动态文件下载
+
+      除了支持静态文件下载，也可通过程序来生成要下载的文件地址或直接输出二进制流
+      
+            方式1：动态生成本地文件路径下载
+            
+            	在protobuffer输出消息里设置以下属性，webserver就会自动启用文件下载
+            	
+            		string downloadFile 要下载的文件的本地路径,  此属性为特殊属性，只要存在就认为是一个文件下载的响应
+            		                    此文件可以是已经存在的（增加了下载权限检查），也可能是动态生成的
+            		int32 attachment 是否在header中增加 attachment 头，默认为0
+            		int32 autoDelete 对动态生成的文件，是否在下载完毕后自动删除，默认为0
+            
+            方式2：直接输出二进制流
+            
+            	在protobuffer输出消息里设置以下属性，webserver就会自动启用二进制流下载功能
+            	
+            		bytes downloadString 要下载的二进制流, 类型必须是probuffer bytes,  
+            		                        此属性为特殊属性，只要存在就认为要输出二进制流
+            		string filename 浏览器中保存时的文件名, 可带中文名
+          	    	       	    
+# 文件上传
+    
+       krpc支持文件上传功能, 支持上传G级别的文件, 不占内存。
+       
+       在protobuffer输入消息里设置以下属性就会自动获取到文件上传的内容，映射关系如下：
+
+               所有文件上传项会映射到如下类型的参数中
+				message UploadFile {
+					string file = 1;  // 上传后的文件保存在临时目录下，此值为临时文件的全路径名
+					string filename = 2; // 原始文件名
+					int64 size = 3; // 文件大小，允许为0
+					string ext = 4; // 文件后缀，原始文件无后缀，此值可能为空
+					string contentType = 5; // 文件类型, 可能为空
+					string name = 6; // 表单中的名称
+				}
+				消息类型UploadFile和tag可以修改，消息里的属性名称不可以修改, 不感兴趣的值可不定义
+				
+				在输入消息如下定义九可以获取到上传的内容:
+						UploadFile files = xxx;  // 如果只有一个文件上传项
+						repeated UploadFile files = xxx; // 如果有多个文件上传项
+				files为特殊属性，不可修改
+				
+				上传表单中的非文件属性按正常的定义消息属性就可以。
+		
+		上传的文件保存在临时目录下，需要由应用程序自行删除(程序中删除或定时清理)。
+		临时目录为 {application.dataDir}/upload 子目录
+		
+		和上传相关的配置参数：
+    		maxContentLength 最大包长，这个控制的是非文件上传的包大小
+    		maxUploadLength 上传时允许最大长度(非精确字节数)，这个控制的是文件上传的大小
+    		
+    		
+    				
+		 
