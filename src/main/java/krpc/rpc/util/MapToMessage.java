@@ -33,6 +33,9 @@ public class MapToMessage {
 			if (field.isRepeated()) {
 				objToMessageObjRepeated(b,value,field);
 			} else {
+				if( value instanceof List ) {
+					value = ((List)value).get(0);
+				}
 				objToMessageObj(b,value,field);
 			}
 		}

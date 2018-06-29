@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -279,8 +277,9 @@ public class Bootstrap {
 		return m;
 	}
 
-	public WebRouteService newRouteService(WebServerConfig c) {
+	public WebRouteService newRouteService(WebServerConfig c,String dataDir) {
 		DefaultWebRouteService rs = new DefaultWebRouteService();
+		rs.setDataDir(dataDir);
 
 		if (!isEmpty(c.routesFile)) {
 			loadRoutes(rs, c.routesFile);
@@ -804,11 +803,10 @@ public class Bootstrap {
 			server.setSampleRate(c.sampleRate);
 			server.setExpireSeconds(c.expireSeconds);
 			server.setAutoTrim(c.autoTrim);
-			server.setDataDir(appConfig.dataDir);
 			server.setServiceMetas(app.serviceMetas);
 			server.setErrorMsgConverter(app.errorMsgConverter);
 			server.setMonitorService(app.monitorService);
-			server.setRouteService(newRouteService(c));
+			server.setRouteService(newRouteService(c,appConfig.dataDir));
 			server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
 			server.setDefaultSessionService(ss);
 			server.setSessionIdCookieName(c.sessionIdCookieName);
@@ -1562,10 +1560,10 @@ public class Bootstrap {
 		if (!isEmpty(staticDir) ) {
 			if( staticDir.equals("classpath:") ) // too dangerous, can download any file in the jar
 				throw new RuntimeException("root classpath is not allowed for staticDir, staticDir=" + staticDir);
-			if( !checkExist(staticDir) )
+			if( !checkDirExist(staticDir) )
 				throw new RuntimeException("staticDir is not correct, staticDir=" + staticDir);
 		}
-		if (!isEmpty(templateDir) && !checkExist(templateDir)) {
+		if (!isEmpty(templateDir) && !checkDirExist(templateDir)) {
 			throw new RuntimeException("templateDir is not correct, templateDir=" + templateDir);
 		}
 
@@ -1589,13 +1587,14 @@ public class Bootstrap {
 		return getClass().getClassLoader().getResourceAsStream(file);
 	}
 
-	boolean checkExist(String dir) {
+	boolean checkDirExist(String dir) {
 		if( dir.startsWith("classpath:")) {
 			dir = dir.substring(10);
 			if( dir.isEmpty() ) return true;
 			return getClass().getClassLoader().getResource(dir) != null;
 		} else {
-			return Files.exists(Paths.get(dir));
+			File f = new File(dir);
+			return f.exists() && f.isDirectory();
 		}
 	}
 	

@@ -32,7 +32,7 @@ dependencies {
 
 		compile 'org.apache.velocity:velocity:1.7'
 
-		// compile files('build/assets.jar')
+		//compile files('build/assets.jar')
 		
 		testCompile 'junit:junit:4.12'
 }

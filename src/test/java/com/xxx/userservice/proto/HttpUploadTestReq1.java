@@ -4,18 +4,18 @@
 package com.xxx.userservice.proto;
 
 /**
- * Protobuf type {@code HttpUploadTestReq}
+ * Protobuf type {@code HttpUploadTestReq1}
  */
-public  final class HttpUploadTestReq extends
+public  final class HttpUploadTestReq1 extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:HttpUploadTestReq)
-    HttpUploadTestReqOrBuilder {
+    // @@protoc_insertion_point(message_implements:HttpUploadTestReq1)
+    HttpUploadTestReq1OrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use HttpUploadTestReq.newBuilder() to construct.
-  private HttpUploadTestReq(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use HttpUploadTestReq1.newBuilder() to construct.
+  private HttpUploadTestReq1(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private HttpUploadTestReq() {
+  private HttpUploadTestReq1() {
     httpContentType_ = "";
     httpContent_ = "";
     a_ = "";
@@ -28,7 +28,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private HttpUploadTestReq(
+  private HttpUploadTestReq1(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -104,15 +104,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.xxx.userservice.proto.HttpUploadTestReq.class, com.xxx.userservice.proto.HttpUploadTestReq.Builder.class);
+            com.xxx.userservice.proto.HttpUploadTestReq1.class, com.xxx.userservice.proto.HttpUploadTestReq1.Builder.class);
   }
 
   private int bitField0_;
@@ -351,10 +351,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.xxx.userservice.proto.HttpUploadTestReq)) {
+    if (!(obj instanceof com.xxx.userservice.proto.HttpUploadTestReq1)) {
       return super.equals(obj);
     }
-    com.xxx.userservice.proto.HttpUploadTestReq other = (com.xxx.userservice.proto.HttpUploadTestReq) obj;
+    com.xxx.userservice.proto.HttpUploadTestReq1 other = (com.xxx.userservice.proto.HttpUploadTestReq1) obj;
 
     boolean result = true;
     result = result && getHttpContentType()
@@ -395,69 +395,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseDelimitedFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.xxx.userservice.proto.HttpUploadTestReq parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -470,7 +470,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.xxx.userservice.proto.HttpUploadTestReq prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.HttpUploadTestReq1 prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -486,26 +486,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code HttpUploadTestReq}
+   * Protobuf type {@code HttpUploadTestReq1}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:HttpUploadTestReq)
-      com.xxx.userservice.proto.HttpUploadTestReqOrBuilder {
+      // @@protoc_insertion_point(builder_implements:HttpUploadTestReq1)
+      com.xxx.userservice.proto.HttpUploadTestReq1OrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.xxx.userservice.proto.HttpUploadTestReq.class, com.xxx.userservice.proto.HttpUploadTestReq.Builder.class);
+              com.xxx.userservice.proto.HttpUploadTestReq1.class, com.xxx.userservice.proto.HttpUploadTestReq1.Builder.class);
     }
 
-    // Construct using com.xxx.userservice.proto.HttpUploadTestReq.newBuilder()
+    // Construct using com.xxx.userservice.proto.HttpUploadTestReq1.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -544,17 +544,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
     }
 
     @java.lang.Override
-    public com.xxx.userservice.proto.HttpUploadTestReq getDefaultInstanceForType() {
-      return com.xxx.userservice.proto.HttpUploadTestReq.getDefaultInstance();
+    public com.xxx.userservice.proto.HttpUploadTestReq1 getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.HttpUploadTestReq1.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.xxx.userservice.proto.HttpUploadTestReq build() {
-      com.xxx.userservice.proto.HttpUploadTestReq result = buildPartial();
+    public com.xxx.userservice.proto.HttpUploadTestReq1 build() {
+      com.xxx.userservice.proto.HttpUploadTestReq1 result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -562,8 +562,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.xxx.userservice.proto.HttpUploadTestReq buildPartial() {
-      com.xxx.userservice.proto.HttpUploadTestReq result = new com.xxx.userservice.proto.HttpUploadTestReq(this);
+    public com.xxx.userservice.proto.HttpUploadTestReq1 buildPartial() {
+      com.xxx.userservice.proto.HttpUploadTestReq1 result = new com.xxx.userservice.proto.HttpUploadTestReq1(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       result.httpContentType_ = httpContentType_;
@@ -618,16 +618,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.xxx.userservice.proto.HttpUploadTestReq) {
-        return mergeFrom((com.xxx.userservice.proto.HttpUploadTestReq)other);
+      if (other instanceof com.xxx.userservice.proto.HttpUploadTestReq1) {
+        return mergeFrom((com.xxx.userservice.proto.HttpUploadTestReq1)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.xxx.userservice.proto.HttpUploadTestReq other) {
-      if (other == com.xxx.userservice.proto.HttpUploadTestReq.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.HttpUploadTestReq1 other) {
+      if (other == com.xxx.userservice.proto.HttpUploadTestReq1.getDefaultInstance()) return this;
       if (!other.getHttpContentType().isEmpty()) {
         httpContentType_ = other.httpContentType_;
         onChanged();
@@ -685,11 +685,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.xxx.userservice.proto.HttpUploadTestReq parsedMessage = null;
+      com.xxx.userservice.proto.HttpUploadTestReq1 parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.xxx.userservice.proto.HttpUploadTestReq) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.HttpUploadTestReq1) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1220,41 +1220,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:HttpUploadTestReq)
+    // @@protoc_insertion_point(builder_scope:HttpUploadTestReq1)
   }
 
-  // @@protoc_insertion_point(class_scope:HttpUploadTestReq)
-  private static final com.xxx.userservice.proto.HttpUploadTestReq DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:HttpUploadTestReq1)
+  private static final com.xxx.userservice.proto.HttpUploadTestReq1 DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.xxx.userservice.proto.HttpUploadTestReq();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.HttpUploadTestReq1();
   }
 
-  public static com.xxx.userservice.proto.HttpUploadTestReq getDefaultInstance() {
+  public static com.xxx.userservice.proto.HttpUploadTestReq1 getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<HttpUploadTestReq>
-      PARSER = new com.google.protobuf.AbstractParser<HttpUploadTestReq>() {
+  private static final com.google.protobuf.Parser<HttpUploadTestReq1>
+      PARSER = new com.google.protobuf.AbstractParser<HttpUploadTestReq1>() {
     @java.lang.Override
-    public HttpUploadTestReq parsePartialFrom(
+    public HttpUploadTestReq1 parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new HttpUploadTestReq(input, extensionRegistry);
+      return new HttpUploadTestReq1(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<HttpUploadTestReq> parser() {
+  public static com.google.protobuf.Parser<HttpUploadTestReq1> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<HttpUploadTestReq> getParserForType() {
+  public com.google.protobuf.Parser<HttpUploadTestReq1> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.xxx.userservice.proto.HttpUploadTestReq getDefaultInstanceForType() {
+  public com.xxx.userservice.proto.HttpUploadTestReq1 getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

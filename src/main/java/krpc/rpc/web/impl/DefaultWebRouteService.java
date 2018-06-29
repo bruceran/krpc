@@ -1,33 +1,43 @@
 package krpc.rpc.web.impl;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import krpc.common.InitClose;
 import krpc.common.InitCloseUtils;
 import krpc.common.StartStop;
 import krpc.rpc.web.WebRoute;
 import krpc.rpc.web.WebRouteService;
-import krpc.rpc.web.WebRouteStatic;
 import krpc.rpc.web.WebDir;
 import krpc.rpc.web.WebPlugin;
 import krpc.rpc.web.WebPlugins;
 import krpc.rpc.web.WebUrl;
+import krpc.rpc.web.WebUtils;
 
 public class DefaultWebRouteService implements WebRouteService, InitClose,StartStop {
 	
-	static class DirMapping implements Comparable<DirMapping>  {
+	static Logger log = LoggerFactory.getLogger(DefaultWebRouteService.class);
+	
+	static class TemplateDirMapping implements Comparable<TemplateDirMapping>  {
 		String hosts;
 		Set<String> hostSet;
 		String path;
 		String dir;
 		
-		DirMapping(String hosts,String path,String dir) {
+		TemplateDirMapping(String hosts,String path,String dir) {
 			this.hosts = hosts;
 			if( !hosts.equals("*") ) {
 				hostSet = new HashSet<String>();
@@ -39,11 +49,34 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 			this.dir = dir;
 		}
 		
-		public int compareTo(DirMapping other) {
+		public int compareTo(TemplateDirMapping other) {
 			return other.path.compareTo(this.path); // reverse order
 		}		
 	}
 
+	static class StaticDirMapping implements Comparable<StaticDirMapping>  {
+		String hosts;
+		Set<String> hostSet;
+		String path;
+		List<String> dirs;
+		
+		StaticDirMapping(String hosts,String path,List<String> dirs) {
+			this.hosts = hosts;
+			if( !hosts.equals("*") ) {
+				hostSet = new HashSet<String>();
+				String[] ss = hosts.split(",");
+				for(String s:ss ) hostSet.add(s);
+			}
+
+			this.path = path;
+			this.dirs = dirs;
+		}
+		
+		public int compareTo(StaticDirMapping other) {
+			return other.path.compareTo(this.path); // reverse order
+		}		
+	}
+	
 	static class ServiceMapping implements Comparable<ServiceMapping> {
 		
 		String hosts;
@@ -144,11 +177,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		Map<String,List<ServiceMapping>> pathMappings = new HashMap<>();
 	}
 	
+	private String dataDir = ".";
+	private String jarCacheDir;
+	
 	private List<WebUrl> urlList = new ArrayList<WebUrl>();
 	private List<WebDir> dirList = new ArrayList<WebDir>();
 	
-	private List<DirMapping> staticDir = new ArrayList<DirMapping>();
-	private List<DirMapping> templateDir = new ArrayList<DirMapping>();
+	private List<StaticDirMapping> staticDir = new ArrayList<>();
+	private List<TemplateDirMapping> templateDir = new ArrayList<>();
 
 	private Map<String,HostMapping> hostMappings = new HashMap<String,HostMapping>();
 
@@ -164,16 +200,21 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	
 	public void init() {
 		
+
+		jarCacheDir = dataDir + "/jarcache";
+		
+		
 		for(WebDir wd: dirList) {
 
 			if( !isEmpty(wd.getStaticDir())) {
 				String dir = wd.getStaticDir();
-				staticDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
+				List<String> dirs = staticDirConvert(dir);
+				staticDir.add( new StaticDirMapping(wd.getHosts(),wd.getPath(),dirs) );
 			}
 
 			if( !isEmpty(wd.getTemplateDir())) {
 				String dir = wd.getTemplateDir();
-				templateDir.add( new DirMapping(wd.getHosts(),wd.getPath(),dir) );
+				templateDir.add( new TemplateDirMapping(wd.getHosts(),wd.getPath(),dir) );
 			}
 
 		}
@@ -319,22 +360,91 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		return "";
 	}
 
-	public WebRouteStatic findStaticFile(String host,String path) {
+	public File findStaticFile(String host,String path) {
 		path = sanitizePath(path);
 		if( path == null ) return null;
-		for(DirMapping dm: staticDir ) {
+		for(StaticDirMapping dm: staticDir ) {
 			if( match(dm,host,path) ) {
 				String t = path.substring(dm.path.length());
-				return new WebRouteStatic(dm.dir,t);
+				for(String dir: dm.dirs) {
+					String filename = dir + "/" + t ; // todo			
+					File f = new File(filename);
+					if( f.exists() ) {
+						if( f.isDirectory()) return null;
+						else return f;
+					}
+				}
+				return null;
 			}
 		}
 		return null;
 	}
+
+	List<String> staticDirConvert(String dir) {
+		List<String> list = new ArrayList<>();
+
+		if( !dir.startsWith("classpath:") ) {
+			list.add(dir);
+			return list;
+		}
+
+		dir = dir.substring(10);
+		Enumeration<URL> urls = null;
+		try {
+			urls = getClass().getClassLoader().getResources(dir);
+		} catch(Exception e) {
+			throw new RuntimeException("unknown classpath dir=classpath:"+dir);
+		}
+		
+		while( urls.hasMoreElements() ) {
+			URL url = urls.nextElement();
+			String d = urlToDir(url);
+			if( d != null ) {
+				list.add(d);
+			}
+		}
+		
+		return list;
+	}
 	
+	String urlToDir(URL url) {
+
+		String path = url.getPath(); 
+		
+		if (url.getProtocol().equals("file")) { 
+			path = path.substring(path.indexOf("/"));
+			File file = new File(path); 
+			if( !file.isDirectory() ) {
+				return null;
+			}
+			return file.getAbsolutePath();
+		} 
+		
+		if (url.getProtocol().equals("jar")) {
+			
+			String jarPath = path.substring(path.indexOf("/"), path.indexOf("!")); 
+			String dir = path.substring(path.indexOf("!")+2); // remove the first / 
+			
+			try { 
+				File jarFile = new File(jarPath);
+				String targetDir = jarCacheDir+"/"+jarFile.getName();
+				WebUtils.extractJarDir(jarPath,targetDir,dir);
+				
+				String searchdir = targetDir + "/" + dir;
+				return new File(searchdir).getAbsolutePath();
+            } catch (Exception e) {  
+                log.error("load jar exception, exception="+e.getMessage()+", url="+url);
+				return null;
+            } 
+		}
+
+		return null;
+	}
+		
 	public String findTemplateDir(String host,String path) {
 		path = sanitizePath(path);
 		if( path == null ) return null;
-		for(DirMapping dm: templateDir ) {
+		for(TemplateDirMapping dm: templateDir ) {
 			if( match(dm,host,path) ) {
 				return dm.dir;
 			}
@@ -358,7 +468,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		return path;
 	}
 
-	boolean match(DirMapping dir,String host,String path) {
+	boolean match(TemplateDirMapping dir,String host,String path) {
+		if(dir.hosts.equals("*") || dir.hostSet.contains(host) ) {
+			if( path.startsWith(dir.path)) return true;
+		}
+		return false;
+	}
+	
+	boolean match(StaticDirMapping dir,String host,String path) {
 		if(dir.hosts.equals("*") || dir.hostSet.contains(host) ) {
 			if( path.startsWith(dir.path)) return true;
 		}
@@ -367,6 +484,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	
 	boolean isEmpty(String s) {
 		return s == null || s.isEmpty() ;
+	}
+
+	public String getDataDir() {
+		return dataDir;
+	}
+
+	public void setDataDir(String dataDir) {
+		this.dataDir = dataDir;
 	}
 
 }

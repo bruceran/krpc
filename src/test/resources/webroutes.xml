@@ -20,6 +20,7 @@
 	<url hosts="*" path="/template3/test6" methods="get,post" serviceId="104" msgId="1"   plugins="velocity" template="template/a"/>  
 
 	<url hosts="*" path="/upload1" methods="post" serviceId="104" msgId="3"   />  
+	<url hosts="*" path="/upload2" methods="post" serviceId="104" msgId="4"   />  
 	
 	<!--  sample: import  other files -->
 	<import file="webroutes2.xml" />  
@@ -29,9 +30,9 @@
     <dir hosts="*" path="/template1" templateDir="c:\ws\site\template"/>
     <dir hosts="*" path="/template2" templateDir="classpath:vm/"/>
     
-    <!-- 
+    
     <dir hosts="*" path="/assets2" staticDir="classpath:assets2/static/"/>
     <dir hosts="*" path="/template3" templateDir="classpath:assets2/"/>
- 	-->
+ 	<!--  -->
  	
 </routes>  

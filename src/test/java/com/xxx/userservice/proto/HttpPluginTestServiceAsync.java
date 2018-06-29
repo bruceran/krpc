@@ -13,8 +13,11 @@ public interface HttpPluginTestServiceAsync {
     java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.HttpDownloadStaticRes> test2(com.xxx.userservice.proto.HttpPluginTestReq req);
     static final public int test2MsgId = 2;
 
-    java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.HttpUploadTestRes> upload(com.xxx.userservice.proto.HttpUploadTestReq req);
-    static final public int uploadMsgId = 3;
+    java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.HttpUploadTestRes> upload1(com.xxx.userservice.proto.HttpUploadTestReq1 req);
+    static final public int upload1MsgId = 3;
+
+    java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.HttpUploadTestRes> upload2(com.xxx.userservice.proto.HttpUploadTestReq2 req);
+    static final public int upload2MsgId = 4;
 
 }
 

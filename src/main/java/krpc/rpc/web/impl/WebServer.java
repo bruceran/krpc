@@ -4,7 +4,6 @@ import static krpc.rpc.web.WebConstants.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,7 +56,6 @@ import krpc.common.RetCodes;
 import krpc.common.StartStop;
 import krpc.rpc.web.WebRoute;
 import krpc.rpc.web.WebRouteService;
-import krpc.rpc.web.WebRouteStatic;
 import krpc.rpc.web.WebUtils;
 import krpc.rpc.web.RpcDataConverter;
 import krpc.rpc.web.SessionService;
@@ -78,8 +76,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	int expireSeconds = 0;
 	int sampleRate = 1;
 	boolean autoTrim = true;
-	String dataDir = ".";
-	String jarCacheDir;
+
 
 	SessionService defaultSessionService;
 
@@ -98,13 +95,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	ArrayList<Object> resources = new ArrayList<Object>();
 
-	ConcurrentHashMap<String,String> staticClassPathFileCache = new ConcurrentHashMap<>();
-	ConcurrentHashMap<String,String> jarDirExtracted = new ConcurrentHashMap<>();
 		
 	public void init() {
 
-		jarCacheDir = dataDir + "/jarcache";
-		
 		resources.add(defaultSessionService);
 		resources.add(routeService);
 		resources.add(httpTransport);
@@ -178,7 +171,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		if (r == null) {
 
 			if (req.getMethod() == HttpMethod.GET || req.getMethod() == HttpMethod.HEAD) {
-				WebRouteStatic file = routeService.findStaticFile(req.getHost(), req.getPath());	
+				File file = routeService.findStaticFile(req.getHost(), req.getPath());	
 				if (file != null) {
 						boolean done = routeStaticFile(connId, req, file);
 						if( done ) return;
@@ -978,92 +971,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		return v;
 	}
 
-	boolean checkResourceExist(String file) {
-		return getClass().getClassLoader().getResource(file) != null;
-	}
-
-	private File findFile(WebRouteStatic route) {
-		
-		String dir = route.getDir();
-		
-		if( !dir.startsWith("classpath:") ) {
-			File file = new File( route.getFilename() );
-			if( !file.exists() || file.isDirectory() ) {
-				return null;
-			}
-			return file;
-		}
-
-		String filename = route.getFilename();
-		
-		String realFile = staticClassPathFileCache.get(filename);
-		if( realFile != null ) {
-			if( realFile.equals(NOT_EXISTED_FILE)) return null;
-			return new File( realFile );
-		}
-		
-		String classpathFilename = filename.substring(10);
-		if( classpathFilename.startsWith("/")) classpathFilename = classpathFilename.substring(1);
-		URL url = getClass().getClassLoader().getResource(classpathFilename); // should be cached
-		if( url == null ) {
-			staticClassPathFileCache.put(filename,NOT_EXISTED_FILE);
-			return null;
-		}
-		
-		String path = url.getPath(); 
-		
-		if (url.getProtocol().equals("file")) { 
-			path = path.substring(path.indexOf("/"));
-			path = WebUtils.decodeUrl(path);
-			File file = new File(path); 
-			if( file.isDirectory() ) {
-				staticClassPathFileCache.put(filename,NOT_EXISTED_FILE);
-				return null;
-			}
-			
-			staticClassPathFileCache.put(filename,file.getAbsolutePath());
-			return file;
-		} 
-		
-		if (url.getProtocol().equals("jar")) {
-			
-			int p = path.indexOf("!");
-			String jarPath = path.substring(path.indexOf("/"), p); 
-			jarPath = WebUtils.decodeUrl(jarPath);
-			
-			try { 
-
-				File jarFile = new File(jarPath);
-				String targetDir = jarCacheDir+"/"+jarFile.getName();
-				if( !jarDirExtracted.containsKey(targetDir)) {
-					WebUtils.extractJarDir(jarPath,targetDir,dir.substring(10));  // should be cached
-					jarDirExtracted.put(targetDir, "1");
-				}
-				
-				String itemPath = path.substring(p+1); 
-				File file = new File(targetDir + itemPath); 
-				if( file.isDirectory() ) {
-					staticClassPathFileCache.put(filename,NOT_EXISTED_FILE);
-					return null;
-				}
-				
-				staticClassPathFileCache.put(filename,file.getAbsolutePath());
-				return file;
-				
-            } catch (Exception e) {  
-                log.error("load jar exception, exception="+e.getMessage()+", url="+url);
-                staticClassPathFileCache.put(filename,NOT_EXISTED_FILE);
-				return null;
-            } 
-		}
-
-		return null;
-	}
-	
-	public boolean routeStaticFile(String connId, DefaultWebReq req, WebRouteStatic route ) {
-		
-		File file = findFile(route);
-		if( file == null ) return false;
+	public boolean routeStaticFile(String connId, DefaultWebReq req, File file ) {
 
 		DefaultWebRes res = new DefaultWebRes(req, 200);
 		res.getResults().put(WebConstants.DOWNLOAD_FILE_FIELD, file.getAbsolutePath()); // special key for file
@@ -1260,14 +1168,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void setAutoTrim(boolean autoTrim) {
 		this.autoTrim = autoTrim;
-	}
-
-	public String getDataDir() {
-		return dataDir;
-	}
-
-	public void setDataDir(String dataDir) {
-		this.dataDir = dataDir;
 	}
 
 }

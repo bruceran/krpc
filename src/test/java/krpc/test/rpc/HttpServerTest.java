@@ -1,6 +1,5 @@
 package krpc.test.rpc;
 
-import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.slf4j.Logger;
@@ -11,7 +10,8 @@ import com.xxx.userservice.proto.HttpDownloadStaticRes;
 import com.xxx.userservice.proto.HttpPluginTestReq;
 import com.xxx.userservice.proto.HttpPluginTestRes;
 import com.xxx.userservice.proto.HttpPluginTestService;
-import com.xxx.userservice.proto.HttpUploadTestReq;
+import com.xxx.userservice.proto.HttpUploadTestReq1;
+import com.xxx.userservice.proto.HttpUploadTestReq2;
 import com.xxx.userservice.proto.HttpUploadTestRes;
 import com.xxx.userservice.proto.LoginReq;
 import com.xxx.userservice.proto.LoginRes;
@@ -78,8 +78,11 @@ class HttpPluginTestServiceImpl implements HttpPluginTestService {
 		return builder.build();		
 	}
 	
-	public HttpUploadTestRes upload(HttpUploadTestReq req) {
+	public HttpUploadTestRes upload1(HttpUploadTestReq1 req) {
 
+		System.out.println("a="+req.getA());
+		System.out.println("b="+req.getB());
+		
 		if( req.getFilesCount() > 0 ) {
 			for(UploadFile f: req.getFilesList()) {
 				System.out.println("upload filename="+f.getFilename());
@@ -90,6 +93,23 @@ class HttpPluginTestServiceImpl implements HttpPluginTestService {
 				// new File(f.getFile()).delete();
 			}
 		}
+		return HttpUploadTestRes.newBuilder().setRetCode(0).build();
+	}
+	
+	public HttpUploadTestRes upload2(HttpUploadTestReq2 req) {
+
+		System.out.println("a count="+req.getACount());
+		System.out.println("b="+req.getB());
+		
+		UploadFile f = req.getFiles();
+		if( f != null ) {
+			System.out.println("upload filename="+f.getFilename());
+			System.out.println("upload file="+f.getFile());
+			System.out.println("upload size="+f.getSize());
+			System.out.println("upload ext="+f.getExt());
+			System.out.println("upload contentType="+f.getContentType());
+		}
+
 		return HttpUploadTestRes.newBuilder().setRetCode(0).build();
 	}
 

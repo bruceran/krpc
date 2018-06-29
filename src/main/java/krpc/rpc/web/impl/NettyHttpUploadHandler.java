@@ -15,23 +15,16 @@ import org.slf4j.LoggerFactory;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.DefaultLastHttpContent;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMessage;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
-import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.LastHttpContent;
-import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import krpc.common.Json;
-import krpc.common.RetCodes;
 import krpc.rpc.web.WebConstants;
 
 public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
@@ -40,7 +33,6 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
 
 	static byte CR = '\r';
 	static byte NL = '\n';
-	static String charset = "utf-8";
 
 	long maxUploadLength = 5000000;
 	String uploadDir;
@@ -67,29 +59,15 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
 		try {
 			needRelease = channelRead0(ctx,msg);
 		} catch(Exception e) {
-			log.error("channelRead exception, exception="+e.getMessage());
+			log.error("upload file read exception, exception="+e.getMessage());
 			closed = true;
-			// sendError(ctx,HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE,RetCodes.HTTP_TOO_LARGE);
 			ctx.close();
 		} finally {
 			if( needRelease ) ReferenceCountUtil.release(msg);
 		}
 		
 	}
-	
-	/*
-    void sendError(ChannelHandlerContext ctx, HttpResponseStatus status,int retCode) {	
-    	ByteBuf bb = ctx.alloc().buffer(32);
-    	String s = String.format(WebConstants.ContentFormat, retCode , RetCodes.retCodeText(retCode));
-    	bb.writeCharSequence(s, CharsetUtil.UTF_8);
-    	int len = bb.readableBytes();
-    	DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, bb);
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/json");
-        response.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, len);
-        ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
-    }	
-    */
-    
+
 	boolean channelRead0(final ChannelHandlerContext ctx, final Object msg) throws Exception {
 
 		if( closed ) return true;
@@ -169,7 +147,6 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
                 lastContent.discardReadBytes();
 
                 if (chunk instanceof LastHttpContent ) {
-
                 	String json = generateJson();
 
                 	ByteBuf bb = ByteBufUtil.writeUtf8(ctx.alloc(), json);
@@ -190,6 +167,7 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
         return false;
     }
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	String generateJson() {
 		
 		// data =[
@@ -220,17 +198,34 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
 				if( p > 0 && p < filename.length() - 1 ) ext = filename.substring(p);
 				Map<String,Object> uploadFile = new HashMap<>();
 				String contentType = map.get("contentType");
+				String name = map.get("name");
 				uploadFile.put("filename", filename);
 				uploadFile.put("contentType", contentType);
 				uploadFile.put("file", file);
 				uploadFile.put("size", len);
 				uploadFile.put("ext", ext);
+				uploadFile.put("name", name);
 				files.add(uploadFile);
 			} else {
 				String name = map.get("name");
 				String value = map.get("value");
-				if( value != null && !value.isEmpty() )
-					results.put(name, value);
+				if( value != null && !value.isEmpty() ) {
+					
+					Object o = results.get(name);
+					if( o == null ) {
+						results.put(name, value);
+					} else {
+						if( o instanceof String ) {
+							List list = new ArrayList();
+							list.add(o);
+							list.add(value);
+							results.put(name, list);
+						}
+						if( o instanceof List ) {
+							((List)o).add(value);
+						}
+					}
+				}
 			}
 		}
 		
@@ -328,7 +323,7 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
                 if (ret.matched) {
                     byte[] bs = new byte[i-p1];
                     lastContent.readBytes(bs);
-                    String v = getString(bs,charset);
+                    String v = getString(bs,WebConstants.DefaultCharSet);
                     lastContent.readerIndex(ret.nextp);
                     return v;
                 } 
@@ -450,7 +445,7 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
             if (b == '\n') {
                 byte[] bs = new byte[i-p1+1];
                 lastContent.getBytes(p1,bs);
-                String line = getString(bs,charset);
+                String line = getString(bs,WebConstants.DefaultCharSet);
                 if (line.endsWith("\r\n\r\n")) {
                     lastContent.readerIndex(i+1);
                     return line;
