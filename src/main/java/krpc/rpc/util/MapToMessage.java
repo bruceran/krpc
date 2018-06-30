@@ -109,7 +109,7 @@ public class MapToMessage {
 					}
 				}				
 				
-				return null; // todo
+				return null;
 
 			case ENUM:
 				EnumDescriptor ed = (EnumDescriptor)field.getEnumType();
@@ -172,7 +172,7 @@ public class MapToMessage {
 	    try {  
 	    	String methodName = "get"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1)+"Builder";
 		    Method method = b.getClass().getDeclaredMethod(methodName,dummyTypes);
-	    	Builder builder = (Builder)method.invoke(b,dummyParameters); // todo cache
+	    	Builder builder = (Builder)method.invoke(b,dummyParameters);
 	        return builder;
 	    } catch(Exception e) {  
 	    	throw new RuntimeException("getFieldBuilder exception",e);
@@ -184,7 +184,7 @@ public class MapToMessage {
 	    try {  
 	    	String methodName = "add"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1)+"Builder";
 		    Method method = b.getClass().getDeclaredMethod(methodName,dummyTypes);
-		    Object builder = (Object)method.invoke(b,dummyParameters); // todo cache
+		    Object builder = (Object)method.invoke(b,dummyParameters);
 	        return (Builder)builder;
 	    } catch(Exception e) {  
 	    	throw new RuntimeException("getFieldBuilder exception",e);

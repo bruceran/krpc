@@ -12,6 +12,7 @@ public class WebUrl {
 	int sessionMode = WebRoute.SESSION_MODE_NO ;
 	WebPlugins plugins;
 	Map<String,String>  attrs;
+	String origins;
 	
 	public WebUrl(String hosts,String path) {
 		this.hosts = hosts;
@@ -88,7 +89,17 @@ public class WebUrl {
 		return attrs;
 	}
 
-	public void setAttrs(Map<String, String> attrs) {
+	public WebUrl setAttrs(Map<String, String> attrs) {
 		this.attrs = attrs;
+		return this;
+	}
+
+	public String getOrigins() {
+		return origins;
+	}
+
+	public WebUrl setOrigins(String origins) {
+		this.origins = origins;
+		return this;
 	}	
 }

@@ -1401,6 +1401,7 @@ public class Bootstrap {
 			prefix = "";
 
 		String defaultMethods = defaultAttrs.getOrDefault("methods", "");
+		String defaultOrigins = defaultAttrs.getOrDefault("origins", "");
 		String defaultServiceId = defaultAttrs.getOrDefault("serviceId", "");
 		String defaultMsgId = defaultAttrs.getOrDefault("msgId", "");
 		if (!isEmpty(defaultMsgId))
@@ -1412,6 +1413,7 @@ public class Bootstrap {
 		defaultAttrs.remove("prefix");
 		defaultAttrs.remove("path");
 		defaultAttrs.remove("methods");
+		defaultAttrs.remove("origins");
 		defaultAttrs.remove("serviceId");
 		defaultAttrs.remove("msgId");
 		defaultAttrs.remove("sessionMode");
@@ -1442,6 +1444,12 @@ public class Bootstrap {
 					methods = "get,post";
 				if (!checkMethod(methods))
 					throw new RuntimeException("mapping methods is not valid, methods=" + methods);
+
+				String origins = attrs.getOrDefault("origins", "");
+				if (isEmpty(origins))
+					origins = defaultOrigins;
+				if (isEmpty(origins))
+					origins = "";
 
 				String serviceIdStr = attrs.getOrDefault("serviceId", "");
 				if (isEmpty(serviceIdStr))
@@ -1476,6 +1484,7 @@ public class Bootstrap {
 				attrs.remove("hosts");
 				attrs.remove("path");
 				attrs.remove("methods");
+				attrs.remove("origins");
 				attrs.remove("serviceId");
 				attrs.remove("msgId");
 				attrs.remove("sessionMode");
@@ -1487,7 +1496,7 @@ public class Bootstrap {
 				
 				WebUrl url = new WebUrl(hosts, path);
 				url.setMethods(methods).setServiceId(serviceId).setMsgId(msgId).setSessionMode(sessionMode)
-						.setPlugins(pluginsList).setAttrs(allAttrs);
+						.setPlugins(pluginsList).setAttrs(allAttrs).setOrigins(origins);
 				rs.addUrl(url);
 			}
 		}
@@ -1507,6 +1516,8 @@ public class Bootstrap {
 		if (!checkMethod(methods))
 			throw new RuntimeException("mapping methods is not valid, methods=" + methods);
 
+		String origins = attrs.getOrDefault("origins", "");
+		
 		String serviceIdStr = attrs.getOrDefault("serviceId", "");
 		if (isEmpty(serviceIdStr))
 			throw new RuntimeException("mapping serviceId can not be empty");
@@ -1533,6 +1544,7 @@ public class Bootstrap {
 		attrs.remove("hosts");
 		attrs.remove("path");
 		attrs.remove("methods");
+		attrs.remove("origins");
 		attrs.remove("serviceId");
 		attrs.remove("msgId");
 		attrs.remove("sessionMode");
@@ -1540,7 +1552,7 @@ public class Bootstrap {
 		
 		WebUrl url = new WebUrl(hosts, path);
 		url.setMethods(methods).setServiceId(serviceId).setMsgId(msgId).setPlugins(pluginList)
-				.setSessionMode(sessionMode).setAttrs(attrs);
+				.setSessionMode(sessionMode).setAttrs(attrs).setOrigins(origins);
 		rs.addUrl(url);
 	}
 

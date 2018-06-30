@@ -14,11 +14,14 @@ public class WebRoute {
 	int msgId;
 	int sessionMode = SESSION_MODE_NO;
 	Map<String,String>  attrs;
-
 	Map<String,String> variables; // parsed from path
-
 	WebPlugins plugins;
+
+	String templateDir;
 	
+	String methods;
+	String origins;
+
 	public WebRoute(int serviceId,int msgId) {
 		this.serviceId = serviceId;
 		this.msgId = msgId;
@@ -121,8 +124,36 @@ public class WebRoute {
 		return attrs;
 	}
 
-	public void setAttrs(Map<String, String> attrs) {
+	public WebRoute setAttrs(Map<String, String> attrs) {
 		this.attrs = attrs;
+		return this;
+	}
+
+	public String getTemplateDir() {
+		return templateDir;
+	}
+
+	public WebRoute setTemplateDir(String templateDir) {
+		this.templateDir = templateDir;
+		return this;
+	}
+
+	public String getMethods() {
+		return methods;
+	}
+
+	public WebRoute setMethods(String methods) {
+		this.methods = methods;
+		return this;
+	}
+
+	public String getOrigins() {
+		return origins;
+	}
+
+	public WebRoute setOrigins(String origins) {
+		this.origins = origins;
+		return this;
 	}
  
 }

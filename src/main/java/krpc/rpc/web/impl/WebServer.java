@@ -8,8 +8,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -77,7 +79,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	int sampleRate = 1;
 	boolean autoTrim = true;
 
-
 	SessionService defaultSessionService;
 
 	ServiceMetas serviceMetas;
@@ -94,7 +95,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	ConcurrentHashMap<String, String> clientConns = new ConcurrentHashMap<String, String>();
 
 	ArrayList<Object> resources = new ArrayList<Object>();
-
+	ConcurrentHashMap<String,Set<String>> cachedOrigins = new ConcurrentHashMap<>();
 		
 	public void init() {
 
@@ -164,23 +165,35 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		return ctx;
 	}
 
+	private void receiveStatic(String connId, DefaultWebReq req) {
+		if (req.getMethod() == HttpMethod.GET || req.getMethod() == HttpMethod.HEAD) {
+			File file = routeService.findStaticFile(req.getHostNoPort(), req.getPath());	
+			if (file != null) {
+					boolean done = routeStaticFile(connId, req, file);
+					if( done ) return;
+			}
+		}
+
+		DefaultWebRes res = generateError(req, RetCodes.HTTP_NOT_FOUND, 404,null);
+		httpTransport.send(connId, res);
+	}
+	
 	public void receive(String connId, DefaultWebReq req) {
 
-		// route
+		if( req.getMethod() == HttpMethod.OPTIONS ) {
+			processCorsPreRequest(connId,req);
+			return;
+		}
+
 		WebRoute r = routeService.findRoute(req.getHostNoPort(), req.getPath(), req.getMethod().toString());
 		if (r == null) {
+			receiveStatic(connId, req);
+			return;
+		}
 
-			if (req.getMethod() == HttpMethod.GET || req.getMethod() == HttpMethod.HEAD) {
-				File file = routeService.findStaticFile(req.getHost(), req.getPath());	
-				if (file != null) {
-						boolean done = routeStaticFile(connId, req, file);
-						if( done ) return;
-				}
-			}
-
-			DefaultWebRes res = generateError(req, RetCodes.HTTP_NOT_FOUND, 404,null);
+		if( !checkCorsRequest(connId,req,r)) {
+			DefaultWebRes res = generateError(req, RetCodes.HTTP_FORBIDDEN, 403,null);
 			httpTransport.send(connId, res);
-
 			return;
 		}
 
@@ -797,6 +810,12 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			}
 		}
 
+		String origin = req.getHeader("origin");
+		if( !isEmpty(origin) ) {
+				res.setHeader("access-control-allow-origin", origin);
+				res.setHeader("access-control-allow-methods", ctx.getRoute().getMethods().toUpperCase());
+		}
+		
 		String sessionId = ctx.getSessionId();
 		if (!hasSessionId(req) && !isEmpty(sessionId)) {
 			if( isEmpty(sessionIdCookiePath) )
@@ -872,7 +891,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		sendErrorResponse(ctx,req,retCode,null);
 	}
 	
-	void sendErrorResponse(WebContextData ctx, DefaultWebReq req, int retCode,String retMsg) {
+	void sendErrorResponse(WebContextData ctx, DefaultWebReq req, int retCode, String retMsg) {
 		DefaultWebRes res = generateError(req, retCode, 200, retMsg);
 		startRender(ctx,req,res);
 	}
@@ -1044,6 +1063,76 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
         return etag.equals(ifNoneMatch);	
 	}
 
+	void processCorsPreRequest(String connId, DefaultWebReq req) {
+
+		String origin = req.getHeader("origin");
+		String requestMethod = req.getHeader("access-control-request-method");
+		String requestHeaders = req.getHeader("access-control-request-headers");
+		WebRoute r = routeService.findRoute(req.getHostNoPort(), req.getPath(), requestMethod);
+		if (r == null) {
+			DefaultWebRes res = generateError(req, RetCodes.HTTP_FORBIDDEN, 403,null);
+			httpTransport.send(connId, res);
+			return;
+		}
+		
+		String origins =	r.getOrigins();
+		if( isEmpty(origins) ) origins = req.getHostNoPort();
+		boolean allowed = checkOrigins(origin,origins);
+		if(!allowed) {
+			DefaultWebRes res = generateError(req, RetCodes.HTTP_FORBIDDEN, 403,null);
+			httpTransport.send(connId, res);
+			return;
+		}
+		
+		DefaultWebRes res = new DefaultWebRes(req, 204);
+		res.setHeader("access-control-allow-origin", origin);
+		res.setHeader("access-control-allow-methods", r.getMethods());		
+		if( !isEmpty(requestHeaders) )
+			res.setHeader("access-control-allow-headers", requestHeaders);		
+		res.setContentType(MIMETYPE_JSON);
+		res.setContent("");		
+		httpTransport.send(connId, res);
+	}
+
+	boolean checkCorsRequest(String connId, DefaultWebReq req,WebRoute r) {
+		String origin = req.getHeader("origin");
+		if( isEmpty(origin)) return true;
+		String origins =	r.getOrigins();
+		if( isEmpty(origins) ) origins = req.getHostNoPort();
+		return checkOrigins(origin,origins);
+	}
+	
+	boolean checkOrigins(String origin,String origins) {
+		if( isEmpty(origins) ) return false;
+		if( origins.equals("*") ) return true;
+		String originHost = parseHost(origin);
+		Set<String> set =  strToSet(origins);
+		return set.contains(originHost);
+	}
+	
+	String parseHost(String s) {
+		int p1 = s.indexOf("://");
+		if( p1 >= 0 ) p1 += 3;
+		else p1 = 0;
+		int p2 = s.indexOf(":",p1);
+		if( p2 >= 0 ) return s.substring(p1, p2);
+		p2 = s.indexOf(":",p1);
+		if( p2 >= 0 ) return s.substring(p1, p2);
+		return s.substring(p1);
+	}	
+
+	Set<String> strToSet(String s) {
+		Set<String> set =  cachedOrigins.get(s);
+		if( set != null ) return set;
+		set = new HashSet<>();
+		String[] ss = s.split(",");
+		for(String ts:ss) {
+			set.add(ts);
+		}
+		cachedOrigins.put(s,set);
+		return set;
+	}
+	
 	String getRemoteAddr(String connId) {
 		int p = connId.lastIndexOf(":");
 		return connId.substring(0, p);

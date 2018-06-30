@@ -107,7 +107,7 @@ public class VelocityWebPlugin implements WebPlugin, RenderPlugin {
 			}
 		}
 
-		String templateDir  = ctx.getRoute().getAttribute("templateDir");
+		String templateDir  = ctx.getRoute().getTemplateDir();
 		if (isEmpty(templateDir)) {
 			renderErrorHtml(res,"template dir not found");
 			return;

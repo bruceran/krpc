@@ -15,12 +15,6 @@ public class WebServerConfig  {
 	int idleSeconds = 30;
 	int maxConns = 500000;
 	int ioThreads = 0;	// auto
-
-	int maxInitialLineLength = 4096;
-	int maxHeaderSize = 8192;
-	int maxChunkSize = 8192;
-	int maxContentLength = 1000000;
-	long maxUploadLength = 5000000;
 	
 	int threads = 0; // workthreads, 0=auto -1=no workthreads,use iothreads n=workthreads
 	int maxThreads = 0;
@@ -33,6 +27,12 @@ public class WebServerConfig  {
 	int expireSeconds = 0;
 	boolean autoTrim = true;
 
+	int maxInitialLineLength = 4096;
+	int maxHeaderSize = 8192;
+	int maxChunkSize = 8192;
+	int maxContentLength = 1000000;
+	long maxUploadLength = 5000000;
+	
 	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
 
 	String defaultSessionService = "memorysessionservice";

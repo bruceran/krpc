@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>    
 <routes>    
 
-    <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" sessionMode="0"  plugins="logOnly"/>  
+    <url hosts="*" path="/user/test1" methods="get,post" origins="localhost88"  serviceId="100" msgId="1" sessionMode="0"  plugins="logOnly"/>  
     <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
 
     <group   prefix="/abc"  methods="get,post" serviceId="100">  

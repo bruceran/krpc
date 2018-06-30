@@ -28,6 +28,7 @@ public class RetCodes {
 	 static public final int VALIDATE_ERROR = -559;
 	 
 	 // http client side
+	 static public final int HTTP_FORBIDDEN = -403;  
 	 static public final int HTTP_NOT_FOUND = -404;  
 	 static public final int HTTP_METHOD_NOT_ALLOWED = -405;  
 	 static public final int HTTP_TOO_LARGE = -413;  
@@ -76,7 +77,7 @@ public class RetCodes {
 		 	case SERVICE_NOT_ALLOWED: return "serviceId is not allowed";
 		 	case VALIDATE_ERROR: return "validate error: ";
 		 	
-		 	
+		 	case HTTP_FORBIDDEN: return "forbidden";
 		 	case HTTP_NOT_FOUND: return "not found";
 		 	case HTTP_TOO_LARGE: return "too large";
 		 	case HTTP_METHOD_NOT_ALLOWED: return "method not allowed";

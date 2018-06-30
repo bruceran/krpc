@@ -613,120 +613,6 @@
     logQueueSize 异步输出日志的固定队列大小，默认为10000
     serverAddr 监控服务地址
     printDefault 是否输出protobuff消息里的默认值, 默认为false
-    
-# webroutes.xml配置				  
-
-	启动webserver需要一个配套的webroutes.xml,  webroutes.xml 必须放在classpath目录下
-	
-	示例：
-	
-      <?xml version="1.0" encoding="utf-8"?>    
-      <routes>    
-      
-          <import file="routes-b.xml"/>  
-
-          <url hosts="*" path="/user/test1" methods="get,post" serviceId="100" msgId="1" 
-               plugins="dummy" sessionMode="0"/>  
-          <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
-          
-          <group   prefix="/abc"  methods="get,post" serviceId="100">  
-            <url path="/test3" msgId="3"/>  
-            <url path="/test4" msgId="4"/>  
-          </group>
-      
-          <dir hosts="*" path="/test1" staticDir="c:\ws\web\static" templateDir="c:\ws\web\template"/>  
-                
-      </routes>
-      
-  * 可通过import导入其它routes文件，这样可以按服务分别存放路由
-  
-  * 每个url标识一个路由映射, 可直接放在routes下，也可放在group下, 通常总是一类消息会共用相同的配置，建议都放在group下 
-
-  * 每个url支持以下属性：
-  
-        hosts 允许的域名，*表示不限制，默认为*; 通用网关支持按不同的域名分开配置
-        path 访问路径,  path中支持变量， 如 /abc/{region}/{userId}, 以支持纯rest风格的开发
-        methods 访问方法，支持get,post,put,delete, 默认为get,post;  
-                      如果body是json格式，默认也会直接做解析，无需额外配置
-        serviceId path对应的服务号
-        msgId path对应的消息号
-        plugins 用来配置插件名，允许多个，用逗号隔开
-        sessionMode 会话模式 
-             0=不需要会话 (默认)
-             1=只需要会话ID 
-             2=有会话则把会话信息传给后端，但不强制登录 
-             3=必须要登录
-
-        每个url里的其它属性也会保存下来，如果自定义插件需要一些扩展属性，也可以从context中获取到这些自定义的属性
-        
-        对插件的引用只能使用名称，不可带参数； 如参数需要参数，需在webserver的pluginParams里申明, 
-        不带参数的插件不要申明，直接引用即可
-        
-  * group用来配置一组url公共的属性，简化url配置
-  
-        group节点不支持配置 path 和 msgId
-        group节点允许配置的节点:
-        
-        hosts 允许的域名，*表示不限制，默认为*
-        prefix 若配置了此值，则所有路径为 prefix + path, 默认为空
-        methods 访问方法，支持get,post,head,put,delete, 默认为get,post; 
-                如果post body是json格式，默认也会直接做解析，无需额外配置
-        serviceId path对应的服务号
-        plugins 用来配置插件名，允许多个，用逗号隔开
-       sessionMode 会话模式 
-             0=不需要会话 (默认)
-             1=只需要会话ID 
-             2=有会话则把会话信息传给后端，但不强制登录 
-             3=必须要登录
-  
-  * 可通过dir定义静态资源目录，上传目录等
-
-# HTTP通用网关参数映射
-    
-      webserver框架会自动将http里的http元信息，header,cookie,session,入参等映射到protobuff请求消息；
-      webserver框架也会自动将protobuff响应消息映射到http里的http元信息,header,cookie,操作session, 输出内容等；
-      通过以上的机制，webserver可以承担一个通用网关的功能，业务开发无需在http层再做开发，只需开发后台服务;
-      webserver提供强大的扩展机制，业务可根据自己的需要开发必要的插件来实现一些特殊功能
-      
-      请求映射规则：
-      
-        按需映射，不关心的参数就不要在protobuffer消息里定义, 关心的参数按名称定义即可
-        
-        常规参数映射，按参数名映射到protobuffer消息里的参数名
-        session 里的信息 -> 按参数名映射到protobuffer消息里的参数名 
-                            (名称冲突则总是session里的优先, 客户端无法覆盖session参数)
-        
-        特殊参数映射，如果有需要，后端服务可以获取到http调用的所有细节, 一般建议不要去获取这些特殊信息
-        
-            session id -> sessionId
-            http method -> httpMethod 值为 get,post,put,delete
-            http schema -> httpSchema 值为 http,https
-            http path -> httpPath 值为 http,https, 不含?后及以后的值
-            http host -> httpHost 值为 header里的host值
-            http query string -> httpQueryString 值为uri后?号以后的值
-            http content-type -> httpContentType header里的content-type值, 去除;号以后的附加参数
-            http content -> httpContent 值为http的content
-            http header -> headerXxx 映射到protobuffer消息里以header开头的参数名, 需做名称转换，
-                                     如 User-Agent，在pb里必须定义为headerUserAgent
-            http cookie -> cookieXxx 映射到protobuffer消息里以cookie开头的参数名, xxx和cookie名严格保持一致，区分大小写
-            
-      响应映射规则：
-        
-        protobuff的消息里如带一些特殊参数，则会先做处理再从响应里删除再转换为json输出
-        
-        httpCode 单值 -> 会转换为实际的http code, 不设置则默认为200
-        httpContentType 单值 -> 会转换为实际的http header里的content-type
-        headerXxx 单值 -> 会转换为http输出的 header     
-        cookieXxx 单值 -> 会转换为http输出的 cookie, cookie可带参数，格式为：值^key=value;key=value;...  
-                  key支持 domain,path,maxAge,httpOnly,secure,wrap    
-        session 不能是单值，必须是消息(Map) -> 
-          如果成功完成登录，后端服务返回的session中应带 loginFlag=1, 以便框架在后续做登录检验；
-          如 session 消息里带 loginFlag = 0 则会删除会话；否则将返回的session信息保存到会话上; 
-          后续收到请求会自动将会话里的信息做登录验证，并把已登录信息转发给后端服务
-          常规情况下后端服务不用去存储会话信息，也不用关心sessionId; 
-          如果有特殊需求，后端也可以根据sessionId做自己的存储策略
-        
-        以上处理完毕后将剩余消息转换成json并输出, 如需控制输出格式或内容，可通过插件进行定制
 
 # RPC调用超时配置
 
@@ -856,169 +742,6 @@
 	      PushReq req pushReqBuilder = PushReq.newBuilder().setClientId("123").setMessage("I like you").build();
 	      ps.push(req); // 完成推送
 
-# 参数验证
-
-	* 框架支持直接在proto文件中定义参数验证规则，简化程序中的程式化代码
-	* 框架只会对请求对象进行参数验证，对结果对象不做验证
-	* 参数验证的编写语法为protobuffer的标准语法, 示例：
-	
-		string s1 = 1  [  (krpc.vld).required = true  ] ;
-		string s2 = 2  [  (krpc.vld).match="date" ] ;	
-		string s3 = 3  [  (krpc.vld).match="a.*c" ] ;			
-		string s4 = 4  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
-		repeated string s5 = 5  [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
-		
-		一个field多个规则的时候protobuffer允许用两种等价形式编写规则：
-		
-		    [  (krpc.vld).arrlen = "1,-", (krpc.vld).values = "111,222" ];
-		    [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
-		
-    * 支持的验证规则
-    	
-    	required 非空字符串, 适用于字符串
-    	match 字符串必须符合某个规则, 适用于字符串和数值，转换为字符串后再匹配
-    			int 必须是java int
-    			long 必须是java long
-    			double 必须是java double
-    			date 必须是 2011-01-01 这种日期格式
-    			timestamp  必须是 2011-01-01 12:12:11 这种时间戳格式
-    			email 必须是电子邮件
-    			其他  则认为是正则表达式
-    	 values 用逗号隔开的多个枚举值, 适用于字符串和数值
-    	 length 字符串长度, 适用于字符串和数值，转换为字符串后获取长度再比较
-    	 	n  n个字符
-    	 	n,m  仅n到m个字符
-    	 	n,-  最少n个字符
-    	 	-,n  最大为n个字符
-    	 nrange 数值范围, 适用于字符串和数值，转换为数值后比较大小
-    	 	n  min,max都为n
-    	 	min,max 范围为min到max
-    	 	min,-  最少min
-    	 	-,max  最大max
-    	 srange 字符串范围, 适用于字符串和数值，转换为字符串后比较大小
-    	 	min,max 字符串范围为min到max
-    	 arrlen 数组长度范围, 仅适用于repeated field
-    	 	n  min,max都为n
-    	 	min,max 范围为min到max
-    	 	min,-  最少min
-    	 	-,max  最大max
-
-	 * 支持的验证规则目前不提供扩展机制
-	 
-# 打点和跟踪
-
-    * krpc支持多种全链路跟踪系统, 可通过application配置参数 traceAdapter 来配置
-
-         配置示例："traceAdapter"="skywalking:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
-         所有打点的信息都可以在全链路跟踪系统里查询到
-
-    * 数据采集
-    
-    	 krpc的rpc框架本身已集成了全链路跟踪所需的各种打点，如果仅仅使用krpc的rpc功能无需配置探针
-    	 只有对业务层或第三方框架（如httpclient, mybatis, hibernate等）才需要配置krpc的javaagent探针
-    	 探针采用的是javasssit字节码技术，只需配置krpcsniffer.cfg文件即可采集数据，对业务层或第三方框架的代码零侵入
-    
-         建议业务层总是通过配置krpc的探针来采集数据， 确实有必要再手工通过代码打点采集数据
-
-    * krpc探针配置
-
-         要使用探针功能，需在启动应用程序的时候增加 
-               java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar   your-main-class
-         如果使用spring boot1/boot2,  则是 
-               java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar  -jar  your-boot-application-jar
-         在 krpc-sniffer-1.0.0.jar 的相同目录下，还必须存在 javassist-3.12.1.GA.jar， 否则探针无法加载
-         探针会自动读取当前目录下的krpcsniffer.cfg配置文件, krpcsniffer.cfg配置文件格式如下：
-         
-         1) log.file 指定日志文件，未指定则为当前目录下的 krpcsniffer.log
-         2) log.level 指定日志级别，未指定则为error (默认)，只支持 error, info两个级别
-         3) 类名#方法名正则表达式=操作类别
-         
-         示例：
-         
-         log.level=info
-         krpc.test.misc.TraceObj#say.*=DB 
-         
-         表示: 对 krpc.test.misc.TraceObj 类的匹配正则表达式(say.*)的方法自动增加探针，记录调用该方法的Span
-         Span的type为DB, span的action为类名+消息名
-
-     * 模型
-    
-       每次start开启一个新的Span并作为当前Span, 后续所有操作都针对该Span，直到stop, 每个span都有时间戳和耗时
-       所有的Span组成一个树状结构
-       可以使用startAsync开启一个新的Span但不作为当前Span
-       
-       每个span上可以增加event, event有时间戳但无耗时信息, 异常也作为event
-       每个span上可以增加tag, tag就是普通的key/value信息
-              
-    * 业务层因只应使用krpc.trace.Trace静态类和krpc.trace.Span接口来进行打点
-    
-    * Trace类 此类都是静态方法，常用方法如下：
-    
-        void start(String type,String action) 可以嵌套，每次start后Span入栈，stop后出栈，后续所有操作都针对栈顶对象 
-        long stop()
-        long stop(boolean ok)
-        long stop(String status)
-        void logEvent(String type,String name)
-        void logEvent(String type,String name,String result,String data)
-        void logException(Throwable c)
-        void logException(String message, Throwable c)
-        void tag(String key,String value)
-        void setRemoteAddr(String addr)
-        
-        Span startAsync(String type,String action)  异步调用，Span不入栈，后续用Span接口对该Span进行操作
-        
-     * Span接口 常用方法   
-     
-        long stop()
-        long stop(boolean ok)
-        long stop(String status)
-        void logEvent(String type,String name)
-        void logEvent(String type,String name,String result,String data)
-        void logException(Throwable c)
-        void logException(String message, Throwable c)
-        void tag(String key,String value)
-        void setRemoteAddr(String addr)
-
-     * start/stop 配对
-     
-       如果start/stop之间可能抛出异常，应该如下:
-       
-       Trace.start(...)
-       try {
-         ...
-       } finally {
-         Trace.stop(...)
-       }
-
-     * type 参数规范 (暂定)
-     
-        DB 访问db
-        REDIS 访问redis
-        HTTP 访问http服务
-     
-     * status 参数规范 (暂定)     
-     
-        SUCCESS 成功
-        ERROR 失败
-      
-     * 线程间Trace上下文传递
-     
-          跨线程Trace上下文如果不做处理，可能会造成调用链混乱，不会影响正常业务逻辑，但会造成全链路跟踪系统里的数据不正确
-          
-          在krpc框架中已经对Trace上下文做了集成处理  
-          
-              所有框架发起的调用，无需再手工设置trace上下文 
-              业务层自己实现的线程, 只要调用过 closure.recoverContext(); Trace上下文就已经设置好了
-              
-          未使用krpc closure的情况 (比如一个后台服务，未使用krpc框架)
-          
-              线程1：调用Trace.currentContext() 获取当前trace上下文, 可以随意传递到其他线程
-              线程2：调用Trace.setCurrentContext(ctx) 恢复trace上下文     
-              
-     * 进程间Trace上下文传递
-     
-         krpc框架已做了处理，业务层代码无需关心
- 
 # 负载均衡策略
 
         负载均衡策略在referer设置
@@ -1272,6 +995,291 @@
           
           示例： misc\samples\boot1
 
+# 参数验证
+
+	* 框架支持直接在proto文件中定义参数验证规则，简化程序中的程式化代码
+	* 框架只会对请求对象进行参数验证，对结果对象不做验证
+	* 参数验证的编写语法为protobuffer的标准语法, 示例：
+	
+		string s1 = 1  [  (krpc.vld).required = true  ] ;
+		string s2 = 2  [  (krpc.vld).match="date" ] ;	
+		string s3 = 3  [  (krpc.vld).match="a.*c" ] ;			
+		string s4 = 4  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
+		repeated string s5 = 5  [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
+		
+		一个field多个规则的时候protobuffer允许用两种等价形式编写规则：
+		
+		    [  (krpc.vld).arrlen = "1,-", (krpc.vld).values = "111,222" ];
+		    [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
+		
+    * 支持的验证规则
+    	
+    	required 非空字符串, 适用于字符串
+    	match 字符串必须符合某个规则, 适用于字符串和数值，转换为字符串后再匹配
+    			int 必须是java int
+    			long 必须是java long
+    			double 必须是java double
+    			date 必须是 2011-01-01 这种日期格式
+    			timestamp  必须是 2011-01-01 12:12:11 这种时间戳格式
+    			email 必须是电子邮件
+    			其他  则认为是正则表达式
+    	 values 用逗号隔开的多个枚举值, 适用于字符串和数值
+    	 length 字符串长度, 适用于字符串和数值，转换为字符串后获取长度再比较
+    	 	n  n个字符
+    	 	n,m  仅n到m个字符
+    	 	n,-  最少n个字符
+    	 	-,n  最大为n个字符
+    	 nrange 数值范围, 适用于字符串和数值，转换为数值后比较大小
+    	 	n  min,max都为n
+    	 	min,max 范围为min到max
+    	 	min,-  最少min
+    	 	-,max  最大max
+    	 srange 字符串范围, 适用于字符串和数值，转换为字符串后比较大小
+    	 	min,max 字符串范围为min到max
+    	 arrlen 数组长度范围, 仅适用于repeated field
+    	 	n  min,max都为n
+    	 	min,max 范围为min到max
+    	 	min,-  最少min
+    	 	-,max  最大max
+
+	 * 支持的验证规则目前不提供扩展机制
+	 
+# 打点和跟踪
+
+    * krpc支持多种全链路跟踪系统, 可通过application配置参数 traceAdapter 来配置
+
+         配置示例："traceAdapter"="skywalking:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
+         所有打点的信息都可以在全链路跟踪系统里查询到
+
+    * 数据采集
+    
+    	 krpc的rpc框架本身已集成了全链路跟踪所需的各种打点，如果仅仅使用krpc的rpc功能无需配置探针
+    	 只有对业务层或第三方框架（如httpclient, mybatis, hibernate等）才需要配置krpc的javaagent探针
+    	 探针采用的是javasssit字节码技术，只需配置krpcsniffer.cfg文件即可采集数据，对业务层或第三方框架的代码零侵入
+    
+         建议业务层总是通过配置krpc的探针来采集数据， 确实有必要再手工通过代码打点采集数据
+
+    * krpc探针配置
+
+         要使用探针功能，需在启动应用程序的时候增加 
+               java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar   your-main-class
+         如果使用spring boot1/boot2,  则是 
+               java -javaagent:/path_to_sniffer_jar/krpc-sniffer-1.0.0.jar  -jar  your-boot-application-jar
+         在 krpc-sniffer-1.0.0.jar 的相同目录下，还必须存在 javassist-3.12.1.GA.jar， 否则探针无法加载
+         探针会自动读取当前目录下的krpcsniffer.cfg配置文件, krpcsniffer.cfg配置文件格式如下：
+         
+         1) log.file 指定日志文件，未指定则为当前目录下的 krpcsniffer.log
+         2) log.level 指定日志级别，未指定则为error (默认)，只支持 error, info两个级别
+         3) 类名#方法名正则表达式=操作类别
+         
+         示例：
+         
+         log.level=info
+         krpc.test.misc.TraceObj#say.*=DB 
+         
+         表示: 对 krpc.test.misc.TraceObj 类的匹配正则表达式(say.*)的方法自动增加探针，记录调用该方法的Span
+         Span的type为DB, span的action为类名+消息名
+
+     * 模型
+    
+       每次start开启一个新的Span并作为当前Span, 后续所有操作都针对该Span，直到stop, 每个span都有时间戳和耗时
+       所有的Span组成一个树状结构
+       可以使用startAsync开启一个新的Span但不作为当前Span
+       
+       每个span上可以增加event, event有时间戳但无耗时信息, 异常也作为event
+       每个span上可以增加tag, tag就是普通的key/value信息
+              
+    * 业务层因只应使用krpc.trace.Trace静态类和krpc.trace.Span接口来进行打点
+    
+    * Trace类 此类都是静态方法，常用方法如下：
+    
+        void start(String type,String action) 可以嵌套，每次start后Span入栈，stop后出栈，后续所有操作都针对栈顶对象 
+        long stop()
+        long stop(boolean ok)
+        long stop(String status)
+        void logEvent(String type,String name)
+        void logEvent(String type,String name,String result,String data)
+        void logException(Throwable c)
+        void logException(String message, Throwable c)
+        void tag(String key,String value)
+        void setRemoteAddr(String addr)
+        
+        Span startAsync(String type,String action)  异步调用，Span不入栈，后续用Span接口对该Span进行操作
+        
+     * Span接口 常用方法   
+     
+        long stop()
+        long stop(boolean ok)
+        long stop(String status)
+        void logEvent(String type,String name)
+        void logEvent(String type,String name,String result,String data)
+        void logException(Throwable c)
+        void logException(String message, Throwable c)
+        void tag(String key,String value)
+        void setRemoteAddr(String addr)
+
+     * start/stop 配对
+     
+       如果start/stop之间可能抛出异常，应该如下:
+       
+       Trace.start(...)
+       try {
+         ...
+       } finally {
+         Trace.stop(...)
+       }
+
+     * type 参数规范 (暂定)
+     
+        DB 访问db
+        REDIS 访问redis
+        HTTP 访问http服务
+     
+     * status 参数规范 (暂定)     
+     
+        SUCCESS 成功
+        ERROR 失败
+      
+     * 线程间Trace上下文传递
+     
+          跨线程Trace上下文如果不做处理，可能会造成调用链混乱，不会影响正常业务逻辑，但会造成全链路跟踪系统里的数据不正确
+          
+          在krpc框架中已经对Trace上下文做了集成处理  
+          
+              所有框架发起的调用，无需再手工设置trace上下文 
+              业务层自己实现的线程, 只要调用过 closure.recoverContext(); Trace上下文就已经设置好了
+              
+          未使用krpc closure的情况 (比如一个后台服务，未使用krpc框架)
+          
+              线程1：调用Trace.currentContext() 获取当前trace上下文, 可以随意传递到其他线程
+              线程2：调用Trace.setCurrentContext(ctx) 恢复trace上下文     
+              
+     * 进程间Trace上下文传递
+     
+         krpc框架已做了处理，业务层代码无需关心
+ 
+# webroutes.xml配置				  
+
+	启动webserver需要一个配套的webroutes.xml,  webroutes.xml 必须放在classpath目录下
+	
+	示例：
+	
+      <?xml version="1.0" encoding="utf-8"?>    
+      <routes>    
+      
+          <import file="routes-b.xml"/>  
+
+          <url hosts="*" path="/user/test1" origins="*" methods="get,post" serviceId="100" msgId="1" 
+               plugins="dummy" sessionMode="0"/>  
+          <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
+          
+          <group   prefix="/abc"  methods="get,post" serviceId="100">  
+            <url path="/test3" msgId="3"/>  
+            <url path="/test4" msgId="4"/>  
+          </group>
+      
+          <dir hosts="*" path="/test1" staticDir="c:\ws\web\static" />  
+          <dir hosts="*" path="/test2" templateDir="c:\ws\web\template"/>  
+                
+      </routes>
+      
+  * 可通过import导入其它routes文件，这样可以按服务分别存放路由
+  
+  * 每个url标识一个路由映射, 可直接放在routes下，也可放在group下, 通常总是一类消息会共用相同的配置，建议都放在group下 
+
+  * 每个url支持以下属性：
+  
+        hosts 允许的域名，*表示不限制，默认为*; 通用网关支持按不同的域名分开配置
+        path 访问路径,  path中支持变量， 如 /abc/{region}/{userId}, 以支持纯rest风格的开发
+        methods 访问方法，支持get,post,put,delete, 默认为get,post;  
+                      如果body是json格式，默认也会直接做解析，无需额外配置
+        origins 允许跨域访问的来源域名, 用逗号隔开的域名，默认为空表示当前域名，可以配置为*表示允许所有域名
+                   不可以带http:// 或 https:// 前缀，不可以带端口
+        serviceId path对应的服务号
+        msgId path对应的消息号
+        plugins 用来配置插件名，允许多个，用逗号隔开
+        sessionMode 会话模式 
+             0=不需要会话 (默认)
+             1=只需要会话ID 
+             2=有会话则把会话信息传给后端，但不强制登录 
+             3=必须要登录
+
+        每个url里的其它属性也会保存下来，如果自定义插件需要一些扩展属性，也可以从context中获取到这些自定义的属性
+        
+        对插件的引用只能使用名称，不可带参数； 如参数需要参数，需在webserver的pluginParams里申明, 
+        不带参数的插件不要申明，直接引用即可
+        
+  * group用来配置一组url公共的属性，简化url配置
+  
+        group节点不支持配置 path 和 msgId
+        group节点允许配置的节点:
+        
+        hosts 允许的域名，*表示不限制，默认为*
+        prefix 若配置了此值，则所有路径为 prefix + path, 默认为空
+        methods 访问方法，支持get,post,head,put,delete, 默认为get,post; 
+                如果post body是json格式，默认也会直接做解析，无需额外配置
+        origins 允许跨域访问的来源域名, 用逗号隔开的域名，默认为空表示当前域名，可以配置为*表示允许所有域名
+                   不可以带http:// 或 https:// 前缀，不可以带端口                
+        serviceId path对应的服务号
+        plugins 用来配置插件名，允许多个，用逗号隔开
+       sessionMode 会话模式 
+             0=不需要会话 (默认)
+             1=只需要会话ID 
+             2=有会话则把会话信息传给后端，但不强制登录 
+             3=必须要登录
+  
+  * 可通过dir定义静态资源目录，上传目录等
+        staticDir 对应的静态目录，支持classpath:前缀的路径
+        templateDir 对应的模板文件目录，支持classpath:前缀的路径
+        相同路径的 staticDir 和 templateDir 可以在一个节点进行配置
+
+# HTTP通用网关参数映射
+    
+      webserver框架会自动将http里的http元信息，header,cookie,session,入参等映射到protobuff请求消息；
+      webserver框架也会自动将protobuff响应消息映射到http里的http元信息,header,cookie,操作session, 输出内容等；
+      通过以上的机制，webserver可以承担一个通用网关的功能，业务开发无需在http层再做开发，只需开发后台服务;
+      webserver提供强大的扩展机制，业务可根据自己的需要开发必要的插件来实现一些特殊功能
+      
+      请求映射规则：
+      
+        按需映射，不关心的参数就不要在protobuffer消息里定义, 关心的参数按名称定义即可
+        
+        常规参数映射，按参数名映射到protobuffer消息里的参数名
+        session 里的信息 -> 按参数名映射到protobuffer消息里的参数名 
+                            (名称冲突则总是session里的优先, 客户端无法覆盖session参数)
+        
+        特殊参数映射，如果有需要，后端服务可以获取到http调用的所有细节, 一般建议不要去获取这些特殊信息
+        
+            session id -> sessionId
+            http method -> httpMethod 值为 get,post,put,delete
+            http schema -> httpSchema 值为 http,https
+            http path -> httpPath 值为 http,https, 不含?后及以后的值
+            http host -> httpHost 值为 header里的host值
+            http query string -> httpQueryString 值为uri后?号以后的值
+            http content-type -> httpContentType header里的content-type值, 去除;号以后的附加参数
+            http content -> httpContent 值为http的content
+            http header -> headerXxx 映射到protobuffer消息里以header开头的参数名, 需做名称转换，
+                                     如 User-Agent，在pb里必须定义为headerUserAgent
+            http cookie -> cookieXxx 映射到protobuffer消息里以cookie开头的参数名, xxx和cookie名严格保持一致，区分大小写
+            
+      响应映射规则：
+        
+        protobuff的消息里如带一些特殊参数，则会先做处理再从响应里删除再转换为json输出
+        
+        httpCode 单值 -> 会转换为实际的http code, 不设置则默认为200
+        httpContentType 单值 -> 会转换为实际的http header里的content-type
+        headerXxx 单值 -> 会转换为http输出的 header     
+        cookieXxx 单值 -> 会转换为http输出的 cookie, cookie可带参数，格式为：值^key=value;key=value;...  
+                  key支持 domain,path,maxAge,httpOnly,secure,wrap    
+        session 不能是单值，必须是消息(Map) -> 
+          如果成功完成登录，后端服务返回的session中应带 loginFlag=1, 以便框架在后续做登录检验；
+          如 session 消息里带 loginFlag = 0 则会删除会话；否则将返回的session信息保存到会话上; 
+          后续收到请求会自动将会话里的信息做登录验证，并把已登录信息转发给后端服务
+          常规情况下后端服务不用去存储会话信息，也不用关心sessionId; 
+          如果有特殊需求，后端也可以根据sessionId做自己的存储策略
+        
+        以上处理完毕后将剩余消息转换成json并输出, 如需控制输出格式或内容，可通过插件进行定制
+
 # Web渲染插件
 	  
 	  框架默认的渲染格式为json, 如需渲染为其它格式，可通过内置的如下插件来配置：
@@ -1383,7 +1391,14 @@
 		和上传相关的配置参数：
     		maxContentLength 最大包长，这个控制的是非文件上传的包大小
     		maxUploadLength 上传时允许最大长度(非精确字节数)，这个控制的是文件上传的大小
-    		
-    		
-    				
+                                        	
+# 跨域访问
+	  
+	  krpc提供两种方式支持跨域访问
+	  
+	  1) cors方式， 通过webroutes.xml中的origins属性配置允许的域名，或者用*表示任意
+	                      cors方式目前不支持Access-Control-Max-Age缓存	       
+	  
+	  2) jsonp方式， 通过webroutes.xml中的plugins属性配置jsonp插件
+
 		 

@@ -3,7 +3,6 @@ package krpc.rpc.web.impl;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -11,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +29,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	
 	static Logger log = LoggerFactory.getLogger(DefaultWebRouteService.class);
 	
-	static class TemplateDirMapping implements Comparable<TemplateDirMapping>  {
+	static class DirInfo implements Comparable<DirInfo>  {
 		String hosts;
 		Set<String> hostSet;
 		String path;
-		String dir;
 		
-		TemplateDirMapping(String hosts,String path,String dir) {
+		String templateDir;
+		
+		DirInfo(String hosts,String path,String templateDir) {
 			this.hosts = hosts;
 			if( !hosts.equals("*") ) {
 				hostSet = new HashSet<String>();
@@ -46,10 +45,10 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 			}
 
 			this.path = path;
-			this.dir = dir;
+			this.templateDir = templateDir;
 		}
 		
-		public int compareTo(TemplateDirMapping other) {
+		public int compareTo(DirInfo other) {
 			return other.path.compareTo(this.path); // reverse order
 		}		
 	}
@@ -93,7 +92,9 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		WebPlugins plugins;
 		Map<String,String>  attrs;
 		
-		ServiceMapping(String hosts,String path,String methods,int serviceId,int msgId,
+		String origins; // * for all
+		
+		ServiceMapping(String hosts,String path,String methods,String origins, int serviceId,int msgId,
 				int sessionMode,WebPlugins plugins,Map<String,String>  attrs) {
 			
 			this.hosts = hosts;
@@ -123,6 +124,8 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 				String[] ss = methods.split(",");
 				for(String s:ss ) methodSet.add(s.toLowerCase());
 			}
+			
+			this.origins = origins;
 			
 			this.serviceId = serviceId;
 			this.msgId = msgId;
@@ -179,12 +182,13 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	
 	private String dataDir = ".";
 	private String jarCacheDir;
+	private String defaultCorsAllowOrigin = "*";
 	
 	private List<WebUrl> urlList = new ArrayList<WebUrl>();
 	private List<WebDir> dirList = new ArrayList<WebDir>();
 	
-	private List<StaticDirMapping> staticDir = new ArrayList<>();
-	private List<TemplateDirMapping> templateDir = new ArrayList<>();
+	private List<StaticDirMapping> staticDirs = new ArrayList<>();
+	private List<DirInfo> dirInfos = new ArrayList<>();
 
 	private Map<String,HostMapping> hostMappings = new HashMap<String,HostMapping>();
 
@@ -209,17 +213,17 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 			if( !isEmpty(wd.getStaticDir())) {
 				String dir = wd.getStaticDir();
 				List<String> dirs = staticDirConvert(dir);
-				staticDir.add( new StaticDirMapping(wd.getHosts(),wd.getPath(),dirs) );
+				staticDirs.add( new StaticDirMapping(wd.getHosts(),wd.getPath(),dirs) );
 			}
 
-			if( !isEmpty(wd.getTemplateDir())) {
+			if( !isEmpty(wd.getTemplateDir())  ) {
 				String dir = wd.getTemplateDir();
-				templateDir.add( new TemplateDirMapping(wd.getHosts(),wd.getPath(),dir) );
+				dirInfos.add( new DirInfo(wd.getHosts(),wd.getPath(),dir) );
 			}
 
 		}
-		Collections.sort(staticDir);
-		Collections.sort(templateDir);
+		Collections.sort(staticDirs);
+		Collections.sort(dirInfos);
 	
 		for(WebUrl url: urlList) {
 			
@@ -230,7 +234,8 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 				throw new RuntimeException("path must be specified");
 			}
 
-			ServiceMapping sm = new ServiceMapping(url.getHosts(),url.getPath(),url.getMethods(),
+			ServiceMapping sm = new ServiceMapping(url.getHosts(),url.getPath(),
+					url.getMethods(),url.getOrigins(),
 					url.getServiceId(),url.getMsgId(),
 					url.getSessionMode(),url.getPlugins(),url.getAttrs());
 			
@@ -297,7 +302,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	}
 
 	public WebRoute findRoute(String host, String path, String method) {
-		return findByHost(host, path, method.toLowerCase());
+		WebRoute r = findByHost(host, path, method.toLowerCase());
+		if( r != null ) {
+			String templateDir = findTemplateDir(host,path);
+			if( !isEmpty(templateDir) ) {
+				r.setTemplateDir(templateDir);
+			}		
+		}
+		return r;
 	}
 
 	private WebRoute findByHost(String host, String path, String method) {
@@ -322,26 +334,9 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 						r.setSessionMode(sm.sessionMode);
 						r.setPlugins(sm.plugins);
 						r.setVariables(variables);
-						
-						// transfer attributes to plugins 
-						
-						Map<String,String>  attrs = null;
-						String templateDir = findTemplateDir(host,path);
-						if( !isEmpty(templateDir) ) {
-							attrs = new HashMap<>();
-							attrs.put("templateDir", templateDir);
-						}
-						
-						if( sm.attrs != null && sm.attrs.size() > 0 ) {
-							if( attrs == null )
-								attrs = sm.attrs;
-							else
-								attrs.putAll(sm.attrs);
-						}
-						
-						if( attrs != null )
-							r.setAttrs(attrs);
-						
+						r.setAttrs(sm.attrs);
+						r.setMethods(sm.methods);
+						r.setOrigins(sm.origins);
 						return r;
 					}
 				}
@@ -363,11 +358,11 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	public File findStaticFile(String host,String path) {
 		path = sanitizePath(path);
 		if( path == null ) return null;
-		for(StaticDirMapping dm: staticDir ) {
+		for(StaticDirMapping dm: staticDirs ) {
 			if( match(dm,host,path) ) {
 				String t = path.substring(dm.path.length());
 				for(String dir: dm.dirs) {
-					String filename = dir + "/" + t ; // todo			
+					String filename = dir + "/" + t ;
 					File f = new File(filename);
 					if( f.exists() ) {
 						if( f.isDirectory()) return null;
@@ -444,9 +439,10 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 	public String findTemplateDir(String host,String path) {
 		path = sanitizePath(path);
 		if( path == null ) return null;
-		for(TemplateDirMapping dm: templateDir ) {
+		for(DirInfo dm: dirInfos ) {
+			if( isEmpty(dm.templateDir) ) continue;
 			if( match(dm,host,path) ) {
-				return dm.dir;
+				return dm.templateDir;
 			}
 		}
 		return null;
@@ -468,7 +464,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 		return path;
 	}
 
-	boolean match(TemplateDirMapping dir,String host,String path) {
+	boolean match(DirInfo dir,String host,String path) {
 		if(dir.hosts.equals("*") || dir.hostSet.contains(host) ) {
 			if( path.startsWith(dir.path)) return true;
 		}
@@ -492,6 +488,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 
 	public void setDataDir(String dataDir) {
 		this.dataDir = dataDir;
+	}
+
+	public String getDefaultCorsAllowOrigin() {
+		return defaultCorsAllowOrigin;
+	}
+
+	public void setDefaultCorsAllowOrigin(String defaultCorsAllowOrigin) {
+		this.defaultCorsAllowOrigin = defaultCorsAllowOrigin;
 	}
 
 }

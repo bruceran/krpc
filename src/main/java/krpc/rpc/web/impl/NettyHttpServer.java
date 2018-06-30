@@ -267,37 +267,42 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 	            sendError(ctx, HttpResponseStatus.BAD_REQUEST,RetCodes.DECODE_REQ_ERROR);
 	            return;
 	        }
-	
-	        /*
-	        if (httpReq.method() == HttpMethod.OPTIONS ) {   // todo cors
-	            sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED,RetCodes.HTTP_METHOD_NOT_ALLOWED);
-	            return;        	
-	        }
-	        */
-	        
-	        if (httpReq.method() != HttpMethod.GET && httpReq.method() != HttpMethod.POST && httpReq.method() != HttpMethod.HEAD
-	        		&& httpReq.method() != HttpMethod.PUT && httpReq.method() != HttpMethod.DELETE ) {
+
+	        if (httpReq.method() != HttpMethod.GET && httpReq.method() != HttpMethod.POST 
+	        		&& httpReq.method() != HttpMethod.PUT && httpReq.method() != HttpMethod.DELETE 
+	        		&& httpReq.method() != HttpMethod.HEAD  && httpReq.method() != HttpMethod.OPTIONS 
+	        		) {
 	            sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED,RetCodes.HTTP_METHOD_NOT_ALLOWED);
 	            return;
 	        }
-	
+        	
+        	if( httpReq.method() == HttpMethod.OPTIONS  ) {
+	        	String origin = httpReq.headers().get(HttpHeaderNames.ORIGIN);
+	        	String requestMethod = httpReq.headers().get(HttpHeaderNames.ACCESS_CONTROL_REQUEST_METHOD);
+	        	if( origin == null || requestMethod == null ) {
+	        		sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED,RetCodes.HTTP_METHOD_NOT_ALLOWED);
+		            return;
+	        	}
+        	}
+        	
 			req = convertReq(httpReq);
+			
+			String connId = getConnId(ctx);
+			
+			if( callback != null ) {
+				try {
+					callback.receive(connId, req);
+				} catch (Exception ex) {
+					ctx.close();
+					log.error("impossible exception, connId=" + connId, ex);
+				}			
+			}
 		} finally {
 			ReferenceCountUtil.release(msg);
 		}
-		
-		String connId = getConnId(ctx);
-		
-		if( callback != null ) {
-			try {
-				callback.receive(connId, req);
-			} catch (Exception ex) {
-				ctx.close();
-				log.error("impossible exception, connId=" + connId, ex);
-			}			
-		}
-	}
 
+	}
+	
     DefaultWebReq convertReq(FullHttpRequest data) {
 		DefaultWebReq req = new DefaultWebReq();
 		
@@ -508,7 +513,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 			}
 		}
 		
-		String filename = data.getStringResult("filename"); // todo
+		String filename = data.getStringResult("filename");
 		
 		res.headers().set(HttpHeaderNames.SERVER, WebConstants.Server);
     	res.headers().set(HttpHeaderNames.DATE, WebUtils.formatDate(new GregorianCalendar().getTime()));
