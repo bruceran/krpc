@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+</appender>
+
+<appender name="ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/krpc/log/root.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/krpc/log/root.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+
+<appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/krpc/log/all.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/krpc/log/all.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+
+<appender name="SERVERLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/krpc/auditlog/server.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/krpc/auditlog/server.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+<appender name="WEBSERVERLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/monitorserver/auditlog/webserver.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/monitorserver/auditlog/webserver.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+<appender name="CLIENTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/monitorserver/auditlog/client.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/monitorserver/auditlog/client.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+<appender name="STATSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/monitorserver/auditlog/stats.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/monitorserver/auditlog/stats.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+
+<logger name="krpc" level="debug" additivity="false"><appender-ref ref="STDOUT" /></logger>
+<logger name="krpc.serverlog" level="info" additivity="false"><appender-ref ref="SERVERLOG" /></logger>
+<logger name="krpc.webserverlog" level="info" additivity="false"><appender-ref ref="WEBSERVERLOG" /></logger>
+<logger name="krpc.clientlog" level="info" additivity="false"><appender-ref ref="CLIENTLOG" /></logger>
+<logger name="krpc.statslog" level="info" additivity="false"><appender-ref ref="STATSLOG" /></logger>
+
+<root level="debug"><appender-ref ref="ROOT" /></root>
+
+</configuration>
+

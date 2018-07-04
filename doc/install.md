@@ -76,6 +76,7 @@
     misc/  杂项
     	sniffer/ krpc的探针代理源码
     	springbootstarter/ spring boot starter, 仅一个pom文件，spring boot 1.x / 2.x  starter通用
+    	monitorserver 每个krpc可以上报数据给服务端，此模块为monitor服务端的框架代码, 暂无实际逻辑
     	protos/  此目录下为krpc框架自己用到的一些protobuff文件以及所有的测试用的protobuff文件  
     	samples/  示例代码目录
     		sample1/ 不使用spring的示例
