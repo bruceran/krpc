@@ -1076,8 +1076,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 		
 		String origins =	r.getOrigins();
-		if( isEmpty(origins) ) origins = req.getHostNoPort();
-		boolean allowed = checkOrigins(origin,origins);
+		boolean allowed = checkOrigins(origin,origins,req.getHostNoPort());
 		if(!allowed) {
 			DefaultWebRes res = generateError(req, RetCodes.HTTP_FORBIDDEN, 403,null);
 			httpTransport.send(connId, res);
@@ -1098,15 +1097,15 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		String origin = req.getHeader("origin");
 		if( isEmpty(origin)) return true;
 		String origins =	r.getOrigins();
-		if( isEmpty(origins) ) origins = req.getHostNoPort();
-		return checkOrigins(origin,origins);
+		return checkOrigins(origin,origins,req.getHostNoPort());
 	}
 	
-	boolean checkOrigins(String origin,String origins) {
-		if( isEmpty(origins) ) return false;
+	boolean checkOrigins(String origin,String origins,String host) {
 		if( origins.equals("*") ) return true;
+		String allowed = host;
+		if( !isEmpty(origins) ) allowed += "," + origins;
 		String originHost = parseHost(origin);
-		Set<String> set =  strToSet(origins);
+		Set<String> set =  strToSet(allowed);
 		return set.contains(originHost);
 	}
 	
@@ -1127,6 +1126,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		set = new HashSet<>();
 		String[] ss = s.split(",");
 		for(String ts:ss) {
+			if( ts.isEmpty() ) continue;
 			set.add(ts);
 		}
 		cachedOrigins.put(s,set);
