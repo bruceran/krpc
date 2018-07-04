@@ -19,6 +19,7 @@ import krpc.rpc.core.Registry;
 import krpc.rpc.monitor.LogFormatter;
 import krpc.rpc.monitor.MonitorPlugin;
 import krpc.rpc.web.WebPlugin;
+import krpc.trace.TraceAdapter;
 
 public class SpringBootstrap {
 	
@@ -69,6 +70,7 @@ public class SpringBootstrap {
 			loadBean(DynamicRoutePlugin.class,beanPlugins);
 			loadBean(MonitorPlugin.class,beanPlugins);
 			loadBean(FallbackPlugin.class,beanPlugins);
+			loadBean(TraceAdapter.class,beanPlugins);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

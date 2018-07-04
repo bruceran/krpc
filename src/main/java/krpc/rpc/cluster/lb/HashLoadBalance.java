@@ -6,11 +6,11 @@ import java.util.Random;
 
 import com.google.protobuf.Message;
 
+import krpc.common.Plugin;
 import krpc.rpc.cluster.Addr;
 import krpc.rpc.cluster.LoadBalance;
 import krpc.rpc.cluster.Weights;
 import krpc.rpc.core.ClientContextData;
-import krpc.rpc.core.Plugin;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.util.MurmurHash;
 

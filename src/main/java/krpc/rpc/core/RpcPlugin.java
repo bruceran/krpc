@@ -2,7 +2,7 @@ package krpc.rpc.core;
 
 import com.google.protobuf.Message;
 
-import krpc.rpc.core.Plugin;
+import krpc.common.Plugin;
 
 public interface RpcPlugin extends Plugin {
 	int preCall(RpcContextData ctx,Message req);

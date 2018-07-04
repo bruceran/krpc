@@ -29,7 +29,7 @@ public class RpcClientTest {
 				.addClient(new ClientConfig().setConnections(1))
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
 				.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
-				//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+				.setTraceAdapter("zipkin:server=127.0.0.1:9411")
 				.setName("usa")
 				.build();
 		

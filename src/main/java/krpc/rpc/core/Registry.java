@@ -1,5 +1,7 @@
 package krpc.rpc.core;
 
+import krpc.common.Plugin;
+
 public interface Registry extends Plugin {
 	
 	int getCheckIntervalSeconds();

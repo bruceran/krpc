@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import krpc.common.InitClose;
 import krpc.common.Json;
+import krpc.common.Plugin;
 import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRoutePlugin;
-import krpc.rpc.core.Plugin;
 
 public class ZooKeeperDynamicRoutePlugin  implements InitClose,DynamicRoutePlugin  {
 

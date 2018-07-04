@@ -1,6 +1,5 @@
 package krpc.trace;
 
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,17 +9,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultTraceAdapter implements TraceAdapter {
 
 	static Logger log = LoggerFactory.getLogger(DefaultTraceAdapter.class);
-	
-	public DefaultTraceAdapter() {
-	}
 
-	public DefaultTraceAdapter(Map<String,String> params) {
-	}
-	
-	public void init() {}
-	
-	public void close() {}
-	
 	public void send(TraceContext ctx, Span span) {
 		// do nothing
 	}

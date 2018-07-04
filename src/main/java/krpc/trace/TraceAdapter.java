@@ -2,9 +2,9 @@ package krpc.trace;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import krpc.common.InitClose;
+import krpc.common.Plugin;
 
-public interface TraceAdapter extends InitClose {
+public interface TraceAdapter extends Plugin {
 
 	public String newTraceId();
 	public String newZeroRpcId(boolean isServer); // start point of rpcId

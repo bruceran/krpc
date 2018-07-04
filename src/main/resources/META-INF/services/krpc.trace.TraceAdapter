@@ -1,0 +1,4 @@
+krpc.trace.DefaultTraceAdapter
+krpc.trace.adapter.ZipkinTraceAdapter
+krpc.trace.adapter.CatTraceAdapter
+krpc.trace.adapter.SkyWalkingTraceAdapter

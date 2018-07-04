@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.protobuf.Message;
 
+import krpc.common.Plugin;
 import krpc.rpc.core.ClientContextData;
-import krpc.rpc.core.Plugin;
 
 public interface LoadBalance extends Plugin {
 	

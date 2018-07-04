@@ -12,8 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import krpc.common.InitClose;
 import krpc.common.Json;
 import krpc.common.NamedThreadFactory;
+import krpc.common.Plugin;
 import krpc.httpclient.DefaultHttpClient;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
@@ -23,7 +25,7 @@ import krpc.trace.Trace;
 import krpc.trace.TraceAdapter;
 import krpc.trace.TraceContext;
 
-public class ZipkinTraceAdapter implements TraceAdapter {
+public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 
 	static Logger log = LoggerFactory.getLogger(ZipkinTraceAdapter.class);
 	
@@ -36,8 +38,9 @@ public class ZipkinTraceAdapter implements TraceAdapter {
 	NamedThreadFactory threadFactory = new NamedThreadFactory("zipkin_report");
 	ThreadPoolExecutor pool;
 
-	public ZipkinTraceAdapter(Map<String,String> params) {
-
+	public void config(String paramsStr) {
+		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
+	
 		postUrl = "http://"+params.get("server")+"/api/v2/spans";
 		
 		String s = params.get("queueSize");

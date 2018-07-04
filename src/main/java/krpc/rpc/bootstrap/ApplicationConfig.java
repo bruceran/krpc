@@ -6,7 +6,7 @@ public class ApplicationConfig  {
 	String name = "unknown";
 	String dataDir = ".";
 	
-	String traceAdapter = "default"; // default, skywalking, zipkin, cat
+	String traceAdapter = "default"; // default, zipkin, cat, skywalking
 	String errorMsgConverter = "file";
 	String fallbackPlugin = "default"; 
 	String dynamicRoutePlugin;  // consul,etcd,zookeeper,jedis,...

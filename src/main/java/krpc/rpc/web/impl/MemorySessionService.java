@@ -7,8 +7,8 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import krpc.common.InitClose;
+import krpc.common.Plugin;
 import krpc.rpc.core.Continue;
-import krpc.rpc.core.Plugin;
 import krpc.rpc.web.SessionService;
 import krpc.rpc.web.WebPlugin;
 

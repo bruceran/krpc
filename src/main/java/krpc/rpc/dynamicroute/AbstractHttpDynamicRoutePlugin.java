@@ -5,8 +5,8 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 import krpc.common.InitClose;
+import krpc.common.Plugin;
 import krpc.httpclient.DefaultHttpClient;
-import krpc.rpc.core.Plugin;
 
 public class AbstractHttpDynamicRoutePlugin implements InitClose {
 

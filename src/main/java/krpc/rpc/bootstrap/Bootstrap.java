@@ -38,6 +38,7 @@ import com.google.protobuf.Descriptors.ServiceDescriptor;
 import com.google.protobuf.UnknownFieldSet.Field;
 
 import krpc.KrpcExt;
+import krpc.common.Plugin;
 import krpc.rpc.cluster.BreakerInfo;
 import krpc.rpc.cluster.DefaultClusterManager;
 import krpc.rpc.cluster.DefaultRouter;
@@ -52,7 +53,6 @@ import krpc.rpc.core.ErrorMsgConverter;
 import krpc.rpc.core.ExecutorManager;
 import krpc.rpc.core.FallbackPlugin;
 import krpc.rpc.core.RpcPlugin;
-import krpc.rpc.core.Plugin;
 import krpc.rpc.core.ProxyGenerator;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.Registry;
@@ -95,12 +95,9 @@ import krpc.rpc.web.impl.DefaultWebRouteService;
 import krpc.rpc.web.impl.DefaultRpcDataConverter;
 import krpc.rpc.web.impl.NettyHttpServer;
 import krpc.rpc.web.impl.WebServer;
-import krpc.trace.DefaultTraceAdapter;
 import krpc.trace.Trace;
 import krpc.trace.TraceAdapter;
-import krpc.trace.adapter.CatTraceAdapter;
-import krpc.trace.adapter.SkyWalkingTraceAdapter;
-import krpc.trace.adapter.ZipkinTraceAdapter;
+
 import krpc.trace.sniffer.Advice;
 import krpc.trace.sniffer.AdviceInstance;
 
@@ -346,23 +343,7 @@ public class Bootstrap {
 	
 	public TraceAdapter newTraceAdapter() {
 		Trace.setAppName(appConfig.name);
-		
-		String type = parseType(appConfig.traceAdapter);
-		String params = parseParams(appConfig.traceAdapter);
-		Map<String,String> paramsMap = Plugin.defaultSplitParams(params);
-		
-		switch( type.toLowerCase() ) {
-			case "zipkin":
-				return new ZipkinTraceAdapter(paramsMap);
-			case "skywalking":
-				return new SkyWalkingTraceAdapter(paramsMap);
-			case "cat":
-				return new CatTraceAdapter(paramsMap);
-			case "default":
-				return new DefaultTraceAdapter(paramsMap);
-			default:
-				throw new RuntimeException("not supported trace adapter");
-		}
+		return getPlugin(TraceAdapter.class,appConfig.traceAdapter);
 	}
 	
 	private void prepare() {
@@ -1248,6 +1229,7 @@ public class Bootstrap {
 			loadSpi(DynamicRoutePlugin.class);
 			loadSpi(MonitorPlugin.class);
 			loadSpi(FallbackPlugin.class);
+			loadSpi(TraceAdapter.class);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

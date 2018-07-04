@@ -5,11 +5,13 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import krpc.common.InitClose;
+import krpc.common.Plugin;
 import krpc.trace.Span;
 import krpc.trace.TraceAdapter;
 import krpc.trace.TraceContext;
 
-public class SkyWalkingTraceAdapter implements TraceAdapter {
+public class SkyWalkingTraceAdapter implements TraceAdapter,InitClose {
 
 	private ThreadLocalRandom t = ThreadLocalRandom.current();
 	
@@ -17,10 +19,11 @@ public class SkyWalkingTraceAdapter implements TraceAdapter {
 	private String applicationInstanceUuid = uuid();
 	private long applicationInstanceId = 0; // got from skywalking server
 	
-	public SkyWalkingTraceAdapter(Map<String,String> params) {
-		// todo
+	public void config(String paramsStr) {
+		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
+	 
 	}
-
+	
 	public void init() {}
 	
 	public void close() {}

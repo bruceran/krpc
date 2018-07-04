@@ -17,8 +17,8 @@ import com.google.protobuf.Message;
 
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
+import krpc.common.Plugin;
 import krpc.common.RetCodes;
-import krpc.rpc.core.Plugin;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.RpcPlugin;
 import krpc.trace.Trace;

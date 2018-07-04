@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import krpc.common.InitClose;
 import krpc.common.Json;
+import krpc.common.Plugin;
 import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRoutePlugin;
-import krpc.rpc.core.Plugin;
 import krpc.rpc.core.Registry;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;

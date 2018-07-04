@@ -1,4 +1,4 @@
-package krpc.rpc.core;
+package krpc.common;
 
 import java.util.HashMap;
 import java.util.Map;

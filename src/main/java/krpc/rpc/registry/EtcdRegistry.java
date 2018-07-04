@@ -10,11 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import krpc.common.Json;
+import krpc.common.Plugin;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
 import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.core.DynamicRoutePlugin;
-import krpc.rpc.core.Plugin;
 
 public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePlugin   {
 

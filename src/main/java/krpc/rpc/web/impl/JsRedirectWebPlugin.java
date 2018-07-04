@@ -3,7 +3,7 @@ package krpc.rpc.web.impl;
 import java.util.Map;
 
 import krpc.common.Json;
-import krpc.rpc.core.Plugin;
+import krpc.common.Plugin;
 import krpc.rpc.web.RenderPlugin;
 import krpc.rpc.web.WebContextData;
 import krpc.rpc.web.WebPlugin;

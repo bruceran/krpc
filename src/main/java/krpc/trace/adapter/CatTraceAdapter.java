@@ -3,14 +3,18 @@ package krpc.trace.adapter;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import krpc.common.InitClose;
+import krpc.common.Plugin;
 import krpc.trace.Span;
 import krpc.trace.TraceAdapter;
 import krpc.trace.TraceContext;
 
 // todo
-public class CatTraceAdapter implements TraceAdapter {
+public class CatTraceAdapter implements TraceAdapter,InitClose {
 
-	public CatTraceAdapter(Map<String,String> params) {
+	public void config(String paramsStr) {
+		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
+	 
 	}
 	
 	public void init() { }

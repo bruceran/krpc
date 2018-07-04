@@ -12,7 +12,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import krpc.rpc.core.Plugin;
+import krpc.common.Plugin;
 import krpc.rpc.web.RenderPlugin;
 import krpc.rpc.web.WebContextData;
 import krpc.rpc.web.WebPlugin;

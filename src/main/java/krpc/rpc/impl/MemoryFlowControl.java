@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.google.protobuf.Message;
 
+import krpc.common.Plugin;
 import krpc.common.RetCodes;
-import krpc.rpc.core.Plugin;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.RpcPlugin;
 

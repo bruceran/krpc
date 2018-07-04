@@ -1,6 +1,6 @@
 package krpc.rpc.web;
 
-import krpc.rpc.core.Plugin;
+import krpc.common.Plugin;
 
 public interface WebPlugin extends Plugin {
 }

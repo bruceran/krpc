@@ -1,6 +1,6 @@
 package krpc.rpc.monitor;
 
-import krpc.rpc.core.Plugin;
+import krpc.common.Plugin;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.web.WebClosure;
 

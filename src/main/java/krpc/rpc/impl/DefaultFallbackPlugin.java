@@ -13,8 +13,8 @@ import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Message.Builder;
 
 import krpc.common.InitClose;
+import krpc.common.Plugin;
 import krpc.rpc.core.FallbackPlugin;
-import krpc.rpc.core.Plugin;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.ServiceMetas;

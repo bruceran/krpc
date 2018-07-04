@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import krpc.rpc.core.Plugin;
+import krpc.common.Plugin;
 import krpc.rpc.core.ReflectionUtils;
 import krpc.rpc.web.DefaultWebReq;
 import krpc.rpc.web.DefaultWebRes;

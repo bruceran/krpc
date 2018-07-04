@@ -13,7 +13,7 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
-import krpc.rpc.core.Plugin;
+import krpc.common.Plugin;
 import krpc.rpc.core.ReflectionUtils;
 
 public class DefaultWebRes implements WebRes {
