@@ -311,20 +311,21 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		String s = UUID.randomUUID().toString();
 	    return s.replaceAll("-", "");		
 	}
-	
-	public String newZeroRpcId(boolean isServer) {
-		if( isServer )
-			return "0:"+nextSpanId();
-		else 
-			return "0:0";
+
+	public String newStartServerRpcId(String traceId) {
+		return "0:"+nextSpanId();
 	}
 	
-	public String newEntryRpcId(String parentRpcId) {
+	public String newServerRpcId(String parentRpcId) {
 		return parentRpcId;
 	}
 	
+	public String newStartChildRpcId(String traceId) {
+		return "0:0";
+	}
+	
 	public String newChildRpcId(String parentRpcId,AtomicInteger subCalls) {
-		int p = parentRpcId.indexOf(":");
+		int p = parentRpcId.indexOf(":");  // got parentSpanId
 		return parentRpcId.substring(p+1)+":"+nextSpanId(); // parentSpanId : spanId
 	}
 	

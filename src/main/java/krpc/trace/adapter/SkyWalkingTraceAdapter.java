@@ -37,12 +37,16 @@ public class SkyWalkingTraceAdapter implements TraceAdapter,InitClose {
 		String part3 = Long.toHexString(t.nextLong());
 		return applicationInstanceId + "." + part2 + "." +  part3; // same as newEntryRpcId but no suffix ':0'
 	}
-	
-	public String newZeroRpcId(boolean isServer) {
+
+	public String newStartServerRpcId(String traceId) {
+		return newTraceId() + ":0";
+	}
+
+	public String newServerRpcId(String parentRpcId) {
 		return newTraceId() + ":0";
 	}
 	
-	public String newEntryRpcId(String parentRpcId) {
+	public String newStartChildRpcId(String traceId) {
 		return newTraceId() + ":0";
 	}
 	

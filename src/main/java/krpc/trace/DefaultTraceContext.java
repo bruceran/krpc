@@ -20,6 +20,10 @@ public class DefaultTraceContext implements TraceContext {
 	long requestTimeMicros = System.currentTimeMillis()*1000;
 	long startMicros = System.nanoTime()/1000;
 
+	private long threadId;
+	private String threadName;
+	private String threadGroupName;
+	
 	AtomicInteger subCalls = new AtomicInteger(); 
 	Deque<Span> spans = new ArrayDeque<Span>();
 	
@@ -31,24 +35,33 @@ public class DefaultTraceContext implements TraceContext {
 			this.traceId = traceId;
 		}
 		if( isEmpty(rpcId) )  {
-			this.rootRpcId = Trace.getAdapter().newZeroRpcId(true); 
+			this.rootRpcId = Trace.getAdapter().newStartServerRpcId(this.traceId); 
 		} else {
 			this.rootRpcId = rpcId;
 		}
 		this.peers = peers;
 		this.apps = apps;
 		this.sampled = sampled;
-		String entryRpcId = Trace.getAdapter().newEntryRpcId(rootRpcId);
+		String entryRpcId = Trace.getAdapter().newServerRpcId(rootRpcId);
 		Span root = new DefaultSpan(this, entryRpcId, type, action, startMicros);
 		spans.addLast(root);
+		initThreadNames();
 	}
 
 	// for client
 	public DefaultTraceContext() {
 		this.traceId = Trace.getAdapter().newTraceId();
-		this.rootRpcId = Trace.getAdapter().newZeroRpcId(false);
+		this.rootRpcId = Trace.getAdapter().newStartChildRpcId(this.traceId);
+		initThreadNames();
 	}
 
+	void initThreadNames() {
+		Thread t = Thread.currentThread();
+		threadId = t.getId();
+		threadName = t.getName();
+		threadGroupName = t.getThreadGroup().getName();
+	}
+	
 	// push the new span to the stack top
 	public void start(String type,String action) {
 		Span tail = spans.peekLast();
@@ -160,6 +173,30 @@ public class DefaultTraceContext implements TraceContext {
 
 	public String getRootRpcId() {
 		return rootRpcId;
+	}
+
+	public long getThreadId() {
+		return threadId;
+	}
+
+	public void setThreadId(long threadId) {
+		this.threadId = threadId;
+	}
+
+	public String getThreadName() {
+		return threadName;
+	}
+
+	public void setThreadName(String threadName) {
+		this.threadName = threadName;
+	}
+
+	public String getThreadGroupName() {
+		return threadGroupName;
+	}
+
+	public void setThreadGroupName(String threadGroupName) {
+		this.threadGroupName = threadGroupName;
 	}
 			
 } 

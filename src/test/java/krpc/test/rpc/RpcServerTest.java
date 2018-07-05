@@ -29,7 +29,8 @@ public class RpcServerTest {
 
 		RpcApp app = new Bootstrap() 
 			.addService(UserService.class,impl) 
-			.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+			//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+			.setTraceAdapter("cat:server=192.168.213.128:8080")
 			.setName("uss")
 			.build();
 		
@@ -62,7 +63,8 @@ class UserServiceImpl implements UserService {
 
 		Trace.start("DB", "queryUser");
 		try { Thread.sleep(100); } catch(Exception e) {}
-		Trace.logEvent("find a user", "hi");
+		Trace.logEvent("QUERY", "FINDUSER");
+		Trace.logEvent("QUERY", "FINDUSER","ERROR","id not found");
 		Trace.tag("secret", "xxx");
 		Trace.stop();
 		
@@ -71,7 +73,9 @@ class UserServiceImpl implements UserService {
 		Trace.setRemoteAddr("10.1.2.198:8909");
 		Trace.tag("userId", "mmm");
 		Trace.tag("userName", "nnn");
-		Trace.stop();
+		Trace.stop(false);
+		
+		Trace.logEvent("QUERY", "GETRATE");
 		
 		log.info("login received, peers="+ctx.getMeta().getPeers());
 		i++;

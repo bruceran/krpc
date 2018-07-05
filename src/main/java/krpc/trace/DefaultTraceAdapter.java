@@ -19,17 +19,18 @@ public class DefaultTraceAdapter implements TraceAdapter {
 	    return s.replaceAll("-", "");		
 	}
 	
-	public String newZeroRpcId(boolean isServer) {
-		if( isServer)
-			return "0.1";
-		else
-			return "0";
+	public String newStartServerRpcId(String traceId) {
+		return "0.1";
 	}
 	
-	public String newEntryRpcId(String parentRpcId) {
+	public String newServerRpcId(String parentRpcId) {
 		return parentRpcId;
 	}
 	
+	public String newStartChildRpcId(String traceId) {
+		return "0";
+	}
+
 	public String newChildRpcId(String parentRpcId,AtomicInteger subCalls) {
 		return parentRpcId+"."+subCalls.incrementAndGet();  // 0.1.1.1
 	}

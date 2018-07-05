@@ -15,4 +15,8 @@ public interface TraceContext {
 	
 	public void stopped(Span span); // a span ended
 	public void serverSpanStopped(String result); // the server span ended
+	
+	public long getThreadId();
+	public String getThreadName();
+	public String getThreadGroupName();
 } 
