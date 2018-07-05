@@ -121,23 +121,33 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	}
 
 	private WebContextData generateCtx(String connId, DefaultWebReq req, WebRoute r) {
+		
 		int sequence = nextSequence();
 		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST)
 				.setServiceId(r.getServiceId()).setMsgId(r.getMsgId()).setSequence(sequence);
 
+		RpcMeta.Trace trace = generateTraceInfo(connId, req, r);
+		
+		RpcMeta meta = builder.setTrace(trace).build();
+		WebContextData ctx = new WebContextData(connId, meta, r, Trace.currentContext() );
+		return ctx;
+	}
+
+	private RpcMeta.Trace generateTraceInfo(String connId, DefaultWebReq req, WebRoute r) {
+		
+		RpcMeta.Trace.Builder traceBuilder = RpcMeta.Trace.newBuilder();
+		
 		String traceId = Trace.getAdapter().newTraceId();
+		String parentSpanId = Trace.getAdapter().newDefaultSpanId(false,traceId);
+		String spanId = Trace.getAdapter().newDefaultSpanId(true,traceId);
 		
 		boolean needSample = ( traceId.hashCode() % sampleRate ) == 0;
 		int sampled = needSample?0:2; // todo 1
-		
-		String action = serviceMetas.getName(r.getServiceId(), r.getMsgId());
-		Trace.startServer(traceId,"","","",sampled,"HTTPSERVER",action);
-		TraceContext tctx = Trace.currentContext();
-		Trace.setRemoteAddr(getRemoteAddr(connId));
-		Span span = tctx.currentSpan();
-		
-		builder.setTraceId(traceId).setRpcId(span.getRpcId()).setSampled(sampled);
 
+		traceBuilder.setTraceId(traceId).setSampleFlag(sampled);
+		traceBuilder.setParentSpanId(parentSpanId);
+		traceBuilder.setSpanId(spanId);
+		
 		String peers = "";
 		String xff = req.getXff();
 		if (!isEmpty(xff)) {
@@ -151,18 +161,21 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			peers = getRemoteAddr(connId);
 		}
 
-		builder.setPeers(peers);
-		builder.setApps("client");
+		traceBuilder.setPeers(peers);
+		traceBuilder.setApps("client");
 		
 		String clientTraceId = getClientTraceId(req);
 		if( !isEmpty(clientTraceId) ) {
-			String attachement = "ct="+clientTraceId;
-			builder.setAttachment(attachement);
+			String tags = "ct="+clientTraceId;
+			traceBuilder.setTags(tags);
 		}
 		
-		RpcMeta meta = builder.build();
-		WebContextData ctx = new WebContextData(connId, meta, r, tctx);
-		return ctx;
+		RpcMeta.Trace trace = traceBuilder.build();
+
+		String action = serviceMetas.getName(r.getServiceId(), r.getMsgId());
+		Trace.startForServer("HTTPSERVER",action,trace);
+		Trace.setRemoteAddr(getRemoteAddr(connId));
+		return trace;
 	}
 
 	private void receiveStatic(String connId, DefaultWebReq req) {

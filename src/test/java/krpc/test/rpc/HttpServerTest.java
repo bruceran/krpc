@@ -40,7 +40,7 @@ public class HttpServerTest {
 			.addWebServer(new WebServerConfig(8890)) 
 			// .addServer(5600) 
 			.addService(UserService.class,impl) 
-			.addService(HttpPluginTestService.class,impl2) 
+			.addService(HttpPluginTestService.class,impl2) 	
 			.build();
 		
 		app.initAndStart();
@@ -132,7 +132,7 @@ class UserServiceImpl2 implements UserService {
 		
 		RpcContextData ctx = ServerContext.get();
 		
-		log.info("login received, peers="+ctx.getMeta().getPeers());
+		log.info("login received, peers="+ctx.getMeta().getTrace().getPeers());
 		i++;
 		return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
 	}

@@ -29,6 +29,7 @@ import krpc.rpc.core.MonitorService;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.RpcContextData;
+import krpc.rpc.core.ServerContextData;
 import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.monitor.proto.ReportRpcStatReq;
@@ -300,7 +301,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	StringBuilder b = new StringBuilder();
     	RpcContextData ctx = closure.getCtx();
     	RpcMeta meta = ctx.getMeta();
-    	
+    	RpcMeta.Trace trace = meta.getTrace();
+    	if( ctx instanceof ServerContextData ) {
+    		trace = ((ServerContextData)ctx).getTraceContext().getTrace();
+    	}
+
     	long responseTime = ctx.getResponseTimeMicros();
     	String timestamp =  logFormat.format( LocalDateTime.ofEpochSecond(responseTime/1000000,(int)((responseTime%1000000)*1000),offset) ); 
     	b.append(timestamp);
@@ -309,9 +314,9 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	b.append(sep);
     	b.append(meta.getSequence());
     	b.append(sep);
-    	b.append(meta.getTraceId());
+    	b.append(trace.getTraceId());
     	b.append(sep);
-    	b.append(meta.getRpcId());
+    	b.append(trace.getSpanId());
     	b.append(sep);
     	b.append(meta.getServiceId());
     	b.append(sep);
@@ -339,7 +344,8 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	StringBuilder b = new StringBuilder();
     	RpcContextData ctx = closure.getCtx();
     	RpcMeta meta = ctx.getMeta();
-
+    	RpcMeta.Trace trace = meta.getTrace(); // from network
+    	
     	long responseTime = ctx.getResponseTimeMicros();
     	String timestamp =  logFormat.format( LocalDateTime.ofEpochSecond(responseTime/1000000,(int)((responseTime%1000000)*1000),offset) ); 
     	b.append(timestamp);
@@ -348,9 +354,9 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	b.append(sep);
     	b.append(meta.getSequence());
     	b.append(sep);
-    	b.append(meta.getTraceId());
+    	b.append(trace.getTraceId());
     	b.append(sep);
-    	b.append(meta.getRpcId());
+    	b.append(trace.getSpanId());
     	b.append(sep);
     	b.append(meta.getServiceId());
     	b.append(sep);

@@ -15,7 +15,9 @@ public interface Span {
 	public void tag(String key,String value);
 	public void setRemoteAddr(String addr);
 
-	public String getRpcId();
+	public String getParentSpanId();
+	public String getSpanId();
+	
 	public String getType();
 	public String getAction();
 	public long getStartMicros();

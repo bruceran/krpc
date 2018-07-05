@@ -7,20 +7,31 @@ option java_multiple_files = true;
 
 message RpcMeta {
 
-    enum Direction { INVALID_DIRECTION = 0 ; REQUEST = 1; RESPONSE = 2; }
+    enum Direction { 
+        INVALID_DIRECTION = 0 ; 
+        REQUEST = 1; 
+        RESPONSE = 2; 
+    }
+    
+    message Trace { 
+        string peers = 1; // ip:port for each hop
+	    string apps = 2; // app names for each hop
+	    string traceId = 3; // traceId
+	    string parentSpanId = 4; // format depends on apm system used
+	    string spanId = 5; // format depends on apm system used
+	    string tags = 6; // key/value pairs for each hop, value should be url encoded
+	    int32 sampleFlag = 7; // flags 0=default(yes) 1=force 2=no
+    }
+
     Direction direction = 1;
     int32 serviceId = 2;
     int32 msgId = 3;
     int32 sequence = 4;
-    int32 retCode = 5;
-    string peers = 6; // ip:port for each hop
-    string apps = 7; // app names for each hop
-    string traceId = 8; // traceId for all hops
-    string rpcId = 9; // format depends on apm system used
-    int32 sampled = 10; // flags 0=default(yes) 1=force 2=no
-    int32 timeout = 11;  // client side timeout in milliseconds
-    string attachment = 12; // attached key/value pairs
-    int32 compress = 13; // compress type, 0=no compress, 1=gzip 2=snappy
+    int32 timeout = 5;  // client side timeout in milliseconds
+    int32 retCode = 6;
+    Trace trace = 7;
+    string attachment = 8; // oob data
+    int32 compress = 9; // compress type, 0=no compress, 1=gzip 2=snappy
 
 /*
     signature fields

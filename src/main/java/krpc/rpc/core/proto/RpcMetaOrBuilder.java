@@ -32,114 +32,38 @@ public interface RpcMetaOrBuilder extends
   int getSequence();
 
   /**
-   * <code>int32 retCode = 5;</code>
-   */
-  int getRetCode();
-
-  /**
-   * <pre>
-   * ip:port for each hop
-   * </pre>
-   *
-   * <code>string peers = 6;</code>
-   */
-  java.lang.String getPeers();
-  /**
-   * <pre>
-   * ip:port for each hop
-   * </pre>
-   *
-   * <code>string peers = 6;</code>
-   */
-  com.google.protobuf.ByteString
-      getPeersBytes();
-
-  /**
-   * <pre>
-   * app names for each hop
-   * </pre>
-   *
-   * <code>string apps = 7;</code>
-   */
-  java.lang.String getApps();
-  /**
-   * <pre>
-   * app names for each hop
-   * </pre>
-   *
-   * <code>string apps = 7;</code>
-   */
-  com.google.protobuf.ByteString
-      getAppsBytes();
-
-  /**
-   * <pre>
-   * traceId for all hops
-   * </pre>
-   *
-   * <code>string traceId = 8;</code>
-   */
-  java.lang.String getTraceId();
-  /**
-   * <pre>
-   * traceId for all hops
-   * </pre>
-   *
-   * <code>string traceId = 8;</code>
-   */
-  com.google.protobuf.ByteString
-      getTraceIdBytes();
-
-  /**
-   * <pre>
-   * format depends on apm system used
-   * </pre>
-   *
-   * <code>string rpcId = 9;</code>
-   */
-  java.lang.String getRpcId();
-  /**
-   * <pre>
-   * format depends on apm system used
-   * </pre>
-   *
-   * <code>string rpcId = 9;</code>
-   */
-  com.google.protobuf.ByteString
-      getRpcIdBytes();
-
-  /**
-   * <pre>
-   * flags 0=default(yes) 1=force 2=no
-   * </pre>
-   *
-   * <code>int32 sampled = 10;</code>
-   */
-  int getSampled();
-
-  /**
    * <pre>
    * client side timeout in milliseconds
    * </pre>
    *
-   * <code>int32 timeout = 11;</code>
+   * <code>int32 timeout = 5;</code>
    */
   int getTimeout();
 
   /**
-   * <pre>
-   * attached key/value pairs
-   * </pre>
-   *
-   * <code>string attachment = 12;</code>
+   * <code>int32 retCode = 6;</code>
+   */
+  int getRetCode();
+
+  /**
+   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+   */
+  boolean hasTrace();
+  /**
+   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+   */
+  krpc.rpc.core.proto.RpcMeta.Trace getTrace();
+  /**
+   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+   */
+  krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder();
+
+  /**
+   * <code>string attachment = 8;</code>
    */
   java.lang.String getAttachment();
   /**
-   * <pre>
-   * attached key/value pairs
-   * </pre>
-   *
-   * <code>string attachment = 12;</code>
+   * <code>string attachment = 8;</code>
    */
   com.google.protobuf.ByteString
       getAttachmentBytes();
@@ -149,7 +73,7 @@ public interface RpcMetaOrBuilder extends
    * compress type, 0=no compress, 1=gzip 2=snappy
    * </pre>
    *
-   * <code>int32 compress = 13;</code>
+   * <code>int32 compress = 9;</code>
    */
   int getCompress();
 }

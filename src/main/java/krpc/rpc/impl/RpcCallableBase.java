@@ -1,7 +1,6 @@
 package krpc.rpc.impl;
 
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -173,45 +172,24 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	@SuppressWarnings("all")
 	private CompletableFuture<Message> callAsyncInner(int serviceId,int msgId,Message req,boolean isAsync)  {
 
-		String action = serviceMetas.getName(serviceId, msgId);
-		Span span = Trace.startAsync("RPCCLIENT", action);
-		TraceContext tctx = Trace.currentContext();
-		String connId = "no_connection:0:0";
-		span.setRemoteAddr(getAddr(connId));
-		
 		RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(serviceId).setMsgId(msgId);
-		builder.setTraceId(tctx.getTraceId());
-		builder.setRpcId(span.getRpcId());
 
-		String clientAttachment = ClientContext.removeAttachment();
-		if( clientAttachment != null)
-			builder.setAttachment(clientAttachment);
-		builder.setApps(Trace.getAppName());
-		
-		ServerContextData svrCtx = ServerContext.get();
-		if( svrCtx != null ) {
-			builder.setPeers(svrCtx.getMeta().getPeers());
-			
-			String apps = svrCtx.getMeta().getApps();
-			if( apps.isEmpty() ) apps = Trace.getAppName();
-			else apps += "," + Trace.getAppName();
-			builder.setApps(apps);
-
-			String attachment = svrCtx.getMeta().getAttachment();
-			if( !isEmpty(clientAttachment) ) {
-				if( attachment.isEmpty() ) attachment = clientAttachment;
-				else attachment += "&" + clientAttachment;
-			}
-			builder.setAttachment(attachment);
-		} 
-		
 		int timeout = ClientContext.removeTimeout();
 		if( timeout > 0 )
 			builder.setTimeout(timeout);
 		else 
 			builder.setTimeout(getTimeout(serviceId, msgId));
 		
-		RpcMeta meta = builder.build();
+		String clientAttachment = ClientContext.removeAttachment();
+		if( clientAttachment != null)
+			builder.setAttachment(clientAttachment);
+
+		String action = serviceMetas.getName(serviceId, msgId);
+		Span span = Trace.startAsync("RPCCLIENT", action);
+		TraceContext tctx = Trace.currentContext();
+		RpcMeta.Trace trace  = generateTraceInfo(tctx,span); 
+
+		RpcMeta meta = builder.setTrace(trace).build();
 		ClientContextData ctx = new ClientContextData("no_connection:0:0",meta, tctx, span);
 		CompletableFuture<Message> future = futureFactory.newFuture(meta.getServiceId(),meta.getMsgId(),isAsync,ctx.getTraceContext());
 		ctx.setFuture(future);
@@ -223,7 +201,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			return future;		
 		}
 
-		connId = nextConnId(ctx,req); // may be null
+		String connId = nextConnId(ctx,req); // may be null
 		if( connId == null ) { // no connection, no need to retry
 			
 			if( fallbackPlugin != null ) {
@@ -258,6 +236,39 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		
 		sendCall(closure,true);
 		return future;
+	}
+	
+	private RpcMeta.Trace generateTraceInfo(TraceContext tctx,Span span) {
+		String connId = "no_connection:0:0";
+		span.setRemoteAddr(getAddr(connId));
+				
+		RpcMeta.Trace.Builder traceBuilder = RpcMeta.Trace.newBuilder();
+		traceBuilder.setTraceId(tctx.getTraceId());
+		traceBuilder.setParentSpanId(span.getParentSpanId());
+		traceBuilder.setSpanId(span.getSpanId());
+		traceBuilder.setApps(Trace.getAppName());
+		String clientTraceTags = ClientContext.removeTraceTags();
+		if( clientTraceTags != null)
+			traceBuilder.setTags(clientTraceTags);
+		
+		ServerContextData svrCtx = ServerContext.get();
+		if( svrCtx != null ) {
+			traceBuilder.setPeers(svrCtx.getMeta().getTrace().getPeers());
+			traceBuilder.setSampleFlag(svrCtx.getMeta().getTrace().getSampleFlag());
+			
+			String apps = svrCtx.getMeta().getTrace().getApps();
+			if( apps.isEmpty() ) apps = Trace.getAppName();
+			else apps += "," + Trace.getAppName();
+			traceBuilder.setApps(apps);
+
+			String tags = svrCtx.getMeta().getTrace().getTags();
+			if( !isEmpty(clientTraceTags) ) {
+				if( tags.isEmpty() ) tags = clientTraceTags;
+				else tags += "&" + clientTraceTags;
+			}
+			traceBuilder.setTags(tags);
+		}
+		return traceBuilder.build();
 	}
 
 	void sendCall(RpcClosure closure,boolean allowRetry) {
@@ -364,8 +375,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
 			RpcMeta meta = data.getMeta();
 			String action = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
-			Trace.startServer(meta.getTraceId(), meta.getRpcId(),meta.getPeers(),meta.getApps(),meta.getSampled(), "RPCSERVER", action);
-			addAttachementToTrace(meta.getAttachment());
+			Trace.startForServer("RPCSERVER", action,meta.getTrace());
 			Trace.setRemoteAddr(getAddr(connId));
 			ServerContextData ctx = new ServerContextData(connId,data.getMeta(),Trace.currentContext());
 			ServerContext.set(ctx);
@@ -561,21 +571,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		
 		if( monitorService == null ) return;
 		monitorService.reqDone(closure);
-	}
-	
-	void addAttachementToTrace(String attachement) {
-		if( isEmpty(attachement) ) return;
-		try {
-			String[] ss = attachement.split("&");
-			for(String s: ss) {
-				String[] tt = s.split("=");
-				String key = tt[0];
-				String value = URLDecoder.decode(tt[1],"utf-8");
-				Trace.tag(key, value);
-			}
-		} catch(Exception e) {
-			log.error("decode attachement exception, attachement="+attachement);
-		}
 	}
 	
 	int getTimeout(int serviceId,int msgId) {

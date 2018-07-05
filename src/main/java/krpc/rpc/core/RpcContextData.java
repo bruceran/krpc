@@ -40,7 +40,7 @@ abstract public class RpcContextData {
 	}
 	
 	public String getClientIp() {
-		String peers = meta.getPeers();
+		String peers = meta.getTrace().getPeers();
 		if( peers.isEmpty() ) return getClientIp();
 		return peers.split(",")[0];
 	}

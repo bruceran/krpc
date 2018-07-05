@@ -52,7 +52,7 @@ class UserServiceImpl implements UserService {
 	public LoginRes login(LoginReq req) {
 		
 		RpcContextData ctx = ServerContext.get();
-		log.info("login received, peers="+ctx.getMeta().getPeers());
+		log.info("login received, peers="+ctx.getMeta().getTrace().getPeers());
 		return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req ").build();
 	}
 	

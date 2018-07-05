@@ -250,11 +250,9 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		ZipkinSpan zs = new ZipkinSpan();
 		zs.traceId = ctx.getTraceId();
 		zs.name = span.getAction();
-		String rpcId = span.getRpcId();
-		int p = rpcId.indexOf(":");
-		zs.parentId = rpcId.substring(0, p);
+		zs.parentId = span.getParentSpanId();
 		if( zs.parentId.equals("0") ) zs.parentId = "";
-		zs.id = rpcId.substring(p+1);
+		zs.id = span.getSpanId();
 		zs.kind = span.getType().equals("RPCSERVER") || span.getType().equals("HTTPSERVER") ?"SERVER":"CLIENT";
 		zs.timestamp = ctx.getRequestTimeMicros() + ( span.getStartMicros() - ctx.getStartMicros() );
 		zs.duration = span.getTimeUsedMicros();
@@ -282,7 +280,7 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 
 		String remoteAddr = span.getRemoteAddr();
 		if( remoteAddr != null ) {
-			p = remoteAddr.lastIndexOf(":");
+			int p = remoteAddr.lastIndexOf(":");
 			String s = remoteAddr.substring(0, p);
 			if( s.indexOf(":") > 0 )
 				rep.ipv4 = s;
@@ -312,21 +310,16 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 	    return s.replaceAll("-", "");		
 	}
 
-	public String newStartServerRpcId(String traceId) {
-		return "0:"+nextSpanId();
+	public String newDefaultSpanId(boolean isServer,String traceId) {
+		if( isServer ) return nextSpanId();
+		else return "0";
 	}
 	
-	public String newServerRpcId(String parentRpcId) {
-		return parentRpcId;
+	public void convertRpcSpanIds(String traceId,SpanIds ids) {	
 	}
-	
-	public String newStartChildRpcId(String traceId) {
-		return "0:0";
-	}
-	
-	public String newChildRpcId(String parentRpcId,AtomicInteger subCalls) {
-		int p = parentRpcId.indexOf(":");  // got parentSpanId
-		return parentRpcId.substring(p+1)+":"+nextSpanId(); // parentSpanId : spanId
+
+	public String newChildSpanId(String parentSpanId,AtomicInteger subCalls) {
+		return nextSpanId();
 	}
 	
 	private String nextSpanId() {

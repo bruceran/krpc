@@ -199,7 +199,7 @@ public abstract class TransportBase extends ChannelDuplexHandler {
 		if( monitorService == null ) return;
 
 		String action = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
-		Trace.startServer(meta.getTraceId(), meta.getRpcId(),meta.getPeers(),meta.getApps(),meta.getSampled(), "RPCSERVER", action);
+		Trace.startForServer("RPCSERVER", action, meta.getTrace());
 		RpcContextData rpcCtx = new ServerContextData(connId,meta,Trace.currentContext());
 		 
 		Message res = serviceMetas.generateRes(meta.getServiceId(),meta.getMsgId(),retCode);

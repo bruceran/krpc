@@ -38,21 +38,18 @@ public class SkyWalkingTraceAdapter implements TraceAdapter,InitClose {
 		return applicationInstanceId + "." + part2 + "." +  part3; // same as newEntryRpcId but no suffix ':0'
 	}
 
-	public String newStartServerRpcId(String traceId) {
+	public String newDefaultSpanId(boolean isServer,String traceId) {
 		return newTraceId() + ":0";
+	}
+	
+	public void convertRpcSpanIds(String traceId,SpanIds ids) {	
+		ids.parentSpanId = newTraceId() + ":0";
+		ids.spanId = newTraceId() + ":0";
 	}
 
-	public String newServerRpcId(String parentRpcId) {
-		return newTraceId() + ":0";
-	}
-	
-	public String newStartChildRpcId(String traceId) {
-		return newTraceId() + ":0";
-	}
-	
-	public String newChildRpcId(String parentRpcId,AtomicInteger subCalls) {
-		int p = parentRpcId.indexOf(":");
-		return parentRpcId.substring(0,p)+":"+subCalls.incrementAndGet(); // just increment span number
+	public String newChildSpanId(String parentSpanId,AtomicInteger subCalls) {
+		int p = parentSpanId.indexOf(":");
+		return parentSpanId.substring(0,p)+":"+subCalls.incrementAndGet(); // just increment span number		
 	}
 	
 	String uuid() {

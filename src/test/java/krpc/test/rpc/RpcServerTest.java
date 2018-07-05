@@ -30,7 +30,7 @@ public class RpcServerTest {
 		RpcApp app = new Bootstrap() 
 			.addService(UserService.class,impl) 
 			//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
-			.setTraceAdapter("cat:server=192.168.213.128:8080")
+			//.setTraceAdapter("cat:server=192.168.213.128:8080")
 			.setName("uss")
 			.build();
 		
@@ -77,7 +77,7 @@ class UserServiceImpl implements UserService {
 		
 		Trace.logEvent("QUERY", "GETRATE");
 		
-		log.info("login received, peers="+ctx.getMeta().getPeers());
+		log.info("login received, peers="+ctx.getMeta().getTrace().getPeers());
 		i++;
 		return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
 	}

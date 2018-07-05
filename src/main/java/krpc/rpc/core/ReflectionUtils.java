@@ -48,7 +48,7 @@ public class ReflectionUtils {
 	
 	public static void init() {
 		try {
-			metaPeersField = RpcMeta.class.getDeclaredField("peers_");
+			metaPeersField = RpcMeta.Trace.class.getDeclaredField("peers_");
 			metaPeersField.setAccessible(true);
 			metaCompressField = RpcMeta.class.getDeclaredField("compress_");
 			metaCompressField.setAccessible(true);
@@ -220,9 +220,9 @@ public class ReflectionUtils {
 		try {  
 			int p = connId.lastIndexOf(":");
 			String addr = connId.substring(0,p);
-			String peers = meta.getPeers();
+			String peers = meta.getTrace().getPeers();
 			String newPeers = peers.isEmpty() ? addr : peers+","+addr;
-			metaPeersField.set(meta,newPeers);
+			metaPeersField.set(meta.getTrace(),newPeers);
         } catch(Exception e) {  
         	log.error("adjustPeers exception");
         }   			

@@ -5,15 +5,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 import krpc.common.Plugin;
 
 public interface TraceAdapter extends Plugin {
-
-	public String newTraceId();
 	
-	public String newStartServerRpcId(String traceId);
-	public String newServerRpcId(String parentRpcId);
-
-	public String newStartChildRpcId(String traceId);
-	public String newChildRpcId(String parentRpcId,AtomicInteger subCalls);
+	static public class SpanIds {
+		public String parentSpanId;
+		public String spanId;
+		SpanIds(String parentSpanId,String spanId) {
+			this.parentSpanId = parentSpanId;
+			this.spanId = spanId;
+		}
+	}
+	
+	public String newTraceId();
+	public String newDefaultSpanId(boolean isServer,String traceId);
+	public String newChildSpanId(String parentSpanId,AtomicInteger subCalls);
+	public void convertRpcSpanIds(String traceId,SpanIds ids);
 	
 	public void send(TraceContext ctx, Span span);
 	
+
 } 

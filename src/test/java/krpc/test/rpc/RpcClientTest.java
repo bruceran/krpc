@@ -29,8 +29,8 @@ public class RpcClientTest {
 				.addClient(new ClientConfig().setConnections(1))
 				.addReferer("us",UserService.class,"127.0.0.1:5600") 
 				.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
-				//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
-				.setTraceAdapter("cat:server=192.168.213.128:8080")
+				.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+				//.setTraceAdapter("cat:server=192.168.213.128:8080")
 				.setName("usa")
 				.build();
 		
@@ -46,7 +46,7 @@ public class RpcClientTest {
 		LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
 		LoginRes res = us.login(req);
 		log.info("res="+res.getRetCode()+","+res.getRetMsg());
-/*
+
 		//Thread.sleep(2000);
 		
 		UpdateProfileReq ureq = UpdateProfileReq.newBuilder().build();
@@ -55,7 +55,7 @@ public class RpcClientTest {
 		log.info("res="+ures.getRetCode()+","+ures.getRetMsg());
 
 		//Thread.sleep(2000);
-		
+		/*
 		CompletableFuture<LoginRes> f = usa.login(req);  // call async
 		LoginRes resa = f.get();
 		log.info("resa="+resa.getRetCode()+","+resa.getRetMsg());

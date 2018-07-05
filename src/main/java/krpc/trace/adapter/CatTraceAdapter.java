@@ -230,14 +230,12 @@ System.out.println(data);
 		b.append(ctx.getThreadId()).append(TAB);
 		b.append(ctx.getThreadName()).append(TAB);
 		
-		
-		
-		String rpcId = span.getRpcId();
-		String[] spanIds = rpcId.split(":");
-		String parentSpanId = spanIds[0];
-		String spanId = spanIds[1];
+		String parentSpanId = span.getParentSpanId();
+		String spanId = span.getSpanId();
 		
 		b.append(spanId).append(TAB); // message id
+		
+		// todo according span type, hide parent or root message id
 		
 		if( !parentSpanId.equals("0") ) {
 			b.append(parentSpanId).append(TAB); // parent message id
@@ -370,23 +368,19 @@ System.out.println(data);
 	public String newTraceId() {
 		return nextSpanId();
 	}
-	
-	public String newStartServerRpcId(String traceId) {
-		return "0:"+traceId;
-	}
-	
-	public String newServerRpcId(String parentRpcId) {
-		int p = parentRpcId.indexOf(":"); // got parentSpanId
-		return parentRpcId.substring(p+1)+":"+nextSpanId(); // parentSpanId : spanId
-	}
 
-	public String newStartChildRpcId(String traceId) {
-		return "0:"+traceId;
+	public String newDefaultSpanId(boolean isServer,String traceId) {
+		return traceId;
 	}
 	
-	public String newChildRpcId(String parentRpcId,AtomicInteger subCalls) {
-		int p = parentRpcId.indexOf(":"); // got parentSpanId
-		return parentRpcId.substring(p+1)+":"+nextSpanId(); // parentSpanId : spanId
+	public void convertRpcSpanIds(String traceId,SpanIds ids) {	
+		if( ids.spanId.equals(traceId) ) return; // for web server
+		ids.parentSpanId = ids.spanId;
+		ids.spanId = nextSpanId();
+	}
+	
+	public String newChildSpanId(String parentSpanId,AtomicInteger subCalls) {
+		return nextSpanId();
 	}
 	
 	boolean isEmpty(String s) {

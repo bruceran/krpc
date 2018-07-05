@@ -11,7 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DefaultSpan implements Span {
 
 	private TraceContext ctx;
-	private String rpcId;
+	private String parentSpanId;
+	private String spanId;
 	private String type;
 	private String action;
 	long startMicros;
@@ -25,9 +26,10 @@ public class DefaultSpan implements Span {
 	
 	AtomicInteger completed = new AtomicInteger(0); // 0=pending 1=stopped
 	
-	DefaultSpan(TraceContext ctx, String rpcId, String type,String action,long startMicros) {
+	DefaultSpan(TraceContext ctx, String parentSpanId, String spanId, String type,String action,long startMicros) {
 		this.ctx = ctx;
-		this.rpcId = rpcId;
+		this.parentSpanId = parentSpanId;
+		this.spanId = spanId;
 		this.type = type;
 		this.action = action;
 		if( startMicros <= 0 ) this.startMicros = System.nanoTime()/1000;
@@ -36,8 +38,8 @@ public class DefaultSpan implements Span {
 	
 	public Span newChild(String type,String action) {
 		if( subCalls == null ) subCalls = new AtomicInteger();
-		String childRpcId = Trace.getAdapter().newChildRpcId(rpcId,subCalls);
-		Span child = new DefaultSpan(ctx, childRpcId, type, action,-1);
+		String childSpanId = Trace.getAdapter().newChildSpanId(spanId,subCalls);
+		Span child = new DefaultSpan(ctx, spanId, childSpanId, type, action,-1);
 		if( children == null ) children = new ArrayList<>();
 		children.add(child);		
 		return child;
@@ -45,7 +47,8 @@ public class DefaultSpan implements Span {
 
 	public String toString() {
 		StringBuilder b = new StringBuilder();
-		b.append("rpcId=").append(rpcId).append(",");
+		b.append("parentSpanId=").append(parentSpanId).append(",");
+		b.append("spanId=").append(spanId).append(",");
 		b.append("type=").append(type).append(",");
 		b.append("action=").append(action).append(",");
 		b.append("startMicros=").append(startMicros).append(",");
@@ -117,10 +120,6 @@ public class DefaultSpan implements Span {
 		return completed;
 	}
 
-	public String getRpcId() {
-		return rpcId;
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -156,4 +155,13 @@ public class DefaultSpan implements Span {
 	public String getRemoteAddr() {
 		return remoteAddr;
 	}
+
+	public String getParentSpanId() {
+		return parentSpanId;
+	}
+ 
+	public String getSpanId() {
+		return spanId;
+	}
+ 
 }

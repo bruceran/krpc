@@ -20,13 +20,8 @@ private static final long serialVersionUID = 0L;
     serviceId_ = 0;
     msgId_ = 0;
     sequence_ = 0;
-    retCode_ = 0;
-    peers_ = "";
-    apps_ = "";
-    traceId_ = "";
-    rpcId_ = "";
-    sampled_ = 0;
     timeout_ = 0;
+    retCode_ = 0;
     attachment_ = "";
     compress_ = 0;
   }
@@ -78,50 +73,34 @@ private static final long serialVersionUID = 0L;
           }
           case 40: {
 
+            timeout_ = input.readInt32();
+            break;
+          }
+          case 48: {
+
             retCode_ = input.readInt32();
             break;
           }
-          case 50: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            peers_ = s;
-            break;
-          }
           case 58: {
-            java.lang.String s = input.readStringRequireUtf8();
+            krpc.rpc.core.proto.RpcMeta.Trace.Builder subBuilder = null;
+            if (trace_ != null) {
+              subBuilder = trace_.toBuilder();
+            }
+            trace_ = input.readMessage(krpc.rpc.core.proto.RpcMeta.Trace.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(trace_);
+              trace_ = subBuilder.buildPartial();
+            }
 
-            apps_ = s;
             break;
           }
           case 66: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            traceId_ = s;
-            break;
-          }
-          case 74: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            rpcId_ = s;
-            break;
-          }
-          case 80: {
-
-            sampled_ = input.readInt32();
-            break;
-          }
-          case 88: {
-
-            timeout_ = input.readInt32();
-            break;
-          }
-          case 98: {
-            java.lang.String s = input.readStringRequireUtf8();
-
             attachment_ = s;
             break;
           }
-          case 104: {
+          case 72: {
 
             compress_ = input.readInt32();
             break;
@@ -265,6 +244,1528 @@ private static final long serialVersionUID = 0L;
     // @@protoc_insertion_point(enum_scope:krpc.rpc.core.proto.RpcMeta.Direction)
   }
 
+  public interface TraceOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:krpc.rpc.core.proto.RpcMeta.Trace)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * ip:port for each hop
+     * </pre>
+     *
+     * <code>string peers = 1;</code>
+     */
+    java.lang.String getPeers();
+    /**
+     * <pre>
+     * ip:port for each hop
+     * </pre>
+     *
+     * <code>string peers = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getPeersBytes();
+
+    /**
+     * <pre>
+     * app names for each hop
+     * </pre>
+     *
+     * <code>string apps = 2;</code>
+     */
+    java.lang.String getApps();
+    /**
+     * <pre>
+     * app names for each hop
+     * </pre>
+     *
+     * <code>string apps = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAppsBytes();
+
+    /**
+     * <pre>
+     * traceId
+     * </pre>
+     *
+     * <code>string traceId = 3;</code>
+     */
+    java.lang.String getTraceId();
+    /**
+     * <pre>
+     * traceId
+     * </pre>
+     *
+     * <code>string traceId = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getTraceIdBytes();
+
+    /**
+     * <pre>
+     * format depends on apm system used
+     * </pre>
+     *
+     * <code>string parentSpanId = 4;</code>
+     */
+    java.lang.String getParentSpanId();
+    /**
+     * <pre>
+     * format depends on apm system used
+     * </pre>
+     *
+     * <code>string parentSpanId = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getParentSpanIdBytes();
+
+    /**
+     * <pre>
+     * format depends on apm system used
+     * </pre>
+     *
+     * <code>string spanId = 5;</code>
+     */
+    java.lang.String getSpanId();
+    /**
+     * <pre>
+     * format depends on apm system used
+     * </pre>
+     *
+     * <code>string spanId = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getSpanIdBytes();
+
+    /**
+     * <pre>
+     * key/value pairs for each hop, value should be url encoded
+     * </pre>
+     *
+     * <code>string tags = 6;</code>
+     */
+    java.lang.String getTags();
+    /**
+     * <pre>
+     * key/value pairs for each hop, value should be url encoded
+     * </pre>
+     *
+     * <code>string tags = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getTagsBytes();
+
+    /**
+     * <pre>
+     * flags 0=default(yes) 1=force 2=no
+     * </pre>
+     *
+     * <code>int32 sampleFlag = 7;</code>
+     */
+    int getSampleFlag();
+  }
+  /**
+   * Protobuf type {@code krpc.rpc.core.proto.RpcMeta.Trace}
+   */
+  public  static final class Trace extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:krpc.rpc.core.proto.RpcMeta.Trace)
+      TraceOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Trace.newBuilder() to construct.
+    private Trace(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Trace() {
+      peers_ = "";
+      apps_ = "";
+      traceId_ = "";
+      parentSpanId_ = "";
+      spanId_ = "";
+      tags_ = "";
+      sampleFlag_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Trace(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              peers_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              apps_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              traceId_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              parentSpanId_ = s;
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              spanId_ = s;
+              break;
+            }
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              tags_ = s;
+              break;
+            }
+            case 56: {
+
+              sampleFlag_ = input.readInt32();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              krpc.rpc.core.proto.RpcMeta.Trace.class, krpc.rpc.core.proto.RpcMeta.Trace.Builder.class);
+    }
+
+    public static final int PEERS_FIELD_NUMBER = 1;
+    private volatile java.lang.Object peers_;
+    /**
+     * <pre>
+     * ip:port for each hop
+     * </pre>
+     *
+     * <code>string peers = 1;</code>
+     */
+    public java.lang.String getPeers() {
+      java.lang.Object ref = peers_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        peers_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * ip:port for each hop
+     * </pre>
+     *
+     * <code>string peers = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPeersBytes() {
+      java.lang.Object ref = peers_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        peers_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int APPS_FIELD_NUMBER = 2;
+    private volatile java.lang.Object apps_;
+    /**
+     * <pre>
+     * app names for each hop
+     * </pre>
+     *
+     * <code>string apps = 2;</code>
+     */
+    public java.lang.String getApps() {
+      java.lang.Object ref = apps_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        apps_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * app names for each hop
+     * </pre>
+     *
+     * <code>string apps = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAppsBytes() {
+      java.lang.Object ref = apps_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        apps_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TRACEID_FIELD_NUMBER = 3;
+    private volatile java.lang.Object traceId_;
+    /**
+     * <pre>
+     * traceId
+     * </pre>
+     *
+     * <code>string traceId = 3;</code>
+     */
+    public java.lang.String getTraceId() {
+      java.lang.Object ref = traceId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        traceId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * traceId
+     * </pre>
+     *
+     * <code>string traceId = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTraceIdBytes() {
+      java.lang.Object ref = traceId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        traceId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PARENTSPANID_FIELD_NUMBER = 4;
+    private volatile java.lang.Object parentSpanId_;
+    /**
+     * <pre>
+     * format depends on apm system used
+     * </pre>
+     *
+     * <code>string parentSpanId = 4;</code>
+     */
+    public java.lang.String getParentSpanId() {
+      java.lang.Object ref = parentSpanId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        parentSpanId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * format depends on apm system used
+     * </pre>
+     *
+     * <code>string parentSpanId = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getParentSpanIdBytes() {
+      java.lang.Object ref = parentSpanId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        parentSpanId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SPANID_FIELD_NUMBER = 5;
+    private volatile java.lang.Object spanId_;
+    /**
+     * <pre>
+     * format depends on apm system used
+     * </pre>
+     *
+     * <code>string spanId = 5;</code>
+     */
+    public java.lang.String getSpanId() {
+      java.lang.Object ref = spanId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        spanId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * format depends on apm system used
+     * </pre>
+     *
+     * <code>string spanId = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSpanIdBytes() {
+      java.lang.Object ref = spanId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        spanId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TAGS_FIELD_NUMBER = 6;
+    private volatile java.lang.Object tags_;
+    /**
+     * <pre>
+     * key/value pairs for each hop, value should be url encoded
+     * </pre>
+     *
+     * <code>string tags = 6;</code>
+     */
+    public java.lang.String getTags() {
+      java.lang.Object ref = tags_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        tags_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * key/value pairs for each hop, value should be url encoded
+     * </pre>
+     *
+     * <code>string tags = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTagsBytes() {
+      java.lang.Object ref = tags_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        tags_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SAMPLEFLAG_FIELD_NUMBER = 7;
+    private int sampleFlag_;
+    /**
+     * <pre>
+     * flags 0=default(yes) 1=force 2=no
+     * </pre>
+     *
+     * <code>int32 sampleFlag = 7;</code>
+     */
+    public int getSampleFlag() {
+      return sampleFlag_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getPeersBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, peers_);
+      }
+      if (!getAppsBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, apps_);
+      }
+      if (!getTraceIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, traceId_);
+      }
+      if (!getParentSpanIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, parentSpanId_);
+      }
+      if (!getSpanIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, spanId_);
+      }
+      if (!getTagsBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, tags_);
+      }
+      if (sampleFlag_ != 0) {
+        output.writeInt32(7, sampleFlag_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getPeersBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, peers_);
+      }
+      if (!getAppsBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, apps_);
+      }
+      if (!getTraceIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, traceId_);
+      }
+      if (!getParentSpanIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, parentSpanId_);
+      }
+      if (!getSpanIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, spanId_);
+      }
+      if (!getTagsBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, tags_);
+      }
+      if (sampleFlag_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, sampleFlag_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof krpc.rpc.core.proto.RpcMeta.Trace)) {
+        return super.equals(obj);
+      }
+      krpc.rpc.core.proto.RpcMeta.Trace other = (krpc.rpc.core.proto.RpcMeta.Trace) obj;
+
+      boolean result = true;
+      result = result && getPeers()
+          .equals(other.getPeers());
+      result = result && getApps()
+          .equals(other.getApps());
+      result = result && getTraceId()
+          .equals(other.getTraceId());
+      result = result && getParentSpanId()
+          .equals(other.getParentSpanId());
+      result = result && getSpanId()
+          .equals(other.getSpanId());
+      result = result && getTags()
+          .equals(other.getTags());
+      result = result && (getSampleFlag()
+          == other.getSampleFlag());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + PEERS_FIELD_NUMBER;
+      hash = (53 * hash) + getPeers().hashCode();
+      hash = (37 * hash) + APPS_FIELD_NUMBER;
+      hash = (53 * hash) + getApps().hashCode();
+      hash = (37 * hash) + TRACEID_FIELD_NUMBER;
+      hash = (53 * hash) + getTraceId().hashCode();
+      hash = (37 * hash) + PARENTSPANID_FIELD_NUMBER;
+      hash = (53 * hash) + getParentSpanId().hashCode();
+      hash = (37 * hash) + SPANID_FIELD_NUMBER;
+      hash = (53 * hash) + getSpanId().hashCode();
+      hash = (37 * hash) + TAGS_FIELD_NUMBER;
+      hash = (53 * hash) + getTags().hashCode();
+      hash = (37 * hash) + SAMPLEFLAG_FIELD_NUMBER;
+      hash = (53 * hash) + getSampleFlag();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(krpc.rpc.core.proto.RpcMeta.Trace prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code krpc.rpc.core.proto.RpcMeta.Trace}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:krpc.rpc.core.proto.RpcMeta.Trace)
+        krpc.rpc.core.proto.RpcMeta.TraceOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                krpc.rpc.core.proto.RpcMeta.Trace.class, krpc.rpc.core.proto.RpcMeta.Trace.Builder.class);
+      }
+
+      // Construct using krpc.rpc.core.proto.RpcMeta.Trace.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        peers_ = "";
+
+        apps_ = "";
+
+        traceId_ = "";
+
+        parentSpanId_ = "";
+
+        spanId_ = "";
+
+        tags_ = "";
+
+        sampleFlag_ = 0;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
+      }
+
+      @java.lang.Override
+      public krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstanceForType() {
+        return krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public krpc.rpc.core.proto.RpcMeta.Trace build() {
+        krpc.rpc.core.proto.RpcMeta.Trace result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public krpc.rpc.core.proto.RpcMeta.Trace buildPartial() {
+        krpc.rpc.core.proto.RpcMeta.Trace result = new krpc.rpc.core.proto.RpcMeta.Trace(this);
+        result.peers_ = peers_;
+        result.apps_ = apps_;
+        result.traceId_ = traceId_;
+        result.parentSpanId_ = parentSpanId_;
+        result.spanId_ = spanId_;
+        result.tags_ = tags_;
+        result.sampleFlag_ = sampleFlag_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof krpc.rpc.core.proto.RpcMeta.Trace) {
+          return mergeFrom((krpc.rpc.core.proto.RpcMeta.Trace)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(krpc.rpc.core.proto.RpcMeta.Trace other) {
+        if (other == krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance()) return this;
+        if (!other.getPeers().isEmpty()) {
+          peers_ = other.peers_;
+          onChanged();
+        }
+        if (!other.getApps().isEmpty()) {
+          apps_ = other.apps_;
+          onChanged();
+        }
+        if (!other.getTraceId().isEmpty()) {
+          traceId_ = other.traceId_;
+          onChanged();
+        }
+        if (!other.getParentSpanId().isEmpty()) {
+          parentSpanId_ = other.parentSpanId_;
+          onChanged();
+        }
+        if (!other.getSpanId().isEmpty()) {
+          spanId_ = other.spanId_;
+          onChanged();
+        }
+        if (!other.getTags().isEmpty()) {
+          tags_ = other.tags_;
+          onChanged();
+        }
+        if (other.getSampleFlag() != 0) {
+          setSampleFlag(other.getSampleFlag());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        krpc.rpc.core.proto.RpcMeta.Trace parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (krpc.rpc.core.proto.RpcMeta.Trace) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object peers_ = "";
+      /**
+       * <pre>
+       * ip:port for each hop
+       * </pre>
+       *
+       * <code>string peers = 1;</code>
+       */
+      public java.lang.String getPeers() {
+        java.lang.Object ref = peers_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          peers_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * ip:port for each hop
+       * </pre>
+       *
+       * <code>string peers = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPeersBytes() {
+        java.lang.Object ref = peers_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          peers_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * ip:port for each hop
+       * </pre>
+       *
+       * <code>string peers = 1;</code>
+       */
+      public Builder setPeers(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        peers_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * ip:port for each hop
+       * </pre>
+       *
+       * <code>string peers = 1;</code>
+       */
+      public Builder clearPeers() {
+        
+        peers_ = getDefaultInstance().getPeers();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * ip:port for each hop
+       * </pre>
+       *
+       * <code>string peers = 1;</code>
+       */
+      public Builder setPeersBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        peers_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object apps_ = "";
+      /**
+       * <pre>
+       * app names for each hop
+       * </pre>
+       *
+       * <code>string apps = 2;</code>
+       */
+      public java.lang.String getApps() {
+        java.lang.Object ref = apps_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          apps_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * app names for each hop
+       * </pre>
+       *
+       * <code>string apps = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAppsBytes() {
+        java.lang.Object ref = apps_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          apps_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * app names for each hop
+       * </pre>
+       *
+       * <code>string apps = 2;</code>
+       */
+      public Builder setApps(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        apps_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * app names for each hop
+       * </pre>
+       *
+       * <code>string apps = 2;</code>
+       */
+      public Builder clearApps() {
+        
+        apps_ = getDefaultInstance().getApps();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * app names for each hop
+       * </pre>
+       *
+       * <code>string apps = 2;</code>
+       */
+      public Builder setAppsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        apps_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object traceId_ = "";
+      /**
+       * <pre>
+       * traceId
+       * </pre>
+       *
+       * <code>string traceId = 3;</code>
+       */
+      public java.lang.String getTraceId() {
+        java.lang.Object ref = traceId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          traceId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * traceId
+       * </pre>
+       *
+       * <code>string traceId = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTraceIdBytes() {
+        java.lang.Object ref = traceId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          traceId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * traceId
+       * </pre>
+       *
+       * <code>string traceId = 3;</code>
+       */
+      public Builder setTraceId(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        traceId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * traceId
+       * </pre>
+       *
+       * <code>string traceId = 3;</code>
+       */
+      public Builder clearTraceId() {
+        
+        traceId_ = getDefaultInstance().getTraceId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * traceId
+       * </pre>
+       *
+       * <code>string traceId = 3;</code>
+       */
+      public Builder setTraceIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        traceId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object parentSpanId_ = "";
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string parentSpanId = 4;</code>
+       */
+      public java.lang.String getParentSpanId() {
+        java.lang.Object ref = parentSpanId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          parentSpanId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string parentSpanId = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getParentSpanIdBytes() {
+        java.lang.Object ref = parentSpanId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          parentSpanId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string parentSpanId = 4;</code>
+       */
+      public Builder setParentSpanId(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        parentSpanId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string parentSpanId = 4;</code>
+       */
+      public Builder clearParentSpanId() {
+        
+        parentSpanId_ = getDefaultInstance().getParentSpanId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string parentSpanId = 4;</code>
+       */
+      public Builder setParentSpanIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        parentSpanId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object spanId_ = "";
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string spanId = 5;</code>
+       */
+      public java.lang.String getSpanId() {
+        java.lang.Object ref = spanId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          spanId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string spanId = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSpanIdBytes() {
+        java.lang.Object ref = spanId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          spanId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string spanId = 5;</code>
+       */
+      public Builder setSpanId(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        spanId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string spanId = 5;</code>
+       */
+      public Builder clearSpanId() {
+        
+        spanId_ = getDefaultInstance().getSpanId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * format depends on apm system used
+       * </pre>
+       *
+       * <code>string spanId = 5;</code>
+       */
+      public Builder setSpanIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        spanId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object tags_ = "";
+      /**
+       * <pre>
+       * key/value pairs for each hop, value should be url encoded
+       * </pre>
+       *
+       * <code>string tags = 6;</code>
+       */
+      public java.lang.String getTags() {
+        java.lang.Object ref = tags_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          tags_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * key/value pairs for each hop, value should be url encoded
+       * </pre>
+       *
+       * <code>string tags = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTagsBytes() {
+        java.lang.Object ref = tags_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          tags_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * key/value pairs for each hop, value should be url encoded
+       * </pre>
+       *
+       * <code>string tags = 6;</code>
+       */
+      public Builder setTags(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        tags_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * key/value pairs for each hop, value should be url encoded
+       * </pre>
+       *
+       * <code>string tags = 6;</code>
+       */
+      public Builder clearTags() {
+        
+        tags_ = getDefaultInstance().getTags();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * key/value pairs for each hop, value should be url encoded
+       * </pre>
+       *
+       * <code>string tags = 6;</code>
+       */
+      public Builder setTagsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        tags_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int sampleFlag_ ;
+      /**
+       * <pre>
+       * flags 0=default(yes) 1=force 2=no
+       * </pre>
+       *
+       * <code>int32 sampleFlag = 7;</code>
+       */
+      public int getSampleFlag() {
+        return sampleFlag_;
+      }
+      /**
+       * <pre>
+       * flags 0=default(yes) 1=force 2=no
+       * </pre>
+       *
+       * <code>int32 sampleFlag = 7;</code>
+       */
+      public Builder setSampleFlag(int value) {
+        
+        sampleFlag_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * flags 0=default(yes) 1=force 2=no
+       * </pre>
+       *
+       * <code>int32 sampleFlag = 7;</code>
+       */
+      public Builder clearSampleFlag() {
+        
+        sampleFlag_ = 0;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:krpc.rpc.core.proto.RpcMeta.Trace)
+    }
+
+    // @@protoc_insertion_point(class_scope:krpc.rpc.core.proto.RpcMeta.Trace)
+    private static final krpc.rpc.core.proto.RpcMeta.Trace DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new krpc.rpc.core.proto.RpcMeta.Trace();
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Trace>
+        PARSER = new com.google.protobuf.AbstractParser<Trace>() {
+      @java.lang.Override
+      public Trace parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Trace(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Trace> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Trace> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public static final int DIRECTION_FIELD_NUMBER = 1;
   private int direction_;
   /**
@@ -309,217 +1810,53 @@ private static final long serialVersionUID = 0L;
     return sequence_;
   }
 
-  public static final int RETCODE_FIELD_NUMBER = 5;
-  private int retCode_;
-  /**
-   * <code>int32 retCode = 5;</code>
-   */
-  public int getRetCode() {
-    return retCode_;
-  }
-
-  public static final int PEERS_FIELD_NUMBER = 6;
-  private volatile java.lang.Object peers_;
-  /**
-   * <pre>
-   * ip:port for each hop
-   * </pre>
-   *
-   * <code>string peers = 6;</code>
-   */
-  public java.lang.String getPeers() {
-    java.lang.Object ref = peers_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      peers_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * ip:port for each hop
-   * </pre>
-   *
-   * <code>string peers = 6;</code>
-   */
-  public com.google.protobuf.ByteString
-      getPeersBytes() {
-    java.lang.Object ref = peers_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      peers_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int APPS_FIELD_NUMBER = 7;
-  private volatile java.lang.Object apps_;
-  /**
-   * <pre>
-   * app names for each hop
-   * </pre>
-   *
-   * <code>string apps = 7;</code>
-   */
-  public java.lang.String getApps() {
-    java.lang.Object ref = apps_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      apps_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * app names for each hop
-   * </pre>
-   *
-   * <code>string apps = 7;</code>
-   */
-  public com.google.protobuf.ByteString
-      getAppsBytes() {
-    java.lang.Object ref = apps_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      apps_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int TRACEID_FIELD_NUMBER = 8;
-  private volatile java.lang.Object traceId_;
-  /**
-   * <pre>
-   * traceId for all hops
-   * </pre>
-   *
-   * <code>string traceId = 8;</code>
-   */
-  public java.lang.String getTraceId() {
-    java.lang.Object ref = traceId_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      traceId_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * traceId for all hops
-   * </pre>
-   *
-   * <code>string traceId = 8;</code>
-   */
-  public com.google.protobuf.ByteString
-      getTraceIdBytes() {
-    java.lang.Object ref = traceId_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      traceId_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int RPCID_FIELD_NUMBER = 9;
-  private volatile java.lang.Object rpcId_;
-  /**
-   * <pre>
-   * format depends on apm system used
-   * </pre>
-   *
-   * <code>string rpcId = 9;</code>
-   */
-  public java.lang.String getRpcId() {
-    java.lang.Object ref = rpcId_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      rpcId_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * format depends on apm system used
-   * </pre>
-   *
-   * <code>string rpcId = 9;</code>
-   */
-  public com.google.protobuf.ByteString
-      getRpcIdBytes() {
-    java.lang.Object ref = rpcId_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      rpcId_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int SAMPLED_FIELD_NUMBER = 10;
-  private int sampled_;
-  /**
-   * <pre>
-   * flags 0=default(yes) 1=force 2=no
-   * </pre>
-   *
-   * <code>int32 sampled = 10;</code>
-   */
-  public int getSampled() {
-    return sampled_;
-  }
-
-  public static final int TIMEOUT_FIELD_NUMBER = 11;
+  public static final int TIMEOUT_FIELD_NUMBER = 5;
   private int timeout_;
   /**
    * <pre>
    * client side timeout in milliseconds
    * </pre>
    *
-   * <code>int32 timeout = 11;</code>
+   * <code>int32 timeout = 5;</code>
    */
   public int getTimeout() {
     return timeout_;
   }
 
-  public static final int ATTACHMENT_FIELD_NUMBER = 12;
+  public static final int RETCODE_FIELD_NUMBER = 6;
+  private int retCode_;
+  /**
+   * <code>int32 retCode = 6;</code>
+   */
+  public int getRetCode() {
+    return retCode_;
+  }
+
+  public static final int TRACE_FIELD_NUMBER = 7;
+  private krpc.rpc.core.proto.RpcMeta.Trace trace_;
+  /**
+   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+   */
+  public boolean hasTrace() {
+    return trace_ != null;
+  }
+  /**
+   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+   */
+  public krpc.rpc.core.proto.RpcMeta.Trace getTrace() {
+    return trace_ == null ? krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance() : trace_;
+  }
+  /**
+   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+   */
+  public krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder() {
+    return getTrace();
+  }
+
+  public static final int ATTACHMENT_FIELD_NUMBER = 8;
   private volatile java.lang.Object attachment_;
   /**
-   * <pre>
-   * attached key/value pairs
-   * </pre>
-   *
-   * <code>string attachment = 12;</code>
+   * <code>string attachment = 8;</code>
    */
   public java.lang.String getAttachment() {
     java.lang.Object ref = attachment_;
@@ -534,11 +1871,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   * attached key/value pairs
-   * </pre>
-   *
-   * <code>string attachment = 12;</code>
+   * <code>string attachment = 8;</code>
    */
   public com.google.protobuf.ByteString
       getAttachmentBytes() {
@@ -554,14 +1887,14 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int COMPRESS_FIELD_NUMBER = 13;
+  public static final int COMPRESS_FIELD_NUMBER = 9;
   private int compress_;
   /**
    * <pre>
    * compress type, 0=no compress, 1=gzip 2=snappy
    * </pre>
    *
-   * <code>int32 compress = 13;</code>
+   * <code>int32 compress = 9;</code>
    */
   public int getCompress() {
     return compress_;
@@ -593,32 +1926,20 @@ private static final long serialVersionUID = 0L;
     if (sequence_ != 0) {
       output.writeInt32(4, sequence_);
     }
-    if (retCode_ != 0) {
-      output.writeInt32(5, retCode_);
-    }
-    if (!getPeersBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, peers_);
-    }
-    if (!getAppsBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, apps_);
-    }
-    if (!getTraceIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, traceId_);
-    }
-    if (!getRpcIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 9, rpcId_);
-    }
-    if (sampled_ != 0) {
-      output.writeInt32(10, sampled_);
-    }
     if (timeout_ != 0) {
-      output.writeInt32(11, timeout_);
+      output.writeInt32(5, timeout_);
+    }
+    if (retCode_ != 0) {
+      output.writeInt32(6, retCode_);
+    }
+    if (trace_ != null) {
+      output.writeMessage(7, getTrace());
     }
     if (!getAttachmentBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 12, attachment_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, attachment_);
     }
     if (compress_ != 0) {
-      output.writeInt32(13, compress_);
+      output.writeInt32(9, compress_);
     }
     unknownFields.writeTo(output);
   }
@@ -645,36 +1966,24 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(4, sequence_);
     }
-    if (retCode_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(5, retCode_);
-    }
-    if (!getPeersBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, peers_);
-    }
-    if (!getAppsBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, apps_);
-    }
-    if (!getTraceIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, traceId_);
-    }
-    if (!getRpcIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, rpcId_);
-    }
-    if (sampled_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(10, sampled_);
-    }
     if (timeout_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(11, timeout_);
+        .computeInt32Size(5, timeout_);
+    }
+    if (retCode_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(6, retCode_);
+    }
+    if (trace_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(7, getTrace());
     }
     if (!getAttachmentBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, attachment_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, attachment_);
     }
     if (compress_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(13, compress_);
+        .computeInt32Size(9, compress_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -699,20 +2008,15 @@ private static final long serialVersionUID = 0L;
         == other.getMsgId());
     result = result && (getSequence()
         == other.getSequence());
-    result = result && (getRetCode()
-        == other.getRetCode());
-    result = result && getPeers()
-        .equals(other.getPeers());
-    result = result && getApps()
-        .equals(other.getApps());
-    result = result && getTraceId()
-        .equals(other.getTraceId());
-    result = result && getRpcId()
-        .equals(other.getRpcId());
-    result = result && (getSampled()
-        == other.getSampled());
     result = result && (getTimeout()
         == other.getTimeout());
+    result = result && (getRetCode()
+        == other.getRetCode());
+    result = result && (hasTrace() == other.hasTrace());
+    if (hasTrace()) {
+      result = result && getTrace()
+          .equals(other.getTrace());
+    }
     result = result && getAttachment()
         .equals(other.getAttachment());
     result = result && (getCompress()
@@ -736,20 +2040,14 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getMsgId();
     hash = (37 * hash) + SEQUENCE_FIELD_NUMBER;
     hash = (53 * hash) + getSequence();
-    hash = (37 * hash) + RETCODE_FIELD_NUMBER;
-    hash = (53 * hash) + getRetCode();
-    hash = (37 * hash) + PEERS_FIELD_NUMBER;
-    hash = (53 * hash) + getPeers().hashCode();
-    hash = (37 * hash) + APPS_FIELD_NUMBER;
-    hash = (53 * hash) + getApps().hashCode();
-    hash = (37 * hash) + TRACEID_FIELD_NUMBER;
-    hash = (53 * hash) + getTraceId().hashCode();
-    hash = (37 * hash) + RPCID_FIELD_NUMBER;
-    hash = (53 * hash) + getRpcId().hashCode();
-    hash = (37 * hash) + SAMPLED_FIELD_NUMBER;
-    hash = (53 * hash) + getSampled();
     hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
     hash = (53 * hash) + getTimeout();
+    hash = (37 * hash) + RETCODE_FIELD_NUMBER;
+    hash = (53 * hash) + getRetCode();
+    if (hasTrace()) {
+      hash = (37 * hash) + TRACE_FIELD_NUMBER;
+      hash = (53 * hash) + getTrace().hashCode();
+    }
     hash = (37 * hash) + ATTACHMENT_FIELD_NUMBER;
     hash = (53 * hash) + getAttachment().hashCode();
     hash = (37 * hash) + COMPRESS_FIELD_NUMBER;
@@ -895,20 +2193,16 @@ private static final long serialVersionUID = 0L;
 
       sequence_ = 0;
 
-      retCode_ = 0;
-
-      peers_ = "";
-
-      apps_ = "";
-
-      traceId_ = "";
-
-      rpcId_ = "";
-
-      sampled_ = 0;
-
       timeout_ = 0;
 
+      retCode_ = 0;
+
+      if (traceBuilder_ == null) {
+        trace_ = null;
+      } else {
+        trace_ = null;
+        traceBuilder_ = null;
+      }
       attachment_ = "";
 
       compress_ = 0;
@@ -943,13 +2237,13 @@ private static final long serialVersionUID = 0L;
       result.serviceId_ = serviceId_;
       result.msgId_ = msgId_;
       result.sequence_ = sequence_;
-      result.retCode_ = retCode_;
-      result.peers_ = peers_;
-      result.apps_ = apps_;
-      result.traceId_ = traceId_;
-      result.rpcId_ = rpcId_;
-      result.sampled_ = sampled_;
       result.timeout_ = timeout_;
+      result.retCode_ = retCode_;
+      if (traceBuilder_ == null) {
+        result.trace_ = trace_;
+      } else {
+        result.trace_ = traceBuilder_.build();
+      }
       result.attachment_ = attachment_;
       result.compress_ = compress_;
       onBuilt();
@@ -1012,30 +2306,14 @@ private static final long serialVersionUID = 0L;
       if (other.getSequence() != 0) {
         setSequence(other.getSequence());
       }
+      if (other.getTimeout() != 0) {
+        setTimeout(other.getTimeout());
+      }
       if (other.getRetCode() != 0) {
         setRetCode(other.getRetCode());
       }
-      if (!other.getPeers().isEmpty()) {
-        peers_ = other.peers_;
-        onChanged();
-      }
-      if (!other.getApps().isEmpty()) {
-        apps_ = other.apps_;
-        onChanged();
-      }
-      if (!other.getTraceId().isEmpty()) {
-        traceId_ = other.traceId_;
-        onChanged();
-      }
-      if (!other.getRpcId().isEmpty()) {
-        rpcId_ = other.rpcId_;
-        onChanged();
-      }
-      if (other.getSampled() != 0) {
-        setSampled(other.getSampled());
-      }
-      if (other.getTimeout() != 0) {
-        setTimeout(other.getTimeout());
+      if (other.hasTrace()) {
+        mergeTrace(other.getTrace());
       }
       if (!other.getAttachment().isEmpty()) {
         attachment_ = other.attachment_;
@@ -1196,425 +2474,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int retCode_ ;
-    /**
-     * <code>int32 retCode = 5;</code>
-     */
-    public int getRetCode() {
-      return retCode_;
-    }
-    /**
-     * <code>int32 retCode = 5;</code>
-     */
-    public Builder setRetCode(int value) {
-      
-      retCode_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 retCode = 5;</code>
-     */
-    public Builder clearRetCode() {
-      
-      retCode_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object peers_ = "";
-    /**
-     * <pre>
-     * ip:port for each hop
-     * </pre>
-     *
-     * <code>string peers = 6;</code>
-     */
-    public java.lang.String getPeers() {
-      java.lang.Object ref = peers_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        peers_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <pre>
-     * ip:port for each hop
-     * </pre>
-     *
-     * <code>string peers = 6;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPeersBytes() {
-      java.lang.Object ref = peers_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        peers_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * ip:port for each hop
-     * </pre>
-     *
-     * <code>string peers = 6;</code>
-     */
-    public Builder setPeers(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      peers_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * ip:port for each hop
-     * </pre>
-     *
-     * <code>string peers = 6;</code>
-     */
-    public Builder clearPeers() {
-      
-      peers_ = getDefaultInstance().getPeers();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * ip:port for each hop
-     * </pre>
-     *
-     * <code>string peers = 6;</code>
-     */
-    public Builder setPeersBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      peers_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object apps_ = "";
-    /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    public java.lang.String getApps() {
-      java.lang.Object ref = apps_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        apps_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    public com.google.protobuf.ByteString
-        getAppsBytes() {
-      java.lang.Object ref = apps_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        apps_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    public Builder setApps(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      apps_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    public Builder clearApps() {
-      
-      apps_ = getDefaultInstance().getApps();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    public Builder setAppsBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      apps_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object traceId_ = "";
-    /**
-     * <pre>
-     * traceId for all hops
-     * </pre>
-     *
-     * <code>string traceId = 8;</code>
-     */
-    public java.lang.String getTraceId() {
-      java.lang.Object ref = traceId_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        traceId_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <pre>
-     * traceId for all hops
-     * </pre>
-     *
-     * <code>string traceId = 8;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTraceIdBytes() {
-      java.lang.Object ref = traceId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        traceId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * traceId for all hops
-     * </pre>
-     *
-     * <code>string traceId = 8;</code>
-     */
-    public Builder setTraceId(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      traceId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * traceId for all hops
-     * </pre>
-     *
-     * <code>string traceId = 8;</code>
-     */
-    public Builder clearTraceId() {
-      
-      traceId_ = getDefaultInstance().getTraceId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * traceId for all hops
-     * </pre>
-     *
-     * <code>string traceId = 8;</code>
-     */
-    public Builder setTraceIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      traceId_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object rpcId_ = "";
-    /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string rpcId = 9;</code>
-     */
-    public java.lang.String getRpcId() {
-      java.lang.Object ref = rpcId_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        rpcId_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string rpcId = 9;</code>
-     */
-    public com.google.protobuf.ByteString
-        getRpcIdBytes() {
-      java.lang.Object ref = rpcId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        rpcId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string rpcId = 9;</code>
-     */
-    public Builder setRpcId(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      rpcId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string rpcId = 9;</code>
-     */
-    public Builder clearRpcId() {
-      
-      rpcId_ = getDefaultInstance().getRpcId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string rpcId = 9;</code>
-     */
-    public Builder setRpcIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      rpcId_ = value;
-      onChanged();
-      return this;
-    }
-
-    private int sampled_ ;
-    /**
-     * <pre>
-     * flags 0=default(yes) 1=force 2=no
-     * </pre>
-     *
-     * <code>int32 sampled = 10;</code>
-     */
-    public int getSampled() {
-      return sampled_;
-    }
-    /**
-     * <pre>
-     * flags 0=default(yes) 1=force 2=no
-     * </pre>
-     *
-     * <code>int32 sampled = 10;</code>
-     */
-    public Builder setSampled(int value) {
-      
-      sampled_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * flags 0=default(yes) 1=force 2=no
-     * </pre>
-     *
-     * <code>int32 sampled = 10;</code>
-     */
-    public Builder clearSampled() {
-      
-      sampled_ = 0;
-      onChanged();
-      return this;
-    }
-
     private int timeout_ ;
     /**
      * <pre>
      * client side timeout in milliseconds
      * </pre>
      *
-     * <code>int32 timeout = 11;</code>
+     * <code>int32 timeout = 5;</code>
      */
     public int getTimeout() {
       return timeout_;
@@ -1624,7 +2490,7 @@ private static final long serialVersionUID = 0L;
      * client side timeout in milliseconds
      * </pre>
      *
-     * <code>int32 timeout = 11;</code>
+     * <code>int32 timeout = 5;</code>
      */
     public Builder setTimeout(int value) {
       
@@ -1637,7 +2503,7 @@ private static final long serialVersionUID = 0L;
      * client side timeout in milliseconds
      * </pre>
      *
-     * <code>int32 timeout = 11;</code>
+     * <code>int32 timeout = 5;</code>
      */
     public Builder clearTimeout() {
       
@@ -1646,13 +2512,152 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private int retCode_ ;
+    /**
+     * <code>int32 retCode = 6;</code>
+     */
+    public int getRetCode() {
+      return retCode_;
+    }
+    /**
+     * <code>int32 retCode = 6;</code>
+     */
+    public Builder setRetCode(int value) {
+      
+      retCode_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 retCode = 6;</code>
+     */
+    public Builder clearRetCode() {
+      
+      retCode_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private krpc.rpc.core.proto.RpcMeta.Trace trace_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder> traceBuilder_;
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    public boolean hasTrace() {
+      return traceBuilder_ != null || trace_ != null;
+    }
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    public krpc.rpc.core.proto.RpcMeta.Trace getTrace() {
+      if (traceBuilder_ == null) {
+        return trace_ == null ? krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance() : trace_;
+      } else {
+        return traceBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    public Builder setTrace(krpc.rpc.core.proto.RpcMeta.Trace value) {
+      if (traceBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        trace_ = value;
+        onChanged();
+      } else {
+        traceBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    public Builder setTrace(
+        krpc.rpc.core.proto.RpcMeta.Trace.Builder builderForValue) {
+      if (traceBuilder_ == null) {
+        trace_ = builderForValue.build();
+        onChanged();
+      } else {
+        traceBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    public Builder mergeTrace(krpc.rpc.core.proto.RpcMeta.Trace value) {
+      if (traceBuilder_ == null) {
+        if (trace_ != null) {
+          trace_ =
+            krpc.rpc.core.proto.RpcMeta.Trace.newBuilder(trace_).mergeFrom(value).buildPartial();
+        } else {
+          trace_ = value;
+        }
+        onChanged();
+      } else {
+        traceBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    public Builder clearTrace() {
+      if (traceBuilder_ == null) {
+        trace_ = null;
+        onChanged();
+      } else {
+        trace_ = null;
+        traceBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    public krpc.rpc.core.proto.RpcMeta.Trace.Builder getTraceBuilder() {
+      
+      onChanged();
+      return getTraceFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    public krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder() {
+      if (traceBuilder_ != null) {
+        return traceBuilder_.getMessageOrBuilder();
+      } else {
+        return trace_ == null ?
+            krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance() : trace_;
+      }
+    }
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder> 
+        getTraceFieldBuilder() {
+      if (traceBuilder_ == null) {
+        traceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder>(
+                getTrace(),
+                getParentForChildren(),
+                isClean());
+        trace_ = null;
+      }
+      return traceBuilder_;
+    }
+
     private java.lang.Object attachment_ = "";
     /**
-     * <pre>
-     * attached key/value pairs
-     * </pre>
-     *
-     * <code>string attachment = 12;</code>
+     * <code>string attachment = 8;</code>
      */
     public java.lang.String getAttachment() {
       java.lang.Object ref = attachment_;
@@ -1667,11 +2672,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * attached key/value pairs
-     * </pre>
-     *
-     * <code>string attachment = 12;</code>
+     * <code>string attachment = 8;</code>
      */
     public com.google.protobuf.ByteString
         getAttachmentBytes() {
@@ -1687,11 +2688,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * attached key/value pairs
-     * </pre>
-     *
-     * <code>string attachment = 12;</code>
+     * <code>string attachment = 8;</code>
      */
     public Builder setAttachment(
         java.lang.String value) {
@@ -1702,11 +2699,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * attached key/value pairs
-     * </pre>
-     *
-     * <code>string attachment = 12;</code>
+     * <code>string attachment = 8;</code>
      */
     public Builder clearAttachment() {
       
@@ -1715,11 +2708,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * attached key/value pairs
-     * </pre>
-     *
-     * <code>string attachment = 12;</code>
+     * <code>string attachment = 8;</code>
      */
     public Builder setAttachmentBytes(
         com.google.protobuf.ByteString value) {
@@ -1739,7 +2728,7 @@ private static final long serialVersionUID = 0L;
      * compress type, 0=no compress, 1=gzip 2=snappy
      * </pre>
      *
-     * <code>int32 compress = 13;</code>
+     * <code>int32 compress = 9;</code>
      */
     public int getCompress() {
       return compress_;
@@ -1749,7 +2738,7 @@ private static final long serialVersionUID = 0L;
      * compress type, 0=no compress, 1=gzip 2=snappy
      * </pre>
      *
-     * <code>int32 compress = 13;</code>
+     * <code>int32 compress = 9;</code>
      */
     public Builder setCompress(int value) {
       
@@ -1762,7 +2751,7 @@ private static final long serialVersionUID = 0L;
      * compress type, 0=no compress, 1=gzip 2=snappy
      * </pre>
      *
-     * <code>int32 compress = 13;</code>
+     * <code>int32 compress = 9;</code>
      */
     public Builder clearCompress() {
       

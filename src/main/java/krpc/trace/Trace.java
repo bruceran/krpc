@@ -3,48 +3,17 @@ package krpc.trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import krpc.rpc.core.proto.RpcMeta;
+
 public class Trace {
 
 	private static Logger log = LoggerFactory.getLogger(Trace.class);
 	private static String appName = "unknown";
-	private static TraceAdapter adapter = new DefaultTraceAdapter();
-	private static TraceContextFactory factory = new DefaultTraceContextFactory();
+	private static TraceAdapter adapter = new DummyTraceAdapter();
 	private static ThreadLocal<TraceContext> tlContext = new ThreadLocal<TraceContext>();
-	
-	public static String getAppName() {
-		return appName;
-	}
 
-	public static void setAppName(String appName) {
-		Trace.appName = appName;
-	}	 
-
-	public static TraceAdapter getAdapter() {
-		return adapter;
-	}
-
-	public static void setAdapter(TraceAdapter adapter) {
-		Trace.adapter = adapter;
-	}	    
-	
-	public static TraceContextFactory getFactory() {
-		return factory;
-	}
-	
-	public static void setFactory(TraceContextFactory f) {
-		factory = f;
-	}
-
-    public static TraceContext currentContext() {
-        return tlContext.get();
-    }
-	
-    public static void setCurrentContext(TraceContext traceContext) {
-    	tlContext.set(traceContext);
-    }	
-
-    public static void startServer(String traceId,String rpcId,String peers,String apps, int sampled,String type,String action) {
-    	TraceContext ctx = factory.newTraceContext(traceId, rpcId, peers,apps,sampled, type, action);
+    public static void startForServer(String type,String action,RpcMeta.Trace trace) {
+    	TraceContext ctx = new DefaultTraceContext(trace,type, action);
     	setCurrentContext(ctx);
     }
     
@@ -61,7 +30,7 @@ public class Trace {
 	private static TraceContext getOrNew() {
     	TraceContext ctx = tlContext.get();
     	if( ctx != null ) return ctx;
-		ctx = factory.newTraceContext();
+		ctx = new DefaultTraceContext();
 		setCurrentContext(ctx);
     	return ctx;
     }
@@ -134,5 +103,29 @@ public class Trace {
     	}
     	span.setRemoteAddr(addr);
     }
+	
+	public static String getAppName() {
+		return appName;
+	}
+
+	public static void setAppName(String appName) {
+		Trace.appName = appName;
+	}	 
+
+	public static TraceAdapter getAdapter() {
+		return adapter;
+	}
+
+	public static void setAdapter(TraceAdapter adapter) {
+		Trace.adapter = adapter;
+	}	    
+
+    public static TraceContext currentContext() {
+        return tlContext.get();
+    }
+	
+    public static void setCurrentContext(TraceContext traceContext) {
+    	tlContext.set(traceContext);
+    }	
     
 }
