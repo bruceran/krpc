@@ -267,103 +267,87 @@ private static final long serialVersionUID = 0L;
         getPeersBytes();
 
     /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 2;</code>
-     */
-    java.lang.String getApps();
-    /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getAppsBytes();
-
-    /**
-     * <pre>
-     * traceId
-     * </pre>
-     *
-     * <code>string traceId = 3;</code>
+     * <code>string traceId = 2;</code>
      */
     java.lang.String getTraceId();
     /**
-     * <pre>
-     * traceId
-     * </pre>
-     *
-     * <code>string traceId = 3;</code>
+     * <code>string traceId = 2;</code>
      */
     com.google.protobuf.ByteString
         getTraceIdBytes();
 
     /**
      * <pre>
-     * format depends on apm system used
+     * may be empty
      * </pre>
      *
-     * <code>string parentSpanId = 4;</code>
+     * <code>string parentSpanId = 3;</code>
      */
     java.lang.String getParentSpanId();
     /**
      * <pre>
-     * format depends on apm system used
+     * may be empty
      * </pre>
      *
-     * <code>string parentSpanId = 4;</code>
+     * <code>string parentSpanId = 3;</code>
      */
     com.google.protobuf.ByteString
         getParentSpanIdBytes();
 
     /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string spanId = 5;</code>
+     * <code>string spanId = 4;</code>
      */
     java.lang.String getSpanId();
     /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string spanId = 5;</code>
+     * <code>string spanId = 4;</code>
      */
     com.google.protobuf.ByteString
         getSpanIdBytes();
 
     /**
      * <pre>
-     * key/value pairs for each hop, value should be url encoded
+     * key/value pairs passing in the chain
      * </pre>
      *
-     * <code>string tags = 6;</code>
+     * <code>string tags = 5;</code>
      */
     java.lang.String getTags();
     /**
      * <pre>
-     * key/value pairs for each hop, value should be url encoded
+     * key/value pairs passing in the chain
      * </pre>
      *
-     * <code>string tags = 6;</code>
+     * <code>string tags = 5;</code>
      */
     com.google.protobuf.ByteString
         getTagsBytes();
 
     /**
      * <pre>
-     * flags 0=default(yes) 1=force 2=no
+     *  0=default(yes) 1=force 2=no
      * </pre>
      *
-     * <code>int32 sampleFlag = 7;</code>
+     * <code>int32 sampleFlag = 6;</code>
      */
     int getSampleFlag();
+
+    /**
+     * <pre>
+     * app names for each hop, may be empty
+     * </pre>
+     *
+     * <code>string apps = 7;</code>
+     */
+    java.lang.String getApps();
+    /**
+     * <pre>
+     * app names for each hop, may be empty
+     * </pre>
+     *
+     * <code>string apps = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getAppsBytes();
   }
   /**
    * Protobuf type {@code krpc.rpc.core.proto.RpcMeta.Trace}
@@ -379,12 +363,12 @@ private static final long serialVersionUID = 0L;
     }
     private Trace() {
       peers_ = "";
-      apps_ = "";
       traceId_ = "";
       parentSpanId_ = "";
       spanId_ = "";
       tags_ = "";
       sampleFlag_ = 0;
+      apps_ = "";
     }
 
     @java.lang.Override
@@ -420,36 +404,36 @@ private static final long serialVersionUID = 0L;
             case 18: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              apps_ = s;
+              traceId_ = s;
               break;
             }
             case 26: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              traceId_ = s;
+              parentSpanId_ = s;
               break;
             }
             case 34: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              parentSpanId_ = s;
+              spanId_ = s;
               break;
             }
             case 42: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              spanId_ = s;
-              break;
-            }
-            case 50: {
-              java.lang.String s = input.readStringRequireUtf8();
-
               tags_ = s;
               break;
             }
-            case 56: {
+            case 48: {
 
               sampleFlag_ = input.readInt32();
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              apps_ = s;
               break;
             }
             default: {
@@ -526,56 +510,10 @@ private static final long serialVersionUID = 0L;
       }
     }
 
-    public static final int APPS_FIELD_NUMBER = 2;
-    private volatile java.lang.Object apps_;
-    /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 2;</code>
-     */
-    public java.lang.String getApps() {
-      java.lang.Object ref = apps_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        apps_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * app names for each hop
-     * </pre>
-     *
-     * <code>string apps = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getAppsBytes() {
-      java.lang.Object ref = apps_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        apps_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int TRACEID_FIELD_NUMBER = 3;
+    public static final int TRACEID_FIELD_NUMBER = 2;
     private volatile java.lang.Object traceId_;
     /**
-     * <pre>
-     * traceId
-     * </pre>
-     *
-     * <code>string traceId = 3;</code>
+     * <code>string traceId = 2;</code>
      */
     public java.lang.String getTraceId() {
       java.lang.Object ref = traceId_;
@@ -590,11 +528,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * traceId
-     * </pre>
-     *
-     * <code>string traceId = 3;</code>
+     * <code>string traceId = 2;</code>
      */
     public com.google.protobuf.ByteString
         getTraceIdBytes() {
@@ -610,14 +544,14 @@ private static final long serialVersionUID = 0L;
       }
     }
 
-    public static final int PARENTSPANID_FIELD_NUMBER = 4;
+    public static final int PARENTSPANID_FIELD_NUMBER = 3;
     private volatile java.lang.Object parentSpanId_;
     /**
      * <pre>
-     * format depends on apm system used
+     * may be empty
      * </pre>
      *
-     * <code>string parentSpanId = 4;</code>
+     * <code>string parentSpanId = 3;</code>
      */
     public java.lang.String getParentSpanId() {
       java.lang.Object ref = parentSpanId_;
@@ -633,10 +567,10 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * format depends on apm system used
+     * may be empty
      * </pre>
      *
-     * <code>string parentSpanId = 4;</code>
+     * <code>string parentSpanId = 3;</code>
      */
     public com.google.protobuf.ByteString
         getParentSpanIdBytes() {
@@ -652,14 +586,10 @@ private static final long serialVersionUID = 0L;
       }
     }
 
-    public static final int SPANID_FIELD_NUMBER = 5;
+    public static final int SPANID_FIELD_NUMBER = 4;
     private volatile java.lang.Object spanId_;
     /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string spanId = 5;</code>
+     * <code>string spanId = 4;</code>
      */
     public java.lang.String getSpanId() {
       java.lang.Object ref = spanId_;
@@ -674,11 +604,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * format depends on apm system used
-     * </pre>
-     *
-     * <code>string spanId = 5;</code>
+     * <code>string spanId = 4;</code>
      */
     public com.google.protobuf.ByteString
         getSpanIdBytes() {
@@ -694,14 +620,14 @@ private static final long serialVersionUID = 0L;
       }
     }
 
-    public static final int TAGS_FIELD_NUMBER = 6;
+    public static final int TAGS_FIELD_NUMBER = 5;
     private volatile java.lang.Object tags_;
     /**
      * <pre>
-     * key/value pairs for each hop, value should be url encoded
+     * key/value pairs passing in the chain
      * </pre>
      *
-     * <code>string tags = 6;</code>
+     * <code>string tags = 5;</code>
      */
     public java.lang.String getTags() {
       java.lang.Object ref = tags_;
@@ -717,10 +643,10 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * key/value pairs for each hop, value should be url encoded
+     * key/value pairs passing in the chain
      * </pre>
      *
-     * <code>string tags = 6;</code>
+     * <code>string tags = 5;</code>
      */
     public com.google.protobuf.ByteString
         getTagsBytes() {
@@ -736,17 +662,59 @@ private static final long serialVersionUID = 0L;
       }
     }
 
-    public static final int SAMPLEFLAG_FIELD_NUMBER = 7;
+    public static final int SAMPLEFLAG_FIELD_NUMBER = 6;
     private int sampleFlag_;
     /**
      * <pre>
-     * flags 0=default(yes) 1=force 2=no
+     *  0=default(yes) 1=force 2=no
      * </pre>
      *
-     * <code>int32 sampleFlag = 7;</code>
+     * <code>int32 sampleFlag = 6;</code>
      */
     public int getSampleFlag() {
       return sampleFlag_;
+    }
+
+    public static final int APPS_FIELD_NUMBER = 7;
+    private volatile java.lang.Object apps_;
+    /**
+     * <pre>
+     * app names for each hop, may be empty
+     * </pre>
+     *
+     * <code>string apps = 7;</code>
+     */
+    public java.lang.String getApps() {
+      java.lang.Object ref = apps_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        apps_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * app names for each hop, may be empty
+     * </pre>
+     *
+     * <code>string apps = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAppsBytes() {
+      java.lang.Object ref = apps_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        apps_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -766,23 +734,23 @@ private static final long serialVersionUID = 0L;
       if (!getPeersBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, peers_);
       }
-      if (!getAppsBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, apps_);
-      }
       if (!getTraceIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, traceId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, traceId_);
       }
       if (!getParentSpanIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, parentSpanId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, parentSpanId_);
       }
       if (!getSpanIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, spanId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, spanId_);
       }
       if (!getTagsBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, tags_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, tags_);
       }
       if (sampleFlag_ != 0) {
-        output.writeInt32(7, sampleFlag_);
+        output.writeInt32(6, sampleFlag_);
+      }
+      if (!getAppsBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, apps_);
       }
       unknownFields.writeTo(output);
     }
@@ -796,24 +764,24 @@ private static final long serialVersionUID = 0L;
       if (!getPeersBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, peers_);
       }
-      if (!getAppsBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, apps_);
-      }
       if (!getTraceIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, traceId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, traceId_);
       }
       if (!getParentSpanIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, parentSpanId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, parentSpanId_);
       }
       if (!getSpanIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, spanId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, spanId_);
       }
       if (!getTagsBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, tags_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, tags_);
       }
       if (sampleFlag_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(7, sampleFlag_);
+          .computeInt32Size(6, sampleFlag_);
+      }
+      if (!getAppsBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, apps_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -833,8 +801,6 @@ private static final long serialVersionUID = 0L;
       boolean result = true;
       result = result && getPeers()
           .equals(other.getPeers());
-      result = result && getApps()
-          .equals(other.getApps());
       result = result && getTraceId()
           .equals(other.getTraceId());
       result = result && getParentSpanId()
@@ -845,6 +811,8 @@ private static final long serialVersionUID = 0L;
           .equals(other.getTags());
       result = result && (getSampleFlag()
           == other.getSampleFlag());
+      result = result && getApps()
+          .equals(other.getApps());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -858,8 +826,6 @@ private static final long serialVersionUID = 0L;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + PEERS_FIELD_NUMBER;
       hash = (53 * hash) + getPeers().hashCode();
-      hash = (37 * hash) + APPS_FIELD_NUMBER;
-      hash = (53 * hash) + getApps().hashCode();
       hash = (37 * hash) + TRACEID_FIELD_NUMBER;
       hash = (53 * hash) + getTraceId().hashCode();
       hash = (37 * hash) + PARENTSPANID_FIELD_NUMBER;
@@ -870,6 +836,8 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + getTags().hashCode();
       hash = (37 * hash) + SAMPLEFLAG_FIELD_NUMBER;
       hash = (53 * hash) + getSampleFlag();
+      hash = (37 * hash) + APPS_FIELD_NUMBER;
+      hash = (53 * hash) + getApps().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1005,8 +973,6 @@ private static final long serialVersionUID = 0L;
         super.clear();
         peers_ = "";
 
-        apps_ = "";
-
         traceId_ = "";
 
         parentSpanId_ = "";
@@ -1016,6 +982,8 @@ private static final long serialVersionUID = 0L;
         tags_ = "";
 
         sampleFlag_ = 0;
+
+        apps_ = "";
 
         return this;
       }
@@ -1044,12 +1012,12 @@ private static final long serialVersionUID = 0L;
       public krpc.rpc.core.proto.RpcMeta.Trace buildPartial() {
         krpc.rpc.core.proto.RpcMeta.Trace result = new krpc.rpc.core.proto.RpcMeta.Trace(this);
         result.peers_ = peers_;
-        result.apps_ = apps_;
         result.traceId_ = traceId_;
         result.parentSpanId_ = parentSpanId_;
         result.spanId_ = spanId_;
         result.tags_ = tags_;
         result.sampleFlag_ = sampleFlag_;
+        result.apps_ = apps_;
         onBuilt();
         return result;
       }
@@ -1102,10 +1070,6 @@ private static final long serialVersionUID = 0L;
           peers_ = other.peers_;
           onChanged();
         }
-        if (!other.getApps().isEmpty()) {
-          apps_ = other.apps_;
-          onChanged();
-        }
         if (!other.getTraceId().isEmpty()) {
           traceId_ = other.traceId_;
           onChanged();
@@ -1124,6 +1088,10 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getSampleFlag() != 0) {
           setSampleFlag(other.getSampleFlag());
+        }
+        if (!other.getApps().isEmpty()) {
+          apps_ = other.apps_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1241,100 +1209,9 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
-      private java.lang.Object apps_ = "";
-      /**
-       * <pre>
-       * app names for each hop
-       * </pre>
-       *
-       * <code>string apps = 2;</code>
-       */
-      public java.lang.String getApps() {
-        java.lang.Object ref = apps_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          apps_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * app names for each hop
-       * </pre>
-       *
-       * <code>string apps = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getAppsBytes() {
-        java.lang.Object ref = apps_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          apps_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * app names for each hop
-       * </pre>
-       *
-       * <code>string apps = 2;</code>
-       */
-      public Builder setApps(
-          java.lang.String value) {
-        if (value == null) value = "";
-  
-        apps_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * app names for each hop
-       * </pre>
-       *
-       * <code>string apps = 2;</code>
-       */
-      public Builder clearApps() {
-        
-        apps_ = getDefaultInstance().getApps();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * app names for each hop
-       * </pre>
-       *
-       * <code>string apps = 2;</code>
-       */
-      public Builder setAppsBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        apps_ = value;
-        onChanged();
-        return this;
-      }
-
       private java.lang.Object traceId_ = "";
       /**
-       * <pre>
-       * traceId
-       * </pre>
-       *
-       * <code>string traceId = 3;</code>
+       * <code>string traceId = 2;</code>
        */
       public java.lang.String getTraceId() {
         java.lang.Object ref = traceId_;
@@ -1349,11 +1226,7 @@ private static final long serialVersionUID = 0L;
         }
       }
       /**
-       * <pre>
-       * traceId
-       * </pre>
-       *
-       * <code>string traceId = 3;</code>
+       * <code>string traceId = 2;</code>
        */
       public com.google.protobuf.ByteString
           getTraceIdBytes() {
@@ -1369,11 +1242,7 @@ private static final long serialVersionUID = 0L;
         }
       }
       /**
-       * <pre>
-       * traceId
-       * </pre>
-       *
-       * <code>string traceId = 3;</code>
+       * <code>string traceId = 2;</code>
        */
       public Builder setTraceId(
           java.lang.String value) {
@@ -1384,11 +1253,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <pre>
-       * traceId
-       * </pre>
-       *
-       * <code>string traceId = 3;</code>
+       * <code>string traceId = 2;</code>
        */
       public Builder clearTraceId() {
         
@@ -1397,11 +1262,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <pre>
-       * traceId
-       * </pre>
-       *
-       * <code>string traceId = 3;</code>
+       * <code>string traceId = 2;</code>
        */
       public Builder setTraceIdBytes(
           com.google.protobuf.ByteString value) {
@@ -1418,10 +1279,10 @@ private static final long serialVersionUID = 0L;
       private java.lang.Object parentSpanId_ = "";
       /**
        * <pre>
-       * format depends on apm system used
+       * may be empty
        * </pre>
        *
-       * <code>string parentSpanId = 4;</code>
+       * <code>string parentSpanId = 3;</code>
        */
       public java.lang.String getParentSpanId() {
         java.lang.Object ref = parentSpanId_;
@@ -1437,10 +1298,10 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * format depends on apm system used
+       * may be empty
        * </pre>
        *
-       * <code>string parentSpanId = 4;</code>
+       * <code>string parentSpanId = 3;</code>
        */
       public com.google.protobuf.ByteString
           getParentSpanIdBytes() {
@@ -1457,10 +1318,10 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * format depends on apm system used
+       * may be empty
        * </pre>
        *
-       * <code>string parentSpanId = 4;</code>
+       * <code>string parentSpanId = 3;</code>
        */
       public Builder setParentSpanId(
           java.lang.String value) {
@@ -1472,10 +1333,10 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * format depends on apm system used
+       * may be empty
        * </pre>
        *
-       * <code>string parentSpanId = 4;</code>
+       * <code>string parentSpanId = 3;</code>
        */
       public Builder clearParentSpanId() {
         
@@ -1485,10 +1346,10 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * format depends on apm system used
+       * may be empty
        * </pre>
        *
-       * <code>string parentSpanId = 4;</code>
+       * <code>string parentSpanId = 3;</code>
        */
       public Builder setParentSpanIdBytes(
           com.google.protobuf.ByteString value) {
@@ -1504,11 +1365,7 @@ private static final long serialVersionUID = 0L;
 
       private java.lang.Object spanId_ = "";
       /**
-       * <pre>
-       * format depends on apm system used
-       * </pre>
-       *
-       * <code>string spanId = 5;</code>
+       * <code>string spanId = 4;</code>
        */
       public java.lang.String getSpanId() {
         java.lang.Object ref = spanId_;
@@ -1523,11 +1380,7 @@ private static final long serialVersionUID = 0L;
         }
       }
       /**
-       * <pre>
-       * format depends on apm system used
-       * </pre>
-       *
-       * <code>string spanId = 5;</code>
+       * <code>string spanId = 4;</code>
        */
       public com.google.protobuf.ByteString
           getSpanIdBytes() {
@@ -1543,11 +1396,7 @@ private static final long serialVersionUID = 0L;
         }
       }
       /**
-       * <pre>
-       * format depends on apm system used
-       * </pre>
-       *
-       * <code>string spanId = 5;</code>
+       * <code>string spanId = 4;</code>
        */
       public Builder setSpanId(
           java.lang.String value) {
@@ -1558,11 +1407,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <pre>
-       * format depends on apm system used
-       * </pre>
-       *
-       * <code>string spanId = 5;</code>
+       * <code>string spanId = 4;</code>
        */
       public Builder clearSpanId() {
         
@@ -1571,11 +1416,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <pre>
-       * format depends on apm system used
-       * </pre>
-       *
-       * <code>string spanId = 5;</code>
+       * <code>string spanId = 4;</code>
        */
       public Builder setSpanIdBytes(
           com.google.protobuf.ByteString value) {
@@ -1592,10 +1433,10 @@ private static final long serialVersionUID = 0L;
       private java.lang.Object tags_ = "";
       /**
        * <pre>
-       * key/value pairs for each hop, value should be url encoded
+       * key/value pairs passing in the chain
        * </pre>
        *
-       * <code>string tags = 6;</code>
+       * <code>string tags = 5;</code>
        */
       public java.lang.String getTags() {
         java.lang.Object ref = tags_;
@@ -1611,10 +1452,10 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * key/value pairs for each hop, value should be url encoded
+       * key/value pairs passing in the chain
        * </pre>
        *
-       * <code>string tags = 6;</code>
+       * <code>string tags = 5;</code>
        */
       public com.google.protobuf.ByteString
           getTagsBytes() {
@@ -1631,10 +1472,10 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * key/value pairs for each hop, value should be url encoded
+       * key/value pairs passing in the chain
        * </pre>
        *
-       * <code>string tags = 6;</code>
+       * <code>string tags = 5;</code>
        */
       public Builder setTags(
           java.lang.String value) {
@@ -1646,10 +1487,10 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * key/value pairs for each hop, value should be url encoded
+       * key/value pairs passing in the chain
        * </pre>
        *
-       * <code>string tags = 6;</code>
+       * <code>string tags = 5;</code>
        */
       public Builder clearTags() {
         
@@ -1659,10 +1500,10 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * key/value pairs for each hop, value should be url encoded
+       * key/value pairs passing in the chain
        * </pre>
        *
-       * <code>string tags = 6;</code>
+       * <code>string tags = 5;</code>
        */
       public Builder setTagsBytes(
           com.google.protobuf.ByteString value) {
@@ -1679,20 +1520,20 @@ private static final long serialVersionUID = 0L;
       private int sampleFlag_ ;
       /**
        * <pre>
-       * flags 0=default(yes) 1=force 2=no
+       *  0=default(yes) 1=force 2=no
        * </pre>
        *
-       * <code>int32 sampleFlag = 7;</code>
+       * <code>int32 sampleFlag = 6;</code>
        */
       public int getSampleFlag() {
         return sampleFlag_;
       }
       /**
        * <pre>
-       * flags 0=default(yes) 1=force 2=no
+       *  0=default(yes) 1=force 2=no
        * </pre>
        *
-       * <code>int32 sampleFlag = 7;</code>
+       * <code>int32 sampleFlag = 6;</code>
        */
       public Builder setSampleFlag(int value) {
         
@@ -1702,14 +1543,101 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * flags 0=default(yes) 1=force 2=no
+       *  0=default(yes) 1=force 2=no
        * </pre>
        *
-       * <code>int32 sampleFlag = 7;</code>
+       * <code>int32 sampleFlag = 6;</code>
        */
       public Builder clearSampleFlag() {
         
         sampleFlag_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object apps_ = "";
+      /**
+       * <pre>
+       * app names for each hop, may be empty
+       * </pre>
+       *
+       * <code>string apps = 7;</code>
+       */
+      public java.lang.String getApps() {
+        java.lang.Object ref = apps_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          apps_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * app names for each hop, may be empty
+       * </pre>
+       *
+       * <code>string apps = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAppsBytes() {
+        java.lang.Object ref = apps_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          apps_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * app names for each hop, may be empty
+       * </pre>
+       *
+       * <code>string apps = 7;</code>
+       */
+      public Builder setApps(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        apps_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * app names for each hop, may be empty
+       * </pre>
+       *
+       * <code>string apps = 7;</code>
+       */
+      public Builder clearApps() {
+        
+        apps_ = getDefaultInstance().getApps();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * app names for each hop, may be empty
+       * </pre>
+       *
+       * <code>string apps = 7;</code>
+       */
+      public Builder setAppsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        apps_ = value;
         onChanged();
         return this;
       }
@@ -1856,6 +1784,10 @@ private static final long serialVersionUID = 0L;
   public static final int ATTACHMENT_FIELD_NUMBER = 8;
   private volatile java.lang.Object attachment_;
   /**
+   * <pre>
+   * oob data
+   * </pre>
+   *
    * <code>string attachment = 8;</code>
    */
   public java.lang.String getAttachment() {
@@ -1871,6 +1803,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * oob data
+   * </pre>
+   *
    * <code>string attachment = 8;</code>
    */
   public com.google.protobuf.ByteString
@@ -2657,6 +2593,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object attachment_ = "";
     /**
+     * <pre>
+     * oob data
+     * </pre>
+     *
      * <code>string attachment = 8;</code>
      */
     public java.lang.String getAttachment() {
@@ -2672,6 +2612,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * oob data
+     * </pre>
+     *
      * <code>string attachment = 8;</code>
      */
     public com.google.protobuf.ByteString
@@ -2688,6 +2632,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * oob data
+     * </pre>
+     *
      * <code>string attachment = 8;</code>
      */
     public Builder setAttachment(
@@ -2699,6 +2647,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * oob data
+     * </pre>
+     *
      * <code>string attachment = 8;</code>
      */
     public Builder clearAttachment() {
@@ -2708,6 +2660,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * oob data
+     * </pre>
+     *
      * <code>string attachment = 8;</code>
      */
     public Builder setAttachmentBytes(

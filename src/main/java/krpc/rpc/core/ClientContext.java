@@ -1,14 +1,11 @@
 package krpc.rpc.core;
 
-import java.net.URLEncoder;
-
 public class ClientContext {
 	
 	static private ThreadLocal<ClientContextData> tlData = new ThreadLocal<ClientContextData>();
 	static private ThreadLocal<String> tlConnId = new ThreadLocal<String>();
 	static private ThreadLocal<Integer> tlTimeout = new ThreadLocal<Integer>();
 	static private ThreadLocal<String> tlAttachment = new ThreadLocal<String>();
-	static private ThreadLocal<String> tlTraceTags = new ThreadLocal<String>();
 
     public static ClientContextData get() {
         return tlData.get();
@@ -55,29 +52,6 @@ public class ClientContext {
         return i == null ? 0 : i;
     }	    
 
-    public static void addTraceTag(String key,String value) {
-    	String s = tlTraceTags.get();
-    	try {
-    		value = URLEncoder.encode(value,"utf-8");  	
-    	} catch(Exception e) {
-    	}
-    	if( s == null || s.isEmpty() ) s = key+"="+value;
-    	else s += "&" + key+"="+value;
-    	tlTraceTags.set(s);
-    }	   
-    
-    public static String getTraceTags() {
-        String s = (String)tlTraceTags.get();
-        return s;
-    }	    
-    
-    public static String removeTraceTags() {
-        String s = (String)tlTraceTags.get();
-        if( s != null)
-        	tlTraceTags.remove();
-        return s;
-    }
-    
     public static void setAttachment(String attachment) {
     	tlAttachment.set(attachment);
     }	   

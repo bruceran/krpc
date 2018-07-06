@@ -8,13 +8,21 @@ public interface Span {
 	public Span newChild(String type,String action);
     public long stop();
     public long stop(boolean ok);
-	public long stop(String result);
+	public long stop(String status);
 	public void logEvent(String type,String action,String status,String data);
 	public void logException(Throwable c);
 	public void logException(String message,Throwable c);
 	public void tag(String key,String value);
-	public void setRemoteAddr(String addr);
 
+    public void incCount(String key);
+    public void incQuantity(String key,long value);
+    public void incSum(String key,double value);
+    public void incQuantitySum(String key,long v1, double v2);
+    
+	public void setRemoteAddr(String addr);
+	
+	public String getRootSpanId();
+	public SpanIds getSpanIds();
 	public String getParentSpanId();
 	public String getSpanId();
 	
@@ -24,8 +32,9 @@ public interface Span {
 	public long getTimeUsedMicros();
 	public String getStatus();
 	public String getRemoteAddr();
-	public Map<String,String> getTags();
-	public List<Event> getEvents();
 	public List<Span> getChildren(); 
+	public List<Event> getEvents();
+	public Map<String,String> getTags();
+	public List<Metric> getMetrics();
 	
 }

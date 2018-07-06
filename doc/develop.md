@@ -399,6 +399,7 @@
         0=容器启动完成后立即调用start(), 
         n>0 =容器启动完成后再延迟n秒调用start(), 
         n<0 用户代码手工调用start()
+    sampleRate 全链路跟踪采样率, 为0.0-1.0之间的一个值, 默认为1
     
     errorMsgConverter 错误码错误消息转换文件，默认为file
         file 插件参数：location 文件位置，默认为classpath下的error.properties
@@ -511,7 +512,6 @@
     expireSeconds 静态资源在浏览器中的的过期时间，单位：秒， 默认为0秒表示立即过期
     autoTrim 自动对所有参数值做trim, 默认为true
     
-    sampleRate 全链路跟踪采样率, 实际比率为 1/sampleRate, 默认为1
     defaultSessionService  会话服务插件, 支持 memorysessionservice, jedissessionservice, 默认为memorysessionservice
                                      jedissessionservice插件参数：
                                      		clusterMode 是否是redis cluster, 默认为false

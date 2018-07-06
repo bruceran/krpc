@@ -32,8 +32,6 @@ public class WebServerConfig  {
 	int maxChunkSize = 8192;
 	int maxContentLength = 1000000;
 	long maxUploadLength = 5000000;
-	
-	int sampleRate = 1; // todo doc  sample if hash(traceId) % sampleRate == 0, now only for webserver
 
 	String defaultSessionService = "memorysessionservice";
 	List<String> pluginParams  = new ArrayList<>(); // config WebPlugins if needed
@@ -161,15 +159,6 @@ public class WebServerConfig  {
 
 	public WebServerConfig setSessionIdCookiePath(String sessionIdCookiePath) {
 		this.sessionIdCookiePath = sessionIdCookiePath;
-		return this;
-	}
-
-	public int getSampleRate() {
-		return sampleRate;
-	}
-
-	public WebServerConfig setSampleRate(int sampleRate) {
-		this.sampleRate = sampleRate;
 		return this;
 	}
 

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -65,8 +66,7 @@ import krpc.rpc.web.WebClosure;
 import krpc.rpc.web.WebConstants;
 import krpc.rpc.web.WebContextData;
 import krpc.rpc.web.WebMonitorService;
-import krpc.trace.TraceContext;
-import krpc.trace.Span;
+import krpc.trace.TraceIds;
 import krpc.trace.Trace;
 
 public class WebServer implements HttpTransportCallback, InitClose, StartStop {
@@ -76,7 +76,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	String sessionIdCookieName = DefaultSessionIdCookieName;
 	String sessionIdCookiePath = "";
 	int expireSeconds = 0;
-	int sampleRate = 1;
+	double sampleRate = 1;
 	boolean autoTrim = true;
 
 	SessionService defaultSessionService;
@@ -96,7 +96,8 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	ArrayList<Object> resources = new ArrayList<Object>();
 	ConcurrentHashMap<String,Set<String>> cachedOrigins = new ConcurrentHashMap<>();
-		
+	Random rand = new Random();
+	
 	public void init() {
 
 		resources.add(defaultSessionService);
@@ -137,16 +138,13 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		
 		RpcMeta.Trace.Builder traceBuilder = RpcMeta.Trace.newBuilder();
 		
-		String traceId = Trace.getAdapter().newTraceId();
-		String parentSpanId = Trace.getAdapter().newDefaultSpanId(false,traceId);
-		String spanId = Trace.getAdapter().newDefaultSpanId(true,traceId);
+		TraceIds traceIds = Trace.newStartTraceIds(true);
+		traceBuilder.setTraceId(traceIds.getTraceId());
+		traceBuilder.setParentSpanId(traceIds.getParentSpanId());
+		traceBuilder.setSpanId(traceIds.getSpanId());
 		
-		boolean needSample = ( traceId.hashCode() % sampleRate ) == 0;
-		int sampled = needSample?0:2; // todo 1
-
-		traceBuilder.setTraceId(traceId).setSampleFlag(sampled);
-		traceBuilder.setParentSpanId(parentSpanId);
-		traceBuilder.setSpanId(spanId);
+		int sampleFlag = rand.nextDouble() <= sampleRate  ? 0 : 2 ;
+		traceBuilder.setSampleFlag(sampleFlag);
 		
 		String peers = "";
 		String xff = req.getXff();
@@ -166,14 +164,14 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		
 		String clientTraceId = getClientTraceId(req);
 		if( !isEmpty(clientTraceId) ) {
-			String tags = "ct="+clientTraceId;
+			String tags = "x-trace-id="+clientTraceId;
 			traceBuilder.setTags(tags);
 		}
 		
 		RpcMeta.Trace trace = traceBuilder.build();
 
 		String action = serviceMetas.getName(r.getServiceId(), r.getMsgId());
-		Trace.startForServer("HTTPSERVER",action,trace);
+		Trace.startForServer(trace,"HTTPSERVER",action);
 		Trace.setRemoteAddr(getRemoteAddr(connId));
 		return trace;
 	}
@@ -746,7 +744,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		ctx.end();
 		
 		String status = res.getRetCode() == 0 ? "SUCCESS" : "ERROR";
-		ctx.getTraceContext().serverSpanStopped(status);
+		ctx.getTraceContext().stopForServer(status);
 		
 		if( monitorService != null)
 			monitorService.webReqDone(closure);		
@@ -915,7 +913,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		ctx.end();
 		
 		String status = retCode == 0 ? "SUCCESS" : "ERROR";
-		ctx.getTraceContext().serverSpanStopped(status);
+		ctx.getTraceContext().stopForServer(status);
 		
 		if( monitorService != null)
 			monitorService.webReqDone(closure);
@@ -1232,11 +1230,11 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		this.sessionIdCookiePath = sessionIdCookiePath;
 	}
 
-	public int getSampleRate() {
+	public double getSampleRate() {
 		return sampleRate;
 	}
 
-	public void setSampleRate(int sampleRate) {
+	public void setSampleRate(double sampleRate) {
 		this.sampleRate = sampleRate;
 	}
 

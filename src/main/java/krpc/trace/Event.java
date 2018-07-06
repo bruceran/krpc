@@ -2,12 +2,12 @@ package krpc.trace;
 
 public class Event {
 
-	String type;
-	String action;
-	String status;
-	String data;
+	private String type;
+	private String action;
+	private String status;
+	private String data;
 	
-	long startMicros = System.nanoTime()/1000;
+	private long startMicros = System.nanoTime()/1000;
 	
 	public Event(String type,String action,String status,String data) {
 		this.type = type;

@@ -187,7 +187,7 @@ public class CatNettyClient  extends ChannelDuplexHandler implements InitClose {
 		scheduleToReconnect(addr);
 	}
 
-	public boolean send(String addr, String data) {
+	public boolean send(String addr, StringBuilder data) {
 
 		Channel ch = getChannel(addr);
 		if (ch == null) {
@@ -205,8 +205,8 @@ public class CatNettyClient  extends ChannelDuplexHandler implements InitClose {
 	
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-    	if( msg instanceof String ) {
-    		String s = (String)msg;
+    	if( msg instanceof StringBuilder ) {
+    		StringBuilder s = (StringBuilder)msg;
         	ByteBuf len = ctx.alloc().buffer(4);
         	ByteBuf data = ByteBufUtil.writeUtf8(ctx.alloc(), s);
         	len.writeInt(data.readableBytes());

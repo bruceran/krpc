@@ -40,10 +40,10 @@ public final class RpcMetas {
       "\022\017\n\007timeout\030\005 \001(\005\022\017\n\007retCode\030\006 \001(\005\0221\n\005tr" +
       "ace\030\007 \001(\0132\".krpc.rpc.core.proto.RpcMeta." +
       "Trace\022\022\n\nattachment\030\010 \001(\t\022\020\n\010compress\030\t " +
-      "\001(\005\032}\n\005Trace\022\r\n\005peers\030\001 \001(\t\022\014\n\004apps\030\002 \001(" +
-      "\t\022\017\n\007traceId\030\003 \001(\t\022\024\n\014parentSpanId\030\004 \001(\t" +
-      "\022\016\n\006spanId\030\005 \001(\t\022\014\n\004tags\030\006 \001(\t\022\022\n\nsample" +
-      "Flag\030\007 \001(\005\"=\n\tDirection\022\025\n\021INVALID_DIREC" +
+      "\001(\005\032}\n\005Trace\022\r\n\005peers\030\001 \001(\t\022\017\n\007traceId\030\002" +
+      " \001(\t\022\024\n\014parentSpanId\030\003 \001(\t\022\016\n\006spanId\030\004 \001" +
+      "(\t\022\014\n\004tags\030\005 \001(\t\022\022\n\nsampleFlag\030\006 \001(\005\022\014\n\004" +
+      "apps\030\007 \001(\t\"=\n\tDirection\022\025\n\021INVALID_DIREC" +
       "TION\020\000\022\013\n\007REQUEST\020\001\022\014\n\010RESPONSE\020\002B!\n\023krp" +
       "c.rpc.core.protoB\010RpcMetasP\001b\006proto3"
     };
@@ -70,7 +70,7 @@ public final class RpcMetas {
     internal_static_krpc_rpc_core_proto_RpcMeta_Trace_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor,
-        new java.lang.String[] { "Peers", "Apps", "TraceId", "ParentSpanId", "SpanId", "Tags", "SampleFlag", });
+        new java.lang.String[] { "Peers", "TraceId", "ParentSpanId", "SpanId", "Tags", "SampleFlag", "Apps", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

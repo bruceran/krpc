@@ -1,8 +1,11 @@
 package krpc.trace;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -19,111 +22,97 @@ public class DefaultTraceContext implements TraceContext {
 	long requestTimeMicros = System.currentTimeMillis()*1000;
 	long startMicros = System.nanoTime()/1000;
 	AtomicInteger subCalls = new AtomicInteger(); 
-	Deque<Span> spans = new ArrayDeque<Span>();
+	Deque<Span> stack = new ArrayDeque<Span>();
 
 	long threadId;
 	String threadName;
 	String threadGroupName;
 	
+	Map<String,String> tagsForRpc;
+	
+	public DefaultTraceContext(RpcMeta.Trace trace,boolean restoreFlag) {
+		initThreadNames();
+		this.trace = trace;
+		if( !restoreFlag ) return; // web server
+
+		SpanIds newSpanIds = Trace.getAdapter().restore(trace.getParentSpanId(),trace.getSpanId());
+
+		if(  newSpanIds != null ) {
+			RpcMeta.Trace.Builder traceBuilder = trace.toBuilder();
+			traceBuilder.setParentSpanId( newSpanIds.getParentSpanId() );
+			traceBuilder.setSpanId( newSpanIds.getSpanId() );
+			this.trace = traceBuilder.build();
+		} 
+
+	}
+
 	public DefaultTraceContext() {
 		initThreadNames();
 		
 		RpcMeta.Trace.Builder traceBuilder = RpcMeta.Trace.newBuilder();
 		
-		String newTraceId = Trace.getAdapter().newTraceId();
-		String newParentSpanId = Trace.getAdapter().newDefaultSpanId(false,newTraceId);
-		String newSpanId = newParentSpanId;
-		traceBuilder.setTraceId( newTraceId );
-		traceBuilder.setParentSpanId( newParentSpanId );
-		traceBuilder.setSpanId( newSpanId );
+		TraceIds ids = Trace.getAdapter().newStartTraceIds(false);
+		traceBuilder.setTraceId( ids.getTraceId() );
+		traceBuilder.setParentSpanId( ids.getParentSpanId() );
+		traceBuilder.setSpanId( ids.getSpanId() );
 		
 		this.trace = traceBuilder.build();
 	}
 	
-	public DefaultTraceContext(RpcMeta.Trace trace,String type,String action) {
-		initThreadNames();
-		
-		String traceId = trace.getTraceId();
-		String parentSpanId = trace.getParentSpanId();
-		String spanId = trace.getSpanId();
-		
-		TraceAdapter.SpanIds ids = new TraceAdapter.SpanIds(parentSpanId, spanId);
-		Trace.getAdapter().convertRpcSpanIds(traceId,ids);
-
-		if( !parentSpanId.equals(ids.parentSpanId) ||  !spanId.equals(ids.spanId) ) {
-			RpcMeta.Trace.Builder traceBuilder = trace.toBuilder();
-			traceBuilder.setParentSpanId( ids.parentSpanId );
-			traceBuilder.setSpanId( ids.spanId );
-			this.trace = traceBuilder.build();
-		} else {
-			this.trace = trace;
-		}
-
-		Span rootSpan = new DefaultSpan(this, ids.parentSpanId, ids.spanId, type, action, startMicros);
-		spans.addLast(rootSpan);		
+	public void startForServer(String type,String action) {
+		SpanIds spanIds = new SpanIds(trace.getParentSpanId(), trace.getSpanId());
+		Span rootSpan = new DefaultSpan(this, spanIds , type, action, startMicros);
+		stack.addLast(rootSpan);		
 		
 		if( !isEmpty(trace.getTags()) ) {
 			addTags(rootSpan,trace.getTags());
-		}
-	}
-
-	void initThreadNames() {
-		Thread t = Thread.currentThread();
-		threadId = t.getId();
-		threadName = t.getName();
-		threadGroupName = t.getThreadGroup().getName();
+		}		
 	}
 	
-	// push the new span to the stack top
-	public void start(String type,String action) {
-		Span tail = spans.peekLast();
-		if( tail == null ) {
-			String childSpanId = Trace.getAdapter().newChildSpanId(trace.getSpanId(),subCalls);
-			tail = new DefaultSpan(this, trace.getSpanId(), childSpanId, type, action,-1);
-			spans.addLast(tail);
-		} else {
-			Span newChild = tail.newChild(type,action);
-			spans.addLast(newChild);
-		}
-	}
-	
-	// donot push the new span to the stack top
+	// create a span
 	public Span startAsync(String type,String action) {
-		Span tail = spans.peekLast();
+		Span tail = stack.peekLast();
 		if( tail == null ) {
-			String childSpanId = Trace.getAdapter().newChildSpanId(trace.getSpanId(),subCalls);
-			return new DefaultSpan(this, trace.getSpanId(), childSpanId, type, action,-1);
+			SpanIds childIds = Trace.getAdapter().newChildSpanIds(trace.getSpanId(),subCalls);
+			return new DefaultSpan(this, childIds, type, action,-1);
 		} else {
 			return tail.newChild(type,action);
 		}
 	}
 	
-	public void serverSpanStopped(String result) {
+	// push the new span to the stack top
+	public void start(String type,String action) {
+		Span child = startAsync(type,action);
+		stack.addLast(child);
+	}
 
-		Span span = spans.peekFirst();
+	public void stopForServer(String result) {
+
+		Span span = stack.peekFirst();
 		if( span != null ) {
 			span.stop(result);
-			if( !spans.isEmpty() ) {
-				spans.clear();
+			if( !stack.isEmpty() ) {
+				stack.clear();
 				sendToTrace(span);
 			}
 		}
+		
 	}
 	
 	public void stopped(Span span) {
 
-		if( span == spans.peekLast() ) {
-			spans.removeLast();
-			if( spans.isEmpty() ) {
+		if( span == stack.peekLast() ) {
+			stack.removeLast();
+			if( stack.isEmpty() ) {
 				Trace.getAdapter().send(this, span);
 				return;
 			}
 		} else {
-			if( span == spans.peekFirst() ) {
-				spans.clear();
+			if( span == stack.peekFirst() ) {
+				stack.clear();
 				sendToTrace(span);
 				return;
-			} else if( spans.isEmpty() ) {
+			} else if( stack.isEmpty() ) {
 				sendToTrace(span);
 				return;
 			}
@@ -153,7 +142,7 @@ public class DefaultTraceContext implements TraceContext {
 	}
 	
 	public String getRemoteAppName() {
-		String apps = trace.getPeers();
+		String apps = trace.getApps();
 		if( isEmpty(apps) ) return "client";
 		int p = apps.lastIndexOf(",");
 		if( p >= 0 ) return apps.substring(p+1);
@@ -161,7 +150,7 @@ public class DefaultTraceContext implements TraceContext {
 	}
 	
 	public Span currentSpan() {
-		Span tail = spans.peekLast();
+		Span tail = stack.peekLast();
 		return tail;
 	}
 
@@ -175,6 +164,28 @@ public class DefaultTraceContext implements TraceContext {
 		}
 	}
 	
+	public void tagForRpc(String key,String value) {
+		if( tagsForRpc == null ) tagsForRpc = new HashMap<>();
+		tagsForRpc.put(key, value);
+	}
+	
+	public String getTagsForRpc() {
+		if( tagsForRpc == null ) return null;
+		StringBuilder b = new StringBuilder();
+		for(Map.Entry<String, String> entry: tagsForRpc.entrySet()) {
+			if( b.length() > 0 ) b.append("&");
+			b.append(entry.getKey()).append("=").append(encodeValue(entry.getValue()));
+		}
+		return b.toString();
+	}
+	
+	void initThreadNames() {
+		Thread t = Thread.currentThread();
+		threadId = t.getId();
+		threadName = t.getName();
+		threadGroupName = t.getThreadGroup().getName();
+	}
+		
 	String decodeValue(String value) {
 		try {
 			return URLDecoder.decode(value,"utf-8");
@@ -183,24 +194,16 @@ public class DefaultTraceContext implements TraceContext {
 		}
 	}
 	
-	boolean isEmpty(String s) {
-		return s == null || s.isEmpty();
+	String encodeValue(String value) {
+		try {
+			return URLEncoder.encode(value,"utf-8");
+		} catch(Exception e) {
+			return value;
+		}
 	}
 	
-	public String getTraceId() {
-		return trace.getTraceId();
-	}
-
-	public String getRootParentSpanId() {
-		return trace.getParentSpanId();
-	}
-
-	public String getRootSpanId() {
-		return trace.getSpanId();
-	}
-			
-	public int getSampleFlag() {
-		return trace.getSampleFlag();
+	boolean isEmpty(String s) {
+		return s == null || s.isEmpty();
 	}
 
 	public long getRequestTimeMicros() {

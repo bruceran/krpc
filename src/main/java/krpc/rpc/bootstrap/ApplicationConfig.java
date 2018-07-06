@@ -6,6 +6,8 @@ public class ApplicationConfig  {
 	String name = "unknown";
 	String dataDir = ".";
 	
+	double sampleRate = 1;
+	
 	String traceAdapter = "default"; // default, zipkin, cat, skywalking
 	String errorMsgConverter = "file";
 	String fallbackPlugin = "default"; 
@@ -78,6 +80,15 @@ public class ApplicationConfig  {
 
 	public ApplicationConfig setDelayStart(int delayStart) {
 		this.delayStart = delayStart;
+		return this;
+	}
+
+	public double getSampleRate() {
+		return sampleRate;
+	}
+
+	public ApplicationConfig setSampleRate(double sampleRate) {
+		this.sampleRate = sampleRate;
 		return this;
 	}
 

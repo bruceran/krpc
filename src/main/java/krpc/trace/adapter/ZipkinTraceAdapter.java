@@ -21,6 +21,8 @@ import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
 import krpc.trace.Event;
 import krpc.trace.Span;
+import krpc.trace.SpanIds;
+import krpc.trace.TraceIds;
 import krpc.trace.Trace;
 import krpc.trace.TraceAdapter;
 import krpc.trace.TraceContext;
@@ -248,10 +250,9 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 	
 	void convert(TraceContext ctx, Span span,List<ZipkinSpan> list) {
 		ZipkinSpan zs = new ZipkinSpan();
-		zs.traceId = ctx.getTraceId();
+		zs.traceId = ctx.getTrace().getTraceId();
 		zs.name = span.getAction();
 		zs.parentId = span.getParentSpanId();
-		if( zs.parentId.equals("0") ) zs.parentId = "";
 		zs.id = span.getSpanId();
 		zs.kind = span.getType().equals("RPCSERVER") || span.getType().equals("HTTPSERVER") ?"SERVER":"CLIENT";
 		zs.timestamp = ctx.getRequestTimeMicros() + ( span.getStartMicros() - ctx.getStartMicros() );
@@ -270,13 +271,14 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		}
 		
 		ZipkinEndpoint rep = new ZipkinEndpoint();
-		if( span.getType().equals("RPCSERVER")  || span.getType().equals("HTTPSERVER") )
+		if( span.getType().equals("RPCSERVER")  || span.getType().equals("HTTPSERVER") ) {
 			rep.serviceName = ctx.getRemoteAppName();
-		else if( span.getType().equals("RPCCLIENT") ) {
+		} else if( span.getType().equals("RPCCLIENT") ) {
 			//int p2 = span.getAction().indexOf(".");
 			//rep.serviceName = span.getAction().substring(0,p2);
-		} else 
+		} else {
 			rep.serviceName = span.getType();
+		}
 
 		String remoteAddr = span.getRemoteAddr();
 		if( remoteAddr != null ) {
@@ -305,23 +307,23 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		}
 	}
 
-	public String newTraceId() {
+	public boolean needAppNames() { return true;  }
+	
+	public TraceIds newStartTraceIds(boolean isServer) {
+		String traceId = newTraceId();
+		if( isServer ) return new TraceIds(traceId,"",nextSpanId());
+		else return new TraceIds(traceId,"","");
+	}
+
+	public SpanIds newChildSpanIds(String spanId,AtomicInteger subCalls) {
+		return new SpanIds(spanId,nextSpanId());
+	}
+	
+	String newTraceId() {
 		String s = UUID.randomUUID().toString();
 	    return s.replaceAll("-", "");		
 	}
 
-	public String newDefaultSpanId(boolean isServer,String traceId) {
-		if( isServer ) return nextSpanId();
-		else return "0";
-	}
-	
-	public void convertRpcSpanIds(String traceId,SpanIds ids) {	
-	}
-
-	public String newChildSpanId(String parentSpanId,AtomicInteger subCalls) {
-		return nextSpanId();
-	}
-	
 	private String nextSpanId() {
 		String s = UUID.randomUUID().toString();
 	    s =  s.replaceAll("-", "");				

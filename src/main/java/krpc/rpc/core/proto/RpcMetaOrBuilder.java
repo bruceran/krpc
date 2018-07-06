@@ -59,10 +59,18 @@ public interface RpcMetaOrBuilder extends
   krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder();
 
   /**
+   * <pre>
+   * oob data
+   * </pre>
+   *
    * <code>string attachment = 8;</code>
    */
   java.lang.String getAttachment();
   /**
+   * <pre>
+   * oob data
+   * </pre>
+   *
    * <code>string attachment = 8;</code>
    */
   com.google.protobuf.ByteString

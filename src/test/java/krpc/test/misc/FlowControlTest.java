@@ -20,7 +20,8 @@ public class FlowControlTest {
 
 		RpcMeta.Trace trace = RpcMeta.Trace.newBuilder().build();
 		RpcMeta meta = RpcMeta.newBuilder().setServiceId(100).setMsgId(1).setTrace(trace).build();
-		TraceContext traceContext = new DefaultTraceContext(trace,"TEST","TEST");
+		TraceContext traceContext = new DefaultTraceContext(trace,false);
+		traceContext.startForServer("TEST","TEST");
 		ServerContextData ctx = new ServerContextData("0:0:0",meta,traceContext);
 		
 		MemoryFlowControl impl = new MemoryFlowControl();
@@ -45,7 +46,8 @@ public class FlowControlTest {
 		
 		RpcMeta.Trace trace = RpcMeta.Trace.newBuilder().build();
 		RpcMeta meta = RpcMeta.newBuilder().setServiceId(100).setMsgId(1).setTrace(trace).build();
-		TraceContext traceContext = new DefaultTraceContext(trace,"TEST","TEST");
+		TraceContext traceContext = new DefaultTraceContext(trace,false);
+		traceContext.startForServer("TEST","TEST");
 		ServerContextData ctx = new ServerContextData("0:0:0",meta,traceContext);
 		
 		

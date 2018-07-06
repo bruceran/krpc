@@ -12,9 +12,10 @@ public class Trace {
 	private static TraceAdapter adapter = new DummyTraceAdapter();
 	private static ThreadLocal<TraceContext> tlContext = new ThreadLocal<TraceContext>();
 
-    public static void startForServer(String type,String action,RpcMeta.Trace trace) {
-    	TraceContext ctx = new DefaultTraceContext(trace,type, action);
+    public static void startForServer(RpcMeta.Trace trace,String type,String action) {
+    	TraceContext ctx = adapter.newTraceContext(trace,type.equals("RPCSERVER"));
     	setCurrentContext(ctx);
+    	ctx.startForServer(type, action);
     }
     
     public static void start(String type,String action) {
@@ -30,7 +31,7 @@ public class Trace {
 	private static TraceContext getOrNew() {
     	TraceContext ctx = tlContext.get();
     	if( ctx != null ) return ctx;
-		ctx = new DefaultTraceContext();
+		ctx = adapter.newTraceContext();
 		setCurrentContext(ctx);
     	return ctx;
     }
@@ -60,17 +61,17 @@ public class Trace {
     }	    
 
     
-    public static void logEvent(String type,String name) {
-    	logEvent(type,name,"SUCCESS",null);
+    public static void logEvent(String type,String action) {
+    	logEvent(type,action,"SUCCESS",null);
     }
     
-    public static void logEvent(String type,String name,String result,String data) {
+    public static void logEvent(String type,String action,String status,String data) {
     	Span span = currentSpan();
     	if( span == null ) {
     		log.error("span not started");
     		return;
     	}
-    	span.logEvent(type,name,result,data);
+    	span.logEvent(type,action,status,data);
     }	    
     
     public static void logException(Throwable c) {
@@ -95,6 +96,48 @@ public class Trace {
     	span.tag(key,value);
     }
 
+    public static void tagForRpc(String key,String value) {
+    	
+    	tag(key,value); // normal tag
+    	
+    	TraceContext ctx = tlContext.get();
+    	if( ctx == null ) return;
+    	ctx.tagForRpc(key,value); // save to rpc
+    }
+    
+    public static void incCount(String key) {
+    	Span span = currentSpan();
+    	if( span == null ) {
+    		log.error("span not started");
+    		return;
+    	}
+    	span.incCount(key);
+    }
+    public static void incQuantity(String key,long value) {
+    	Span span = currentSpan();
+    	if( span == null ) {
+    		log.error("span not started");
+    		return;
+    	}
+    	span.incQuantity(key,value);
+    }
+    public static void incSum(String key,double value) {
+    	Span span = currentSpan();
+    	if( span == null ) {
+    		log.error("span not started");
+    		return;
+    	}
+    	span.incSum(key,value);
+    }
+    public static void incQuantitySum(String key,long v1, double v2) {
+    	Span span = currentSpan();
+    	if( span == null ) {
+    		log.error("span not started");
+    		return;
+    	}
+    	span.incQuantitySum(key,v1,v2);
+    }
+    
     public static void setRemoteAddr(String addr) {
     	Span span = currentSpan();
     	if( span == null ) {
@@ -104,14 +147,18 @@ public class Trace {
     	span.setRemoteAddr(addr);
     }
 	
-	public static String getAppName() {
-		return appName;
+	public static TraceIds newStartTraceIds(boolean isServerSide) {
+		return adapter.newStartTraceIds(isServerSide);
 	}
 
-	public static void setAppName(String appName) {
-		Trace.appName = appName;
-	}	 
-
+	public static TraceIds inject(TraceContext ctx, Span span) {
+		return adapter.inject(ctx,span);  
+	}
+	
+	public static boolean needAppNames() { 
+		return adapter.needAppNames();  
+	}
+	
 	public static TraceAdapter getAdapter() {
 		return adapter;
 	}
@@ -120,7 +167,15 @@ public class Trace {
 		Trace.adapter = adapter;
 	}	    
 
-    public static TraceContext currentContext() {
+    public static String getAppName() {
+		return appName;
+	}
+
+	public static void setAppName(String appName) {
+		Trace.appName = appName;
+	}
+
+	public static TraceContext currentContext() {
         return tlContext.get();
     }
 	

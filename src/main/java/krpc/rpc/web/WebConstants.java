@@ -4,7 +4,7 @@ public class WebConstants {
 
 	static public final String DefaultCharSet = "utf-8";
 	
-	static public final String TraceIdName = "X-Trace-Id";
+	static public final String TraceIdName = "x-trace-id";
 	
 	static public final String LoginFlagName = "loginFlag";
 	static public final String SessionMapName = "session";

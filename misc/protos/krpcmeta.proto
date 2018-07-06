@@ -15,12 +15,12 @@ message RpcMeta {
     
     message Trace { 
         string peers = 1; // ip:port for each hop
-	    string apps = 2; // app names for each hop
-	    string traceId = 3; // traceId
-	    string parentSpanId = 4; // format depends on apm system used
-	    string spanId = 5; // format depends on apm system used
-	    string tags = 6; // key/value pairs for each hop, value should be url encoded
-	    int32 sampleFlag = 7; // flags 0=default(yes) 1=force 2=no
+	    string traceId = 2;
+	    string parentSpanId = 3; // may be empty
+	    string spanId = 4;
+	    string tags = 5; // key/value pairs passing in the chain
+	    int32 sampleFlag = 6; //  0=default(yes) 1=force 2=no
+	    string apps = 7; // app names for each hop, may be empty, used only by zipkin
     }
 
     Direction direction = 1;

@@ -25,7 +25,10 @@ import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
 import krpc.rpc.util.IpUtils;
 import krpc.trace.Event;
+import krpc.trace.Metric;
 import krpc.trace.Span;
+import krpc.trace.SpanIds;
+import krpc.trace.TraceIds;
 import krpc.trace.Trace;
 import krpc.trace.TraceAdapter;
 import krpc.trace.TraceContext;
@@ -69,6 +72,7 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 		
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
 	 
+		// todo mutiple server addrs
 		String url = "http://"+params.get("server")+"/cat/s/router?op=json&domain=%s&ip=%s";
 		routeQueryUrl = String.format(url, domain, localIp);
 
@@ -201,18 +205,18 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 			return;
 		}
 		
-		StringBuilder b = new StringBuilder();
+		StringBuilder b = new StringBuilder(1024);
 		appendHeader(ctx, span, b);
 		appendMessage(ctx, span, b);
-		String data = b.toString();
-System.out.println(data);
+
+System.out.println(b.toString());
 		
-		boolean ok = client.send(addr, data);
+		boolean ok = client.send(addr, b); // send StringBuilder, not String
 		if(!ok) {
 			skipAddr(addr);
 			String newAddr = currentAddr();
 			if( !newAddr.equals(addr) ) {
-				ok = client.send(newAddr, data);
+				ok = client.send(newAddr, b);
 			}
 		}
 		if(!ok) {
@@ -230,37 +234,47 @@ System.out.println(data);
 		b.append(ctx.getThreadId()).append(TAB);
 		b.append(ctx.getThreadName()).append(TAB);
 		
-		String parentSpanId = span.getParentSpanId();
 		String spanId = span.getSpanId();
 		
 		b.append(spanId).append(TAB); // message id
 		
-		// todo according span type, hide parent or root message id
-		
-		if( !parentSpanId.equals("0") ) {
-			b.append(parentSpanId).append(TAB); // parent message id
+		if( !span.getType().equals("RPCSERVER")  ) {
+			b.append(spanId).append(TAB); // parent message id
+			b.append(spanId).append(TAB); // root message id			
 		} else {
-			b.append("null").append(TAB); // parent message id
+			String traceId = ctx.getTrace().getTraceId();
+			String parentSpanId = ctx.getTrace().getParentSpanId();
+			b.append(parentSpanId).append(TAB); // parent message id
+			b.append(traceId).append(TAB); // root message id
 		}
-		
-		b.append(ctx.getTraceId()).append(TAB); // root message id
-		
-		b.append("null"); // session token
+
+		b.append(""); // session token
 		b.append(LF);
 	}
 
 	private void appendMessage(TraceContext ctx, Span span, StringBuilder b) {
-		// Map<String,String> tags = span.getTags();
 		List<Event> events = span.getEvents();
 		List<Span> children = span.getChildren(); 
+		Map<String,String> tags = span.getTags();
+		List<Metric> metrics = span.getMetrics(); 
 		
-		if( events == null && children == null ) {  // tags == null  &&  
+		if( events == null && children == null && tags == null  && metrics == null  ) {
 			appendAtomicMessage(ctx,span,b);
 		} else {
 			appendStartMessage(ctx,span,b);
+			if( tags != null  )  {
+				for(Map.Entry<String, String> entry:tags.entrySet()) {
+					appendTag(ctx,span,b,entry.getKey(),entry.getValue() ); // tag -> cat trace
+				}
+			}
+			if( metrics != null  )  {
+				for(Metric m:metrics) {
+					appendMetric(ctx,span,b,m);
+				}
+			}
 			if( events != null  )  {
 				for(Event e:events) {
-					appendEvents(ctx,span,b,e);
+					appendEvent(ctx,span,b,e);
 				}
 			}
 			if( children != null ) {
@@ -271,8 +285,39 @@ System.out.println(data);
 			appendEndMessage(ctx,span,b);
 		}
 	}
-
-	private void appendEvents(TraceContext ctx, Span span, StringBuilder b, Event e) {
+	
+	private void appendTag(TraceContext ctx, Span span, StringBuilder b, String key, String value) {
+		b.append("L");
+		long ts = ctx.getRequestTimeMicros()+span.getStartMicros() - ctx.getStartMicros();
+		b.append(formatMicros(ts)).append(TAB);		
+		b.append("").append(TAB);		
+		b.append(key).append(TAB);	
+		b.append("0").append(TAB); // status
+		b.append(escape(value)).append(TAB);
+		b.append(LF);		 
+	}	
+	
+	private void appendMetric(TraceContext ctx, Span span, StringBuilder b, Metric m) {
+		b.append("M");
+		long ts = ctx.getRequestTimeMicros()+span.getStartMicros() - ctx.getStartMicros();
+		b.append(formatMicros(ts)).append(TAB);		
+		b.append("").append(TAB);		
+		b.append(m.getKey()).append(TAB);	
+		String status = "";
+		switch( m.getType() ) {
+			case Metric.COUNT: status = "C"; break;
+			case Metric.QUANTITY: status = "C"; break;
+			case Metric.SUM: status = "S"; break;
+			case Metric.QUANTITY_AND_SUM: status = "S,C"; break;
+			default: return;
+		}
+		b.append(status).append(TAB);		 
+		String data = m.getValue();
+		b.append(data).append(TAB);
+		b.append(LF);		 
+	}	
+	
+	private void appendEvent(TraceContext ctx, Span span, StringBuilder b, Event e) {
 		b.append("E");
 		long ts = ctx.getRequestTimeMicros()+e.getStartMicros() - ctx.getStartMicros();
 		b.append(formatMicros(ts)).append(TAB);		
@@ -281,11 +326,12 @@ System.out.println(data);
 		String status = e.getStatus();
 		if( status.equals("SUCCESS")) status = "0";
 		b.append(status).append(TAB);		 
-		String data = e.getData(); // todo escape
+		String data = e.getData();
 		if( data == null ) data = "";
-		b.append(data).append(TAB);
+		b.append(escape(data)).append(TAB);
 		b.append(LF);		 
 	}	
+	
 	private void appendAtomicMessage(TraceContext ctx, Span span, StringBuilder b) {
 		b.append("A");
 		long ts = ctx.getRequestTimeMicros()+span.getStartMicros() - ctx.getStartMicros();
@@ -352,6 +398,35 @@ System.out.println(data);
 		return sb.toString();
 	}
 	
+	// escape \r \n \t \
+	public static String escape(String s) {
+		StringBuilder b = null;
+		char[] chars = s.toCharArray();
+		for(int i=0;i<chars.length;++i) {
+			char ch = chars[i];
+			
+			if( ch == '\r' || ch == '\n' ||  ch == '\t' ||  ch == '\\' ) {
+				if( b == null )  {
+					b = new StringBuilder();
+					for(int k=0;k<i;++k) {
+						b.append(chars[k]);
+					}
+				}
+				b.append("\\");
+				switch(ch) {
+					case '\r': b.append('r');break;
+					case '\n': b.append('n');break;
+					case '\t': b.append('t');break;
+					case '\\': b.append(ch);break;
+				}
+			} else {
+				if( b != null ) b.append(ch);
+			}
+			
+		}
+		return b != null ? b.toString() : s;
+	}
+	
 	long getHour() {
 		long ts = System.currentTimeMillis();
 		return ts / HOUR;
@@ -364,25 +439,29 @@ System.out.println(data);
 	String formatMicros(long ts) {
 		return f.get().format(new Date(ts/1000));
 	}
+
+	public TraceIds newStartTraceIds(boolean isServer) {
+		String id = nextSpanId();
+		return new TraceIds(id,"",id);
+	}
 	
-	public String newTraceId() {
-		return nextSpanId();
+	public SpanIds newChildSpanIds(String spanId,AtomicInteger subCalls) {
+		return new SpanIds("",nextSpanId());
 	}
 
-	public String newDefaultSpanId(boolean isServer,String traceId) {
-		return traceId;
+	public SpanIds restore(String parentSpanId, String spanId) {	
+		return new SpanIds(parentSpanId,nextSpanId());  // the parentSpanId is the root span id
 	}
 	
-	public void convertRpcSpanIds(String traceId,SpanIds ids) {	
-		if( ids.spanId.equals(traceId) ) return; // for web server
-		ids.parentSpanId = ids.spanId;
-		ids.spanId = nextSpanId();
+	public TraceIds inject(TraceContext ctx, Span span) {
+		String traceId = ctx.getTrace().getTraceId();
+		String rootSpanId = span.getRootSpanId();  // escape parent link error in cat ui
+		if( !span.getType().equals("RPCSERVER")  ) { // escape root link error in cat ui
+			traceId = rootSpanId;
+		}
+		return new TraceIds(traceId, rootSpanId , span.getSpanId()); // the parentSpanId is the root span id
 	}
-	
-	public String newChildSpanId(String parentSpanId,AtomicInteger subCalls) {
-		return nextSpanId();
-	}
-	
+
 	boolean isEmpty(String s) {
 		return s == null || s.isEmpty();
 	}

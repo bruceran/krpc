@@ -733,6 +733,7 @@ public class Bootstrap {
 				server.setPlugins(plugins);
 			}
 			
+			server.setSampleRate(appConfig.sampleRate);
 			server.setErrorMsgConverter(app.errorMsgConverter);
 			server.setMonitorService(app.monitorService);
 			server.setValidator(app.validator);
@@ -781,7 +782,7 @@ public class Bootstrap {
 			SessionService ss = (SessionService)getPlugin(WebPlugin.class,c.defaultSessionService);
 
 			WebServer server = newWebServer();
-			server.setSampleRate(c.sampleRate);
+			server.setSampleRate(appConfig.sampleRate);
 			server.setExpireSeconds(c.expireSeconds);
 			server.setAutoTrim(c.autoTrim);
 			server.setServiceMetas(app.serviceMetas);
@@ -831,6 +832,7 @@ public class Bootstrap {
 			client.setServiceMetas(app.serviceMetas);
 			client.setValidator(app.validator);
 			client.setFallbackPlugin(app.fallbackPlugin);
+			client.setSampleRate(appConfig.sampleRate);
 
 			if (!isEmpty(c.plugins)) {
 				List<RpcPlugin> plugins = new ArrayList<>();
