@@ -30,8 +30,6 @@ public class JedisSessionService implements WebPlugin,SessionService, InitClose 
 	private String addrs;
 	
 	private String keyPrefix = "krpc.ss.";
-	
-	// todo more control parameters
 
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);

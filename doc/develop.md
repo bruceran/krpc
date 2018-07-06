@@ -411,7 +411,7 @@
         如果未设置此值，则不开启动态路由功能
     fallbackPlugin  降级策略插件, 可配置为 default(默认), 如果未配置， 则不开启降级策略	
         default 插件参数：file 文件位置，默认为classpath下的 fallback.yaml						 
-    traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, skywalking(暂未实现), cat(暂未实现)
+    traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, cat, skywalking(暂未实现)
 
 ## registry
 
@@ -1048,7 +1048,7 @@
 
     * krpc支持多种全链路跟踪系统, 可通过application配置参数 traceAdapter 来配置
 
-         配置示例："traceAdapter"="skywalking:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
+         配置示例："traceAdapter"="zipkin:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
          所有打点的信息都可以在全链路跟踪系统里查询到
 
     * 数据采集
@@ -1088,6 +1088,8 @@
        
        每个span上可以增加event, event有时间戳但无耗时信息, 异常也作为event
        每个span上可以增加tag, tag就是普通的key/value信息
+       每个span上可以增加metric, metric就是需要累计的值，支持按count,quantity,sum等 (仅cat支持)
+       可以使用Trace.tagForRpc在网络上的每个节点来透传某个tag
               
     * 业务层因只应使用krpc.trace.Trace静态类和krpc.trace.Span接口来进行打点
     
@@ -1097,11 +1099,16 @@
         long stop()
         long stop(boolean ok)
         long stop(String status)
-        void logEvent(String type,String name)
-        void logEvent(String type,String name,String result,String data)
+        void logEvent(String type,String action)
+        void logEvent(String type,String action,String status,String data)
         void logException(Throwable c)
         void logException(String message, Throwable c)
         void tag(String key,String value)
+        void tagForRpc(String key,String value) 
+        void incCount(String key);
+        void incQuantity(String key,long value);
+        void incSum(String key,double value);
+        void incQuantitySum(String key,long v1, double v2);
         void setRemoteAddr(String addr)
         
         Span startAsync(String type,String action)  异步调用，Span不入栈，后续用Span接口对该Span进行操作
@@ -1111,11 +1118,15 @@
         long stop()
         long stop(boolean ok)
         long stop(String status)
-        void logEvent(String type,String name)
-        void logEvent(String type,String name,String result,String data)
+        void logEvent(String type,String action)
+        void logEvent(String type,String action,String status,String data)
         void logException(Throwable c)
         void logException(String message, Throwable c)
         void tag(String key,String value)
+        void incCount(String key);
+        void incQuantity(String key,long value);
+        void incSum(String key,double value);
+        void incQuantitySum(String key,long v1, double v2);        
         void setRemoteAddr(String addr)
 
      * start/stop 配对
@@ -1147,7 +1158,7 @@
           在krpc框架中已经对Trace上下文做了集成处理  
           
               所有框架发起的调用，无需再手工设置trace上下文 
-              业务层自己实现的线程, 只要调用过 closure.recoverContext(); Trace上下文就已经设置好了
+              业务层自己实现的线程, 只要调用过 closure.restoreContext(); Trace上下文就已经设置好了
               
           未使用krpc closure的情况 (比如一个后台服务，未使用krpc框架)
           

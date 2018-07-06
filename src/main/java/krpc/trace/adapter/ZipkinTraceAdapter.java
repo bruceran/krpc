@@ -32,7 +32,7 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 	static Logger log = LoggerFactory.getLogger(ZipkinTraceAdapter.class);
 	
 	String postUrl;
-	int queueSize = 10000;
+	int queueSize = 1000;
 	int retryCount = 3;
 	int retryInterval = 1000;
 
@@ -40,10 +40,14 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 	NamedThreadFactory threadFactory = new NamedThreadFactory("zipkin_report");
 	ThreadPoolExecutor pool;
 
+	String[] serverAddrs;
+	int serverIndex = 0;
+
 	public void config(String paramsStr) {
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
 	
-		postUrl = "http://"+params.get("server")+"/api/v2/spans";
+		serverAddrs = params.get("server").split(",");
+		postUrl = "http://%s/api/v2/spans";
 		
 		String s = params.get("queueSize");
 		if( !isEmpty(s) ) queueSize = Integer.parseInt(s);
@@ -69,6 +73,14 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		hc = null;
 	}
 	
+	void nextServerAddr() {
+		if( serverIndex + 1 >= serverAddrs.length ) serverIndex = 0;
+		else serverIndex++;
+	}
+	String currentServerAddr() {
+		return serverAddrs[serverIndex];
+	}
+		
 	public void send(TraceContext ctx, Span span) {
 		try {
 			pool.execute( new Runnable() {
@@ -85,159 +97,16 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		}
 	}
 	
-	static class ZipkinAnnotation {
-		long timestamp;
-		String value;
-		
-		public long getTimestamp() {
-			return timestamp;
-		}
-		public void setTimestamp(long timestamp) {
-			this.timestamp = timestamp;
-		}
-		public String getValue() {
-			return value;
-		}
-		public void setValue(String value) {
-			this.value = value;
-		}
-	}
-	
-	static class ZipkinEndpoint {
-		String serviceName;
-		String ipv4;
-		String ipv6; // never used
-		int port;
-		
-		public String getServiceName() {
-			return serviceName;
-		}
-		public void setServiceName(String serviceName) {
-			this.serviceName = serviceName;
-		}
-		public String getIpv4() {
-			return ipv4;
-		}
-		public void setIpv4(String ipv4) {
-			this.ipv4 = ipv4;
-		}
-		public String getIpv6() {
-			return ipv6;
-		}
-		public void setIpv6(String ipv6) {
-			this.ipv6 = ipv6;
-		}
-		public int getPort() {
-			return port;
-		}
-		public void setPort(int port) {
-			this.port = port;
-		}
-	}
-	
-	static class ZipkinSpan {
-		String traceId;
-		String name;
-		String parentId;
-		String id;
-		String kind;
-		long timestamp;
-		long duration;
-		boolean debug = true; // todo
-		boolean shared = true; // never used
-		ZipkinEndpoint localEndpoint;  // never used
-		ZipkinEndpoint remoteEndpoint;
-		List<ZipkinAnnotation> annotations;
-		Map<String,String> tags;
-		
-		public String getTraceId() {
-			return traceId;
-		}
-		public void setTraceId(String traceId) {
-			this.traceId = traceId;
-		}
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public String getParentId() {
-			return parentId;
-		}
-		public void setParentId(String parentId) {
-			this.parentId = parentId;
-		}
-		public String getId() {
-			return id;
-		}
-		public void setId(String id) {
-			this.id = id;
-		}
-		public String getKind() {
-			return kind;
-		}
-		public void setKind(String kind) {
-			this.kind = kind;
-		}
-		public long getTimestamp() {
-			return timestamp;
-		}
-		public void setTimestamp(long timestamp) {
-			this.timestamp = timestamp;
-		}
-		public long getDuration() {
-			return duration;
-		}
-		public void setDuration(long duration) {
-			this.duration = duration;
-		}
-		public boolean isDebug() {
-			return debug;
-		}
-		public void setDebug(boolean debug) {
-			this.debug = debug;
-		}
-		public boolean isShared() {
-			return shared;
-		}
-		public void setShared(boolean shared) {
-			this.shared = shared;
-		}
-		public ZipkinEndpoint getLocalEndpoint() {
-			return localEndpoint;
-		}
-		public void setLocalEndpoint(ZipkinEndpoint localEndpoint) {
-			this.localEndpoint = localEndpoint;
-		}
-		public ZipkinEndpoint getRemoteEndpoint() {
-			return remoteEndpoint;
-		}
-		public void setRemoteEndpoint(ZipkinEndpoint remoteEndpoint) {
-			this.remoteEndpoint = remoteEndpoint;
-		}
-		public List<ZipkinAnnotation> getAnnotations() {
-			return annotations;
-		}
-		public void setAnnotations(List<ZipkinAnnotation> annotations) {
-			this.annotations = annotations;
-		}
-		public Map<String, String> getTags() {
-			return tags;
-		}
-		public void setTags(Map<String, String> tags) {
-			this.tags = tags;
-		}
-	}
-
 	void report(TraceContext ctx, Span span) {
 		List<ZipkinSpan> list = convert(ctx,span);
 		String json = Json.toJson(list);
-		HttpClientReq req = new HttpClientReq("POST",postUrl).setContent(json);
+		String url = String.format(postUrl, currentServerAddr());
+		HttpClientReq req = new HttpClientReq("POST",url).setContent(json).setGzip(true);
 		int i=0;
 		while(i<retryCount) {
 			HttpClientRes res = hc.call(req);
 			if( res.getRetCode() == 0 && res.getHttpCode() == 202 ) break; // success
+			nextServerAddr();
 			try { Thread.sleep(retryInterval); } catch(Exception e) { break; }
 		}
 	}
@@ -332,6 +201,151 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 
 	boolean isEmpty(String s) {
 		return s == null || s.isEmpty();
+	}
+
+	static class ZipkinAnnotation {
+		long timestamp;
+		String value;
+		
+		public long getTimestamp() {
+			return timestamp;
+		}
+		public void setTimestamp(long timestamp) {
+			this.timestamp = timestamp;
+		}
+		public String getValue() {
+			return value;
+		}
+		public void setValue(String value) {
+			this.value = value;
+		}
+	}
+
+	static class ZipkinEndpoint {
+		String serviceName;
+		String ipv4;
+		String ipv6; // never used
+		int port;
+		
+		public String getServiceName() {
+			return serviceName;
+		}
+		public void setServiceName(String serviceName) {
+			this.serviceName = serviceName;
+		}
+		public String getIpv4() {
+			return ipv4;
+		}
+		public void setIpv4(String ipv4) {
+			this.ipv4 = ipv4;
+		}
+		public String getIpv6() {
+			return ipv6;
+		}
+		public void setIpv6(String ipv6) {
+			this.ipv6 = ipv6;
+		}
+		public int getPort() {
+			return port;
+		}
+		public void setPort(int port) {
+			this.port = port;
+		}
+	}
+
+	static class ZipkinSpan {
+		String traceId;
+		String name;
+		String parentId;
+		String id;
+		String kind;
+		long timestamp;
+		long duration;
+		boolean debug = true; // todo
+		boolean shared = true; // never used
+		ZipkinEndpoint localEndpoint;  // never used
+		ZipkinEndpoint remoteEndpoint;
+		List<ZipkinAnnotation> annotations;
+		Map<String,String> tags;
+		
+		public String getTraceId() {
+			return traceId;
+		}
+		public void setTraceId(String traceId) {
+			this.traceId = traceId;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getParentId() {
+			return parentId;
+		}
+		public void setParentId(String parentId) {
+			this.parentId = parentId;
+		}
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+		public String getKind() {
+			return kind;
+		}
+		public void setKind(String kind) {
+			this.kind = kind;
+		}
+		public long getTimestamp() {
+			return timestamp;
+		}
+		public void setTimestamp(long timestamp) {
+			this.timestamp = timestamp;
+		}
+		public long getDuration() {
+			return duration;
+		}
+		public void setDuration(long duration) {
+			this.duration = duration;
+		}
+		public boolean isDebug() {
+			return debug;
+		}
+		public void setDebug(boolean debug) {
+			this.debug = debug;
+		}
+		public boolean isShared() {
+			return shared;
+		}
+		public void setShared(boolean shared) {
+			this.shared = shared;
+		}
+		public ZipkinEndpoint getLocalEndpoint() {
+			return localEndpoint;
+		}
+		public void setLocalEndpoint(ZipkinEndpoint localEndpoint) {
+			this.localEndpoint = localEndpoint;
+		}
+		public ZipkinEndpoint getRemoteEndpoint() {
+			return remoteEndpoint;
+		}
+		public void setRemoteEndpoint(ZipkinEndpoint remoteEndpoint) {
+			this.remoteEndpoint = remoteEndpoint;
+		}
+		public List<ZipkinAnnotation> getAnnotations() {
+			return annotations;
+		}
+		public void setAnnotations(List<ZipkinAnnotation> annotations) {
+			this.annotations = annotations;
+		}
+		public Map<String, String> getTags() {
+			return tags;
+		}
+		public void setTags(Map<String, String> tags) {
+			this.tags = tags;
+		}
 	}
 	
 } 

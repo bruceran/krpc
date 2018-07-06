@@ -21,7 +21,7 @@ public class RpcClosure {
 		ctx.end();
 	}
 	
-	public void recoverContext() {
+	public void restoreContext() {
 		if( ctx instanceof ServerContextData ) {
 			ServerContextData sctx = (ServerContextData)ctx;
 			ServerContext.set(sctx);

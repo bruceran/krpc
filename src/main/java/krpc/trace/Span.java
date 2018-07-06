@@ -13,7 +13,6 @@ public interface Span {
 	public void logException(Throwable c);
 	public void logException(String message,Throwable c);
 	public void tag(String key,String value);
-
     public void incCount(String key);
     public void incQuantity(String key,long value);
     public void incSum(String key,double value);

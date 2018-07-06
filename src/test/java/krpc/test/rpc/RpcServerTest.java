@@ -29,8 +29,8 @@ public class RpcServerTest {
 
 		RpcApp app = new Bootstrap() 
 			.addService(UserService.class,impl) 
-			//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
-			.setTraceAdapter("cat:server=192.168.213.128:8080")
+			.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+			//.setTraceAdapter("cat:server=192.168.213.128:8080")
 			.setName("uss")
 			.build();
 		
@@ -104,7 +104,7 @@ class UserServiceImpl implements UserService {
 		try {
 			while( true ) {
 				RpcClosure c = queue.take();
-				c.recoverContext();
+				c.restoreContext();
 				log.info("async updateProfile received req#"+i);
 				//try { Thread.sleep(3000); } catch(Exception e) {}
 				UpdateProfileRes res = UpdateProfileRes.newBuilder().setRetCode(-100002).build();

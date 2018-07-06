@@ -104,7 +104,7 @@ public class DefaultTraceContext implements TraceContext {
 		if( span == stack.peekLast() ) {
 			stack.removeLast();
 			if( stack.isEmpty() ) {
-				Trace.getAdapter().send(this, span);
+				doSend(span);
 				return;
 			}
 		} else {
@@ -121,6 +121,11 @@ public class DefaultTraceContext implements TraceContext {
 	
 	private void sendToTrace(Span span) {
 		stopAsync(span);
+		doSend(span);
+	}
+	
+	private void doSend(Span span) {
+		if( trace.getSampleFlag() == 2 ) return; // ignore
 		Trace.getAdapter().send(this, span);
 	}
 	

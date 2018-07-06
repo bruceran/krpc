@@ -53,31 +53,41 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 	String localIpNum;
 	
 	String routeQueryUrl;
-	int queueSize = 10000;
+	int queueSize = 1000;
 	
-	List<String> addrs = new ArrayList<>();
+	String[] queryAddrs;
+	int queryAddrsIndex = 0;
+	
+	String[] addrs = new String[0];
 	int addrIndex = 0;
+	Object addrSyncObj = new Object();
 	
 	DefaultHttpClient hc;
 	CatNettyClient client;
 	NamedThreadFactory threadFactory = new NamedThreadFactory("cat_report");
 	ThreadPoolExecutor pool;
 	Timer timer;
-	
+
+	Object indexSyncObj = new Object();
+	long savedHour = 0;
+	long indexInHour = 0;
+	int indexMultiplier = 100; 
+
 	public void config(String paramsStr) {
 		
 		domain = Trace.getAppName();
 		
 		initIpInfo();
-		
-		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-	 
-		// todo mutiple server addrs
-		String url = "http://"+params.get("server")+"/cat/s/router?op=json&domain=%s&ip=%s";
-		routeQueryUrl = String.format(url, domain, localIp);
+		routeQueryUrl =  "http://%s/cat/s/router?op=json&domain="+domain+"&ip="+localIp;
 
+		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
+		
+		queryAddrs = params.get("server").split(",");
+		
 		String s = params.get("queueSize");
 		if( !isEmpty(s) ) queueSize = Integer.parseInt(s);	
+		s = params.get("indexMultiplier");
+		if( !isEmpty(s) ) indexMultiplier = Integer.parseInt(s);	
 	}
 
 	private void initIpInfo() {
@@ -101,6 +111,9 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 	}
 
 	public void init() {
+		
+		initHourIndex();
+		
 		hc = new DefaultHttpClient();
 		hc.init();
 		pool = new ThreadPoolExecutor(1,1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize),threadFactory);
@@ -128,42 +141,16 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 		hc.close();
 		hc = null;
 	}
-
-	// todo the last is backup ip, remove unused ip
-	synchronized void setAddrs(String[] newAddrs) {
-		for(int i=0;i<newAddrs.length;++i) {
-			String s = newAddrs[i];
-			if( isEmpty(s) ) continue;
-			if( addrs.contains(s)) continue;
-			addrs.add(s);
-			client.connect(s);
-		}
-		String cur = currentAddr();
-		if( isEmpty(cur) ) {
-			addrIndex = 0;
-			return;
-		}
-	}
-	
-	synchronized String currentAddr() {
-		if( addrs.isEmpty() ) return "";
-		return addrs.get(addrIndex);
-	}
-	
-	synchronized void skipAddr(String addr) {
-		if( !currentAddr().equals(addr) ) return;
-		addrIndex++;
-		if( addrIndex >= addrs.size() )  addrIndex = 0;
-	}
 	
 	/*
 	$curl "http://10.241.22.199:8080/cat/s/router?domain=cattest&op=json&ip=127.0.3.3"
 	{"kvs":{"routers":"10.241.22.199:2280;127.0.0.1:2280;","sample":"1.0"}}
 	*/
-	
+
 	@SuppressWarnings("unchecked")
 	void queryRoutes() {
-		HttpClientReq req = new HttpClientReq("GET",routeQueryUrl);
+		String url = String.format(routeQueryUrl, currentQueryAddr());
+		HttpClientReq req = new HttpClientReq("GET",url);
 		HttpClientRes res = hc.call(req);		
 		if( res.getRetCode() == 0 && res.getHttpCode() == 200 ) {
 			Map<String,Object> map = Json.toMap(res.getContent());
@@ -171,12 +158,62 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 			Map<String,Object> kvs = (Map<String,Object>)map.get("kvs");
 			if( kvs == null ) return;
 			String s = (String)kvs.get("routers");
+			if( s == null ) return;
+			if( s.endsWith(";") ) s = s.substring(0, s.length() - 1 );
 			if( isEmpty(s) ) return;
 			String[] addrs = s.split(";");
 			setAddrs(addrs);
-			//String sample = (String)kvs.get("sample");
 		} else {
+			nextQueryAddr();
 			log.error("query cat router failed, retCode="+res.getRetCode()+",content="+res.getContent());
+		}
+	}
+
+	void nextQueryAddr() {
+		if( queryAddrsIndex + 1 >= queryAddrs.length ) queryAddrsIndex = 0;
+		else queryAddrsIndex++;
+	}
+	String currentQueryAddr() {
+		return queryAddrs[queryAddrsIndex];
+	}
+
+	// the last addr is backup addr
+	void setAddrs(String[] newAddrs) {
+		synchronized(addrSyncObj) {
+			List<String> added = getAdded(addrs,newAddrs);
+			List<String> removed = getRemoved(addrs,newAddrs);
+			addrs = newAddrs;
+			
+			for(String addr:added) {
+				client.connect(addr);
+			}
+			for(String addr:removed) {
+				client.disconnect(addr);
+			}
+		}
+	}
+
+	String currentAddr() {
+		synchronized(addrSyncObj) {
+			if( addrs.length == 0 ) return "";
+			if( addrIndex >= addrs.length )  addrIndex = 0;
+			return addrs[addrIndex];
+		}
+	}
+	
+	void nextAddr() {
+		synchronized(addrSyncObj) {
+			addrIndex++;
+			if( addrIndex >= addrs.length )  addrIndex = 0;
+			if( addrIndex == addrs.length - 1 ) { // the backup addr
+				for(int k=0;k<addrs.length - 1;++k) {
+					String addr = addrs[k];
+					if( client.isAlive(addr) ) { // use the alive addr instead of backup addr
+						addrIndex = k;
+						return;
+					}
+				}
+			}
 		}
 	}
 
@@ -213,7 +250,7 @@ System.out.println(b.toString());
 		
 		boolean ok = client.send(addr, b); // send StringBuilder, not String
 		if(!ok) {
-			skipAddr(addr);
+			nextAddr();
 			String newAddr = currentAddr();
 			if( !newAddr.equals(addr) ) {
 				ok = client.send(newAddr, b);
@@ -289,7 +326,7 @@ System.out.println(b.toString());
 	private void appendTag(TraceContext ctx, Span span, StringBuilder b, String key, String value) {
 		b.append("L");
 		long ts = ctx.getRequestTimeMicros()+span.getStartMicros() - ctx.getStartMicros();
-		b.append(formatMicros(ts)).append(TAB);		
+		b.append(formatTimeStampMicros(ts)).append(TAB);		
 		b.append("").append(TAB);		
 		b.append(key).append(TAB);	
 		b.append("0").append(TAB); // status
@@ -300,7 +337,7 @@ System.out.println(b.toString());
 	private void appendMetric(TraceContext ctx, Span span, StringBuilder b, Metric m) {
 		b.append("M");
 		long ts = ctx.getRequestTimeMicros()+span.getStartMicros() - ctx.getStartMicros();
-		b.append(formatMicros(ts)).append(TAB);		
+		b.append(formatTimeStampMicros(ts)).append(TAB);		
 		b.append("").append(TAB);		
 		b.append(m.getKey()).append(TAB);	
 		String status = "";
@@ -320,7 +357,7 @@ System.out.println(b.toString());
 	private void appendEvent(TraceContext ctx, Span span, StringBuilder b, Event e) {
 		b.append("E");
 		long ts = ctx.getRequestTimeMicros()+e.getStartMicros() - ctx.getStartMicros();
-		b.append(formatMicros(ts)).append(TAB);		
+		b.append(formatTimeStampMicros(ts)).append(TAB);		
 		b.append(e.getType()).append(TAB);		
 		b.append(e.getAction()).append(TAB);		 
 		String status = e.getStatus();
@@ -335,7 +372,7 @@ System.out.println(b.toString());
 	private void appendAtomicMessage(TraceContext ctx, Span span, StringBuilder b) {
 		b.append("A");
 		long ts = ctx.getRequestTimeMicros()+span.getStartMicros() - ctx.getStartMicros();
-		b.append(formatMicros(ts)).append(TAB);				
+		b.append(formatTimeStampMicros(ts)).append(TAB);				
 		b.append(span.getType()).append(TAB);		
 		b.append(span.getAction()).append(TAB);
 		String status = span.getStatus();
@@ -350,7 +387,7 @@ System.out.println(b.toString());
 	private void appendStartMessage(TraceContext ctx, Span span, StringBuilder b) {
 		b.append("t");
 		long ts = ctx.getRequestTimeMicros()+span.getStartMicros() - ctx.getStartMicros();
-		b.append(formatMicros(ts)).append(TAB);				
+		b.append(formatTimeStampMicros(ts)).append(TAB);				
 		b.append(span.getType()).append(TAB);		
 		b.append(span.getAction()).append(TAB); 
 		b.append(LF);		 
@@ -359,7 +396,7 @@ System.out.println(b.toString());
 	private void appendEndMessage(TraceContext ctx, Span span, StringBuilder b) {
 		b.append("T");
 		long ts = ctx.getRequestTimeMicros()+span.getStartMicros()+span.getTimeUsedMicros() - ctx.getStartMicros();
-		b.append(formatMicros(ts)).append(TAB);				
+		b.append(formatTimeStampMicros(ts)).append(TAB);				
 		b.append(span.getType()).append(TAB);		
 		b.append(span.getAction()).append(TAB);
 		String status = span.getStatus();
@@ -370,75 +407,6 @@ System.out.println(b.toString());
 		b.append("").append(TAB); // data
 		b.append(LF);		 
 	}	
-	
-	//  todo  restart
-	volatile long savedHour = getHour();
-	volatile AtomicInteger indexInHour = new AtomicInteger(getHourOffset());
-
-	public String nextSpanId() {
-		long hour = getHour();
-
-		if (hour != savedHour) {
-			indexInHour = new AtomicInteger(0); 
-			savedHour = hour;
-		}
-
-		int index = indexInHour.getAndIncrement();
-
-		StringBuilder sb = new StringBuilder(domain.length() + 32);
-
-		sb.append(domain);
-		sb.append('-');
-		sb.append(localIpNum);
-		sb.append('-');
-		sb.append(hour);
-		sb.append('-');
-		sb.append(index);
-
-		return sb.toString();
-	}
-	
-	// escape \r \n \t \
-	public static String escape(String s) {
-		StringBuilder b = null;
-		char[] chars = s.toCharArray();
-		for(int i=0;i<chars.length;++i) {
-			char ch = chars[i];
-			
-			if( ch == '\r' || ch == '\n' ||  ch == '\t' ||  ch == '\\' ) {
-				if( b == null )  {
-					b = new StringBuilder();
-					for(int k=0;k<i;++k) {
-						b.append(chars[k]);
-					}
-				}
-				b.append("\\");
-				switch(ch) {
-					case '\r': b.append('r');break;
-					case '\n': b.append('n');break;
-					case '\t': b.append('t');break;
-					case '\\': b.append(ch);break;
-				}
-			} else {
-				if( b != null ) b.append(ch);
-			}
-			
-		}
-		return b != null ? b.toString() : s;
-	}
-	
-	long getHour() {
-		long ts = System.currentTimeMillis();
-		return ts / HOUR;
-	}
-	int getHourOffset() {
-		long ts = System.currentTimeMillis();
-		return (int)(ts % HOUR);
-	}
-	
-	String formatMicros(long ts) {
-		return f.get().format(new Date(ts/1000));
-	}
 
 	public TraceIds newStartTraceIds(boolean isServer) {
 		String id = nextSpanId();
@@ -460,6 +428,105 @@ System.out.println(b.toString());
 			traceId = rootSpanId;
 		}
 		return new TraceIds(traceId, rootSpanId , span.getSpanId()); // the parentSpanId is the root span id
+	}
+
+	public String nextSpanId() {
+		StringBuilder sb = new StringBuilder(domain.length() + 32);
+		sb.append(domain);
+		sb.append('-');
+		sb.append(localIpNum);
+		sb.append('-');
+		sb.append(getHourIndex());
+	
+		return sb.toString();
+	}
+
+	// restore index after restart
+	// default indexMultiplier=100 means:
+	// if qps < 100,000, spanId generated will not be duplicated
+	// if qps >= 100,000, must change indexMultiplier to a higher value
+	public void initHourIndex() {
+		long ts = System.currentTimeMillis();
+		savedHour = ts / HOUR;
+		indexInHour = ( ts % HOUR ) * indexMultiplier;
+	}
+
+	public String getHourIndex() {
+
+		long hour = 0;
+		long index = 0;
+		
+		synchronized(indexSyncObj) {
+			
+			long ts = System.currentTimeMillis();
+			
+			hour = ts / HOUR;
+			
+			if (hour != savedHour) {
+				savedHour = hour;
+				indexInHour = 0;
+			}
+			
+			indexInHour++;
+			index = indexInHour;
+		}
+		
+		return hour + "-" + index;		
+	}
+	
+	String formatTimeStampMicros(long ts) {
+		return f.get().format(new Date(ts/1000));
+	}
+
+	List<String> getAdded(String[] oldAddrs,String[] newAddrs) {
+		List<String> list = new ArrayList<>();
+		for(String addr: newAddrs ) {
+			if( !contains(oldAddrs,addr) ) list.add(addr);
+		}
+		return list;
+	}
+
+	List<String> getRemoved(String[] oldAddrs,String[] newAddrs) {
+		List<String> list = new ArrayList<>();
+		for(String addr: oldAddrs ) {
+			if( !contains(newAddrs,addr) ) list.add(addr);
+		}
+		return list;
+	}
+
+	boolean contains(String[] newAddrs,String addr) {
+		for(String s:newAddrs) {
+			if( s.equals(addr) ) return true;
+		}
+		return false;
+	}
+
+	public static String escape(String s) {
+		StringBuilder b = null;
+		char[] chars = s.toCharArray();
+		for(int i=0;i<chars.length;++i) {
+			char ch = chars[i];
+			
+			if( ch == '\r' || ch == '\n' ||  ch == '\t' ||  ch == '\\' ) {
+				if( b == null )  {
+					b = new StringBuilder(s.length()+100);
+					for(int k=0;k<i;++k) {
+						b.append(chars[k]);
+					}
+				}
+				b.append("\\");
+				switch(ch) {
+					case '\r': b.append('r');break;
+					case '\n': b.append('n');break;
+					case '\t': b.append('t');break;
+					case '\\': b.append(ch);break;
+				}
+			} else {
+				if( b != null ) b.append(ch);
+			}
+			
+		}
+		return b != null ? b.toString() : s;
 	}
 
 	boolean isEmpty(String s) {

@@ -18,8 +18,8 @@ public class HttpClientTest {
 		RpcApp app = new Bootstrap()
 			.addWebServer(8888) 
 			.addReferer("us",UserService.class,"127.0.0.1:5600") 
-			//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
-			.setTraceAdapter("cat:server=192.168.213.128:8080")
+			.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+			//.setTraceAdapter("cat:server=192.168.213.128:8080")
 			.setName("gate")
 			.build();
 		

@@ -101,7 +101,8 @@ public class DefaultRpcDataConverter implements RpcDataConverter {
 				}
 				if( ctx.getRoute().needLoadSession()) {
 					if( ctx.getSession() != null ) {
-						return ctx.getSession().get(name); // todo always first  field option [(from)=default,client]
+						String value = ctx.getSession().get(name);
+						if( value != null ) return value; // todo always first  field option [(from)=default,client]
 					}
 				}
 				return req.getParameters().get(name);

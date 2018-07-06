@@ -331,7 +331,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 				public void run() {
 					
 					int newSequence = nextSequence(newConnId);
-					// todo use a new rpcId ?
 					RpcMeta newMeta = meta.toBuilder().setSequence(newSequence).build();
 					closure.getCtx().setConnId(newConnId);
 					closure.getCtx().setMeta(newMeta);
