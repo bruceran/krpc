@@ -302,10 +302,12 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	RpcContextData ctx = closure.getCtx();
     	RpcMeta meta = ctx.getMeta();
     	RpcMeta.Trace trace = meta.getTrace();
+    	String spanId = trace.getSpanId();
     	if( ctx instanceof ServerContextData ) {
-    		trace = ((ServerContextData)ctx).getTraceContext().getTrace();
+    		RpcMeta.Trace ctxTrace = ((ServerContextData)ctx).getTraceContext().getTrace();
+    		if( !ctxTrace.getSpanId().equals(spanId)) spanId += "#"+ctxTrace.getSpanId();
     	}
-
+    	
     	long responseTime = ctx.getResponseTimeMicros();
     	String timestamp =  logFormat.format( LocalDateTime.ofEpochSecond(responseTime/1000000,(int)((responseTime%1000000)*1000),offset) ); 
     	b.append(timestamp);
@@ -316,7 +318,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	b.append(sep);
     	b.append(trace.getTraceId());
     	b.append(sep);
-    	b.append(trace.getSpanId());
+    	b.append(spanId);
     	b.append(sep);
     	b.append(meta.getServiceId());
     	b.append(sep);
@@ -344,7 +346,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     	StringBuilder b = new StringBuilder();
     	RpcContextData ctx = closure.getCtx();
     	RpcMeta meta = ctx.getMeta();
-    	RpcMeta.Trace trace = meta.getTrace(); // from network
+    	RpcMeta.Trace trace = meta.getTrace();
     	
     	long responseTime = ctx.getResponseTimeMicros();
     	String timestamp =  logFormat.format( LocalDateTime.ofEpochSecond(responseTime/1000000,(int)((responseTime%1000000)*1000),offset) ); 

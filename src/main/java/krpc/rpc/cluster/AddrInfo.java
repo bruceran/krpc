@@ -129,7 +129,7 @@ public class AddrInfo implements Addr {
 	public int nextConnection() {
 		int cur = current.incrementAndGet();
 		if (cur >= 10000000)
-			current.set(0);
+			current.compareAndSet(cur, 0);
 		int index = cur % connections;
 
 		int v = status.get();
@@ -155,7 +155,7 @@ public class AddrInfo implements Addr {
 	public int nextSequence() {
 		int v = seq.incrementAndGet();
 		if (v >= 10000000)
-			seq.set(0);
+			seq.compareAndSet(v, 0);
 		return v;
 	}
 

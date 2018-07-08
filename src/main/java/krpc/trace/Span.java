@@ -20,6 +20,7 @@ public interface Span {
     
 	public void setRemoteAddr(String addr);
 	
+	public Span getRootSpan();
 	public String getRootSpanId();
 	public SpanIds getSpanIds();
 	public String getParentSpanId();

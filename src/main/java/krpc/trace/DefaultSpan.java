@@ -19,26 +19,30 @@ public class DefaultSpan implements Span {
 	String status = "unset";
 	String remoteAddr;
 	Map<String,String> tags;
-	List<Event> events = null;
-	List<Span> children = null;
-	List<Metric> metrics = null;
-	AtomicInteger subCalls = null;
+	List<Event> events;
+	List<Span> children;
+	List<Metric> metrics;
+	AtomicInteger subCalls;
 	
 	AtomicInteger completed = new AtomicInteger(0); // 0=pending 1=stopped
 	
-	DefaultSpan(Object parent, SpanIds spanIds, String type,String action,long startMicros) {
+	DefaultSpan(Object parent, SpanIds spanIds, String type,String action,long startMicros,AtomicInteger parentSubCalls) {
 		this.parent = parent;
 		this.spanIds = spanIds;
 		this.type = type;
 		this.action = action;
 		if( startMicros <= 0 ) this.startMicros = System.nanoTime()/1000;
 		else this.startMicros = startMicros;
+		
+		if( Trace.getAdapter().useCtxSubCalls() ) {
+			subCalls = parentSubCalls;
+		}
 	}
 	
 	public Span newChild(String type,String action) {
 		if( subCalls == null ) subCalls = new AtomicInteger();
 		SpanIds childIds = Trace.getAdapter().newChildSpanIds(spanIds.getSpanId(),subCalls);
-		Span child = new DefaultSpan(this, childIds, type, action,-1);
+		Span child = new DefaultSpan(this, childIds, type, action,-1, subCalls);
 		if( children == null ) children = new ArrayList<>();
 		children.add(child);		
 		return child;
@@ -129,6 +133,14 @@ public class DefaultSpan implements Span {
 		if( metrics == null ) metrics = new ArrayList<>();
 		String s = String.format("%ld,%.2f", v1, v2);
 		metrics.add(new Metric(key,Metric.QUANTITY_AND_SUM,s));    	
+    }
+    
+    public Span getRootSpan() {
+		if( parent instanceof DefaultSpan ) {
+			return ((DefaultSpan)parent).getRootSpan();
+		} else {
+			return this;
+		}    	
     }
     
     public String getRootSpanId() {

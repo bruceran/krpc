@@ -49,6 +49,10 @@ public class DummyTraceAdapter implements TraceAdapter {
 		public void setRemoteAddr(String addr) {
 		}
 
+		public Span getRootSpan() {
+			return this;
+		}
+		
 		public String getRootSpanId() {
 			return "";
 		}
@@ -138,10 +142,6 @@ public class DummyTraceAdapter implements TraceAdapter {
 			return dummyTrace;
 		}
 
-		public String getRemoteAppName() {
-			return "";
-		}
-
 		public long getThreadId() {
 			return 0;
 		}
@@ -168,8 +168,14 @@ public class DummyTraceAdapter implements TraceAdapter {
 		public void tagForRpc(String key, String value) {
 
 		}
+		public void tagForRpcIfAbsent(String key, String value) {
 
+		}
 		public String getTagsForRpc() {
+			return "";
+		}
+
+		public String getTagForRpc(String key) {
 			return "";
 		}
 	};
@@ -190,12 +196,11 @@ public class DummyTraceAdapter implements TraceAdapter {
 		return dummySpanIds;
 	}
 
-	public SpanIds restore(String parentSpanId, String spanId) {
-		return dummySpanIds;
+	public void inject(TraceContext ctx, Span span,RpcMeta.Trace.Builder traceBuilder) {
 	}
 
-	public TraceIds inject(TraceContext ctx, Span span) {
-		return dummyTraceIds;
+	public SpanIds restore(String parentSpanId, String spanId) {
+		return dummySpanIds;
 	}
 
 	public void send(TraceContext ctx, Span span) {

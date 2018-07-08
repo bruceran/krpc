@@ -3,8 +3,21 @@ syntax="proto3";
 package krpc;
 
 import "descriptor.proto";
-extend google.protobuf.ServiceOptions {  int32 serviceId = 1001;   }  
-extend google.protobuf.MethodOptions {  int32 msgId = 1002;  }  
+extend google.protobuf.ServiceOptions {  int32 serviceId = 50001;   }  
+extend google.protobuf.MethodOptions {  int32 msgId = 50002;  }  
+
+message Validate {
+    bool  required = 1; // not empty string
+    string match = 2; // regex or special value: int,long,double,email,date,timestamp
+    string values = 3; // enums
+    string length = 4; // n or min,max or min,- or -,max
+    string nrange = 5; // n or min,max or min,- or -,max compare by number
+    string srange = 6; // like nrange but compare by string  
+    string arrlen = 7; // length for repeated field
+};
+
+extend google.protobuf.FieldOptions {  Validate vld = 50003;  }  
+extend google.protobuf.FieldOptions {  string map = 50004;  }  
 
 option java_package="krpc";
 option java_outer_classname="KrpcExt";

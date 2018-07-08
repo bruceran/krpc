@@ -66,7 +66,7 @@ public class RoundRobinWeightLoadBalance  implements LoadBalance {
 		
 		int index = ai.incrementAndGet();
 		if( index >= 10000000 ) {
-			ai.set(0);
+			ai.compareAndSet(index, 0);
 		}
 		return index;
 	}

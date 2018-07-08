@@ -42,7 +42,6 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
 	ArrayList<AddrInfo> addrList = new ArrayList<AddrInfo>();
 	AtomicInteger addrIndex = new AtomicInteger(-1);
 	AtomicInteger seq = new AtomicInteger(0);
-	int maxLoopCount = 0;
 	Timer timer;
 	NettyClient nettyClient;
 	
@@ -58,7 +57,6 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
 		for(int i=0;i<ss.length;++i) {
 			addrList.add(new AddrInfo(ss[i]));
 		}
-		maxLoopCount = 10000000*addrList.size();
 		
 		nettyClient = new NettyClient(this,codec,serviceMetas);
 		nettyClient.setWorkerThreads(1);
@@ -102,7 +100,7 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
 	AddrInfo nextAddrInfo() {
 		for(int kk=0;kk<addrList.size();++kk) {
 			int i = addrIndex.incrementAndGet();
-			if( i >= maxLoopCount ) addrIndex.set(0);
+			if( i >= 10000000 ) addrIndex.compareAndSet(i, 0);
 			int idx = i % addrList.size();
 			AddrInfo ai = addrList.get(idx);
 			if( ai.connected.get() ) return ai;
@@ -182,9 +180,9 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
     }
 	
 	int nextSequence() {
-		int sequence = seq.incrementAndGet();
-    	if( sequence >= 10000000 ) seq.set(0);
-    	return sequence;
+		int v = seq.incrementAndGet();
+    	if( v >= 10000000 ) seq.compareAndSet(v, 0);
+    	return v;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import krpc.rpc.core.proto.RpcMeta;
 import krpc.trace.DummyTraceAdapter;
 import krpc.trace.Span;
 import krpc.trace.SpanIds;
@@ -20,7 +21,18 @@ public class DefaultTraceAdapter implements TraceAdapter {
 	public void send(TraceContext ctx, Span span) {
 		// do nothing
 	}
-
+	
+	public void inject(TraceContext ctx, Span span,RpcMeta.Trace.Builder traceBuilder) {
+		traceBuilder.setTraceId(ctx.getTrace().getTraceId());
+		traceBuilder.setParentSpanId("");
+		traceBuilder.setSpanId(span.getSpanId());
+		traceBuilder.setTags(ctx.getTagsForRpc());
+	}
+	
+	public SpanIds restore(String parentSpanId, String spanId) {
+		return null;
+	}
+	
 	// like ali eagle style
 	public TraceIds newStartTraceIds(boolean isServer) {
 		String traceId = newTraceId();
@@ -31,7 +43,7 @@ public class DefaultTraceAdapter implements TraceAdapter {
 	public SpanIds newChildSpanIds(String spanId,AtomicInteger subCalls) {
 		if( isEmpty(spanId) ) spanId = "0";
 		String childId = spanId+"."+subCalls.incrementAndGet();  // 0.1.1.1
-		return new SpanIds("",childId);
+		return new SpanIds(spanId,childId);
 	}
 
 	String newTraceId() {

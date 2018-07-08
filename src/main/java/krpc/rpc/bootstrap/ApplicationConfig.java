@@ -6,7 +6,7 @@ public class ApplicationConfig  {
 	String name = "unknown";
 	String dataDir = ".";
 	
-	double sampleRate = 1;
+	int sampleRate = 100;
 	
 	String traceAdapter = "default"; // default, zipkin, cat, skywalking
 	String errorMsgConverter = "file";
@@ -83,11 +83,11 @@ public class ApplicationConfig  {
 		return this;
 	}
 
-	public double getSampleRate() {
+	public int getSampleRate() {
 		return sampleRate;
 	}
 
-	public ApplicationConfig setSampleRate(double sampleRate) {
+	public ApplicationConfig setSampleRate(int sampleRate) {
 		this.sampleRate = sampleRate;
 		return this;
 	}

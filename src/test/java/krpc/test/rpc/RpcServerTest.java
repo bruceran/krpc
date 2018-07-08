@@ -29,8 +29,9 @@ public class RpcServerTest {
 
 		RpcApp app = new Bootstrap() 
 			.addService(UserService.class,impl) 
-			.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+			//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
 			//.setTraceAdapter("cat:server=192.168.213.128:8080")
+			//.setTraceAdapter("skywalking:server=127.0.0.1:10800")
 			.setName("uss")
 			.build();
 		

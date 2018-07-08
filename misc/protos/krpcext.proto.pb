@@ -1,5 +1,5 @@
 
-³
+æ
 krpcext.protokrpcdescriptor.proto"´
 Validate
 required (Rrequired
@@ -11,5 +11,6 @@
 arrlen (	Rarrlen:?
 	serviceId.google.protobuf.ServiceOptionsÑ† (R	serviceId:6
 msgId.google.protobuf.MethodOptionsÒ† (RmsgId:A
-vld.google.protobuf.FieldOptionsÓ† (2.krpc.ValidateRvldB
+vld.google.protobuf.FieldOptionsÓ† (2.krpc.ValidateRvld:1
+map.google.protobuf.FieldOptionsÔ† (	RmapB
 krpcBKrpcExtbproto3

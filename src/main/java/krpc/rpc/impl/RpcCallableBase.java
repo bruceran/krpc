@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -42,7 +41,6 @@ import krpc.rpc.core.TransportCallback;
 import krpc.rpc.core.Validator;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.trace.TraceContext;
-import krpc.trace.TraceIds;
 import krpc.trace.Span;
 import krpc.trace.Trace;
 import krpc.common.InitClose;
@@ -55,8 +53,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	
 	static Logger log = LoggerFactory.getLogger(RpcCallableBase.class);
 
-	double sampleRate = 1;
-	
 	ServiceMetas serviceMetas;
 	MonitorService monitorService;
 	ErrorMsgConverter errorMsgConverter;
@@ -83,8 +79,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	HashMap<String,Integer> retryCountMap = new HashMap<String,Integer>();
 
 	ArrayList<Object> resources = new ArrayList<Object>();
-	Random rand = new Random();
-	
+
 	abstract boolean isServerSide();
 	abstract String nextConnId(ClientContextData ctx,Message req);
 	abstract int nextSequence(String connId);
@@ -165,6 +160,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		} catch( InterruptedException e) {
 			return serviceMetas.generateRes(serviceId,msgId,RetCodes.USER_CANCEL);
 		} catch( Exception e) {
+			log.error("exception",e);
 			return serviceMetas.generateRes(serviceId,msgId,RetCodes.EXEC_EXCEPTION);
 		}
 	}
@@ -192,6 +188,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 		String action = serviceMetas.getName(serviceId, msgId);
 		Span span = Trace.startAsync("RPCCLIENT", action);
 		TraceContext tctx = Trace.currentContext();
+		
+		String connId = "no_connection:0:0";
+		span.setRemoteAddr(getAddr(connId));
+		
 		RpcMeta.Trace trace  = generateTraceInfo(tctx,span); 
 
 		RpcMeta meta = builder.setTrace(trace).build();
@@ -206,7 +206,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 			return future;		
 		}
 
-		String connId = nextConnId(ctx,req); // may be null
+		connId = nextConnId(ctx,req); // may be null
 		if( connId == null ) { // no connection, no need to retry
 			
 			if( fallbackPlugin != null ) {
@@ -244,52 +244,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 	
 	private RpcMeta.Trace generateTraceInfo(TraceContext tctx,Span span) {
-		String connId = "no_connection:0:0";
-		span.setRemoteAddr(getAddr(connId));
-				
 		RpcMeta.Trace.Builder traceBuilder = RpcMeta.Trace.newBuilder();
-		
-		TraceIds rpcTraceIds = Trace.inject(tctx, span);
-		traceBuilder.setTraceId(rpcTraceIds.getTraceId());
-		traceBuilder.setParentSpanId(rpcTraceIds.getParentSpanId());
-		traceBuilder.setSpanId(rpcTraceIds.getSpanId());
-
-		ServerContextData svrCtx = ServerContext.get();
-		if( svrCtx != null ) {
-
-			traceBuilder.setPeers(svrCtx.getMeta().getTrace().getPeers());
-			
-			traceBuilder.setSampleFlag(svrCtx.getMeta().getTrace().getSampleFlag());
-			
-			if( Trace.needAppNames() ) {
-				String apps = svrCtx.getMeta().getTrace().getApps();
-				if( apps.isEmpty() ) apps = Trace.getAppName();
-				else apps += "," + Trace.getAppName();
-				traceBuilder.setApps(apps);
-			}
-			
-			String clientTraceTags = tctx.getTagsForRpc();
-			String tags = svrCtx.getMeta().getTrace().getTags();
-			if( !isEmpty(clientTraceTags) ) {
-				if( tags.isEmpty() ) tags = clientTraceTags;
-				else tags += "&" + clientTraceTags;
-			}
-			traceBuilder.setTags(tags);
-			
-		} else {
-			
-			int sampleFlag = rand.nextDouble() <= sampleRate  ? 0 : 2 ;
-			traceBuilder.setSampleFlag(sampleFlag);
-			
-			if( Trace.needAppNames() ) {
-				traceBuilder.setApps(Trace.getAppName());
-			}
-			
-			String clientTraceTags = tctx.getTagsForRpc();
-			if( clientTraceTags != null)
-				traceBuilder.setTags(clientTraceTags);			
-		}
-		
+		Trace.inject(tctx, span,traceBuilder);
+		traceBuilder.setPeers(tctx.getTrace().getPeers());
+		traceBuilder.setSampleFlag(tctx.getTrace().getSampleFlag());
 		return traceBuilder.build();
 	}
 
@@ -686,12 +644,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 	}
 	public void setFallbackPlugin(FallbackPlugin fallbackPlugin) {
 		this.fallbackPlugin = fallbackPlugin;
-	}
-	public double getSampleRate() {
-		return sampleRate;
-	}
-	public void setSampleRate(double sampleRate) {
-		this.sampleRate = sampleRate;
 	}
 
 }

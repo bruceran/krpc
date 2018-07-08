@@ -1,5 +1,7 @@
 package krpc.trace;
 
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,9 +11,16 @@ public class Trace {
 
 	private static Logger log = LoggerFactory.getLogger(Trace.class);
 	private static String appName = "unknown";
+	private static int sampleRate = 100;
 	private static TraceAdapter adapter = new DummyTraceAdapter();
 	private static ThreadLocal<TraceContext> tlContext = new ThreadLocal<TraceContext>();
-
+	private static Random rand = new Random();
+	
+	public static int getSampleFlag() {
+		int sampleFlag = rand.nextInt(100) <= Trace.getSampleRate()  ? 0 : 2 ;
+		return sampleFlag;
+	}
+	
     public static void startForServer(RpcMeta.Trace trace,String type,String action) {
     	TraceContext ctx = adapter.newTraceContext(trace,type.equals("RPCSERVER"));
     	setCurrentContext(ctx);
@@ -104,6 +113,17 @@ public class Trace {
     	if( ctx == null ) return;
     	ctx.tagForRpc(key,value); // save to rpc
     }
+
+    public static void tagForRpcIfAbsent(String key,String value) {
+    	if( getTagForRpc(key) != null ) return;
+    	tagForRpc(key,value);
+    }
+    
+    public static String getTagForRpc(String key) {
+    	TraceContext ctx = tlContext.get();
+    	if( ctx == null ) return null;
+    	return ctx.getTagForRpc(key);
+    }
     
     public static void incCount(String key) {
     	Span span = currentSpan();
@@ -151,14 +171,10 @@ public class Trace {
 		return adapter.newStartTraceIds(isServerSide);
 	}
 
-	public static TraceIds inject(TraceContext ctx, Span span) {
-		return adapter.inject(ctx,span);  
+	public static void inject(TraceContext ctx, Span span,RpcMeta.Trace.Builder traceBuilder) {
+		adapter.inject(ctx,span,traceBuilder);  
 	}
-	
-	public static boolean needAppNames() { 
-		return adapter.needAppNames();  
-	}
-	
+
 	public static TraceAdapter getAdapter() {
 		return adapter;
 	}
@@ -181,6 +197,14 @@ public class Trace {
 	
     public static void setCurrentContext(TraceContext traceContext) {
     	tlContext.set(traceContext);
-    }	
+    }
+
+	public static int getSampleRate() {
+		return sampleRate;
+	}
+
+	public static void setSampleRate(int sampleRate) {
+		Trace.sampleRate = sampleRate;
+	}	
     
 }

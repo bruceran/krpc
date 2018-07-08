@@ -10,6 +10,7 @@ public final class KrpcExt {
     registry.add(krpc.KrpcExt.serviceId);
     registry.add(krpc.KrpcExt.msgId);
     registry.add(krpc.KrpcExt.vld);
+    registry.add(krpc.KrpcExt.map);
   }
 
   public static void registerAllExtensions(
@@ -32,7 +33,7 @@ public final class KrpcExt {
 
     /**
      * <pre>
-     * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+     * regex or special value: int,long,double,email,date,timestamp
      * </pre>
      *
      * <code>string match = 2;</code>
@@ -40,7 +41,7 @@ public final class KrpcExt {
     java.lang.String getMatch();
     /**
      * <pre>
-     * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+     * regex or special value: int,long,double,email,date,timestamp
      * </pre>
      *
      * <code>string match = 2;</code>
@@ -68,7 +69,7 @@ public final class KrpcExt {
 
     /**
      * <pre>
-     * value or min#max or min# or #max for string,number
+     * n or min,max or min,- or -,max
      * </pre>
      *
      * <code>string length = 4;</code>
@@ -76,7 +77,7 @@ public final class KrpcExt {
     java.lang.String getLength();
     /**
      * <pre>
-     * value or min#max or min# or #max for string,number
+     * n or min,max or min,- or -,max
      * </pre>
      *
      * <code>string length = 4;</code>
@@ -86,7 +87,7 @@ public final class KrpcExt {
 
     /**
      * <pre>
-     * value or min#max or min# or #max for number only
+     * n or min,max or min,- or -,max compare by number
      * </pre>
      *
      * <code>string nrange = 5;</code>
@@ -94,7 +95,7 @@ public final class KrpcExt {
     java.lang.String getNrange();
     /**
      * <pre>
-     * value or min#max or min# or #max for number only
+     * n or min,max or min,- or -,max compare by number
      * </pre>
      *
      * <code>string nrange = 5;</code>
@@ -104,7 +105,7 @@ public final class KrpcExt {
 
     /**
      * <pre>
-     * like range but for compare by string  
+     * like nrange but compare by string  
      * </pre>
      *
      * <code>string srange = 6;</code>
@@ -112,7 +113,7 @@ public final class KrpcExt {
     java.lang.String getSrange();
     /**
      * <pre>
-     * like range but for compare by string  
+     * like nrange but compare by string  
      * </pre>
      *
      * <code>string srange = 6;</code>
@@ -274,7 +275,7 @@ public final class KrpcExt {
     private volatile java.lang.Object match_;
     /**
      * <pre>
-     * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+     * regex or special value: int,long,double,email,date,timestamp
      * </pre>
      *
      * <code>string match = 2;</code>
@@ -293,7 +294,7 @@ public final class KrpcExt {
     }
     /**
      * <pre>
-     * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+     * regex or special value: int,long,double,email,date,timestamp
      * </pre>
      *
      * <code>string match = 2;</code>
@@ -358,7 +359,7 @@ public final class KrpcExt {
     private volatile java.lang.Object length_;
     /**
      * <pre>
-     * value or min#max or min# or #max for string,number
+     * n or min,max or min,- or -,max
      * </pre>
      *
      * <code>string length = 4;</code>
@@ -377,7 +378,7 @@ public final class KrpcExt {
     }
     /**
      * <pre>
-     * value or min#max or min# or #max for string,number
+     * n or min,max or min,- or -,max
      * </pre>
      *
      * <code>string length = 4;</code>
@@ -400,7 +401,7 @@ public final class KrpcExt {
     private volatile java.lang.Object nrange_;
     /**
      * <pre>
-     * value or min#max or min# or #max for number only
+     * n or min,max or min,- or -,max compare by number
      * </pre>
      *
      * <code>string nrange = 5;</code>
@@ -419,7 +420,7 @@ public final class KrpcExt {
     }
     /**
      * <pre>
-     * value or min#max or min# or #max for number only
+     * n or min,max or min,- or -,max compare by number
      * </pre>
      *
      * <code>string nrange = 5;</code>
@@ -442,7 +443,7 @@ public final class KrpcExt {
     private volatile java.lang.Object srange_;
     /**
      * <pre>
-     * like range but for compare by string  
+     * like nrange but compare by string  
      * </pre>
      *
      * <code>string srange = 6;</code>
@@ -461,7 +462,7 @@ public final class KrpcExt {
     }
     /**
      * <pre>
-     * like range but for compare by string  
+     * like nrange but compare by string  
      * </pre>
      *
      * <code>string srange = 6;</code>
@@ -969,7 +970,7 @@ public final class KrpcExt {
       private java.lang.Object match_ = "";
       /**
        * <pre>
-       * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+       * regex or special value: int,long,double,email,date,timestamp
        * </pre>
        *
        * <code>string match = 2;</code>
@@ -988,7 +989,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+       * regex or special value: int,long,double,email,date,timestamp
        * </pre>
        *
        * <code>string match = 2;</code>
@@ -1008,7 +1009,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+       * regex or special value: int,long,double,email,date,timestamp
        * </pre>
        *
        * <code>string match = 2;</code>
@@ -1023,7 +1024,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+       * regex or special value: int,long,double,email,date,timestamp
        * </pre>
        *
        * <code>string match = 2;</code>
@@ -1036,7 +1037,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * regex or special value: int,number,email,date(2018-01-01),timestamp(2018-01-01 12:12:12)
+       * regex or special value: int,long,double,email,date,timestamp
        * </pre>
        *
        * <code>string match = 2;</code>
@@ -1143,7 +1144,7 @@ public final class KrpcExt {
       private java.lang.Object length_ = "";
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number
+       * n or min,max or min,- or -,max
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1162,7 +1163,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number
+       * n or min,max or min,- or -,max
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1182,7 +1183,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number
+       * n or min,max or min,- or -,max
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1197,7 +1198,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number
+       * n or min,max or min,- or -,max
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1210,7 +1211,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for string,number
+       * n or min,max or min,- or -,max
        * </pre>
        *
        * <code>string length = 4;</code>
@@ -1230,7 +1231,7 @@ public final class KrpcExt {
       private java.lang.Object nrange_ = "";
       /**
        * <pre>
-       * value or min#max or min# or #max for number only
+       * n or min,max or min,- or -,max compare by number
        * </pre>
        *
        * <code>string nrange = 5;</code>
@@ -1249,7 +1250,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for number only
+       * n or min,max or min,- or -,max compare by number
        * </pre>
        *
        * <code>string nrange = 5;</code>
@@ -1269,7 +1270,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for number only
+       * n or min,max or min,- or -,max compare by number
        * </pre>
        *
        * <code>string nrange = 5;</code>
@@ -1284,7 +1285,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for number only
+       * n or min,max or min,- or -,max compare by number
        * </pre>
        *
        * <code>string nrange = 5;</code>
@@ -1297,7 +1298,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * value or min#max or min# or #max for number only
+       * n or min,max or min,- or -,max compare by number
        * </pre>
        *
        * <code>string nrange = 5;</code>
@@ -1317,7 +1318,7 @@ public final class KrpcExt {
       private java.lang.Object srange_ = "";
       /**
        * <pre>
-       * like range but for compare by string  
+       * like nrange but compare by string  
        * </pre>
        *
        * <code>string srange = 6;</code>
@@ -1336,7 +1337,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * like range but for compare by string  
+       * like nrange but compare by string  
        * </pre>
        *
        * <code>string srange = 6;</code>
@@ -1356,7 +1357,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * like range but for compare by string  
+       * like nrange but compare by string  
        * </pre>
        *
        * <code>string srange = 6;</code>
@@ -1371,7 +1372,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * like range but for compare by string  
+       * like nrange but compare by string  
        * </pre>
        *
        * <code>string srange = 6;</code>
@@ -1384,7 +1385,7 @@ public final class KrpcExt {
       }
       /**
        * <pre>
-       * like range but for compare by string  
+       * like nrange but compare by string  
        * </pre>
        *
        * <code>string srange = 6;</code>
@@ -1573,6 +1574,17 @@ public final class KrpcExt {
           .newFileScopedGeneratedExtension(
         krpc.KrpcExt.Validate.class,
         krpc.KrpcExt.Validate.getDefaultInstance());
+  public static final int MAP_FIELD_NUMBER = 50004;
+  /**
+   * <code>extend .google.protobuf.FieldOptions { ... }</code>
+   */
+  public static final
+    com.google.protobuf.GeneratedMessage.GeneratedExtension<
+      com.google.protobuf.DescriptorProtos.FieldOptions,
+      java.lang.String> map = com.google.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.String.class,
+        null);
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_krpc_Validate_descriptor;
   private static final 
@@ -1595,7 +1607,8 @@ public final class KrpcExt {
       "iceOptions\030\321\206\003 \001(\005:/\n\005msgId\022\036.google.pro" +
       "tobuf.MethodOptions\030\322\206\003 \001(\005:<\n\003vld\022\035.goo" +
       "gle.protobuf.FieldOptions\030\323\206\003 \001(\0132\016.krpc" +
-      ".ValidateB\017\n\004krpcB\007KrpcExtb\006proto3"
+      ".Validate:,\n\003map\022\035.google.protobuf.Field" +
+      "Options\030\324\206\003 \001(\tB\017\n\004krpcB\007KrpcExtb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1619,6 +1632,7 @@ public final class KrpcExt {
     serviceId.internalInit(descriptor.getExtensions().get(0));
     msgId.internalInit(descriptor.getExtensions().get(1));
     vld.internalInit(descriptor.getExtensions().get(2));
+    map.internalInit(descriptor.getExtensions().get(3));
     com.google.protobuf.DescriptorProtos.getDescriptor();
   }
 

@@ -19,6 +19,7 @@ import krpc.common.Plugin;
 import krpc.httpclient.DefaultHttpClient;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
+import krpc.rpc.core.proto.RpcMeta;
 import krpc.trace.Event;
 import krpc.trace.Span;
 import krpc.trace.SpanIds;
@@ -73,14 +74,6 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		hc = null;
 	}
 	
-	void nextServerAddr() {
-		if( serverIndex + 1 >= serverAddrs.length ) serverIndex = 0;
-		else serverIndex++;
-	}
-	String currentServerAddr() {
-		return serverAddrs[serverIndex];
-	}
-		
 	public void send(TraceContext ctx, Span span) {
 		try {
 			pool.execute( new Runnable() {
@@ -98,23 +91,27 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 	}
 	
 	void report(TraceContext ctx, Span span) {
-		List<ZipkinSpan> list = convert(ctx,span);
-		String json = Json.toJson(list);
+		String json = convert(ctx,span);
 		String url = String.format(postUrl, currentServerAddr());
 		HttpClientReq req = new HttpClientReq("POST",url).setContent(json).setGzip(true);
 		int i=0;
-		while(i<retryCount) {
+		String lastContent = null;
+		while(true) {
 			HttpClientRes res = hc.call(req);
-			if( res.getRetCode() == 0 && res.getHttpCode() == 202 ) break; // success
+			if( res.getRetCode() == 0 && res.getHttpCode() == 202 ) return; // success
+			lastContent = res.getContent();
 			nextServerAddr();
+			i++;
+			if( i >= retryCount ) break;
 			try { Thread.sleep(retryInterval); } catch(Exception e) { break; }
 		}
+		log.error("report span failed, content="+lastContent);
 	}
 
-	List<ZipkinSpan> convert(TraceContext ctx, Span span) {
+	String convert(TraceContext ctx, Span span) {
 		List<ZipkinSpan> list = new ArrayList<>();
 		convert(ctx,span,list);
-		return list;
+		return Json.toJson(list);
 	}
 	
 	void convert(TraceContext ctx, Span span,List<ZipkinSpan> list) {
@@ -141,7 +138,7 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		
 		ZipkinEndpoint rep = new ZipkinEndpoint();
 		if( span.getType().equals("RPCSERVER")  || span.getType().equals("HTTPSERVER") ) {
-			rep.serviceName = ctx.getRemoteAppName();
+			rep.serviceName = ctx.getTagForRpc("p-app-name");
 		} else if( span.getType().equals("RPCCLIENT") ) {
 			//int p2 = span.getAction().indexOf(".");
 			//rep.serviceName = span.getAction().substring(0,p2);
@@ -175,8 +172,19 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 			}
 		}
 	}
-
-	public boolean needAppNames() { return true;  }
+	
+	public void inject(TraceContext ctx, Span span,RpcMeta.Trace.Builder traceBuilder) {
+		ctx.tagForRpc("p-app-name", Trace.getAppName());
+		
+		traceBuilder.setTraceId(ctx.getTrace().getTraceId());
+		traceBuilder.setParentSpanId(span.getParentSpanId());
+		traceBuilder.setSpanId(span.getSpanId());
+		traceBuilder.setTags(ctx.getTagsForRpc());
+	}
+	
+	public SpanIds restore(String parentSpanId, String spanId) {
+		return null;
+	}
 	
 	public TraceIds newStartTraceIds(boolean isServer) {
 		String traceId = newTraceId();
@@ -187,7 +195,7 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 	public SpanIds newChildSpanIds(String spanId,AtomicInteger subCalls) {
 		return new SpanIds(spanId,nextSpanId());
 	}
-	
+
 	String newTraceId() {
 		String s = UUID.randomUUID().toString();
 	    return s.replaceAll("-", "");		
@@ -197,6 +205,15 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		String s = UUID.randomUUID().toString();
 	    s =  s.replaceAll("-", "");				
 		return s.substring(0,16);
+	}
+
+	void nextServerAddr() {
+		if( serverIndex + 1 >= serverAddrs.length ) serverIndex = 0;
+		else serverIndex++;
+	}
+
+	String currentServerAddr() {
+		return serverAddrs[serverIndex];
 	}
 
 	boolean isEmpty(String s) {

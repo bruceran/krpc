@@ -11,12 +11,13 @@ public interface TraceContext {
 	public Span startAsync(String type,String action);
 	
 	public void tagForRpc(String key,String value);
+	public void tagForRpcIfAbsent(String key, String value);
+	public String getTagForRpc(String key);
 	public String getTagsForRpc();
 	
 	public Span currentSpan();
 	
 	public RpcMeta.Trace getTrace();
-	public String getRemoteAppName();
 
 	public long getThreadId();
 	public String getThreadName();

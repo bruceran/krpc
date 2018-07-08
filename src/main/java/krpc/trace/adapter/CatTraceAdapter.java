@@ -23,6 +23,7 @@ import krpc.common.Plugin;
 import krpc.httpclient.DefaultHttpClient;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
+import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.util.IpUtils;
 import krpc.trace.Event;
 import krpc.trace.Metric;
@@ -58,9 +59,9 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 	String[] queryAddrs;
 	int queryAddrsIndex = 0;
 	
-	String[] addrs = new String[0];
-	int addrIndex = 0;
-	Object addrSyncObj = new Object();
+	String[] serverAddrs = new String[0];
+	volatile int serverAddrIndex = -1;
+	Object serverAddrSyncObj = new Object();
 	
 	DefaultHttpClient hc;
 	CatNettyClient client;
@@ -74,60 +75,45 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 	int indexMultiplier = 100; 
 
 	public void config(String paramsStr) {
-		
-		domain = Trace.getAppName();
-		
-		initIpInfo();
-		routeQueryUrl =  "http://%s/cat/s/router?op=json&domain="+domain+"&ip="+localIp;
-
 		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
 		
 		queryAddrs = params.get("server").split(",");
 		
 		String s = params.get("queueSize");
 		if( !isEmpty(s) ) queueSize = Integer.parseInt(s);	
+		
 		s = params.get("indexMultiplier");
 		if( !isEmpty(s) ) indexMultiplier = Integer.parseInt(s);	
-	}
-
-	private void initIpInfo() {
-		localIp = IpUtils.localIp();
-		try {
-			hostName = Inet4Address.getLocalHost().getHostName();
-		} catch(Exception e) {
-			hostName = localIp;
-		}
-		String[] items = localIp.split("\\.");
-		byte[] bytes = new byte[4];
-		for (int i = 0; i < 4; i++) {
-			bytes[i] = (byte) Integer.parseInt(items[i]);
-		}
-		StringBuilder sb = new StringBuilder(bytes.length / 2);
-		for (byte b : bytes) {
-			sb.append(Integer.toHexString((b >> 4) & 0x0F));
-			sb.append(Integer.toHexString(b & 0x0F));
-		}
-		localIpNum = sb.toString();
 	}
 
 	public void init() {
 		
 		initHourIndex();
 		
+		domain = Trace.getAppName();
+		
+		getHostInfo();
+		
+		routeQueryUrl =  "http://%s/cat/s/router?op=json&domain="+domain+"&ip="+localIp;
+
 		hc = new DefaultHttpClient();
 		hc.init();
 		pool = new ThreadPoolExecutor(1,1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize),threadFactory);
 		
-        timer = new Timer("cattimer");
-        timer.schedule( new TimerTask() {
-            public void run() {
-            	queryRoutes();
-            }
-        },  15000, 15000 );
-        
-		client = new CatNettyClient(timer);
-		client.init();
-		queryRoutes();
+		client = new CatNettyClient();
+		client.init();   
+		
+		boolean ok = queryRoutes();
+		if( !ok) {
+	        timer = new Timer("cattimer");
+	        timer.schedule( new TimerTask() {
+	            public void run() {
+	            	queryRoutesForInit();
+	            }
+	        },  3000, 3000 );
+		} else {
+			startQueryRoutesTimer();
+		}
 	}
 	
 	public void close() {
@@ -142,30 +128,51 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 		hc = null;
 	}
 	
+	void startQueryRoutesTimer() {
+        timer = new Timer("cattimer");
+        timer.schedule( new TimerTask() {
+            public void run() {
+            	queryRoutes();
+            }
+        },  60000, 60000 );			
+        
+     
+	}
+	
+	void queryRoutesForInit() {
+		boolean ok = queryRoutes();	
+		if(ok) {
+			timer.cancel();
+			startQueryRoutesTimer();
+		}
+	}
+	
 	/*
 	$curl "http://10.241.22.199:8080/cat/s/router?domain=cattest&op=json&ip=127.0.3.3"
 	{"kvs":{"routers":"10.241.22.199:2280;127.0.0.1:2280;","sample":"1.0"}}
 	*/
 
 	@SuppressWarnings("unchecked")
-	void queryRoutes() {
+	boolean queryRoutes() {
 		String url = String.format(routeQueryUrl, currentQueryAddr());
 		HttpClientReq req = new HttpClientReq("GET",url);
 		HttpClientRes res = hc.call(req);		
 		if( res.getRetCode() == 0 && res.getHttpCode() == 200 ) {
 			Map<String,Object> map = Json.toMap(res.getContent());
-			if( map == null ) return;
+			if( map == null ) return false;
 			Map<String,Object> kvs = (Map<String,Object>)map.get("kvs");
-			if( kvs == null ) return;
+			if( kvs == null ) return false;
 			String s = (String)kvs.get("routers");
-			if( s == null ) return;
+			if( s == null ) return false;
 			if( s.endsWith(";") ) s = s.substring(0, s.length() - 1 );
-			if( isEmpty(s) ) return;
-			String[] addrs = s.split(";");
-			setAddrs(addrs);
+			if( isEmpty(s) ) return false;
+			
+			setServerAddrs(s);
+			return true;
 		} else {
 			nextQueryAddr();
 			log.error("query cat router failed, retCode="+res.getRetCode()+",content="+res.getContent());
+			return false;
 		}
 	}
 
@@ -178,11 +185,17 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 	}
 
 	// the last addr is backup addr
-	void setAddrs(String[] newAddrs) {
-		synchronized(addrSyncObj) {
-			List<String> added = getAdded(addrs,newAddrs);
-			List<String> removed = getRemoved(addrs,newAddrs);
-			addrs = newAddrs;
+	void setServerAddrs(String s) {
+		String[] newAddrs = s.split(";");
+		synchronized(serverAddrSyncObj) {
+			List<String> added = getAdded(serverAddrs,newAddrs);
+			List<String> removed = getRemoved(serverAddrs,newAddrs);
+			serverAddrs = newAddrs;
+			if( serverAddrIndex == -1 ) {
+				log.info("init addrs="+s);
+				serverAddrIndex = 0;
+			}
+			if( serverAddrIndex >= serverAddrs.length )  serverAddrIndex = 0;
 			
 			for(String addr:added) {
 				client.connect(addr);
@@ -193,23 +206,15 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 		}
 	}
 
-	String currentAddr() {
-		synchronized(addrSyncObj) {
-			if( addrs.length == 0 ) return "";
-			if( addrIndex >= addrs.length )  addrIndex = 0;
-			return addrs[addrIndex];
-		}
-	}
-	
-	void nextAddr() {
-		synchronized(addrSyncObj) {
-			addrIndex++;
-			if( addrIndex >= addrs.length )  addrIndex = 0;
-			if( addrIndex == addrs.length - 1 ) { // the backup addr
-				for(int k=0;k<addrs.length - 1;++k) {
-					String addr = addrs[k];
+	void nextServerAddr() {
+		synchronized(serverAddrSyncObj) {
+			serverAddrIndex++;
+			if( serverAddrIndex >= serverAddrs.length )  serverAddrIndex = 0;
+			if( serverAddrIndex == serverAddrs.length - 1 ) { // the backup addr
+				for(int k=0;k<serverAddrs.length - 1;++k) {
+					String addr = serverAddrs[k];
 					if( client.isAlive(addr) ) { // use the alive addr instead of backup addr
-						addrIndex = k;
+						serverAddrIndex = k;
 						return;
 					}
 				}
@@ -217,7 +222,14 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 		}
 	}
 
+	String currentServerAddr() {
+		synchronized(serverAddrSyncObj) {
+			return serverAddrs[serverAddrIndex];
+		}
+	}
+	
 	public void send(TraceContext ctx, Span span) {
+		if( serverAddrIndex == -1 ) return;
 		
 		try {
 			pool.execute( new Runnable() {
@@ -236,7 +248,7 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 
 	void report(TraceContext ctx, Span span) {
 
-		String addr = currentAddr();
+		String addr = currentServerAddr();
 		if( isEmpty(addr) ) {
 			log.error("cat routes is null");
 			return;
@@ -246,12 +258,12 @@ public class CatTraceAdapter implements TraceAdapter,InitClose {
 		appendHeader(ctx, span, b);
 		appendMessage(ctx, span, b);
 
-System.out.println(b.toString());
+// System.out.println(b.toString());
 		
 		boolean ok = client.send(addr, b); // send StringBuilder, not String
 		if(!ok) {
-			nextAddr();
-			String newAddr = currentAddr();
+			nextServerAddr();
+			String newAddr = currentServerAddr();
 			if( !newAddr.equals(addr) ) {
 				ok = client.send(newAddr, b);
 			}
@@ -280,9 +292,9 @@ System.out.println(b.toString());
 			b.append(spanId).append(TAB); // root message id			
 		} else {
 			String traceId = ctx.getTrace().getTraceId();
-			String parentSpanId = ctx.getTrace().getParentSpanId();
-			b.append(parentSpanId).append(TAB); // parent message id
-			b.append(traceId).append(TAB); // root message id
+			String rootSpanId = ctx.getTagForRpc("p-root-span-id");
+			b.append(rootSpanId).append(TAB);
+			b.append(traceId).append(TAB);
 		}
 
 		b.append(""); // session token
@@ -408,26 +420,39 @@ System.out.println(b.toString());
 		b.append(LF);		 
 	}	
 
-	public TraceIds newStartTraceIds(boolean isServer) {
-		String id = nextSpanId();
-		return new TraceIds(id,"",id);
-	}
-	
-	public SpanIds newChildSpanIds(String spanId,AtomicInteger subCalls) {
-		return new SpanIds("",nextSpanId());
+	public boolean needThreadInfo() { 
+		return true;  
 	}
 
-	public SpanIds restore(String parentSpanId, String spanId) {	
-		return new SpanIds(parentSpanId,nextSpanId());  // the parentSpanId is the root span id
-	}
-	
-	public TraceIds inject(TraceContext ctx, Span span) {
+	public void inject(TraceContext ctx, Span span, RpcMeta.Trace.Builder traceBuilder) {
 		String traceId = ctx.getTrace().getTraceId();
 		String rootSpanId = span.getRootSpanId();  // escape parent link error in cat ui
 		if( !span.getType().equals("RPCSERVER")  ) { // escape root link error in cat ui
 			traceId = rootSpanId;
 		}
-		return new TraceIds(traceId, rootSpanId , span.getSpanId()); // the parentSpanId is the root span id
+		
+		ctx.tagForRpc("p-root-span-id", rootSpanId);
+		
+		traceBuilder.setTraceId(traceId);
+		traceBuilder.setParentSpanId("");
+		traceBuilder.setSpanId(span.getSpanId());
+		//traceBuilder.setSpanId(nextSpanId());
+		traceBuilder.setTags(ctx.getTagsForRpc());
+	}
+	
+	public SpanIds restore(String parentSpanId, String spanId) {	
+		return new SpanIds("",nextSpanId());
+		//return null;
+	}
+
+	public TraceIds newStartTraceIds(boolean isServer) {
+		String id = nextSpanId();
+		if( isServer ) return new TraceIds(id,"",id);
+		else return new TraceIds(id,"","");
+	}
+	
+	public SpanIds newChildSpanIds(String spanId,AtomicInteger subCalls) {
+		return new SpanIds(spanId,nextSpanId());
 	}
 
 	public String nextSpanId() {
@@ -501,18 +526,36 @@ System.out.println(b.toString());
 		return false;
 	}
 
+	private void getHostInfo() {
+		localIp = IpUtils.localIp();
+		try {
+			hostName = Inet4Address.getLocalHost().getHostName();
+		} catch(Exception e) {
+			hostName = localIp;
+		}
+		String[] items = localIp.split("\\.");
+		byte[] bytes = new byte[4];
+		for (int i = 0; i < 4; i++) {
+			bytes[i] = (byte) Integer.parseInt(items[i]);
+		}
+		StringBuilder sb = new StringBuilder(bytes.length / 2);
+		for (byte b : bytes) {
+			sb.append(Integer.toHexString((b >> 4) & 0x0F));
+			sb.append(Integer.toHexString(b & 0x0F));
+		}
+		localIpNum = sb.toString();
+	}
+
 	public static String escape(String s) {
 		StringBuilder b = null;
-		char[] chars = s.toCharArray();
-		for(int i=0;i<chars.length;++i) {
-			char ch = chars[i];
+		int len = s.length();
+		for(int i=0;i<len;++i) {
+			char ch = s.charAt(i);
 			
 			if( ch == '\r' || ch == '\n' ||  ch == '\t' ||  ch == '\\' ) {
 				if( b == null )  {
 					b = new StringBuilder(s.length()+100);
-					for(int k=0;k<i;++k) {
-						b.append(chars[k]);
-					}
+					b.append(s.substring(0,i));
 				}
 				b.append("\\");
 				switch(ch) {

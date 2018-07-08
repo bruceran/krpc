@@ -17,6 +17,7 @@ message Validate {
 };
 
 extend google.protobuf.FieldOptions {  Validate vld = 50003;  }  
+extend google.protobuf.FieldOptions {  string map = 50004;  }  
 
 option java_package="krpc";
 option java_outer_classname="KrpcExt";

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -76,7 +75,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	String sessionIdCookieName = DefaultSessionIdCookieName;
 	String sessionIdCookiePath = "";
 	int expireSeconds = 0;
-	double sampleRate = 1;
 	boolean autoTrim = true;
 
 	SessionService defaultSessionService;
@@ -96,7 +94,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	ArrayList<Object> resources = new ArrayList<Object>();
 	ConcurrentHashMap<String,Set<String>> cachedOrigins = new ConcurrentHashMap<>();
-	Random rand = new Random();
 	
 	public void init() {
 
@@ -143,8 +140,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		traceBuilder.setParentSpanId(traceIds.getParentSpanId());
 		traceBuilder.setSpanId(traceIds.getSpanId());
 		
-		int sampleFlag = rand.nextDouble() <= sampleRate  ? 0 : 2 ;
-		traceBuilder.setSampleFlag(sampleFlag);
+		traceBuilder.setSampleFlag(Trace.getSampleFlag());
 		
 		String peers = "";
 		String xff = req.getXff();
@@ -160,19 +156,18 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 		}
 
 		traceBuilder.setPeers(peers);
-		traceBuilder.setApps("client");
 		
 		String clientTraceId = getClientTraceId(req);
 		if( !isEmpty(clientTraceId) ) {
-			String tags = "x-trace-id="+clientTraceId;
-			traceBuilder.setTags(tags);
-		}
+			traceBuilder.setTags("x-trace-id="+clientTraceId);
+		}		
 		
 		RpcMeta.Trace trace = traceBuilder.build();
 
 		String action = serviceMetas.getName(r.getServiceId(), r.getMsgId());
 		Trace.startForServer(trace,"HTTPSERVER",action);
 		Trace.setRemoteAddr(getRemoteAddr(connId));
+
 		return trace;
 	}
 
@@ -997,7 +992,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	int nextSequence() {
 		int v = seq.incrementAndGet();
 		if (v >= 100000000)
-			seq.set(0);
+			seq.compareAndSet(v, 0);
 		return v;
 	}
 
@@ -1228,14 +1223,6 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
 	public void setSessionIdCookiePath(String sessionIdCookiePath) {
 		this.sessionIdCookiePath = sessionIdCookiePath;
-	}
-
-	public double getSampleRate() {
-		return sampleRate;
-	}
-
-	public void setSampleRate(double sampleRate) {
-		this.sampleRate = sampleRate;
 	}
 
 	public Validator getValidator() {

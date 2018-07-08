@@ -1,6 +1,16 @@
 
-·
-krpcext.protokrpcdescriptor.proto:>
-	serviceId.google.protobuf.ServiceOptionsé (R	serviceId:5
-msgId.google.protobuf.MethodOptionsê (RmsgIdB
+æ
+krpcext.protokrpcdescriptor.proto"´
+Validate
+required (Rrequired
+match (	Rmatch
+values (	Rvalues
+length (	Rlength
+nrange (	Rnrange
+srange (	Rsrange
+arrlen (	Rarrlen:?
+	serviceId.google.protobuf.ServiceOptionsÑ† (R	serviceId:6
+msgId.google.protobuf.MethodOptionsÒ† (RmsgId:A
+vld.google.protobuf.FieldOptionsÓ† (2.krpc.ValidateRvld:1
+map.google.protobuf.FieldOptionsÔ† (	RmapB
 krpcBKrpcExtbproto3

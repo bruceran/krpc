@@ -399,7 +399,7 @@
         0=容器启动完成后立即调用start(), 
         n>0 =容器启动完成后再延迟n秒调用start(), 
         n<0 用户代码手工调用start()
-    sampleRate 全链路跟踪采样率, 为0.0-1.0之间的一个值, 默认为1
+    sampleRate 全链路跟踪采样百分比，为0-100之间的一个值, 默认为100
     
     errorMsgConverter 错误码错误消息转换文件，默认为file
         file 插件参数：location 文件位置，默认为classpath下的error.properties
@@ -411,8 +411,31 @@
         如果未设置此值，则不开启动态路由功能
     fallbackPlugin  降级策略插件, 可配置为 default(默认), 如果未配置， 则不开启降级策略	
         default 插件参数：file 文件位置，默认为classpath下的 fallback.yaml						 
-    traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, cat, skywalking(暂未实现)
-
+    traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, cat, skywalking
+        default插件, 目前仅支持生成跟踪标识，打印在日志中，SPANID的格式和阿里的eagle系统类似
+        zipkin插件, 配置参数：
+        	server  zipkin服务的地址，多个用逗号隔开, 示例：server=127.0.0.1:9411
+        	queueSize 队列大小,默认为1000
+        	retryCount 重试次数，默认为3
+        	retryInterval 重试间隔时间，默认为1秒
+        	截图: ![截图1](images/zipkin.png)
+        cat插件, 配置参数：
+        	server  cat服务的地址，多个用逗号隔开, 示例：server=192.168.213.128:8080
+        	实际的接收数据服务器地址通过server获取，每分钟检查一次地址是否有变更
+        	queueSize 队列大小,默认为1000
+        	cat不支持重试
+        	此插件无需标准Cat客户端SDK所需的两个配置文件：
+        			 META-INF/app.properties
+        			 /data/appdatas/cat/client.xml
+        	截图: ![截图1](images/cat1.png) ![截图2](images/cat2.png)
+        skywalking插件, 配置参数：
+        	server  skywalking服务的地址，多个用逗号隔开, 示例：server=127.0.0.1:10800
+        	实际的接收数据服务器地址通过server获取，每分钟检查一次地址是否有变更
+        	queueSize 队列大小,默认为1000
+        	retryCount 重试次数，默认为3
+        	retryInterval 重试间隔时间，默认为1秒
+        	截图: ![截图1](images/skywalking.png)
+        
 ## registry
 
     id 名称, 必须填写
@@ -1144,6 +1167,8 @@
      
         DB 访问db
         REDIS 访问redis
+        MC 访问memcache
+        MQ 访问MQ
         HTTP 访问http服务
      
      * status 参数规范 (暂定)     

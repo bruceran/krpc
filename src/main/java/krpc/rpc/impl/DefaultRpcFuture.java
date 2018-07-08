@@ -67,6 +67,7 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
 		} catch( InterruptedException e) {
 			return factory.serviceMetas.generateRes(serviceId,msgId,RetCodes.USER_CANCEL);
 		} catch( Exception e) {
+			log.error("exception",e);
 			return factory.serviceMetas.generateRes(serviceId,msgId,RetCodes.EXEC_EXCEPTION); // impossible
 		}
 	}
@@ -80,6 +81,7 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
 		} catch( InterruptedException e) {
 			return factory.serviceMetas.generateRes(serviceId,msgId,RetCodes.USER_CANCEL);
 		} catch( Exception e) {
+			log.error("exception",e);
 			return factory.serviceMetas.generateRes(serviceId,msgId,RetCodes.EXEC_EXCEPTION);  // impossible
 		} 
 	}
@@ -91,6 +93,7 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
 		} catch( CancellationException e) {
 			return factory.serviceMetas.generateRes(serviceId,msgId,RetCodes.USER_CANCEL);
 		} catch( CompletionException  e) {
+			log.error("exception",e);
 			return factory.serviceMetas.generateRes(serviceId,msgId,RetCodes.EXEC_EXCEPTION);
 		} 		
 	}
@@ -102,6 +105,7 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
 		} catch( CancellationException e) {
 			return factory.serviceMetas.generateRes(serviceId,msgId,RetCodes.USER_CANCEL);
 		} catch( CompletionException  e) {
+			log.error("exception",e);
 			return factory.serviceMetas.generateRes(serviceId,msgId,RetCodes.EXEC_EXCEPTION);
 		} 	
 	}

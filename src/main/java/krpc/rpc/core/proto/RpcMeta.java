@@ -250,7 +250,7 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * ip:port for each hop
+     * ip:port for each hop, format: addr1,addr2,...
      * </pre>
      *
      * <code>string peers = 1;</code>
@@ -258,7 +258,7 @@ private static final long serialVersionUID = 0L;
     java.lang.String getPeers();
     /**
      * <pre>
-     * ip:port for each hop
+     * ip:port for each hop, format: addr1,addr2,...
      * </pre>
      *
      * <code>string peers = 1;</code>
@@ -306,7 +306,7 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * key/value pairs passing in the chain
+     * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
      * </pre>
      *
      * <code>string tags = 5;</code>
@@ -314,7 +314,7 @@ private static final long serialVersionUID = 0L;
     java.lang.String getTags();
     /**
      * <pre>
-     * key/value pairs passing in the chain
+     * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
      * </pre>
      *
      * <code>string tags = 5;</code>
@@ -330,24 +330,6 @@ private static final long serialVersionUID = 0L;
      * <code>int32 sampleFlag = 6;</code>
      */
     int getSampleFlag();
-
-    /**
-     * <pre>
-     * app names for each hop, may be empty
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    java.lang.String getApps();
-    /**
-     * <pre>
-     * app names for each hop, may be empty
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    com.google.protobuf.ByteString
-        getAppsBytes();
   }
   /**
    * Protobuf type {@code krpc.rpc.core.proto.RpcMeta.Trace}
@@ -368,7 +350,6 @@ private static final long serialVersionUID = 0L;
       spanId_ = "";
       tags_ = "";
       sampleFlag_ = 0;
-      apps_ = "";
     }
 
     @java.lang.Override
@@ -430,12 +411,6 @@ private static final long serialVersionUID = 0L;
               sampleFlag_ = input.readInt32();
               break;
             }
-            case 58: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              apps_ = s;
-              break;
-            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -472,7 +447,7 @@ private static final long serialVersionUID = 0L;
     private volatile java.lang.Object peers_;
     /**
      * <pre>
-     * ip:port for each hop
+     * ip:port for each hop, format: addr1,addr2,...
      * </pre>
      *
      * <code>string peers = 1;</code>
@@ -491,7 +466,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * ip:port for each hop
+     * ip:port for each hop, format: addr1,addr2,...
      * </pre>
      *
      * <code>string peers = 1;</code>
@@ -624,7 +599,7 @@ private static final long serialVersionUID = 0L;
     private volatile java.lang.Object tags_;
     /**
      * <pre>
-     * key/value pairs passing in the chain
+     * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
      * </pre>
      *
      * <code>string tags = 5;</code>
@@ -643,7 +618,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * key/value pairs passing in the chain
+     * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
      * </pre>
      *
      * <code>string tags = 5;</code>
@@ -673,48 +648,6 @@ private static final long serialVersionUID = 0L;
      */
     public int getSampleFlag() {
       return sampleFlag_;
-    }
-
-    public static final int APPS_FIELD_NUMBER = 7;
-    private volatile java.lang.Object apps_;
-    /**
-     * <pre>
-     * app names for each hop, may be empty
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    public java.lang.String getApps() {
-      java.lang.Object ref = apps_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        apps_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * app names for each hop, may be empty
-     * </pre>
-     *
-     * <code>string apps = 7;</code>
-     */
-    public com.google.protobuf.ByteString
-        getAppsBytes() {
-      java.lang.Object ref = apps_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        apps_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -749,9 +682,6 @@ private static final long serialVersionUID = 0L;
       if (sampleFlag_ != 0) {
         output.writeInt32(6, sampleFlag_);
       }
-      if (!getAppsBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, apps_);
-      }
       unknownFields.writeTo(output);
     }
 
@@ -779,9 +709,6 @@ private static final long serialVersionUID = 0L;
       if (sampleFlag_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(6, sampleFlag_);
-      }
-      if (!getAppsBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, apps_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -811,8 +738,6 @@ private static final long serialVersionUID = 0L;
           .equals(other.getTags());
       result = result && (getSampleFlag()
           == other.getSampleFlag());
-      result = result && getApps()
-          .equals(other.getApps());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -836,8 +761,6 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + getTags().hashCode();
       hash = (37 * hash) + SAMPLEFLAG_FIELD_NUMBER;
       hash = (53 * hash) + getSampleFlag();
-      hash = (37 * hash) + APPS_FIELD_NUMBER;
-      hash = (53 * hash) + getApps().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -983,8 +906,6 @@ private static final long serialVersionUID = 0L;
 
         sampleFlag_ = 0;
 
-        apps_ = "";
-
         return this;
       }
 
@@ -1017,7 +938,6 @@ private static final long serialVersionUID = 0L;
         result.spanId_ = spanId_;
         result.tags_ = tags_;
         result.sampleFlag_ = sampleFlag_;
-        result.apps_ = apps_;
         onBuilt();
         return result;
       }
@@ -1089,10 +1009,6 @@ private static final long serialVersionUID = 0L;
         if (other.getSampleFlag() != 0) {
           setSampleFlag(other.getSampleFlag());
         }
-        if (!other.getApps().isEmpty()) {
-          apps_ = other.apps_;
-          onChanged();
-        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -1125,7 +1041,7 @@ private static final long serialVersionUID = 0L;
       private java.lang.Object peers_ = "";
       /**
        * <pre>
-       * ip:port for each hop
+       * ip:port for each hop, format: addr1,addr2,...
        * </pre>
        *
        * <code>string peers = 1;</code>
@@ -1144,7 +1060,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * ip:port for each hop
+       * ip:port for each hop, format: addr1,addr2,...
        * </pre>
        *
        * <code>string peers = 1;</code>
@@ -1164,7 +1080,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * ip:port for each hop
+       * ip:port for each hop, format: addr1,addr2,...
        * </pre>
        *
        * <code>string peers = 1;</code>
@@ -1179,7 +1095,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * ip:port for each hop
+       * ip:port for each hop, format: addr1,addr2,...
        * </pre>
        *
        * <code>string peers = 1;</code>
@@ -1192,7 +1108,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * ip:port for each hop
+       * ip:port for each hop, format: addr1,addr2,...
        * </pre>
        *
        * <code>string peers = 1;</code>
@@ -1433,7 +1349,7 @@ private static final long serialVersionUID = 0L;
       private java.lang.Object tags_ = "";
       /**
        * <pre>
-       * key/value pairs passing in the chain
+       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
        * </pre>
        *
        * <code>string tags = 5;</code>
@@ -1452,7 +1368,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * key/value pairs passing in the chain
+       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
        * </pre>
        *
        * <code>string tags = 5;</code>
@@ -1472,7 +1388,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * key/value pairs passing in the chain
+       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
        * </pre>
        *
        * <code>string tags = 5;</code>
@@ -1487,7 +1403,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * key/value pairs passing in the chain
+       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
        * </pre>
        *
        * <code>string tags = 5;</code>
@@ -1500,7 +1416,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * key/value pairs passing in the chain
+       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
        * </pre>
        *
        * <code>string tags = 5;</code>
@@ -1551,93 +1467,6 @@ private static final long serialVersionUID = 0L;
       public Builder clearSampleFlag() {
         
         sampleFlag_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object apps_ = "";
-      /**
-       * <pre>
-       * app names for each hop, may be empty
-       * </pre>
-       *
-       * <code>string apps = 7;</code>
-       */
-      public java.lang.String getApps() {
-        java.lang.Object ref = apps_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          apps_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * app names for each hop, may be empty
-       * </pre>
-       *
-       * <code>string apps = 7;</code>
-       */
-      public com.google.protobuf.ByteString
-          getAppsBytes() {
-        java.lang.Object ref = apps_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          apps_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * app names for each hop, may be empty
-       * </pre>
-       *
-       * <code>string apps = 7;</code>
-       */
-      public Builder setApps(
-          java.lang.String value) {
-        if (value == null) value = "";
-  
-        apps_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * app names for each hop, may be empty
-       * </pre>
-       *
-       * <code>string apps = 7;</code>
-       */
-      public Builder clearApps() {
-        
-        apps_ = getDefaultInstance().getApps();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * app names for each hop, may be empty
-       * </pre>
-       *
-       * <code>string apps = 7;</code>
-       */
-      public Builder setAppsBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        apps_ = value;
         onChanged();
         return this;
       }

@@ -22,6 +22,13 @@ public class RpcServer extends RpcCallableBase {
 		ConnInfo(String localAddr) { 
 			this.localAddr = localAddr;
 		}
+		
+		public int nextSequence() {
+			int v = seq.incrementAndGet();
+			if (v >= 10000000)
+				seq.compareAndSet(v, 0);
+			return v;
+		}		
 	}
 	
 	ConcurrentHashMap<String,ConnInfo> clientConns = new ConcurrentHashMap<String,ConnInfo>();
@@ -39,7 +46,7 @@ public class RpcServer extends RpcCallableBase {
 	int nextSequence(String connId) {
 		ConnInfo ci = clientConns.get(connId);
 		if( ci == null ) return 0;
-		else return ci.seq.incrementAndGet();
+		else return ci.nextSequence();
 	}
 
 	public void connected(String connId,String localAddr) {

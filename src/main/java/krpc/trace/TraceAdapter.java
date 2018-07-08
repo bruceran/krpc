@@ -11,19 +11,16 @@ public interface TraceAdapter extends Plugin {
 	
 	default public TraceContext newTraceContext(RpcMeta.Trace trace,boolean restoreFlag) { return new DefaultTraceContext(trace,restoreFlag); } 
 
-	default public boolean needAppNames() { return false;  }
-
-	// inject for rpc
-	default public TraceIds inject(TraceContext ctx, Span span) {
-		return new TraceIds(ctx.getTrace().getTraceId(),span.getParentSpanId(),span.getSpanId());
-	}
+	default public boolean needThreadInfo() { return false;  } // only cat=true
 	
-	// restore from rpc, no need to restore traceId
-	// parentSpanId or spanId may be changed
+	default public boolean useCtxSubCalls() { return false;  } // only skywalking=true
+	
+	// inject rpc info except fields: peers,sampleFlag
+	public void inject(TraceContext ctx, Span span,RpcMeta.Trace.Builder traceBuilder);
+
+	// restore parentSpanId,spanId from rpc, no need to restore other fields
 	// return "null" means no change, "not null" means changed
-	default public SpanIds restore(String parentSpanId, String spanId) {
-		return null;
-	}
+	public SpanIds restore(String parentSpanId, String spanId);
 	
 	public TraceIds newStartTraceIds(boolean isServerSide);
 	

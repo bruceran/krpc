@@ -42,7 +42,6 @@ public class CatNettyClient  extends ChannelDuplexHandler implements InitClose {
 	int workerThreads = 1;
 
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("cat_work");
-	NamedThreadFactory timerThreadFactory = new NamedThreadFactory("cat_timer");
 
 	EventLoopGroup workerGroup;
 	Timer timer;
@@ -52,13 +51,11 @@ public class CatNettyClient  extends ChannelDuplexHandler implements InitClose {
 	Object dummyChannel = new Object();
 	ConcurrentHashMap<String, Object> conns = new ConcurrentHashMap<>(); // value cannot be null, so use Object type but Channel type
 	ConcurrentHashMap<String, String> addrMap = new ConcurrentHashMap<>(); // channel.id() -> outside addr
-
-	CatNettyClient(Timer timer) {
-		
-	}
 	
 	public void init() {
 
+		timer = new Timer("catnettytimer");
+		
 		workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
 
 		bootstrap = new Bootstrap();
@@ -84,7 +81,10 @@ public class CatNettyClient  extends ChannelDuplexHandler implements InitClose {
 		if (workerGroup != null) {
 
 			log.info("cat stopping netty client");
-
+			
+			timer.cancel();
+			timer = null; 
+			
 			ChannelGroup allChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 			for (Object ch : conns.values()) {
 				if (ch != null && ch != dummyChannel)
@@ -156,7 +156,7 @@ public class CatNettyClient  extends ChannelDuplexHandler implements InitClose {
 					reconnect(addr);
 				}
 
-			}, reconnectSeconds*1000, reconnectSeconds*1000);
+			}, reconnectSeconds*1000 );
 		}
 	}
 
