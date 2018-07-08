@@ -418,7 +418,6 @@
         	queueSize 队列大小,默认为1000
         	retryCount 重试次数，默认为3
         	retryInterval 重试间隔时间，默认为1秒
-        	截图: ![截图1](https://github.com/bruceran/krpc/blob/master/doc/images/zipkin.png)
         cat插件, 配置参数：
         	server  cat服务的地址，多个用逗号隔开, 示例：server=192.168.213.128:8080
         	实际的接收数据服务器地址通过server获取，每分钟检查一次地址是否有变更
@@ -427,7 +426,6 @@
         	此插件不使用Cat客户端SDK，无需Cat客户端SDK所需的两个配置文件：
         			 META-INF/app.properties
         			 /data/appdatas/cat/client.xml
-        	截图: ![截图1](https://github.com/bruceran/krpc/blob/master/doc/images/cat1.png) ![截图2](https://github.com/bruceran/krpc/blob/master/doc/images/cat2.png)
         skywalking插件, 配置参数：
         	server  skywalking服务的地址，多个用逗号隔开, 示例：server=127.0.0.1:10800
         	实际的接收数据服务器地址通过server获取，每分钟检查一次地址是否有变更
@@ -435,7 +433,6 @@
         	retryCount 重试次数，默认为3
         	retryInterval 重试间隔时间，默认为1秒
         	此插件不使用Skywalking探针，无需Skywalking探针所需的配置
-        	截图: ![截图1](https://github.com/bruceran/krpc/blob/master/doc/images/skywalking.png)
 
 ## registry
 
@@ -1075,7 +1072,7 @@
          配置示例："traceAdapter"="zipkin:a=b;c=d;..." 冒号后的是插件参数，每个插件配置值可能不一样
          所有打点的信息都可以在全链路跟踪系统里查询到
 
-         krpc默认的traceAdapter仅用于打日志,可修改已支持目前几个主流的全链路跟踪系统：Zipkin, Cat,SkyWalking
+         krpc默认的traceAdapter仅用于打日志,可修改配置来支持目前几个系统：Zipkin,Cat,SkyWalking
 
     * 数据采集
 
