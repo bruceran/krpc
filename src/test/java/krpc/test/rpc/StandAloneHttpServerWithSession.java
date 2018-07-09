@@ -12,9 +12,9 @@ import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.bootstrap.WebServerConfig;
 
 
-public class HttpServerWithSessionTest {
+public class StandAloneHttpServerWithSession {
 
-	static Logger log = LoggerFactory.getLogger(HttpServerWithSessionTest.class);
+	static Logger log = LoggerFactory.getLogger(StandAloneHttpServerWithSession.class);
 	
 	public static void main(String[] args) throws Exception {
 		

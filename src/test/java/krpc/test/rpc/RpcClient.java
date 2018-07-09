@@ -18,9 +18,9 @@ import krpc.rpc.bootstrap.MonitorConfig;
 import krpc.rpc.bootstrap.RegistryConfig;
 import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.core.ClientContext;
-public class RpcClientTest {
+public class RpcClient {
 
-	static Logger log = LoggerFactory.getLogger(RpcClientTest.class);
+	static Logger log = LoggerFactory.getLogger(RpcClient.class);
 	
 	public static void main(String[] args) throws Exception {
 		

@@ -3,8 +3,8 @@ package krpc.test.misc;
 import org.junit.Assert;
 import org.junit.Test;
 
-import krpc.rpc.util.SnappyTool;
-import krpc.rpc.util.ZlibTool;
+import krpc.rpc.util.Snappy;
+import krpc.rpc.util.Zlib;
 
 public class ZipTest {
 
@@ -14,7 +14,7 @@ public class ZipTest {
 		String s = "abcdefg2020202019199191";
 		byte[] bs = s.getBytes();
 		
-		ZlibTool zt = new ZlibTool();
+		Zlib zt = new Zlib();
 		byte[] bs2 = zt.zip(bs);
 		byte[] bs3 = zt.unzip(bs2);
 		
@@ -31,7 +31,7 @@ public class ZipTest {
 		String s = "abcdefg2020202019199191";
 		byte[] bs = s.getBytes();
 		
-		SnappyTool zt = new SnappyTool();
+		Snappy zt = new Snappy();
 		byte[] bs2 = zt.zip(bs);
 		byte[] bs3 = zt.unzip(bs2);
 		

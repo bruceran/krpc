@@ -278,7 +278,7 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		String kind;
 		long timestamp;
 		long duration;
-		boolean debug = true; // TODO
+		boolean debug = true; // TODO not used by now
 		boolean shared = true; // never used
 		ZipkinEndpoint localEndpoint;  // never used
 		ZipkinEndpoint remoteEndpoint;

@@ -19,9 +19,9 @@ import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.ServerContext;
 import krpc.trace.Trace;
 
-public class RpcServerTest {
+public class RpcServer {
 
-	static Logger log = LoggerFactory.getLogger(RpcServerTest.class);
+	static Logger log = LoggerFactory.getLogger(RpcServer.class);
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -59,7 +59,7 @@ class UserServiceImpl implements UserService {
 	}
 	
 	public LoginRes login(LoginReq req) {
-		
+System.out.println("username="+req.getUserName());		
 		RpcContextData ctx = ServerContext.get();
 
 		Trace.start("DB", "queryUser");

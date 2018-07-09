@@ -24,7 +24,7 @@ import krpc.rpc.core.RpcException;
 import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.util.ZipUnzip;
-import krpc.rpc.util.ZlibTool;
+import krpc.rpc.util.Zlib;
 
 public class DefaultRpcCodec implements RpcCodec {
 
@@ -38,16 +38,16 @@ public class DefaultRpcCodec implements RpcCodec {
 	private byte[] reqHeartBeatBytes;
 	private byte[] resHeartBeatBytes;
 	
-	private ZipUnzip zlibTool;
-	private ZipUnzip snappyTool;
+	private ZipUnzip zlib;
+	private ZipUnzip snappy;
 	
 	private HashMap<Integer,Integer> zipMap = new HashMap<>(); // only for encode
 	private HashMap<Integer,Integer> minSizeToZipMap = new HashMap<>(); // only for encode
 	
 	public DefaultRpcCodec(ServiceMetas serviceMetas) {
 		
-		zlibTool = new ZlibTool();
-		snappyTool = loadSnappy();  // continue if missing org.xerial.snappy dependence
+		zlib = new Zlib();
+		snappy = loadSnappy();  // continue if missing org.xerial.snappy dependence
 		
 		this.serviceMetas = serviceMetas;
 		RpcData reqHeartBeatData = new RpcData(
@@ -249,10 +249,10 @@ public class DefaultRpcCodec implements RpcCodec {
 	public byte[] zip(int zipType, byte[] data) throws IOException {
 		switch(zipType) {
 			case GZIP: 
-				return zlibTool.zip(data);
+				return zlib.zip(data);
 			case SNAPPY:
-				if( snappyTool != null ) {
-					return snappyTool.zip(data);
+				if( snappy != null ) {
+					return snappy.zip(data);
 				} else {
 					log.error("snappy not found, data not zipped");
 					return data;
@@ -265,10 +265,10 @@ public class DefaultRpcCodec implements RpcCodec {
 	public byte[] unzip(int zipType, byte[] data) throws IOException {
 		switch(zipType) {
 			case GZIP: 
-				return zlibTool.unzip(data);
+				return zlib.unzip(data);
 			case SNAPPY: 
-				if( snappyTool != null ) {
-					return snappyTool.unzip(data);
+				if( snappy != null ) {
+					return snappy.unzip(data);
 				} else {
 					log.error("snappy not found, data not unzipped");
 					return data;
@@ -288,7 +288,7 @@ public class DefaultRpcCodec implements RpcCodec {
 
 	ZipUnzip loadSnappy() { 
 		try {
-			Class<?> cls = Class.forName("krpc.rpc.util.SnappyTool");
+			Class<?> cls = Class.forName("krpc.rpc.util.Snappy");
 			return (ZipUnzip)cls.newInstance();
 		} catch(Throwable e) {
 			log.error("snappy not loaded");

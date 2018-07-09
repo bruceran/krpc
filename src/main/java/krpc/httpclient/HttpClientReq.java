@@ -7,13 +7,14 @@ import java.util.Map;
 public class HttpClientReq {
 
 	private int timeout = 3000;
+	private boolean gzip = false;
+	private int minSizeToGzip = 2048;
 	
 	private String method = "GET";
 	private String url;
 	private String contentType = "application/json";
 	private String content;
 	private Map<String,String> headers;
-	private boolean gzip;
 	
 	private URL urlObj = null;
 	
@@ -100,6 +101,14 @@ public class HttpClientReq {
 	public HttpClientReq setGzip(boolean gzip) {
 		this.gzip = gzip;
 		return this;
+	}
+
+	public int getMinSizeToGzip() {
+		return minSizeToGzip;
+	}
+
+	public void setMinSizeToGzip(int minSizeToGzip) {
+		this.minSizeToGzip = minSizeToGzip;
 	}
 	
 }

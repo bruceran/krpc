@@ -2,16 +2,14 @@ package krpc.rpc.util;
 
 import java.io.IOException;
 
-import org.xerial.snappy.Snappy;
-
-public class SnappyTool implements ZipUnzip {
+public class Snappy implements ZipUnzip {
 
 	public byte[] zip(byte[] input) throws IOException {
-		return Snappy.compress(input);
+		return org.xerial.snappy.Snappy.compress(input);
 	}
 	
 	public byte[] unzip(byte[] input) throws IOException {
-		return Snappy.uncompress(input);
+		return org.xerial.snappy.Snappy.uncompress(input);
 	}
 
 }

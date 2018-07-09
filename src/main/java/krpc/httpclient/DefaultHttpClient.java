@@ -1,6 +1,5 @@
 package krpc.httpclient;
 
-
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -32,6 +31,7 @@ import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.http.DefaultHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpContentDecompressor;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpMethod;
@@ -41,6 +41,7 @@ import io.netty.util.ReferenceCountUtil;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
 import krpc.common.RetCodes;
+import krpc.rpc.util.GZip;
 
 @Sharable
 public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClient,InitClose {
@@ -50,12 +51,13 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	int maxContentLength = 1000000;
 	int workerThreads = 1;
 	
-	// TODO keepalive, connection pool, https,  gzip
+	// TODO keepalive, connection pool, https
 
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("httpclient");
 	EventLoopGroup workerGroup;
 
 	Bootstrap bootstrap;
+	GZip gzip = new GZip();
 	
 	static class ReqResInfo {
 		HttpClientReq req;
@@ -85,6 +87,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 					protected void initChannel(SocketChannel ch) throws Exception {
 						ChannelPipeline pipeline = ch.pipeline();
 						pipeline.addLast("codec", new HttpClientCodec());
+						pipeline.addLast("decompressor", new HttpContentDecompressor());
 						pipeline.addLast("aggregator", new HttpObjectAggregator(maxContentLength));
 						pipeline.addLast("handler", DefaultHttpClient.this);
 					}
@@ -126,7 +129,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	        
 			String connId = getConnId(channel);
 			ReqResInfo info = new ReqResInfo(req);
-			dataMap.put(connId, info );
+			dataMap.put(connId, info);
 	        channel.writeAndFlush(req);
 	        HttpClientRes res = info.future.get(req.getTimeout(), TimeUnit.MILLISECONDS);
 	        
@@ -150,14 +153,33 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
     	DefaultHttpRequest req = null;
     	
 		if( data.getContent() != null && !data.getContent().isEmpty() ) {
-        	ByteBuf bb = ByteBufUtil.writeUtf8(ctx.alloc(), data.getContent());
-			int len = bb.readableBytes();
+			
+			ByteBuf bb =  null;
+			boolean allowGzip = data.isGzip() && data.getContent().length() >= data.getMinSizeToGzip();
+			if( !allowGzip  ) {
+	        	bb = ByteBufUtil.writeUtf8(ctx.alloc(), data.getContent());
+			} else {
+				bb = ctx.alloc().buffer();
+				try {
+					String charset = stripCharSet(data.getContentType());
+					byte[] bytes = data.getContent().getBytes(charset);
+					gzip.zip(bytes,bb);
+				} catch(Exception e) {
+					ReferenceCountUtil.release(bb);
+					return null;
+				}
+			}
+			
 	    	req = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.valueOf(data.getMethod()), data.getPathQuery(),bb);
 			req.headers().set(HttpHeaderNames.CONTENT_TYPE,data.getContentType());
-			req.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, len);
+			req.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, bb.readableBytes());
+			if( allowGzip ) {
+				req.headers().set(HttpHeaderNames.CONTENT_ENCODING,"gzip");
+			}
 		} else {
 	    	req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.valueOf(data.getMethod()), data.getPathQuery());
 		}
+		req.headers().set(HttpHeaderNames.ACCEPT_ENCODING,"gzip");
 
 		if( data.getHeaders() != null ) {
 			for( Map.Entry<String, String> entry: data.getHeaders().entrySet() ) {
@@ -170,7 +192,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 		
 		return req;
     }
-    
+
     HttpClientRes convertRes(FullHttpResponse data) {
     	HttpClientRes res = new HttpClientRes(0);
     	res.setHttpCode(data.status().code());
@@ -257,6 +279,13 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
     	int p = contentType.indexOf(";");
     	if( p >= 0 ) return contentType.substring(0,p).trim();
     	return contentType;
+    }
+    
+    String stripCharSet(String contentType) {
+    	if( contentType == null ) return null;
+    	int p = contentType.indexOf(";");
+    	if( p >= 0 ) return contentType.substring(p+1).trim();
+    	return "utf-8";
     }
 
 	public int getMaxContentLength() {

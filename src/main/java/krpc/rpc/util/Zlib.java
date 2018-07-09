@@ -6,7 +6,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-public class ZlibTool implements ZipUnzip {
+public class Zlib implements ZipUnzip {
 
 	ThreadLocal<byte[]> tlBuff = new ThreadLocal<byte[]>() {
 		protected byte[] initialValue() {

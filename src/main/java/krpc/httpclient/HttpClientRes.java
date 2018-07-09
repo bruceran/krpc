@@ -6,7 +6,7 @@ public class HttpClientRes {
 
 	private int retCode;
 	
-	private int httpCode = 200;
+	private int httpCode = 0;
 	private String contentType = "application/json";
 	private String content;
 	private HttpHeaders headers;

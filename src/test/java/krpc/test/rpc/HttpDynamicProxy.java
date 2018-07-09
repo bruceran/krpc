@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.RpcApp;
 
-public class HttpDynamicClientTest {
+public class HttpDynamicProxy {
 
-	static Logger log = LoggerFactory.getLogger(HttpDynamicClientTest.class);
+	static Logger log = LoggerFactory.getLogger(HttpDynamicProxy.class);
 	
 	public static void main(String[] args) throws Exception {
 

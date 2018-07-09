@@ -39,6 +39,7 @@ import com.google.protobuf.UnknownFieldSet.Field;
 
 import krpc.KrpcExt;
 import krpc.common.Plugin;
+import krpc.common.RetCodes;
 import krpc.rpc.cluster.BreakerInfo;
 import krpc.rpc.cluster.DefaultClusterManager;
 import krpc.rpc.cluster.DefaultRouter;
@@ -162,6 +163,7 @@ public class Bootstrap {
 	RpcApp app = newRpcApp();
 	
 	public Bootstrap() {
+		RetCodes.retCodeText(0); // cause static initialization
 		initSniffer();
 		loadSpi();
 	}

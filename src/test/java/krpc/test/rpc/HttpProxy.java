@@ -9,9 +9,9 @@ import com.xxx.userservice.proto.UserServiceAsync;
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.RpcApp;
 
-public class HttpClientTest {
+public class HttpProxy {
 
-	static Logger log = LoggerFactory.getLogger(HttpClientTest.class);
+	static Logger log = LoggerFactory.getLogger(HttpProxy.class);
 	
 	public static void main(String[] args) throws Exception {
 

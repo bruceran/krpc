@@ -42,6 +42,7 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpContentCompressor;
+import io.netty.handler.codec.http.HttpContentDecompressor;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -128,7 +129,8 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 						ChannelPipeline pipeline = ch.pipeline();
 						pipeline.addLast("timeout", new IdleStateHandler(0, 0, idleSeconds));
 						pipeline.addLast("codec", new HttpServerCodec(maxInitialLineLength,maxHeaderSize,maxChunkSize));
-						pipeline.addLast("expectContinue", new HttpServerExpectContinueHandler());						
+						pipeline.addLast("expectContinue", new HttpServerExpectContinueHandler());					
+						pipeline.addLast("decompressor", new HttpContentDecompressor());
 						pipeline.addLast("upload", new NettyHttpUploadHandler(uploadDir, maxUploadLength));
 						pipeline.addLast("aggregator", new HttpObjectAggregator(maxContentLength));
 			            //pipeline.addLast("chunkedWriter", new ChunkedWriteHandler()); // use ZeroCopy FileRegion instead

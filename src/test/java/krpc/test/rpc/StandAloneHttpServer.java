@@ -27,9 +27,9 @@ import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.ServerContext;
 
-public class HttpServerTest {
+public class StandAloneHttpServer {
 
-	static Logger log = LoggerFactory.getLogger(HttpServerTest.class);
+	static Logger log = LoggerFactory.getLogger(StandAloneHttpServer.class);
 	
 	public static void main(String[] args) throws Exception {
 		
