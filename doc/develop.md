@@ -81,16 +81,20 @@
       serviceId int32 服务号
       msgId int32 消息号
       sequence int32 包标识
-      traceId string 全链路跟踪标识, 不同的全链路跟踪系统格式不一样
-      rpcId string 全链路跟踪RPCID, 不同的全链路跟踪系统格式不一样
-      sampled int32 是否采样 0=默认(是) 1=强制,忽略存储级配置 2=否
-      peers string 网络包经过的所有节点的ip:port
-      apps string 网络包经过的所有节点的app name
-      retCode int32 错误码，仅用于响应包，某些情况下可以无包体，通过此字段确定错误码
       timeout int32 超时时间，客户端的超时时间可以传给服务端，服务端可以根据此时间快速丢弃队列中已过期未执行的消息
+      retCode int32 错误码，仅用于响应包，某些情况下可以无包体，通过此字段确定错误码
+      trace TRACE对象，包含全链路跟踪所需的所有数据
+	      peers string 网络包经过的所有节点的ip:port，用逗号隔开
+	      traceId string 跟踪标识，每个节点记录的值一样
+	      parentSpanId 父节点ID, 很多跟踪系统不使用此值
+	      spanId 当前节点ID
+	      tags string  key/value数据，数据会在每个节点都进行传递，格式为 k1=v1&k2=v2&..., value需做url编码
+	      sampleFlag int32 采样标志 0=默认(是) 1=强制(暂未使用) 2=否
+      attachment string OOB数据
       compress int32 包体是否做了压缩以及压缩方式  0=不压缩 1=zlib 2=snappy
 
       目前服务号1已被框架使用，其中 serviceId=1 msgId=1 为心跳包, 心跳包无sequence
+      目前服务号2被框架预留作为监控服务端，接收krpc监控服务上报的数据
 
   包体, protobuff形式
 
@@ -399,7 +403,6 @@
         0=容器启动完成后立即调用start(),
         n>0 =容器启动完成后再延迟n秒调用start(),
         n<0 用户代码手工调用start()
-    sampleRate 全链路跟踪采样百分比，为0-100之间的一个值, 默认为100
 
     errorMsgConverter 错误码错误消息转换文件，默认为file
         file 插件参数：location 文件位置，默认为classpath下的error.properties
@@ -411,6 +414,8 @@
         如果未设置此值，则不开启动态路由功能
     fallbackPlugin  降级策略插件, 可配置为 default(默认), 如果未配置， 则不开启降级策略
         default 插件参数：file 文件位置，默认为classpath下的 fallback.yaml
+
+    sampleRate 调用链跟踪采样百分比，为0-100之间的一个值, 默认为100
     traceAdapter 调用链跟踪系统标识，目前支持default(默认), zipkin, cat, skywalking
         default插件, 目前仅支持生成跟踪标识，打印在日志中，SPANID的格式和阿里的eagle系统类似
         zipkin插件, 配置参数：
@@ -422,7 +427,7 @@
         	server  cat服务的地址，多个用逗号隔开, 示例：server=192.168.213.128:8080
         	实际的接收数据服务器地址通过server获取，每分钟检查一次地址是否有变更
         	queueSize 队列大小,默认为1000
-        	cat不支持重试
+        	cat上报数据不支持重试
         	此插件不使用Cat客户端SDK，无需Cat客户端SDK所需的两个配置文件：
         			 META-INF/app.properties
         			 /data/appdatas/cat/client.xml
@@ -708,7 +713,7 @@
      同步实现方式：
 
           public LoginRes login(LoginReq req) {
-              log.info("login received, peers="+ctx.getMeta().getPeers());
+              log.info("login received, peers="+ctx.getMeta().getTrace().getPeers());
               return LoginRes.newBuilder().setRetCode(0)
                      .setRetMsg("hello, friend. receive req#"+i).build(); // 处理完直接返回
           }
@@ -729,7 +734,7 @@
           closure.recoverContext(); // 每次跨线程传递closure后必须调用此接口恢复rpc上下文以及全链路跟踪trace上下文
           ... // 业务层处理
           LoginReq req = (LoginReq)closure.getReq(); // 获取入参
-          log.info("login received, peers="+ctx.getMeta().getPeers());
+          log.info("login received, peers="+ctx.getMeta().getTrace().getPeers());
           LoginRes res = LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#"+i).build();
           closure.done(res); // 什么时候获得了响应就调用done(res)函数
 

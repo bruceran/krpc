@@ -168,7 +168,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter,InitClose {
 	
 	void heartBeatAndQueryRoutes() {
 		/*
-				TODO why skywalking always return failed ?
+				why skywalking always return failed ?
 				
 				in apm-collector\apm-collector-agent\agent-jetty\agent-jetty-provider\
 				src\main\java\org\apache\skywalking\apm\collector\agent\jetty\provider\AgentModuleJettyProvider.java

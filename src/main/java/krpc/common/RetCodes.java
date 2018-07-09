@@ -1,92 +1,107 @@
 package krpc.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RetCodes {
 	
-	 // client side error
-	 static public final int RPC_TIMEOUT = -450;  
-	 static public final int NO_CONNECTION = -451;
-	 static public final int SEND_FAILED = -452;  
-	 static public final int CONNECTION_BROKEN = -453;
-	 static public final int USER_CANCEL = -454;
-	 static public final int EXEC_EXCEPTION = -455; // only used in future
-	 static public final int REFERER_NOT_ALLOWED = -456;
-	 static public final int ENCODE_REQ_ERROR = -457;
-	 static public final int DECODE_RES_ERROR = -458;
+	 // rpc client side error
+	 static public final int RPC_TIMEOUT = -601;  
+	 static public final int NO_CONNECTION = -602;
+	 static public final int SEND_FAILED = -603;  
+	 static public final int CONNECTION_BROKEN = -604;
+	 static public final int USER_CANCEL = -605;
+	 static public final int EXEC_EXCEPTION = -606; // only used in future
+	 static public final int REFERER_NOT_ALLOWED = -607;
+	 static public final int ENCODE_REQ_ERROR = -608;
+	 static public final int DECODE_RES_ERROR = -609;
 
-	 // server side error
-	 static public final int BUSINESS_ERROR = -500;
-	 static public final int SERVER_SHUTDOWN = -503;
-	 static public final int QUEUE_FULL = -550;
-	 static public final int QUEUE_TIMEOUT = -551;
-	 static public final int DECODE_REQ_ERROR = -552;
-	 static public final int ENCODE_RES_ERROR = -553;
-	 static public final int NOT_FOUND = -554;
-	 static public final int FLOW_LIMIT = -555;
-	 static public final int DIST_FLOW_LIMIT = -556;
-	 static public final int SERVICE_NOT_ALLOWED = -557;
-	 static public final int SERVER_CONNECTION_BROKEN = -558; // just for server log, not returned to client
-	 static public final int VALIDATE_ERROR = -559;
-	 
-	 // http client side
-	 static public final int HTTP_FORBIDDEN = -403;  
-	 static public final int HTTP_NOT_FOUND = -404;  
-	 static public final int HTTP_METHOD_NOT_ALLOWED = -405;  
-	 static public final int HTTP_TOO_LARGE = -413;  
-	 
-	 // http server side
-	 static public final int HTTP_NO_LOGIN = -560;  
-	 static public final int HTTP_NO_SESSIONSERVICE = -561;  
-	 static public final int HTTP_CLIENT_NOT_FOUND = -562;  
+	 // rpc server side error
+	 static public final int BUSINESS_ERROR = -620;
+	 static public final int VALIDATE_ERROR = -621;
+	 static public final int SERVER_SHUTDOWN = -622;
+	 static public final int QUEUE_FULL = -623;
+	 static public final int QUEUE_TIMEOUT = -624;
+	 static public final int DECODE_REQ_ERROR = -625;
+	 static public final int ENCODE_RES_ERROR = -626;
+	 static public final int NOT_FOUND = -627;
+	 static public final int FLOW_LIMIT = -628;
+	 static public final int DIST_FLOW_LIMIT = -629;
+	 static public final int SERVICE_NOT_ALLOWED = -630;
+	 static public final int SERVER_CONNECTION_BROKEN = -631; // just for server log, not returned to client
 
+	 // krpc.httpclient component error
+	static public final int HTTPCLIENT_URL_PARSE_ERROR = -701;
+	static public final int HTTPCLIENT_RES_PARSE_ERROR = -702;
+	static public final int HTTPCLIENT_TIMEOUT_ERROR = -703;
+	static public final int HTTPCLIENT_CONNECT_EXCEPTION = -704;
+	static public final int HTTPCLIENT_INTERRUPTED = -705;
+		
+	 // http server error
+	 static public final int HTTP_FORBIDDEN = -720;  
+	 static public final int HTTP_URL_NOT_FOUND = -721;  
+	 static public final int HTTP_METHOD_NOT_ALLOWED = -722;  
+	 static public final int HTTP_TOO_LARGE = -723;  
+	 static public final int HTTP_NO_LOGIN = -724;  
+	 static public final int HTTP_NO_SESSIONSERVICE = -725;  
+	 static public final int HTTP_SERVICE_NOT_FOUND = -726;  
+	 
 	 static public boolean isTimeout(int retCode) {
 		 return retCode == RPC_TIMEOUT || retCode == QUEUE_TIMEOUT;
 	 }
 	 
-	 /*
-	 static public boolean hasExecuted(int retCode) {
-		 return retCode == 0 || retCode == BUSINESS_ERROR  || retCode  == VALIDATE_ERROR || retCode <= -1000;
-	 }
-	 */
-
 	 static public boolean canRetry(int retCode) {
 		 return retCode == QUEUE_FULL || retCode == SERVER_SHUTDOWN || retCode == FLOW_LIMIT;
 	 }
-
+	 
 	 static public String retCodeText(int retCode) {
-		 switch(retCode) {
-		 	case 0: return "";
-
-		 	case NO_CONNECTION: return "no connection";
-		 	case SEND_FAILED: return "failed to send to network";
-		 	case CONNECTION_BROKEN: return "connection is reset";
-		 	case RPC_TIMEOUT: return "rpc timeout";
-		 	case USER_CANCEL: return "user cancelled";
-		 	case EXEC_EXCEPTION: return "exception in future";
-		 	case REFERER_NOT_ALLOWED: return "serviceId is not allowed";
-		 	case ENCODE_REQ_ERROR: return "encode req error";
-		 	case DECODE_RES_ERROR: return "decode res error";
-		 	
-		 	case BUSINESS_ERROR: return "business exception";
-		 	case SERVER_SHUTDOWN: return "server shutdown";
-		 	case FLOW_LIMIT: return "flow control limit exceeded";
-		 	case QUEUE_FULL: return "queue is full";
-		 	case QUEUE_TIMEOUT: return "timeout in queue";
-		 	case DECODE_REQ_ERROR: return "decode req error";
-		 	case ENCODE_RES_ERROR: return "encode res error";
-		 	case NOT_FOUND: return "service or method not found";
-		 	case SERVICE_NOT_ALLOWED: return "serviceId is not allowed";
-		 	case VALIDATE_ERROR: return "validate error: ";
-		 	
-		 	case HTTP_FORBIDDEN: return "forbidden";
-		 	case HTTP_NOT_FOUND: return "not found";
-		 	case HTTP_TOO_LARGE: return "too large";
-		 	case HTTP_METHOD_NOT_ALLOWED: return "method not allowed";
-		 	case HTTP_NO_SESSIONSERVICE: return "session service not found";
-		 	case HTTP_NO_LOGIN: return "not login yet";
-		 	case HTTP_CLIENT_NOT_FOUND: return "service not found";
-		 	
-		 	default: return "unknown error:"+retCode;
-		 }
+		 String msg = map.get(retCode);
+		 if( msg == null ) return "unknown error: "+retCode;
+		 return msg;
 	 }
+	 
+	 static private final Map<Integer,String> map = new HashMap<>();
+	 
+	 static {  
+		 map.put(0,  "");
+		 
+		 map.put(RPC_TIMEOUT,  "rpc timeout");
+		 map.put(NO_CONNECTION,  "no connection");
+		 map.put(SEND_FAILED,  "failed to send to network");
+		 map.put(CONNECTION_BROKEN,  "connection is reset");
+		 map.put(USER_CANCEL,  "user cancelled");
+		 map.put(EXEC_EXCEPTION,  "exception in future");
+		 map.put(REFERER_NOT_ALLOWED,  "serviceId is not allowed");
+		 map.put(ENCODE_REQ_ERROR,  "encode req error");
+		 map.put(DECODE_RES_ERROR,  "decode res error");
+		 
+		 map.put(BUSINESS_ERROR,  "business exception");
+		 map.put(VALIDATE_ERROR,  "validate error: ");
+		 map.put(SERVER_SHUTDOWN,   "server shutdown");
+		 map.put(QUEUE_FULL,  "queue is full");
+		 map.put(QUEUE_TIMEOUT,  "timeout in queue");
+		 map.put(DECODE_REQ_ERROR,  "decode req error");
+		 map.put(ENCODE_RES_ERROR, "encode res error");
+		 map.put(NOT_FOUND,  "service or method not found");
+		 map.put(FLOW_LIMIT,  "flow control limit exceeded");
+		 map.put(DIST_FLOW_LIMIT,  "dist flow control limit exceeded");
+		 map.put(SERVICE_NOT_ALLOWED,  "serviceId is not allowed");
+		 map.put(SERVER_CONNECTION_BROKEN,  "server connection is broken");
+		 
+		 map.put(HTTP_FORBIDDEN,  "forbidden");
+		 map.put(HTTP_URL_NOT_FOUND,  "url not found");
+		 map.put(HTTP_TOO_LARGE,  "request content too large");
+		 map.put(HTTP_METHOD_NOT_ALLOWED,  "method not allowed");
+		 map.put(HTTP_NO_SESSIONSERVICE,  "session service not found");
+		 map.put(HTTP_NO_LOGIN,  "not login yet");
+		 map.put(HTTP_SERVICE_NOT_FOUND,  "service not found");
+		 
+		 map.put(HTTPCLIENT_URL_PARSE_ERROR,  "url parse error");
+		 map.put(HTTPCLIENT_RES_PARSE_ERROR,  "response content parse error");
+		 map.put(HTTPCLIENT_TIMEOUT_ERROR,  "http call timeout");
+		 map.put(HTTPCLIENT_CONNECT_EXCEPTION,  "http connection exception");
+		 map.put(HTTPCLIENT_INTERRUPTED,  "http call interrupted");
+	 }
+
 }
 

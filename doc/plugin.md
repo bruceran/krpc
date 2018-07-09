@@ -46,6 +46,11 @@
 	   如果插件是Spring bean形式的插件，则使用Spring的init,close机制做初始化和清理工作。
 	   krpc所有插件的实现应该都是线程安全的。
 	 
+	   全链路跟踪系统插件  krpc.trace.TraceAdapter 接口
+		       用来生成和上报全链路跟踪数据
+		       通过ApplicationConfig.traceAdapter配置
+		       框架自带了 default, zipkin, cat, skywalking 插件
+
 	   负载均衡插件  krpc.rpc.cluster.LoadBalance 接口
 		       用来自定义loadbalance策略
 		       通过RefererConfig.loadBalance配置

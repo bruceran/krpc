@@ -17,7 +17,7 @@ public class Trace {
 	private static Random rand = new Random();
 	
 	public static int getSampleFlag() {
-		int sampleFlag = rand.nextInt(100) <= Trace.getSampleRate()  ? 0 : 2 ;
+		int sampleFlag = rand.nextInt(100) < Trace.getSampleRate()  ? 0 : 2 ; // 1 not used by now
 		return sampleFlag;
 	}
 	

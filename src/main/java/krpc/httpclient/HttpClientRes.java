@@ -4,13 +4,6 @@ import io.netty.handler.codec.http.HttpHeaders;
 
 public class HttpClientRes {
 
-	public static final int SUCCESS = 0;
-	public static final int URL_PARSE_ERROR = -1; // todo
-	public static final int RES_PARSE_ERROR = -2;
-	public static final int TIMEOUT_ERROR = -3;
-	public static final int CONNECT_EXCEPTION = -4;
-	public static final int INTERRUPTED = -5;
-	
 	private int retCode;
 	
 	private int httpCode = 200;

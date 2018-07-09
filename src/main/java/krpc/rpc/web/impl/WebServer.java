@@ -180,7 +180,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 			}
 		}
 
-		DefaultWebRes res = generateError(req, RetCodes.HTTP_NOT_FOUND, 404,null);
+		DefaultWebRes res = generateError(req, RetCodes.HTTP_URL_NOT_FOUND, 404,null);
 		httpTransport.send(connId, res);
 	}
 	
@@ -623,7 +623,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	void callClient(WebContextData ctx, DefaultWebReq req, Object referer) {
 		RpcCallable callable = serviceMetas.findCallable(referer.getClass().getName());
 		if (callable == null) {
-			sendErrorResponse(ctx, req, RetCodes.HTTP_CLIENT_NOT_FOUND);
+			sendErrorResponse(ctx, req, RetCodes.HTTP_SERVICE_NOT_FOUND);
 			log.error("callable not found, cls=" + referer.getClass().getName());
 			return;
 		}
@@ -650,7 +650,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 	void callDynamic(WebContextData ctx, DefaultWebReq req) {
 		RpcCallable callable = serviceMetas.findDynamicCallable(ctx.getMeta().getServiceId());
 		if (callable == null) {
-			sendErrorResponse(ctx, req, RetCodes.HTTP_CLIENT_NOT_FOUND);
+			sendErrorResponse(ctx, req, RetCodes.HTTP_SERVICE_NOT_FOUND);
 			log.error("callable not found, serviceId=" + ctx.getMeta().getServiceId());
 			return;
 		}

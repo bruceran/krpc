@@ -40,6 +40,7 @@ import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.ReferenceCountUtil;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
+import krpc.common.RetCodes;
 
 @Sharable
 public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClient,InitClose {
@@ -49,7 +50,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	int maxContentLength = 1000000;
 	int workerThreads = 1;
 	
-	// todo keepalive, connection pool, https,  gzip
+	// TODO keepalive, connection pool, https,  gzip
 
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("httpclient");
 	EventLoopGroup workerGroup;
@@ -107,7 +108,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
     public HttpClientRes call(HttpClientReq req)  {
 
     	URL url =  req.getUrlObj();
-    	if( url == null ) return new HttpClientRes(HttpClientRes.URL_PARSE_ERROR);
+    	if( url == null ) return new HttpClientRes(RetCodes.HTTPCLIENT_URL_PARSE_ERROR);
     	
         String host = url.getHost();
         int port = url.getPort();
@@ -120,7 +121,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	        boolean connected = future.await(req.getTimeout(), TimeUnit.MILLISECONDS);
 	        if( !connected ) {
 	        	channel.close();
-	        	return new HttpClientRes(HttpClientRes.TIMEOUT_ERROR);
+	        	return new HttpClientRes(RetCodes.HTTPCLIENT_TIMEOUT_ERROR);
 	        }
 	        
 			String connId = getConnId(channel);
@@ -134,11 +135,11 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	        return res;
         
         } catch(InterruptedException e) {
-        	return new HttpClientRes(HttpClientRes.INTERRUPTED);
+        	return new HttpClientRes(RetCodes.HTTPCLIENT_INTERRUPTED);
         } catch(TimeoutException e) {
-        	return new HttpClientRes(HttpClientRes.TIMEOUT_ERROR);
+        	return new HttpClientRes(RetCodes.HTTPCLIENT_TIMEOUT_ERROR);
         } catch(Exception e) {
-        	return new HttpClientRes(HttpClientRes.CONNECT_EXCEPTION);
+        	return new HttpClientRes(RetCodes.HTTPCLIENT_CONNECT_EXCEPTION);
         }
     }
 
@@ -195,7 +196,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 			FullHttpResponse  httpRes = (FullHttpResponse)msg;
 			
 	        if (!httpRes.decoderResult().isSuccess()) {
-	        	if( info != null ) info.setRes(new HttpClientRes(HttpClientRes.RES_PARSE_ERROR));
+	        	if( info != null ) info.setRes(new HttpClientRes(RetCodes.HTTPCLIENT_RES_PARSE_ERROR));
 	            return;
 	        }
 	
