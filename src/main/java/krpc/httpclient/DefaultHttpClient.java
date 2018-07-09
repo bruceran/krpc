@@ -37,6 +37,9 @@ import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.util.ReferenceCountUtil;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
@@ -51,13 +54,15 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	int maxContentLength = 1000000;
 	int workerThreads = 1;
 	
-	// TODO keepalive, connection pool, https
+	// TODO keepalive, connection pool
 
 	NamedThreadFactory workThreadFactory = new NamedThreadFactory("httpclient");
 	EventLoopGroup workerGroup;
 
+	GZip gzip;
+	SslContext sslCtx;
 	Bootstrap bootstrap;
-	GZip gzip = new GZip();
+	Bootstrap sslBootstrap;
 	
 	static class ReqResInfo {
 		HttpClientReq req;
@@ -78,6 +83,14 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	
     public void init() {
 
+    	gzip = new GZip();
+    	
+    	try {
+    		sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+    	} catch(Exception e) {
+    		log.error("ssl context init failed");
+    	}
+    	
 		workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
 
 		bootstrap = new Bootstrap();
@@ -96,6 +109,23 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 		bootstrap.option(ChannelOption.TCP_NODELAY, true);
 		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
 
+		sslBootstrap = new Bootstrap();
+		sslBootstrap.group(workerGroup).channel(NioSocketChannel.class)
+				.handler(new ChannelInitializer<SocketChannel>() {
+					@Override
+					protected void initChannel(SocketChannel ch) throws Exception {
+						ChannelPipeline pipeline = ch.pipeline();
+						pipeline.addLast("ssl", sslCtx.newHandler(ch.alloc()));
+						pipeline.addLast("codec", new HttpClientCodec());
+						pipeline.addLast("decompressor", new HttpContentDecompressor());
+						pipeline.addLast("aggregator", new HttpObjectAggregator(maxContentLength));
+						pipeline.addLast("handler", DefaultHttpClient.this);
+					}
+				});
+		
+		sslBootstrap.option(ChannelOption.TCP_NODELAY, true);
+		sslBootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+
         log.info("netty http client started");
     }
 
@@ -113,12 +143,13 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
     	URL url =  req.getUrlObj();
     	if( url == null ) return new HttpClientRes(RetCodes.HTTPCLIENT_URL_PARSE_ERROR);
     	
+    	String schema = url.getProtocol();
         String host = url.getHost();
         int port = url.getPort();
         if( port == -1 ) port = url.getDefaultPort();
         
         try {
-	        ChannelFuture future = bootstrap.connect(host,port);
+	        ChannelFuture future = schema.equals("http") ? bootstrap.connect(host,port) :  sslBootstrap.connect(host,port);
 	        Channel channel = future.channel();
 	        
 	        boolean connected = future.await(req.getTimeout(), TimeUnit.MILLISECONDS);

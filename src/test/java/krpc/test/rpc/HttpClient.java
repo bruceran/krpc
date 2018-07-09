@@ -13,8 +13,9 @@ public class HttpClient {
 		//HttpClientReq req = new HttpClientReq("GET","http://127.0.0.1:9411/ui");
 		//HttpClientReq req = new HttpClientReq("GET","http://localhost:9411/ui");
 		//HttpClientReq req = new HttpClientReq("GET","http://news.sina.com.cn/");
-		HttpClientReq req = new HttpClientReq("POST","http://127.0.0.1:8888/user/test1").setContent("{\"userName\":\"abc\"}");
-		//HttpClientReq req = new HttpClientReq("POST","http://127.0.0.1:9999/user/test1").setContent("{\"userName\":\"abc\"}");
+		//HttpClientReq req = new HttpClientReq("POST","http://127.0.0.1:8888/user/test1").setContent("{\"userName\":\"abc\"}");
+		//HttpClientReq req = new HttpClientReq("POST","https://127.0.0.1:9999/user/test1").setContent("{\"userName\":\"abc\"}");
+		HttpClientReq req = new HttpClientReq("GET","https://www.sina.com.cn");
 		req.setMinSizeToGzip(1);
 		req.setGzip(true);
 		HttpClientRes res = c.call(req);
@@ -23,7 +24,7 @@ public class HttpClient {
 		System.out.println("contentType="+res.getContentType());
 		System.out.println("content="+res.getContent());
 		
-		Thread.sleep(5000);
+		//Thread.sleep(5000);
 		
 		c.close();
 	}
