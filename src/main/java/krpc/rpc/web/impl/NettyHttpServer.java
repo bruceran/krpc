@@ -48,7 +48,6 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http.HttpServerExpectContinueHandler;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.LastHttpContent;
@@ -128,8 +127,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 					protected void initChannel(SocketChannel ch) throws Exception {
 						ChannelPipeline pipeline = ch.pipeline();
 						pipeline.addLast("timeout", new IdleStateHandler(0, 0, idleSeconds));
-						pipeline.addLast("codec", new HttpServerCodec(maxInitialLineLength,maxHeaderSize,maxChunkSize));
-						pipeline.addLast("expectContinue", new HttpServerExpectContinueHandler());					
+						pipeline.addLast("codec", new HttpServerCodec(maxInitialLineLength,maxHeaderSize,maxChunkSize));	
 						pipeline.addLast("decompressor", new HttpContentDecompressor());
 						pipeline.addLast("upload", new NettyHttpUploadHandler(uploadDir, maxUploadLength));
 						pipeline.addLast("aggregator", new HttpObjectAggregator(maxContentLength));

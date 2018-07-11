@@ -5,7 +5,8 @@
 bin/
 build/
 target/
-
+jarcache/
+upload/
 krpcsniffer.cfg
 tracesniffer.cfg
 tracesniffer.cfg

@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class RpcServerTest {
+public class RpcServer {
 
-	static Logger log = LoggerFactory.getLogger(RpcServerTest.class);
+	static Logger log = LoggerFactory.getLogger(RpcServer.class);
 	
 	public static void main(String[] args) throws Exception {
 		

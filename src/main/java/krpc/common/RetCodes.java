@@ -6,15 +6,15 @@ import java.util.Map;
 public class RetCodes {
 	
 	 // rpc client side error
-	 static public final int RPC_TIMEOUT = -601;  
-	 static public final int NO_CONNECTION = -602;
-	 static public final int SEND_FAILED = -603;  
-	 static public final int CONNECTION_BROKEN = -604;
-	 static public final int USER_CANCEL = -605;
-	 static public final int EXEC_EXCEPTION = -606; // only used in future
-	 static public final int REFERER_NOT_ALLOWED = -607;
-	 static public final int ENCODE_REQ_ERROR = -608;
-	 static public final int DECODE_RES_ERROR = -609;
+	 static public final int NO_CONNECTION = -600;
+	 static public final int CONNECTION_BROKEN = -601;
+	 static public final int RPC_TIMEOUT = -602;  
+	 static public final int USER_CANCEL = -603;
+	 static public final int SEND_FAILED = -604;  
+	 static public final int EXEC_EXCEPTION = -605; // only used in future
+	 static public final int REFERER_NOT_ALLOWED = -606;
+	 static public final int ENCODE_REQ_ERROR = -607;
+	 static public final int DECODE_RES_ERROR = -608;
 
 	 // rpc server side error
 	 static public final int BUSINESS_ERROR = -620;
@@ -31,11 +31,12 @@ public class RetCodes {
 	 static public final int SERVER_CONNECTION_BROKEN = -631; // just for server log, not returned to client
 
 	 // krpc.httpclient component error
-	static public final int HTTPCLIENT_URL_PARSE_ERROR = -701;
-	static public final int HTTPCLIENT_RES_PARSE_ERROR = -702;
-	static public final int HTTPCLIENT_TIMEOUT_ERROR = -703;
-	static public final int HTTPCLIENT_CONNECT_EXCEPTION = -704;
-	static public final int HTTPCLIENT_INTERRUPTED = -705;
+	static public final int HTTPCLIENT_NO_CONNECT = -700;
+	static public final int HTTPCLIENT_CONNECTION_BROKEN = -701;
+	static public final int HTTPCLIENT_TIMEOUT= -702;
+	static public final int HTTPCLIENT_INTERRUPTED = -703;
+	static public final int HTTPCLIENT_URL_PARSE_ERROR = -704;
+	static public final int HTTPCLIENT_RES_PARSE_ERROR = -705;
 		
 	 // http server error
 	 static public final int HTTP_FORBIDDEN = -720;  
@@ -65,11 +66,11 @@ public class RetCodes {
 	 static {  
 		 map.put(0,  "");
 		 
-		 map.put(RPC_TIMEOUT,  "rpc timeout");
 		 map.put(NO_CONNECTION,  "no connection");
-		 map.put(SEND_FAILED,  "failed to send to network");
 		 map.put(CONNECTION_BROKEN,  "connection is reset");
+		 map.put(RPC_TIMEOUT,  "rpc timeout");
 		 map.put(USER_CANCEL,  "user cancelled");
+		 map.put(SEND_FAILED,  "failed to send to network");
 		 map.put(EXEC_EXCEPTION,  "exception in future");
 		 map.put(REFERER_NOT_ALLOWED,  "serviceId is not allowed");
 		 map.put(ENCODE_REQ_ERROR,  "encode req error");
@@ -87,7 +88,14 @@ public class RetCodes {
 		 map.put(DIST_FLOW_LIMIT,  "dist flow control limit exceeded");
 		 map.put(SERVICE_NOT_ALLOWED,  "serviceId is not allowed");
 		 map.put(SERVER_CONNECTION_BROKEN,  "server connection is broken");
-		 
+
+		 map.put(HTTPCLIENT_NO_CONNECT,  "no connection");
+		 map.put(HTTPCLIENT_CONNECTION_BROKEN,  "connection exception");
+		 map.put(HTTPCLIENT_TIMEOUT,  "call timeout");
+		 map.put(HTTPCLIENT_INTERRUPTED,  "call interrupted");
+		 map.put(HTTPCLIENT_URL_PARSE_ERROR,  "url parse error");
+		 map.put(HTTPCLIENT_RES_PARSE_ERROR,  "response content parse error");
+
 		 map.put(HTTP_FORBIDDEN,  "forbidden");
 		 map.put(HTTP_URL_NOT_FOUND,  "url not found");
 		 map.put(HTTP_TOO_LARGE,  "request content too large");
@@ -96,11 +104,6 @@ public class RetCodes {
 		 map.put(HTTP_NO_LOGIN,  "not login yet");
 		 map.put(HTTP_SERVICE_NOT_FOUND,  "service not found");
 		 
-		 map.put(HTTPCLIENT_URL_PARSE_ERROR,  "url parse error");
-		 map.put(HTTPCLIENT_RES_PARSE_ERROR,  "response content parse error");
-		 map.put(HTTPCLIENT_TIMEOUT_ERROR,  "http call timeout");
-		 map.put(HTTPCLIENT_CONNECT_EXCEPTION,  "http connection exception");
-		 map.put(HTTPCLIENT_INTERRUPTED,  "http call interrupted");
 	 }
 
 }

@@ -8,9 +8,9 @@ import krpc.rpc.bootstrap.RefererConfig;
 import krpc.rpc.bootstrap.RegistryConfig;
 import krpc.rpc.bootstrap.RpcApp;
 
-public class HttpDynamicClientTest {
+public class HttpDynamicProxy {
 
-	static Logger log = LoggerFactory.getLogger(HttpDynamicClientTest.class);
+	static Logger log = LoggerFactory.getLogger(HttpDynamicProxy.class);
 	
 	public static void main(String[] args) throws Exception {
 

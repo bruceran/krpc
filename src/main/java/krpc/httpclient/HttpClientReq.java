@@ -8,7 +8,7 @@ public class HttpClientReq {
 
 	private int timeout = 3000;
 	private boolean gzip = false;
-	private int minSizeToGzip = 2048;
+	private boolean keepAlive = false;
 	
 	private String method = "GET";
 	private String url;
@@ -22,7 +22,7 @@ public class HttpClientReq {
 		this.method = method;
 		this.url = url;
 	}
-	
+
     String getPathQuery() {
     	URL u = getUrlObj();
     	String path = u.getPath();
@@ -103,12 +103,13 @@ public class HttpClientReq {
 		return this;
 	}
 
-	public int getMinSizeToGzip() {
-		return minSizeToGzip;
+	public boolean isKeepAlive() {
+		return keepAlive;
 	}
 
-	public void setMinSizeToGzip(int minSizeToGzip) {
-		this.minSizeToGzip = minSizeToGzip;
+	public HttpClientReq setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
+		return this;
 	}
 	
 }

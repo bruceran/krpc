@@ -16,9 +16,9 @@ import krpc.rpc.bootstrap.ServiceConfig;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.ServerContext;
 
-public class RpcServerTest {
+public class RpcServer1 {
 
-	static Logger log = LoggerFactory.getLogger(RpcServerTest.class);
+	static Logger log = LoggerFactory.getLogger(RpcServer1.class);
 	
 	public static void main(String[] args) throws Exception {
 		

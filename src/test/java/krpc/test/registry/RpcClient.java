@@ -12,9 +12,9 @@ import krpc.rpc.bootstrap.RefererConfig;
 import krpc.rpc.bootstrap.RegistryConfig;
 import krpc.rpc.bootstrap.RpcApp;
 
-public class RpcClientTest {
+public class RpcClient {
 
-	static Logger log = LoggerFactory.getLogger(RpcClientTest.class);
+	static Logger log = LoggerFactory.getLogger(RpcClient.class);
 	
 	public static void main(String[] args) throws Exception {
 		

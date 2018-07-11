@@ -343,8 +343,7 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
     		this.nextp = nextp;
     	}
     }
-    
-    // 返回: Tuple2[_1,_2]  _1 是否匹配  _2 匹配的最后一个字符的下一个位置
+
     BoundaryResult compareBoundary(int si) {
     	int p1 = lastContent.readerIndex();
     	int p2 = lastContent.writerIndex();

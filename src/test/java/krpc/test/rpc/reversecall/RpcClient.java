@@ -8,9 +8,9 @@ import com.xxx.userservice.proto.*;
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.RpcApp;
 
-public class RpcClientTest {
+public class RpcClient {
 
-	static Logger log = LoggerFactory.getLogger(RpcClientTest.class);
+	static Logger log = LoggerFactory.getLogger(RpcClient.class);
 	
 	public static void main(String[] args) throws Exception {
 		

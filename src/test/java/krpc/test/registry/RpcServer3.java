@@ -10,16 +10,16 @@ import krpc.rpc.bootstrap.RegistryConfig;
 import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.bootstrap.ServiceConfig;
 
-public class RpcServerTest2 {
+public class RpcServer3 {
 
-	static Logger log = LoggerFactory.getLogger(RpcServerTest2.class);
+	static Logger log = LoggerFactory.getLogger(RpcServer3.class);
 	
 	public static void main(String[] args) throws Exception {
 		
 		UserServiceImpl impl = new UserServiceImpl(); // user code is here
 
 		RpcApp app = new Bootstrap() 
-			.addServer(5601)
+			.addServer(5602)
 			.addRegistry(new RegistryConfig().setType("zookeeper").setAddrs("192.168.31.144:2181"))			
 			.addService(new ServiceConfig().setInterfaceName(UserService.class.getName()).setImpl(impl).setRegistryNames("zookeeper")) 
 			.build();

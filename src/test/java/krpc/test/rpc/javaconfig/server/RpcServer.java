@@ -6,9 +6,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import krpc.rpc.bootstrap.RpcApp;
 
-public class RpcServerTest {
+public class RpcServer {
 
-	static Logger log = LoggerFactory.getLogger(RpcServerTest.class);
+	static Logger log = LoggerFactory.getLogger(RpcServer.class);
 	
 	public static void main(String[] args) throws Exception {
 		
