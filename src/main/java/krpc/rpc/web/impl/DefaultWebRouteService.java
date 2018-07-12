@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import krpc.common.InitCloseUtils;
 import krpc.common.StartStop;
 import krpc.rpc.web.WebRoute;
 import krpc.rpc.web.WebRouteService;
+import krpc.rpc.core.DynamicRouteConfig;
 import krpc.rpc.web.WebDir;
 import krpc.rpc.web.WebPlugin;
 import krpc.rpc.web.WebPlugins;
@@ -48,6 +50,26 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 			this.templateDir = templateDir;
 		}
 		
+		public boolean equals(final java.lang.Object obj) {
+			if (obj == this) {
+				return true;
+			}
+			if (!(obj instanceof DirInfo)) {
+				return false;
+			}
+			DirInfo other = (DirInfo) obj;
+
+			boolean result = true;
+			result = result && Objects.equals(hosts,other.hosts);
+			result = result && Objects.equals(path,other.path);
+
+			return result;
+		}
+
+		public int hashCode() {
+			return Objects.hash(hosts, path);
+		}
+		
 		public int compareTo(DirInfo other) {
 			return other.path.compareTo(this.path); // reverse order
 		}		
@@ -69,6 +91,26 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 
 			this.path = path;
 			this.dirs = dirs;
+		}
+		
+		public boolean equals(final java.lang.Object obj) {
+			if (obj == this) {
+				return true;
+			}
+			if (!(obj instanceof StaticDirMapping)) {
+				return false;
+			}
+			StaticDirMapping other = (StaticDirMapping) obj;
+
+			boolean result = true;
+			result = result && Objects.equals(hosts,other.hosts);
+			result = result && Objects.equals(path,other.path);
+
+			return result;
+		}
+
+		public int hashCode() {
+			return Objects.hash(hosts, path);
 		}
 		
 		public int compareTo(StaticDirMapping other) {
@@ -170,7 +212,28 @@ public class DefaultWebRouteService implements WebRouteService, InitClose,StartS
 			}
 			return true;
 		}
+		
+		public boolean equals(final java.lang.Object obj) {
+			if (obj == this) {
+				return true;
+			}
+			if (!(obj instanceof ServiceMapping)) {
+				return false;
+			}
+			ServiceMapping other = (ServiceMapping) obj;
 
+			boolean result = true;
+			result = result && Objects.equals(hosts,other.hosts);
+			result = result && Objects.equals(originalPath,other.originalPath);
+			result = result && Objects.equals(methods,other.methods);
+			
+			return result;
+		}
+
+		public int hashCode() {
+			return Objects.hash(hosts, originalPath,methods);
+		}
+		
 		public int compareTo(ServiceMapping other) {
 			return this.originalPath.compareTo(other.originalPath);
 		}

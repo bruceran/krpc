@@ -15,29 +15,26 @@ public class Zlib implements ZipUnzip {
 	};
 
 	public byte[] zip(byte[] input) throws IOException {
-		Deflater defl = new Deflater();
-		defl.setInput(input);
-		defl.finish();
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte[] buff = tlBuff.get();
-		try {
+		try(ByteArrayOutputStream bos = new ByteArrayOutputStream();) {
+			byte[] buff = tlBuff.get();
+			Deflater defl = new Deflater();
+			defl.setInput(input);
+			defl.finish();
 			while (!defl.finished()) {
 				int len = defl.deflate(buff);
 				bos.write(buff, 0, len);
 			}
 			defl.end();
-		} finally {
-			bos.close();
-		}
-		return bos.toByteArray();
+			bos.flush();
+			return bos.toByteArray();
+		}  
 	}
 
 	public byte[] unzip(byte[] input) throws IOException {
-		Inflater infl = new Inflater();
-		infl.setInput(input);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte[] buff = tlBuff.get();
-		try {
+		try( ByteArrayOutputStream bos = new ByteArrayOutputStream(); ) {
+			byte[] buff = tlBuff.get();
+			Inflater infl = new Inflater();
+			infl.setInput(input);
 			while (!infl.finished()) {
 				int len = infl.inflate(buff);
 				if (len == 0) {
@@ -46,12 +43,12 @@ public class Zlib implements ZipUnzip {
 				bos.write(buff, 0, len);
 			}
 			infl.end();
+			bos.flush();
+			return bos.toByteArray();
 		} catch (DataFormatException e) {
 			throw new IOException("unzip error", e);
-		} finally {
-			bos.close();
-		}
-		return bos.toByteArray();
+		}  
+		
 	}
 
 }

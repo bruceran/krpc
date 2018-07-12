@@ -2,6 +2,7 @@ package krpc.rpc.impl;
 
 import java.security.ProtectionDomain;
 import java.util.HashMap;
+import java.util.Map;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -42,9 +43,10 @@ public class DefaultProxyGenerator implements ProxyGenerator {
 			if( serviceId <= 1) throw new RuntimeException("serviceId must > 1");		
 			HashMap<Integer,String> msgIdMap = ReflectionUtils.getMsgIds(intf);
 			HashMap<String,Object> msgNameMap = ReflectionUtils.getMethodInfo(intf);
-			for( int msgId : msgIdMap.keySet() ) {
+			for(  Map.Entry<Integer, String> entry: msgIdMap.entrySet() ) {
+				int msgId = entry.getKey();
+				String msgName = entry.getValue();
 				if( msgId < 1) throw new RuntimeException("msgId must > 0");
-				String msgName = msgIdMap.get(msgId);
 				Class<?> reqCls = (Class<?>)msgNameMap.get(msgName+"-req");
 				Class<?> resCls = (Class<?>)msgNameMap.get(msgName+"-res");		
 				
@@ -78,12 +80,12 @@ public class DefaultProxyGenerator implements ProxyGenerator {
 			if( serviceId <= 1) throw new RuntimeException("serviceId must > 1");		
 			HashMap<Integer,String> msgIdMap = ReflectionUtils.getMsgIds(intf);
 			HashMap<String,Object> msgNameMap = ReflectionUtils.getAsyncMethodInfo(intf);
-			for( int msgId : msgIdMap.keySet() ) {
+			for(  Map.Entry<Integer, String> entry: msgIdMap.entrySet() ) {
+				int msgId = entry.getKey();
+				String msgName = entry.getValue();
 				if( msgId < 1) throw new RuntimeException("msgId must > 0");
-				String msgName = msgIdMap.get(msgId);
 				Class<?> reqCls = (Class<?>)msgNameMap.get(msgName+"-req");
-				@SuppressWarnings("unused")
-				Class<?> resCls = (Class<?>)msgNameMap.get(msgName+"-res");		
+				//Class<?> resCls = (Class<?>)msgNameMap.get(msgName+"-res");		
 				
 				StringBuilder code = new StringBuilder();
 				

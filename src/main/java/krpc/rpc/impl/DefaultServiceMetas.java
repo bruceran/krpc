@@ -119,9 +119,10 @@ public class DefaultServiceMetas implements ServiceMetas {
 		
 		HashMap<Integer,String> msgIdMap = ReflectionUtils.getMsgIds(intf);
 		HashMap<String,Object> msgNameMap = ReflectionUtils.getMethodInfo(intf);
-		for( int msgId : msgIdMap.keySet() ) {
+		for(  Map.Entry<Integer, String> entry: msgIdMap.entrySet() ) {
+			int msgId = entry.getKey();
+			String msgName = entry.getValue();
 			if( msgId < 1) throw new RuntimeException("msgId must > 0");
-			String msgName = msgIdMap.get(msgId);
 			Method m = (Method)msgNameMap.get(msgName);
 			Class<?> reqCls = (Class<?>)msgNameMap.get(msgName+"-req");
 			Class<?> resCls = (Class<?>)msgNameMap.get(msgName+"-res");
@@ -154,9 +155,10 @@ public class DefaultServiceMetas implements ServiceMetas {
 		
 		HashMap<Integer,String> msgIdMap = ReflectionUtils.getMsgIds(intf);
 		HashMap<String,Object> msgNameMap = ReflectionUtils.getAsyncMethodInfo(intf);
-		for( int msgId : msgIdMap.keySet() ) {
+		for(  Map.Entry<Integer, String> entry: msgIdMap.entrySet() ) {
+			int msgId = entry.getKey();
+			String msgName = entry.getValue();
 			if( msgId < 1) throw new RuntimeException("msgId must > 0");
-			String msgName = msgIdMap.get(msgId);
 			Method m = (Method)msgNameMap.get(msgName);
 			Class<?> reqCls = (Class<?>)msgNameMap.get(msgName+"-req");
 			Class<?> resCls = (Class<?>)msgNameMap.get(msgName+"-res");

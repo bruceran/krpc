@@ -334,7 +334,7 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
         return null;
     }
 
-    class BoundaryResult {
+    static class BoundaryResult {
     	boolean matched;
     	int nextp;
     	

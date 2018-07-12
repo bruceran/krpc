@@ -163,7 +163,7 @@ public class Bootstrap {
 	RpcApp app = newRpcApp();
 	
 	public Bootstrap() {
-		RetCodes.retCodeText(0); // cause static initialization
+		RetCodes.init();
 		initSniffer();
 		loadSpi();
 	}
@@ -415,7 +415,7 @@ public class Bootstrap {
 				throw new RuntimeException(String.format("registry id %s duplicated", c.id));
 			registries.put(c.id, c);
 		}
-		if( defaultRegistry == null && registryList.size() == 1 ) defaultRegistry = registryList.get(0).type;
+		if( registryList.size() == 1 ) defaultRegistry = registryList.get(0).type;
 
 		for (ServerConfig c : serverList) {
 			if (isEmpty(c.id))
@@ -630,7 +630,7 @@ public class Bootstrap {
 
 				if (!isEmpty(c.registryName) && !isEmpty(c.direct)) {
 					throw new RuntimeException(
-							String.format("referer registry and direct cannot be specified at the same time", c.id));
+							"referer registry and direct cannot be specified at the same time, id="+c.id);
 				}
 
 				if (!isEmpty(c.registryName)) {
@@ -694,8 +694,11 @@ public class Bootstrap {
 		int processors = Runtime.getRuntime().availableProcessors();
 
 		Map<String,Registry> regMap = new HashMap<>();
-		for (String name : registries.keySet()) {
-			RegistryConfig c = registries.get(name);
+
+		for (Map.Entry<String, RegistryConfig> entry : registries.entrySet()) {
+			//String name = entry.getKey();
+			RegistryConfig c = entry.getValue();		
+
 			Registry impl = getPlugin(Registry.class,parseType(c.type));
 			String params = parseParams(c.type);
 			params += "instanceId="+app.instanceId+";addrs="+c.addrs+";enableRegist="+c.enableRegist+";enableDiscover="+c.enableDiscover;
@@ -721,8 +724,10 @@ public class Bootstrap {
 			}
 		}
 
-		for (String name : servers.keySet()) {
-			ServerConfig c = servers.get(name);
+		for (Map.Entry<String, ServerConfig> entry : servers.entrySet()) {
+			String name = entry.getKey();
+			ServerConfig c = entry.getValue();		
+
 			RpcServer server = newRpcServer();
 			server.setServiceMetas(app.serviceMetas);
 			
@@ -778,8 +783,9 @@ public class Bootstrap {
 			app.servers.put(name, server);
 		}
 
-		for (String name : webServers.keySet()) {
-			WebServerConfig c = webServers.get(name);
+		for (Map.Entry<String, WebServerConfig> entry : webServers.entrySet()) {
+			String name = entry.getKey();
+			WebServerConfig c = entry.getValue();		
 
 			SessionService ss = (SessionService)getPlugin(WebPlugin.class,c.defaultSessionService);
 
@@ -826,8 +832,9 @@ public class Bootstrap {
 			loadProtos(app,c.protoDir);
 		}
 
-		for (String name : clients.keySet()) {
-			ClientConfig c = clients.get(name);
+		for (Map.Entry<String, ClientConfig> entry : clients.entrySet()) {
+			String name = entry.getKey();
+			ClientConfig c = entry.getValue();		
 
 			RpcClient client = newRpcClient();
 			client.setServiceMetas(app.serviceMetas);
@@ -871,7 +878,7 @@ public class Bootstrap {
 			if (hasReverseService(name)) {
 				ExecutorManager em = newExecutorManager();
 				if (c.threads >= 0) {
-					if (c.threads >= 0)
+					if (c.threads == 0)
 						c.threads = processors;
 					em.addDefaultPool(c.threads, c.maxThreads, c.queueSize);
 				}
@@ -885,8 +892,9 @@ public class Bootstrap {
 			app.clients.put(name, client);
 		}
 
-		for (String name : services.keySet()) {
-			ServiceConfig c = services.get(name);
+		for (Map.Entry<String, ServiceConfig> entry : services.entrySet()) {
+			String name = entry.getKey();
+			ServiceConfig c = entry.getValue();		
 
 			Class<?> cls = ReflectionUtils.getClass(c.interfaceName);
 			int serviceId = ReflectionUtils.getServiceId(cls);
@@ -942,8 +950,9 @@ public class Bootstrap {
 			app.services.put(name, c.impl);
 		}
 
-		for (String name : referers.keySet()) {
-			RefererConfig c = referers.get(name);
+		for (Map.Entry<String, RefererConfig> entry : referers.entrySet()) {
+			String name = entry.getKey();
+			RefererConfig c = entry.getValue();
 
 			int serviceId = 0;
 			Class<?> cls = null;
@@ -1240,8 +1249,7 @@ public class Bootstrap {
 	List<String> readSpiLines(URL url) {
 		List<String> lines = new ArrayList<>();
 
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+		try( BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream())); ) {
 			 String s = in.readLine();
 			 while(  s != null ) {
 				 if( !s.isEmpty() ) {
@@ -1249,12 +1257,11 @@ public class Bootstrap {
 				 }
 				 s = in.readLine();
 			 }
-			 in.close();
+			 return lines;
 		} catch(IOException e) {
 			throw new RuntimeException(e);
-		}
-
-		return lines;
+		}  
+		
 	}
 	
 	@SuppressWarnings("rawtypes")

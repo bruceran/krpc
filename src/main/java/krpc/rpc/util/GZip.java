@@ -17,49 +17,41 @@ public class GZip implements ZipUnzip {
 		}
 	};
 
-	public void zip(byte[] in,ByteBuf out)  throws IOException  {
-		ByteBufOutputStream bos = new ByteBufOutputStream(out);
-		try {
-			GZIPOutputStream gzip = new GZIPOutputStream(bos);
+	public void zip(byte[] in, ByteBuf out) throws IOException {
+
+		try (ByteBufOutputStream bos = new ByteBufOutputStream(out);
+				GZIPOutputStream gzip = new GZIPOutputStream(bos);) {
 			gzip.write(in);
 			gzip.finish();
-			gzip.close();
-		} finally {
-			bos.close();
 		}
 	}
-	
-	public byte[] zip(byte[] data)  throws IOException  {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte[] ret = null;
-		try {
-			GZIPOutputStream gzip = new GZIPOutputStream(bos);
-			gzip.write(data);
+
+	public byte[] zip(byte[] in) throws IOException {
+
+		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				GZIPOutputStream gzip = new GZIPOutputStream(bos);) {
+			gzip.write(in);
 			gzip.finish();
-			gzip.close();
-			ret = bos.toByteArray();
-		} finally {
-			bos.close();
+			gzip.flush();
+			byte[] ret = bos.toByteArray();
+			return ret;
 		}
-		return ret;
 	}
- 
-	public byte[] unzip(byte[] data) throws IOException  {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte[] ret = null;
-		try {
-			GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(data));
+
+	public byte[] unzip(byte[] in) throws IOException {
+
+		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(in));) {
+
 			byte[] buf = tlBuff.get();
 			int num = -1;
 			while ((num = gzip.read(buf, 0, buf.length)) != -1) {
 				bos.write(buf, 0, num);
 			}
-			gzip.close();
-			ret = bos.toByteArray();
-		} finally {
-			bos.close();
+
+			byte[] ret = bos.toByteArray();
+			return ret;
 		}
-		return ret;
 	}
 
 }

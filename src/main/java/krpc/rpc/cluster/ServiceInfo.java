@@ -62,10 +62,8 @@ public class ServiceInfo {
 	public void configWeights(List<AddrWeight> list) {
 		Weights w = new Weights();
 
-		if( weights != null ) {
-			for(AddrWeight aw:list) {
-				w.addWeight(aw.getAddr(),aw.getWeight());
-			}
+		for(AddrWeight aw:list) {
+			w.addWeight(aw.getAddr(),aw.getWeight());
 		}
 		
 		weights.set(w);

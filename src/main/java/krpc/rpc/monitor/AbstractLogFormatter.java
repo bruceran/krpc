@@ -75,9 +75,11 @@ abstract class AbstractLogFormatter implements LogFormatter {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })	
 	static void adjustMap(Map<String,Object> allLog,int maxRepeatedSizeToLog) {
-		for(String key: allLog.keySet()) {
+		for(Map.Entry<String,Object> entry: allLog.entrySet()) {
 			
-			Object v = allLog.get(key);
+			//String key = entry.getKey();
+			Object v = entry.getValue();
+			
 			if( v instanceof Map ) {
 				adjustMap((Map)v,maxRepeatedSizeToLog);
 				continue;

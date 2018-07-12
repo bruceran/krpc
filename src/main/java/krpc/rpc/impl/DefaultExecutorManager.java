@@ -48,15 +48,13 @@ public class DefaultExecutorManager implements ExecutorManager, InitClose {
 	}    
 	
 	public void init() {
-		for(String key:pools.keySet()) {
-			ThreadPoolExecutor pool = pools.get(key);
+		for(ThreadPoolExecutor pool:pools.values()) {
 			pool.prestartAllCoreThreads();
 		}
 	}
 	
 	public void close() {
-		for(String key:pools.keySet()) {
-			ThreadPoolExecutor pool = pools.get(key);
+		for(ThreadPoolExecutor pool:pools.values()) {
 			pool.shutdown();
 		}
 	}

@@ -33,8 +33,8 @@ public class ReflectionUtils {
 	
 	public static String retCodeFieldInMap = "retCode"; // can be configured
 	public static String retMsgFieldInMap = "retMsg"; // can be configured
-	public static String retCodeField = "retCode_";
-	public static String retMsgField = "retMsg_";
+	static String retCodeField = "retCode_";
+	static String retMsgField = "retMsg_";
 	static Map<String,Field> retCodeFields = new HashMap<String,Field>();
 	static Map<String,Field> retMsgFields = new HashMap<String,Field>();
 	static Field metaSequenceField = null;
@@ -110,7 +110,7 @@ public class ReflectionUtils {
         		return "";
         	}
 
-        	Object o = (String)f.get(object);
+        	Object o = f.get(object);
             if (o instanceof String) {
                 return (String) o;
               } else {

@@ -27,7 +27,8 @@ public class RoundRobinLoadBalance implements LoadBalance {
 		AtomicInteger ai = map.get(serviceId);
 		if( ai == null ) {
 			ai = new AtomicInteger(-1);
-			map.put(serviceId, ai);
+			AtomicInteger old = map.putIfAbsent(serviceId, ai);
+			if( old != null ) ai = old;
 		}
 		
 		int index = ai.incrementAndGet();

@@ -131,7 +131,7 @@ public class DefaultSpan implements Span {
     }
     public void incQuantitySum(String key,long v1, double v2) {
 		if( metrics == null ) metrics = new ArrayList<>();
-		String s = String.format("%ld,%.2f", v1, v2);
+		String s = String.format("%d,%.2f", v1, v2);
 		metrics.add(new Metric(key,Metric.QUANTITY_AND_SUM,s));    	
     }
     

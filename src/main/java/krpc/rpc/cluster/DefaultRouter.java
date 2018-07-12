@@ -89,20 +89,20 @@ public class DefaultRouter implements Router {
 
 	Rule toRule(RouteRule rr) {
 		String from = rr.getFrom();
-		Condition condition = new Condition(from);
+		Condition condition = new Condition(conditionParser,matchData,from);
 		if( !condition.isUseful() ) {
 			return null;
 		}
 		
-		return new Rule(condition,rr.getTo());
+		return new Rule(targetParser,host,condition,rr.getTo());
 	}
 		
-	class Rule {
+	static class Rule {
 		
 		Condition condition;
 		RouterExpr target; 
 		
-		Rule(Condition condition,String to) {
+		Rule(RouterExprParser targetParser,String host, Condition condition,String to) {
 			this.condition = condition;
 			
 			if( to == null ) return;
@@ -142,11 +142,13 @@ public class DefaultRouter implements Router {
 		}
 	}
 	
-	class Condition {
+	static class Condition {
 		
 		RouterExpr expr = null;
+		Map<String,String> matchData;
 		
-		Condition(String from) {
+		Condition(RouterExprParser conditionParser,Map<String,String> matchData,String from) {
+			this.matchData = matchData;
 			if( from == null ) return;
 			from = from.trim();
 			if( from.isEmpty() ) return;
@@ -167,8 +169,10 @@ public class DefaultRouter implements Router {
 
 		boolean match(int msgId) {
 			if( expr == null ) return true;
-			matchData.put("msgId", String.valueOf(msgId)); // already called in synchronized block
-			return expr.eval(matchData);
+			Map<String,String> newMatchData = new HashMap<>();
+			newMatchData.putAll(matchData);
+			newMatchData.put("msgId", String.valueOf(msgId));
+			return expr.eval(newMatchData);
 		}
 	}
 	

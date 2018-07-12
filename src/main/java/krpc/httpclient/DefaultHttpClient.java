@@ -140,7 +140,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
     	
 	    try {
 	    	cr = getConnection(req);
-	    	if( cr.retCode != 0 ) return new HttpClientRes(cr.retCode);
+	    	if( cr == null || cr.retCode != 0 ) return new HttpClientRes(cr.retCode);
 	        
 	    	Channel channel = cr.channelInfo.channel;
 			connId = getConnId(channel);
@@ -160,7 +160,8 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 	    
 	    if( connId != null)
 	    	dataMap.remove(connId);
-	    closeConnection(req,res,cr.channelInfo);
+	    if( cr != null )
+	    	closeConnection(req,res,cr.channelInfo);
 	    return res;
 	}
 

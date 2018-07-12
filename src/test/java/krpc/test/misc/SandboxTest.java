@@ -17,14 +17,7 @@ public class SandboxTest {
 	@Test
 	public void test1() throws Exception {
  
-		String s = CatTraceAdapter.escape("123");
-		Assert.assertEquals("123", s);
-		s = CatTraceAdapter.escape("123\t456");
-		Assert.assertEquals("123\\t456", s);
-		s = CatTraceAdapter.escape("123\\456");
-		Assert.assertEquals("123\\\\456", s);
-		s = CatTraceAdapter.escape("123\n456");
-		Assert.assertEquals("123\\n456", s);
+ 
 	}
 	
 }

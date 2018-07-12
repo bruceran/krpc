@@ -104,12 +104,14 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     		AddrInfo ai = addrMap.get(addr);
     		if( ai == null ) {
     			ai = new AddrInfo(addr,connections);
-    			addrMap.put(addr, ai);
-    			for(int i=0;i<connections;++i) {
-            		String connId = makeConnId(addr,i);
-        			transportChannel.connect(connId, addr);
+    			AddrInfo old = addrMap.putIfAbsent(addr, ai);
+    			if( old == null ) {
+	    			for(int i=0;i<connections;++i) {
+	            		String connId = makeConnId(addr,i);
+	        			transportChannel.connect(connId, addr);
+	    			}
+	    			hasNewAddr = true;
     			}
-    			hasNewAddr = true;
     		} 
     	}
     	

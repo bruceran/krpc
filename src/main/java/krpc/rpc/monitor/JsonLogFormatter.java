@@ -46,14 +46,16 @@ public class JsonLogFormatter extends AbstractLogFormatter  {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	void adjustLog(Map<String,Object> allLog) {
-		for(String key: allLog.keySet()) {
+		for(Map.Entry<String,Object> entry: allLog.entrySet()) {
+			
+			String key = entry.getKey();
+			Object v = entry.getValue();
 			
 			if( maskFieldsSet.contains(key) ) {
 				allLog.put(key,"***");
 				continue;
 			}
 			
-			Object v = allLog.get(key);
 			if( v instanceof Map ) {
 				adjustLog((Map)v);
 				continue;

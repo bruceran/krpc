@@ -31,7 +31,7 @@ public class DefaultValidator implements Validator {
 	
 	HashMap<String, FieldValidator> validatorCache = new HashMap<>();
 	
-	class FieldInfo {
+	static class FieldInfo {
 		Descriptors.FieldDescriptor field;
 		KrpcExt.Validate vld;
 		
@@ -234,7 +234,7 @@ public class DefaultValidator implements Validator {
 		}
 	}
 
-	class RequiredValidator implements FieldValidator {
+	static class RequiredValidator implements FieldValidator {
 		@SuppressWarnings("rawtypes")
 		public boolean validate(Object v) {
 			if (v instanceof String) {
@@ -249,7 +249,7 @@ public class DefaultValidator implements Validator {
 		}
 	}
 
-	class ValuesValidator implements FieldValidator {
+	static class ValuesValidator implements FieldValidator {
 		HashSet<String> set = new HashSet<>();
 
 		ValuesValidator(String values) {
@@ -269,7 +269,7 @@ public class DefaultValidator implements Validator {
 		}
 	}
 
-	class LengthValidator implements FieldValidator {
+	static class LengthValidator implements FieldValidator {
 		int min = 0;
 		int max = Integer.MAX_VALUE;
 
@@ -292,7 +292,7 @@ public class DefaultValidator implements Validator {
 
 	}
 
-	class ArrlenValidator implements FieldValidator {
+	static class ArrlenValidator implements FieldValidator {
 		int min = 0;
 		int max = Integer.MAX_VALUE;
 
@@ -319,7 +319,7 @@ public class DefaultValidator implements Validator {
 
 	}
 
-	class NrangeValidator implements FieldValidator {
+	static class NrangeValidator implements FieldValidator {
 		long min = Long.MIN_VALUE;
 		long max = Long.MAX_VALUE;
 
@@ -356,7 +356,7 @@ public class DefaultValidator implements Validator {
 
 	}
 
-	class SrangeValidator implements FieldValidator {
+	static class SrangeValidator implements FieldValidator {
 		String min = "";
 		String max = "";
 
@@ -377,7 +377,7 @@ public class DefaultValidator implements Validator {
 
 	}
 
-	class IntValidator implements FieldValidator {
+	static class IntValidator implements FieldValidator {
 		public boolean validate(Object v) {
 			if (v instanceof Integer)
 				return true;
@@ -392,7 +392,7 @@ public class DefaultValidator implements Validator {
 		}
 	}
 
-	class LongValidator implements FieldValidator {
+	static class LongValidator implements FieldValidator {
 		public boolean validate(Object v) {
 			if (v instanceof Integer || v instanceof Long)
 				return true;
@@ -406,7 +406,7 @@ public class DefaultValidator implements Validator {
 		}
 	}
 
-	class DoubleValidator implements FieldValidator {
+	static class DoubleValidator implements FieldValidator {
 		public boolean validate(Object v) {
 			if (v instanceof Integer || v instanceof Long || v instanceof Float || v instanceof Double)
 				return true;
@@ -421,7 +421,7 @@ public class DefaultValidator implements Validator {
 		}
 	}
 
-	class DateValidator implements FieldValidator {
+	static class DateValidator implements FieldValidator {
 
 		ThreadLocal<SimpleDateFormat> f = new ThreadLocal<SimpleDateFormat>() {
 			public SimpleDateFormat initialValue() {
@@ -440,7 +440,7 @@ public class DefaultValidator implements Validator {
 		}
 	}
 
-	class TimestampValidator implements FieldValidator {
+	static class TimestampValidator implements FieldValidator {
 
 		ThreadLocal<SimpleDateFormat> f = new ThreadLocal<SimpleDateFormat>() {
 			public SimpleDateFormat initialValue() {
@@ -459,7 +459,7 @@ public class DefaultValidator implements Validator {
 		}
 	}
 
-	class PatternValidator implements FieldValidator {
+	static class PatternValidator implements FieldValidator {
 		Pattern pattern;
 
 		PatternValidator(String s) {

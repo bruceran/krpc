@@ -150,7 +150,7 @@ public class ZipkinTraceAdapter implements TraceAdapter,InitClose {
 		if( remoteAddr != null ) {
 			int p = remoteAddr.lastIndexOf(":");
 			String s = remoteAddr.substring(0, p);
-			if( s.indexOf(":") > 0 )
+			if( s.indexOf(":") != -1 )
 				rep.ipv4 = s;
 			else 
 				rep.ipv6 = s;

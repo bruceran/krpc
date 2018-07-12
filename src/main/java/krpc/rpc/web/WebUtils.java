@@ -108,39 +108,44 @@ public class WebUtils {
 		
 		deleteDir(targetDir + "/" + dirToExtract);
 
-		JarFile jarFile = new JarFile(jarPath);
-		Enumeration<JarEntry> entries = jarFile.entries();
-		while (entries.hasMoreElements()) {
+		try (JarFile jarFile = new JarFile(jarPath); ) {
 			
-			JarEntry entry = entries.nextElement();
-			if (entry.isDirectory())
-				continue;
+			Enumeration<JarEntry> entries = jarFile.entries();
+			
+			while (entries.hasMoreElements()) {
+				
+				JarEntry entry = entries.nextElement();
+				if (entry.isDirectory())
+					continue;
 
-			String name = entry.getName();
-			if (!name.startsWith(dirToExtract))
-				continue;
+				String name = entry.getName();
+				if (!name.startsWith(dirToExtract))
+					continue;
 
-			File tarFile = new File(targetDir, name);
-			File dir = tarFile.getParentFile();
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-            InputStream in = jarFile.getInputStream(entry);  
-            Files.copy(in, tarFile.toPath());
-            in.close();
-            
-			long lastModified = entry.getLastModifiedTime().toMillis();
-			tarFile.setLastModified(lastModified);
+				File tarFile = new File(targetDir, name);
+				File dir = tarFile.getParentFile();
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+	            InputStream in = jarFile.getInputStream(entry);  
+	            Files.copy(in, tarFile.toPath());
+	            in.close();
+	            
+				long lastModified = entry.getLastModifiedTime().toMillis();
+				tarFile.setLastModified(lastModified);
+			}			
 		}
-		jarFile.close();
+
 	}
   
 	static void deleteDir(String path) {
 		File f = new File(path);
 		if (f.isDirectory()) {
 			String[] list = f.list();
-			for (String item : list) {
-				deleteDir(path + "/" + item);
+			if( list != null ) {
+				for (String item : list) {
+					deleteDir(path + "/" + item);
+				}
 			}
 		}
 		f.delete();

@@ -33,13 +33,14 @@ public class FileErrorMsgConverter implements ErrorMsgConverter, InitClose {
 	}
 	
 	public void init() {
-		try {
-			prop = new Properties();      
-			prop.load(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(location), "UTF-8"));
+
+		try( InputStreamReader in = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(location), "UTF-8"); )  {
+			prop = new Properties();
+			prop.load(in);
 		} catch(Exception e) {
 			log.error("error code message file cannnot be loaded, location="+location);
 			prop = null;
-		}		
+		}  
 	}
 	
 	public void close() {

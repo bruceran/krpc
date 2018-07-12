@@ -63,6 +63,8 @@ public class RetCodes {
 	 
 	 static private final Map<Integer,String> map = new HashMap<>();
 	 
+	 static public void init() {} // used for static initialization
+	 
 	 static {  
 		 map.put(0,  "");
 		 

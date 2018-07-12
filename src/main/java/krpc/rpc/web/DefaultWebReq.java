@@ -167,7 +167,7 @@ public class DefaultWebReq implements WebReq {
 		if( v != null ) {
 			parameters.put(name, v);
 		} else {
-			parameters.remove(v);
+			parameters.remove(name);
 		}
 		return v;
 	}

@@ -499,8 +499,8 @@ System.out.println("segments json="+json);
 	public void inject(TraceContext ctx, Span span, RpcMeta.Trace.Builder traceBuilder) {
 
 		Span rootSpan = span.getRootSpan();
-		String serviceName = rootSpan.getAction();
-		serviceName = rootSpan.getAction() +"@"+Trace.getAppName();
+
+		String serviceName = rootSpan.getAction() +"@"+Trace.getAppName();
 		if( rootSpan.getType().equals("RPCCLIENT") ) {
 			serviceName = rootSpan.getAction() +"@rpcclient";
 		}

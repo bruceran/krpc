@@ -21,6 +21,7 @@ public class MemorySessionService implements WebPlugin,SessionService, InitClose
 		
 		SessionInfo(String sessionId) { 
 			this.sessionId = sessionId;
+			session = new ConcurrentHashMap<>();
 		}
 	}
 	
