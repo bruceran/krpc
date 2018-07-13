@@ -3,133 +3,133 @@ package krpc.rpc.bootstrap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceConfig  {
+public class ServiceConfig {
 
-	String id;
-	String interfaceName;
-	Object impl;
-	
-	String transport; // refer to a client or a server
-	boolean reverse = false;
+    String id;
+    String interfaceName;
+    Object impl;
 
-	String registryNames; // refer to multiple registry
-	String group;
+    String transport; // refer to a client or a server
+    boolean reverse = false;
 
-	int threads = -1;
-	int maxThreads = 0;
-	int queueSize = 10000;
+    String registryNames; // refer to multiple registry
+    String group;
 
-	List<MethodConfig> methods = new ArrayList<MethodConfig>();
+    int threads = -1;
+    int maxThreads = 0;
+    int queueSize = 10000;
 
-	public ServiceConfig() {
-	}
+    List<MethodConfig> methods = new ArrayList<MethodConfig>();
 
-	public ServiceConfig(String id) {
-		this.id = id;
-	}
+    public ServiceConfig() {
+    }
 
-	public ServiceConfig addMethod(MethodConfig method) {
-		methods.add(method);		
-		return this;
-	}
-	
-	public String getId() {
-		return id;
-	}
+    public ServiceConfig(String id) {
+        this.id = id;
+    }
 
-	public ServiceConfig setId(String id) {
-		this.id = id;
-		return this;
-	}
+    public ServiceConfig addMethod(MethodConfig method) {
+        methods.add(method);
+        return this;
+    }
 
-	public String getTransport() {
-		return transport;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public ServiceConfig setTransport(String transport) {
-		this.transport = transport;
-		return this;
-	}
+    public ServiceConfig setId(String id) {
+        this.id = id;
+        return this;
+    }
 
-	public String getInterfaceName() {
-		return interfaceName;
-	}
+    public String getTransport() {
+        return transport;
+    }
 
-	public ServiceConfig setInterfaceName(String interfaceName) {
-		this.interfaceName = interfaceName;
-		return this;
-	}
+    public ServiceConfig setTransport(String transport) {
+        this.transport = transport;
+        return this;
+    }
 
-	public Object getImpl() {
-		return impl;
-	}
+    public String getInterfaceName() {
+        return interfaceName;
+    }
 
-	public ServiceConfig setImpl(Object impl) {
-		this.impl = impl;
-		return this;
-	}
+    public ServiceConfig setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
+        return this;
+    }
 
-	public String getRegistryNames() {
-		return registryNames;
-	}
+    public Object getImpl() {
+        return impl;
+    }
 
-	public ServiceConfig setRegistryNames(String registryNames) {
-		this.registryNames = registryNames;
-		return this;
-	}
+    public ServiceConfig setImpl(Object impl) {
+        this.impl = impl;
+        return this;
+    }
 
-	public int getThreads() {
-		return threads;
-	}
+    public String getRegistryNames() {
+        return registryNames;
+    }
 
-	public ServiceConfig setThreads(int threads) {
-		this.threads = threads;
-		return this;
-	}
+    public ServiceConfig setRegistryNames(String registryNames) {
+        this.registryNames = registryNames;
+        return this;
+    }
 
-	public int getQueueSize() {
-		return queueSize;
-	}
+    public int getThreads() {
+        return threads;
+    }
 
-	public ServiceConfig setQueueSize(int queueSize) {
-		this.queueSize = queueSize;
-		return this;
-	}
+    public ServiceConfig setThreads(int threads) {
+        this.threads = threads;
+        return this;
+    }
 
-	public boolean isReverse() {
-		return reverse;
-	}
+    public int getQueueSize() {
+        return queueSize;
+    }
 
-	public ServiceConfig setReverse(boolean reverse) {
-		this.reverse = reverse;
-		return this;
-	}
+    public ServiceConfig setQueueSize(int queueSize) {
+        this.queueSize = queueSize;
+        return this;
+    }
 
-	public String getGroup() {
-		return group;
-	}
+    public boolean isReverse() {
+        return reverse;
+    }
 
-	public ServiceConfig setGroup(String group) {
-		this.group = group;
-		return this;
-	}
+    public ServiceConfig setReverse(boolean reverse) {
+        this.reverse = reverse;
+        return this;
+    }
 
-	public List<MethodConfig> getMethods() {
-		return methods;
-	}
+    public String getGroup() {
+        return group;
+    }
 
-	public ServiceConfig setMethods(List<MethodConfig> methods) {
-		this.methods = methods;
-		return this;
-	}
+    public ServiceConfig setGroup(String group) {
+        this.group = group;
+        return this;
+    }
 
-	public int getMaxThreads() {
-		return maxThreads;
-	}
+    public List<MethodConfig> getMethods() {
+        return methods;
+    }
 
-	public ServiceConfig setMaxThreads(int maxThreads) {
-		this.maxThreads = maxThreads;
-		return this;
-	}
+    public ServiceConfig setMethods(List<MethodConfig> methods) {
+        this.methods = methods;
+        return this;
+    }
+
+    public int getMaxThreads() {
+        return maxThreads;
+    }
+
+    public ServiceConfig setMaxThreads(int maxThreads) {
+        this.maxThreads = maxThreads;
+        return this;
+    }
 
 }

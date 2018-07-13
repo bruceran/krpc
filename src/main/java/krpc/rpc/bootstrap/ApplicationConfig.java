@@ -1,96 +1,96 @@
 package krpc.rpc.bootstrap;
 
-public class ApplicationConfig  {
+public class ApplicationConfig {
 
-	int delayStart = 0; // -1=manually call start,  0=start after application context, n=start after n seconds
-	String name = "unknown";
-	String dataDir = ".";
-	
-	int sampleRate = 100;
-	
-	String traceAdapter = "default"; // default, zipkin, cat, skywalking
-	String errorMsgConverter = "file";
-	String fallbackPlugin = "default"; 
-	String dynamicRoutePlugin;  // consul,etcd,zookeeper,jedis,...
+    int delayStart = 0; // -1=manually call start,  0=start after application context, n=start after n seconds
+    String name = "unknown";
+    String dataDir = ".";
 
-	public ApplicationConfig() {
-	}
+    int sampleRate = 100;
 
-	public ApplicationConfig(String name) {
-		this.name = name;
-	}
+    String traceAdapter = "default"; // default, zipkin, cat, skywalking
+    String errorMsgConverter = "file";
+    String fallbackPlugin = "default";
+    String dynamicRoutePlugin;  // consul,etcd,zookeeper,jedis,...
 
-	public String getName() {
-		return name;
-	}
+    public ApplicationConfig() {
+    }
 
-	public ApplicationConfig setName(String name) {
-		this.name = name;
-		return this;
-	}
+    public ApplicationConfig(String name) {
+        this.name = name;
+    }
 
-	public String getErrorMsgConverter() {
-		return errorMsgConverter;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public ApplicationConfig setErrorMsgConverter(String errorMsgConverter) {
-		this.errorMsgConverter = errorMsgConverter;
-		return this;
-	}
+    public ApplicationConfig setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-	public String getTraceAdapter() {
-		return traceAdapter;
-	}
+    public String getErrorMsgConverter() {
+        return errorMsgConverter;
+    }
 
-	public ApplicationConfig setTraceAdapter(String traceAdapter) {
-		this.traceAdapter = traceAdapter;
-		return this;
-	}
+    public ApplicationConfig setErrorMsgConverter(String errorMsgConverter) {
+        this.errorMsgConverter = errorMsgConverter;
+        return this;
+    }
 
-	public String getDataDir() {
-		return dataDir;
-	}
+    public String getTraceAdapter() {
+        return traceAdapter;
+    }
 
-	public ApplicationConfig setDataDir(String dataDir) {
-		this.dataDir = dataDir;
-		return this;
-	}
+    public ApplicationConfig setTraceAdapter(String traceAdapter) {
+        this.traceAdapter = traceAdapter;
+        return this;
+    }
 
-	public String getDynamicRoutePlugin() {
-		return dynamicRoutePlugin;
-	}
+    public String getDataDir() {
+        return dataDir;
+    }
 
-	public ApplicationConfig setDynamicRoutePlugin(String dynamicRoutePlugin) {
-		this.dynamicRoutePlugin = dynamicRoutePlugin;
-		return this;
-	}
+    public ApplicationConfig setDataDir(String dataDir) {
+        this.dataDir = dataDir;
+        return this;
+    }
 
-	public String getFallbackPlugin() {
-		return fallbackPlugin;
-	}
+    public String getDynamicRoutePlugin() {
+        return dynamicRoutePlugin;
+    }
 
-	public ApplicationConfig setFallbackPlugin(String fallbackPlugin) {
-		this.fallbackPlugin = fallbackPlugin;
-		return this;
-	}
+    public ApplicationConfig setDynamicRoutePlugin(String dynamicRoutePlugin) {
+        this.dynamicRoutePlugin = dynamicRoutePlugin;
+        return this;
+    }
 
-	public int getDelayStart() {
-		return delayStart;
-	}
+    public String getFallbackPlugin() {
+        return fallbackPlugin;
+    }
 
-	public ApplicationConfig setDelayStart(int delayStart) {
-		this.delayStart = delayStart;
-		return this;
-	}
+    public ApplicationConfig setFallbackPlugin(String fallbackPlugin) {
+        this.fallbackPlugin = fallbackPlugin;
+        return this;
+    }
 
-	public int getSampleRate() {
-		return sampleRate;
-	}
+    public int getDelayStart() {
+        return delayStart;
+    }
 
-	public ApplicationConfig setSampleRate(int sampleRate) {
-		this.sampleRate = sampleRate;
-		return this;
-	}
+    public ApplicationConfig setDelayStart(int delayStart) {
+        this.delayStart = delayStart;
+        return this;
+    }
+
+    public int getSampleRate() {
+        return sampleRate;
+    }
+
+    public ApplicationConfig setSampleRate(int sampleRate) {
+        this.sampleRate = sampleRate;
+        return this;
+    }
 
 }
 

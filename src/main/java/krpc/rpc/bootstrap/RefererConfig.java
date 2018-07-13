@@ -3,247 +3,247 @@ package krpc.rpc.bootstrap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RefererConfig  {
+public class RefererConfig {
 
-	String id;
-	
-	String interfaceName;
-	int serviceId;
+    String id;
 
-	String transport; // refer to a client or a server
-	boolean reverse = false;
-	
-	String direct; // direct url
-	String registryName; // refer to only one registry
-	String group;
+    String interfaceName;
+    int serviceId;
 
-	int timeout = 3000;
-	int retryCount = 0;
+    String transport; // refer to a client or a server
+    boolean reverse = false;
 
-	String loadBalance = "roundrobin"; // can be empty (use client default), or random, roundrobin, ...
-	
-	boolean breakerEnabled = false ;
-	int breakerWindowSeconds = 5;
-	int breakerWindowMinReqs = 20;
-	int breakerCloseBy = 1; // 1=errorRate 2=timeoutRate
-	int breakerCloseRate  = 50; // 50% in 5 seconds to close the addr
-	int breakerSleepSeconds = 5;
-	int breakerSuccMills = 500;
-	boolean breakerForceClose = false;
-	
-	String zip;
-	int minSizeToZip = 10000;
-	
-	List<MethodConfig> methods = new ArrayList<MethodConfig>();
+    String direct; // direct url
+    String registryName; // refer to only one registry
+    String group;
 
-	public RefererConfig() {
-	}
+    int timeout = 3000;
+    int retryCount = 0;
 
-	public RefererConfig(String id) {
-		this.id = id;
-	}
+    String loadBalance = "roundrobin"; // can be empty (use client default), or random, roundrobin, ...
 
-	public RefererConfig addMethod(MethodConfig method) {
-		methods.add(method);		
-		return this;
-	}
+    boolean breakerEnabled = false;
+    int breakerWindowSeconds = 5;
+    int breakerWindowMinReqs = 20;
+    int breakerCloseBy = 1; // 1=errorRate 2=timeoutRate
+    int breakerCloseRate = 50; // 50% in 5 seconds to close the addr
+    int breakerSleepSeconds = 5;
+    int breakerSuccMills = 500;
+    boolean breakerForceClose = false;
 
-	public String getId() {
-		return id;
-	}
+    String zip;
+    int minSizeToZip = 10000;
 
-	public RefererConfig setId(String id) {
-		this.id = id;
-		return this;
-	}
+    List<MethodConfig> methods = new ArrayList<MethodConfig>();
 
-	public String getTransport() {
-		return transport;
-	}
+    public RefererConfig() {
+    }
 
-	public RefererConfig setTransport(String transport) {
-		this.transport = transport;
-		return this;
-	}
+    public RefererConfig(String id) {
+        this.id = id;
+    }
 
-	public String getInterfaceName() {
-		return interfaceName;
-	}
+    public RefererConfig addMethod(MethodConfig method) {
+        methods.add(method);
+        return this;
+    }
 
-	public RefererConfig setInterfaceName(String interfaceName) {
-		this.interfaceName = interfaceName;
-		return this;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getRegistryName() {
-		return registryName;
-	}
+    public RefererConfig setId(String id) {
+        this.id = id;
+        return this;
+    }
 
-	public RefererConfig setRegistryName(String registryName) {
-		this.registryName = registryName;
-		return this;
-	}
+    public String getTransport() {
+        return transport;
+    }
 
-	public int getTimeout() {
-		return timeout;
-	}
+    public RefererConfig setTransport(String transport) {
+        this.transport = transport;
+        return this;
+    }
 
-	public RefererConfig setTimeout(int timeout) {
-		this.timeout = timeout;
-		return this;
-	}
+    public String getInterfaceName() {
+        return interfaceName;
+    }
 
-	public int getRetryCount() {
-		return retryCount;
-	}
+    public RefererConfig setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
+        return this;
+    }
 
-	public RefererConfig setRetryCount(int retryCount) {
-		this.retryCount = retryCount;
-		return this;
-	}
+    public String getRegistryName() {
+        return registryName;
+    }
 
-	public String getLoadBalance() {
-		return loadBalance;
-	}
+    public RefererConfig setRegistryName(String registryName) {
+        this.registryName = registryName;
+        return this;
+    }
 
-	public RefererConfig setLoadBalance(String loadBalance) {
-		this.loadBalance = loadBalance;
-		return this;
-	}
+    public int getTimeout() {
+        return timeout;
+    }
 
-	public boolean isReverse() {
-		return reverse;
-	}
+    public RefererConfig setTimeout(int timeout) {
+        this.timeout = timeout;
+        return this;
+    }
 
-	public RefererConfig setReverse(boolean reverse) {
-		this.reverse = reverse;
-		return this;
-	}
+    public int getRetryCount() {
+        return retryCount;
+    }
 
-	public String getGroup() {
-		return group;
-	}
+    public RefererConfig setRetryCount(int retryCount) {
+        this.retryCount = retryCount;
+        return this;
+    }
 
-	public RefererConfig setGroup(String group) {
-		this.group = group;
-		return this;
-	}
+    public String getLoadBalance() {
+        return loadBalance;
+    }
 
-	public String getDirect() {
-		return direct;
-	}
+    public RefererConfig setLoadBalance(String loadBalance) {
+        this.loadBalance = loadBalance;
+        return this;
+    }
 
-	public RefererConfig setDirect(String direct) {
-		this.direct = direct;
-		return this;
-	}
+    public boolean isReverse() {
+        return reverse;
+    }
 
-	public List<MethodConfig> getMethods() {
-		return methods;
-	}
+    public RefererConfig setReverse(boolean reverse) {
+        this.reverse = reverse;
+        return this;
+    }
 
-	public RefererConfig setMethods(List<MethodConfig> methods) {
-		this.methods = methods;
-		return this;
-	}
+    public String getGroup() {
+        return group;
+    }
 
-	public String getZip() {
-		return zip;
-	}
+    public RefererConfig setGroup(String group) {
+        this.group = group;
+        return this;
+    }
 
-	public RefererConfig setZip(String zip) {
-		this.zip = zip;
-		return this;
-	}
+    public String getDirect() {
+        return direct;
+    }
 
-	public int getMinSizeToZip() {
-		return minSizeToZip;
-	}
+    public RefererConfig setDirect(String direct) {
+        this.direct = direct;
+        return this;
+    }
 
-	public RefererConfig setMinSizeToZip(int minSizeToZip) {
-		this.minSizeToZip = minSizeToZip;
-		return this;
-	}
+    public List<MethodConfig> getMethods() {
+        return methods;
+    }
 
-	public int getServiceId() {
-		return serviceId;
-	}
+    public RefererConfig setMethods(List<MethodConfig> methods) {
+        this.methods = methods;
+        return this;
+    }
 
-	public RefererConfig setServiceId(int serviceId) {
-		this.serviceId = serviceId;
-		return this;
-	}
+    public String getZip() {
+        return zip;
+    }
 
-	public boolean isBreakerEnabled() {
-		return breakerEnabled;
-	}
+    public RefererConfig setZip(String zip) {
+        this.zip = zip;
+        return this;
+    }
 
-	public RefererConfig setBreakerEnabled(boolean breakerEnabled) {
-		this.breakerEnabled = breakerEnabled;
-		return this;
-	}
+    public int getMinSizeToZip() {
+        return minSizeToZip;
+    }
 
-	public int getBreakerWindowSeconds() {
-		return breakerWindowSeconds;
-	}
+    public RefererConfig setMinSizeToZip(int minSizeToZip) {
+        this.minSizeToZip = minSizeToZip;
+        return this;
+    }
 
-	public RefererConfig setBreakerWindowSeconds(int breakerWindowSeconds) {
-		this.breakerWindowSeconds = breakerWindowSeconds;
-		return this;
-	}
+    public int getServiceId() {
+        return serviceId;
+    }
 
-	public int getBreakerCloseRate() {
-		return breakerCloseRate;
-	}
+    public RefererConfig setServiceId(int serviceId) {
+        this.serviceId = serviceId;
+        return this;
+    }
 
-	public RefererConfig setBreakerCloseRate(int breakerCloseRate) {
-		this.breakerCloseRate = breakerCloseRate;
-		return this;
-	}
+    public boolean isBreakerEnabled() {
+        return breakerEnabled;
+    }
 
-	public int getBreakerCloseBy() {
-		return breakerCloseBy;
-	}
+    public RefererConfig setBreakerEnabled(boolean breakerEnabled) {
+        this.breakerEnabled = breakerEnabled;
+        return this;
+    }
 
-	public RefererConfig setBreakerCloseBy(int breakerCloseBy) {
-		this.breakerCloseBy = breakerCloseBy;
-		return this;
-	}
+    public int getBreakerWindowSeconds() {
+        return breakerWindowSeconds;
+    }
 
-	public int getBreakerSuccMills() {
-		return breakerSuccMills;
-	}
+    public RefererConfig setBreakerWindowSeconds(int breakerWindowSeconds) {
+        this.breakerWindowSeconds = breakerWindowSeconds;
+        return this;
+    }
 
-	public RefererConfig setBreakerSuccMills(int breakerSuccMills) {
-		this.breakerSuccMills = breakerSuccMills;
-		return this;
-	}
+    public int getBreakerCloseRate() {
+        return breakerCloseRate;
+    }
 
-	public int getBreakerWindowMinReqs() {
-		return breakerWindowMinReqs;
-	}
+    public RefererConfig setBreakerCloseRate(int breakerCloseRate) {
+        this.breakerCloseRate = breakerCloseRate;
+        return this;
+    }
 
-	public RefererConfig setBreakerWindowMinReqs(int breakerWindowMinReqs) {
-		this.breakerWindowMinReqs = breakerWindowMinReqs;
-		return this;
-	}
+    public int getBreakerCloseBy() {
+        return breakerCloseBy;
+    }
 
-	public int getBreakerSleepSeconds() {
-		return breakerSleepSeconds;
-	}
+    public RefererConfig setBreakerCloseBy(int breakerCloseBy) {
+        this.breakerCloseBy = breakerCloseBy;
+        return this;
+    }
 
-	public RefererConfig setBreakerSleepSeconds(int breakerSleepSeconds) {
-		this.breakerSleepSeconds = breakerSleepSeconds;
-		return this;
-	}
+    public int getBreakerSuccMills() {
+        return breakerSuccMills;
+    }
 
-	public boolean isBreakerForceClose() {
-		return breakerForceClose;
-	}
+    public RefererConfig setBreakerSuccMills(int breakerSuccMills) {
+        this.breakerSuccMills = breakerSuccMills;
+        return this;
+    }
 
-	public RefererConfig setBreakerForceClose(boolean breakerForceClose) {
-		this.breakerForceClose = breakerForceClose;
-		return this;
-	}
-	
+    public int getBreakerWindowMinReqs() {
+        return breakerWindowMinReqs;
+    }
+
+    public RefererConfig setBreakerWindowMinReqs(int breakerWindowMinReqs) {
+        this.breakerWindowMinReqs = breakerWindowMinReqs;
+        return this;
+    }
+
+    public int getBreakerSleepSeconds() {
+        return breakerSleepSeconds;
+    }
+
+    public RefererConfig setBreakerSleepSeconds(int breakerSleepSeconds) {
+        this.breakerSleepSeconds = breakerSleepSeconds;
+        return this;
+    }
+
+    public boolean isBreakerForceClose() {
+        return breakerForceClose;
+    }
+
+    public RefererConfig setBreakerForceClose(boolean breakerForceClose) {
+        this.breakerForceClose = breakerForceClose;
+        return this;
+    }
+
 }

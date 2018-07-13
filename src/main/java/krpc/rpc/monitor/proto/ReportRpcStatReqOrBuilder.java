@@ -4,67 +4,73 @@
 package krpc.rpc.monitor.proto;
 
 public interface ReportRpcStatReqOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:ReportRpcStatReq)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:ReportRpcStatReq)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <pre>
-   * timestamp to generate the stats
-   * </pre>
-   *
-   * <code>int64 timestamp = 1;</code>
-   */
-  long getTimestamp();
+    /**
+     * <pre>
+     * timestamp to generate the stats
+     * </pre>
+     *
+     * <code>int64 timestamp = 1;</code>
+     */
+    long getTimestamp();
 
-  /**
-   * <pre>
-   * machine
-   * </pre>
-   *
-   * <code>string host = 2;</code>
-   */
-  java.lang.String getHost();
-  /**
-   * <pre>
-   * machine
-   * </pre>
-   *
-   * <code>string host = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getHostBytes();
+    /**
+     * <pre>
+     * machine
+     * </pre>
+     *
+     * <code>string host = 2;</code>
+     */
+    java.lang.String getHost();
 
-  /**
-   * <code>string app = 3;</code>
-   */
-  java.lang.String getApp();
-  /**
-   * <code>string app = 3;</code>
-   */
-  com.google.protobuf.ByteString
-      getAppBytes();
+    /**
+     * <pre>
+     * machine
+     * </pre>
+     *
+     * <code>string host = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getHostBytes();
 
-  /**
-   * <code>repeated .RpcStat stats = 4;</code>
-   */
-  java.util.List<krpc.rpc.monitor.proto.RpcStat> 
-      getStatsList();
-  /**
-   * <code>repeated .RpcStat stats = 4;</code>
-   */
-  krpc.rpc.monitor.proto.RpcStat getStats(int index);
-  /**
-   * <code>repeated .RpcStat stats = 4;</code>
-   */
-  int getStatsCount();
-  /**
-   * <code>repeated .RpcStat stats = 4;</code>
-   */
-  java.util.List<? extends krpc.rpc.monitor.proto.RpcStatOrBuilder> 
-      getStatsOrBuilderList();
-  /**
-   * <code>repeated .RpcStat stats = 4;</code>
-   */
-  krpc.rpc.monitor.proto.RpcStatOrBuilder getStatsOrBuilder(
-      int index);
+    /**
+     * <code>string app = 3;</code>
+     */
+    java.lang.String getApp();
+
+    /**
+     * <code>string app = 3;</code>
+     */
+    com.google.protobuf.ByteString
+    getAppBytes();
+
+    /**
+     * <code>repeated .RpcStat stats = 4;</code>
+     */
+    java.util.List<krpc.rpc.monitor.proto.RpcStat>
+    getStatsList();
+
+    /**
+     * <code>repeated .RpcStat stats = 4;</code>
+     */
+    krpc.rpc.monitor.proto.RpcStat getStats(int index);
+
+    /**
+     * <code>repeated .RpcStat stats = 4;</code>
+     */
+    int getStatsCount();
+
+    /**
+     * <code>repeated .RpcStat stats = 4;</code>
+     */
+    java.util.List<? extends krpc.rpc.monitor.proto.RpcStatOrBuilder>
+    getStatsOrBuilderList();
+
+    /**
+     * <code>repeated .RpcStat stats = 4;</code>
+     */
+    krpc.rpc.monitor.proto.RpcStatOrBuilder getStatsOrBuilder(
+            int index);
 }

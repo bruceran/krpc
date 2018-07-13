@@ -4,62 +4,63 @@ import io.netty.handler.codec.http.HttpHeaders;
 
 public class HttpClientRes {
 
-	private int retCode;
-	
-	private int httpCode = 0;
-	private String contentType = "application/json";
-	private String content;
-	private HttpHeaders headers;
-	
-	public HttpClientRes(int retCode) {
-		this.retCode = retCode;
-	}
+    private int retCode;
 
-	public HttpClientRes(int httpCode,String content,HttpHeaders headers) {
-		this.httpCode = httpCode;
-		this.content = content;
-		this.headers = headers;
-	}
-	
-	void setHeaders(HttpHeaders headers) {
-		this.headers = headers;
-	}	
-	
-	public String getHeader(String name) {
-		if( headers == null ) return null;
-		return headers.get(name);
-	}
+    private int httpCode = 0;
+    private String contentType = "application/json";
+    private String content;
+    private HttpHeaders headers;
 
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public HttpClientRes(int retCode) {
+        this.retCode = retCode;
+    }
 
-	public int getRetCode() {
-		return retCode;
-	}
+    public HttpClientRes(int httpCode, String content, HttpHeaders headers) {
+        this.httpCode = httpCode;
+        this.content = content;
+        this.headers = headers;
+    }
 
-	public void setRetCode(int retCode) {
-		this.retCode = retCode;
-	}
+    void setHeaders(HttpHeaders headers) {
+        this.headers = headers;
+    }
 
-	public int getHttpCode() {
-		return httpCode;
-	}
+    public String getHeader(String name) {
+        if (headers == null) return null;
+        return headers.get(name);
+    }
 
-	public void setHttpCode(int httpCode) {
-		this.httpCode = httpCode;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public String getContentType() {
-		return contentType;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
+    public int getRetCode() {
+        return retCode;
+    }
+
+    public void setRetCode(int retCode) {
+        this.retCode = retCode;
+    }
+
+    public int getHttpCode() {
+        return httpCode;
+    }
+
+    public void setHttpCode(int httpCode) {
+        this.httpCode = httpCode;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
 
 }

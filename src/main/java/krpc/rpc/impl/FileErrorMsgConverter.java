@@ -1,63 +1,62 @@
 package krpc.rpc.impl;
 
+import krpc.common.InitClose;
+import krpc.common.Plugin;
+import krpc.rpc.core.ErrorMsgConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import krpc.common.InitClose;
-import krpc.common.Plugin;
-import krpc.rpc.core.ErrorMsgConverter;
-
 public class FileErrorMsgConverter implements ErrorMsgConverter, InitClose {
-	
-	static Logger log = LoggerFactory.getLogger(FileErrorMsgConverter.class);
-	
-	String location = "error.properties";
-	Properties prop = new Properties(); 
 
-	public FileErrorMsgConverter() {
-	}
-	
-	public FileErrorMsgConverter(String location) {
-		this.location = location;
-	}
-	
-	public void config(String paramsStr) {
-		Map<String,String> params = Plugin.defaultSplitParams(paramsStr);
-		if( params.containsKey("location")) {
-			location = params.get("location");
-		}
-	}
-	
-	public void init() {
+    static Logger log = LoggerFactory.getLogger(FileErrorMsgConverter.class);
 
-		try( InputStreamReader in = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(location), "UTF-8"); )  {
-			prop = new Properties();
-			prop.load(in);
-		} catch(Exception e) {
-			log.error("error code message file cannnot be loaded, location="+location);
-			prop = null;
-		}  
-	}
-	
-	public void close() {
-	}
+    String location = "error.properties";
+    Properties prop = new Properties();
 
-    public String getErrorMsg(int retCode) {
-    	if( prop == null ) return null;
-    	return prop.getProperty(String.valueOf(retCode));
+    public FileErrorMsgConverter() {
     }
 
-	public String getLocation() {
-		return location;
-	}
+    public FileErrorMsgConverter(String location) {
+        this.location = location;
+    }
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    public void config(String paramsStr) {
+        Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
+        if (params.containsKey("location")) {
+            location = params.get("location");
+        }
+    }
+
+    public void init() {
+
+        try (InputStreamReader in = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(location), "UTF-8");) {
+            prop = new Properties();
+            prop.load(in);
+        } catch (Exception e) {
+            log.error("error code message file cannnot be loaded, location=" + location);
+            prop = null;
+        }
+    }
+
+    public void close() {
+    }
+
+    public String getErrorMsg(int retCode) {
+        if (prop == null) return null;
+        return prop.getProperty(String.valueOf(retCode));
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
 }
 

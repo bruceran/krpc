@@ -1,6 +1,7 @@
 package krpc.common;
 
 public interface InitClose {
-	void init();
-	void close();
+    void init();
+
+    void close();
 }

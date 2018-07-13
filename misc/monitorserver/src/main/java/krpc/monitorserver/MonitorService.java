@@ -7,5 +7,6 @@ public interface MonitorService {
     static int serviceId = 2;
 
     ReportRpcStatRes reportRpcStat(ReportRpcStatReq req);
-    static int reportRpcStatMsgId = 1;	
+
+    static int reportRpcStatMsgId = 1;
 }

@@ -2,7 +2,10 @@ package krpc.rpc.core;
 
 public interface DataManager {
     void add(RpcClosure closure);
+
     void remove(RpcClosure closure);
-    RpcClosure remove(String connId,int sequence);
+
+    RpcClosure remove(String connId, int sequence);
+
     void disconnected(String connId);
 }

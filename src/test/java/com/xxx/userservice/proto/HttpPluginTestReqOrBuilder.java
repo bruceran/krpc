@@ -4,16 +4,17 @@
 package com.xxx.userservice.proto;
 
 public interface HttpPluginTestReqOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:HttpPluginTestReq)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:HttpPluginTestReq)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>string username = 1;</code>
-   */
-  java.lang.String getUsername();
-  /**
-   * <code>string username = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getUsernameBytes();
+    /**
+     * <code>string username = 1;</code>
+     */
+    java.lang.String getUsername();
+
+    /**
+     * <code>string username = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getUsernameBytes();
 }

@@ -1,76 +1,76 @@
 package krpc.rpc.bootstrap;
 
-public class RegistryConfig  {
+public class RegistryConfig {
 
-	String id;
-	
-	String type; // typeName(etcd,zookeeper,...), must be registered in Bootstrap.registryTypes
-	String addrs;
+    String id;
 
-	boolean enableRegist = true;
-	boolean enableDiscover = true;
-	
-	String params;
+    String type; // typeName(etcd,zookeeper,...), must be registered in Bootstrap.registryTypes
+    String addrs;
 
-	public RegistryConfig() {
-	}
+    boolean enableRegist = true;
+    boolean enableDiscover = true;
 
-	public RegistryConfig(String id) {
-		this.id = id;
-	}
+    String params;
 
-	public String getId() {
-		return id;
-	}
+    public RegistryConfig() {
+    }
 
-	public RegistryConfig setId(String id) {
-		this.id = id;
-		return this;
-	}
+    public RegistryConfig(String id) {
+        this.id = id;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public RegistryConfig setType(String type) {
-		this.type = type;
-		return this;
-	}
+    public RegistryConfig setId(String id) {
+        this.id = id;
+        return this;
+    }
 
-	public String getAddrs() {
-		return addrs;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public RegistryConfig setAddrs(String addrs) {
-		this.addrs = addrs;
-		return this;
-	}
+    public RegistryConfig setType(String type) {
+        this.type = type;
+        return this;
+    }
 
-	public boolean isEnableRegist() {
-		return enableRegist;
-	}
+    public String getAddrs() {
+        return addrs;
+    }
 
-	public RegistryConfig setEnableRegist(boolean enableRegist) {
-		this.enableRegist = enableRegist;
-		return this;
-	}
+    public RegistryConfig setAddrs(String addrs) {
+        this.addrs = addrs;
+        return this;
+    }
 
-	public boolean isEnableDiscover() {
-		return enableDiscover;
-	}
+    public boolean isEnableRegist() {
+        return enableRegist;
+    }
 
-	public RegistryConfig setEnableDiscover(boolean enableDiscover) {
-		this.enableDiscover = enableDiscover;
-		return this;
-	}
+    public RegistryConfig setEnableRegist(boolean enableRegist) {
+        this.enableRegist = enableRegist;
+        return this;
+    }
 
-	public String getParams() {
-		return params;
-	}
+    public boolean isEnableDiscover() {
+        return enableDiscover;
+    }
 
-	public RegistryConfig setParams(String params) {
-		this.params = params;
-		return this;
-	}
-	
+    public RegistryConfig setEnableDiscover(boolean enableDiscover) {
+        this.enableDiscover = enableDiscover;
+        return this;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public RegistryConfig setParams(String params) {
+        this.params = params;
+        return this;
+    }
+
 }

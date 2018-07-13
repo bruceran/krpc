@@ -6,16 +6,16 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class RpcServer {
 
-	static Logger log = LoggerFactory.getLogger(RpcServer.class);
-	
-	public static void main(String[] args) throws Exception {
-		
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-schema-server.xml");
-		Thread.sleep(30000);
+    static Logger log = LoggerFactory.getLogger(RpcServer.class);
 
-		context.close();
-        ((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();		
-	}	
-		
+    public static void main(String[] args) throws Exception {
+
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-schema-server.xml");
+        Thread.sleep(30000);
+
+        context.close();
+        ((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();
+    }
+
 }
 

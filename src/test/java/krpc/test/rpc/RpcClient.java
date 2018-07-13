@@ -1,61 +1,52 @@
 package krpc.test.rpc;
 
-import java.util.concurrent.CompletableFuture;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.xxx.userservice.proto.LoginReq;
-import com.xxx.userservice.proto.LoginRes;
-import com.xxx.userservice.proto.UpdateProfileReq;
-import com.xxx.userservice.proto.UpdateProfileRes;
-import com.xxx.userservice.proto.UserService;
-import com.xxx.userservice.proto.UserServiceAsync;
-
+import com.xxx.userservice.proto.*;
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.ClientConfig;
 import krpc.rpc.bootstrap.MonitorConfig;
-import krpc.rpc.bootstrap.RegistryConfig;
 import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.core.ClientContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class RpcClient {
 
-	static Logger log = LoggerFactory.getLogger(RpcClient.class);
-	
-	public static void main(String[] args) throws Exception {
-		
-		RpcApp app = new Bootstrap() 
-				.setFallbackPlugin("default")
-				.addClient(new ClientConfig().setConnections(1))
-				.addReferer("us",UserService.class,"127.0.0.1:5600") 
-				.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
-				//.setTraceAdapter("zipkin:server=127.0.0.1:9411")
-				//.setTraceAdapter("cat:server=192.168.213.128:8080")
-				//.setTraceAdapter("skywalking:server=127.0.0.1:10800")
-				.setName("usa")
-				.build();
-		
-		app.initAndStart();
+    static Logger log = LoggerFactory.getLogger(RpcClient.class);
 
-		// user code
+    public static void main(String[] args) throws Exception {
 
-		//Thread.sleep(2000);
-		
-		UserService us = app.getReferer("us");
-		UserServiceAsync usa = app.getReferer("usAsync"); // + Async to get the async referer
+        RpcApp app = new Bootstrap()
+                .setFallbackPlugin("default")
+                .addClient(new ClientConfig().setConnections(1))
+                .addReferer("us", UserService.class, "127.0.0.1:5600")
+                .setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
+                //.setTraceAdapter("zipkin:server=127.0.0.1:9411")
+                //.setTraceAdapter("cat:server=192.168.213.128:8080")
+                //.setTraceAdapter("skywalking:server=127.0.0.1:10800")
+                .setName("usa")
+                .build();
 
-		LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
-		LoginRes res = us.login(req);
-		log.info("res="+res.getRetCode()+","+res.getRetMsg());
+        app.initAndStart();
 
-		//Thread.sleep(2000);
-		
-		UpdateProfileReq ureq = UpdateProfileReq.newBuilder().build();
-		ClientContext.setTimeout(1000); // specify a timetout dynamically
-		UpdateProfileRes ures = us.updateProfile(ureq);
-		log.info("res="+ures.getRetCode()+","+ures.getRetMsg());
+        // user code
 
-		//Thread.sleep(2000);
+        //Thread.sleep(2000);
+
+        UserService us = app.getReferer("us");
+        UserServiceAsync usa = app.getReferer("usAsync"); // + Async to get the async referer
+
+        LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
+        LoginRes res = us.login(req);
+        log.info("res=" + res.getRetCode() + "," + res.getRetMsg());
+
+        //Thread.sleep(2000);
+
+        UpdateProfileReq ureq = UpdateProfileReq.newBuilder().build();
+        ClientContext.setTimeout(1000); // specify a timetout dynamically
+        UpdateProfileRes ures = us.updateProfile(ureq);
+        log.info("res=" + ures.getRetCode() + "," + ures.getRetMsg());
+
+        //Thread.sleep(2000);
 		/*
 		CompletableFuture<LoginRes> f = usa.login(req);  // call async
 		LoginRes resa = f.get();
@@ -118,13 +109,13 @@ public class RpcClient {
 
 		// user code end
  	*/
-		Thread.sleep(300000);
-		
-		app.stopAndClose();
-		
-		((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();	
-	}	
-	
-		
+        Thread.sleep(300000);
+
+        app.stopAndClose();
+
+        ((ch.qos.logback.classic.Logger) log).getLoggerContext().stop();
+    }
+
+
 }
 

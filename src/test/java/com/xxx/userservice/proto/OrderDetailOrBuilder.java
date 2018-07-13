@@ -4,36 +4,38 @@
 package com.xxx.userservice.proto;
 
 public interface OrderDetailOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:OrderDetail)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:OrderDetail)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>string name = 1;</code>
-   */
-  java.lang.String getName();
-  /**
-   * <code>string name = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getNameBytes();
+    /**
+     * <code>string name = 1;</code>
+     */
+    java.lang.String getName();
 
-  /**
-   * <code>int32 quantity = 2;</code>
-   */
-  int getQuantity();
+    /**
+     * <code>string name = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getNameBytes();
 
-  /**
-   * <code>double price = 3;</code>
-   */
-  double getPrice();
+    /**
+     * <code>int32 quantity = 2;</code>
+     */
+    int getQuantity();
 
-  /**
-   * <code>string note = 4;</code>
-   */
-  java.lang.String getNote();
-  /**
-   * <code>string note = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getNoteBytes();
+    /**
+     * <code>double price = 3;</code>
+     */
+    double getPrice();
+
+    /**
+     * <code>string note = 4;</code>
+     */
+    java.lang.String getNote();
+
+    /**
+     * <code>string note = 4;</code>
+     */
+    com.google.protobuf.ByteString
+    getNoteBytes();
 }

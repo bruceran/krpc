@@ -8,9 +8,11 @@ public interface UserServiceAsync {
     static final public int serviceId = 100;
 
     java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.LoginRes> login(com.xxx.userservice.proto.LoginReq req);
+
     static final public int loginMsgId = 1;
 
     java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.UpdateProfileRes> updateProfile(com.xxx.userservice.proto.UpdateProfileReq req);
+
     static final public int updateProfileMsgId = 2;
 
 }

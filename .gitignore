@@ -2,8 +2,10 @@
 .gradle/
 .project
 .settings/
+.idea
 bin/
 build/
+out/
 target/
 jarcache/
 upload/

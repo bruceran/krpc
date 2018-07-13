@@ -1,5 +1,7 @@
 package krpc.trace.sniffer;
 
+import javassist.*;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -7,222 +9,214 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
-
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.CtNewMethod;
-import javassist.LoaderClassPath;
 
 public class Transformer implements ClassFileTransformer {
 
-	class MethodPattern {
-		String clsSimpleName;
-		Pattern methodPattern;
-		String traceType;
+    class MethodPattern {
+        String clsSimpleName;
+        Pattern methodPattern;
+        String traceType;
 
-		MethodPattern(String clsSimpleName, Pattern methodPattern, String traceType) {
-			this.clsSimpleName = clsSimpleName;
-			this.methodPattern = methodPattern;
-			this.traceType = traceType;
-		}
-	}
+        MethodPattern(String clsSimpleName, Pattern methodPattern, String traceType) {
+            this.clsSimpleName = clsSimpleName;
+            this.methodPattern = methodPattern;
+            this.traceType = traceType;
+        }
+    }
 
-	enum LogLevel {
-		INFO, ERROR
-	};
+    enum LogLevel {
+        INFO, ERROR
+    }
 
-	private Map<String, List<MethodPattern>> classMap = new HashMap<>();
-	private String cfgFile = "./krpcsniffer.cfg";
-	private String logFile = "./krpcsniffer.log";
-	private LogLevel logLevel = LogLevel.ERROR;
-	private ClassPool pool;
+    ;
 
-	public Transformer(String args) {
+    private Map<String, List<MethodPattern>> classMap = new HashMap<>();
+    private String cfgFile = "./krpcsniffer.cfg";
+    private String logFile = "./krpcsniffer.log";
+    private LogLevel logLevel = LogLevel.ERROR;
+    private ClassPool pool;
 
-		if (args != null && !args.isEmpty()) {
-			String path = args;
-			cfgFile = path + "/krpcsniffer.cfg";
-		}
-		loadConfig();
+    public Transformer(String args) {
 
-		info("-----");
-		info("cfgFile=" + cfgFile);
-	}
+        if (args != null && !args.isEmpty()) {
+            String path = args;
+            cfgFile = path + "/krpcsniffer.cfg";
+        }
+        loadConfig();
 
-	private void loadConfig() {
+        info("-----");
+        info("cfgFile=" + cfgFile);
+    }
 
-		System.out.println("in loadConfig: " + getClass().getClassLoader().getClass().getName());
-		System.out.println("in loadConfig: " + getClass().getClassLoader());
+    private void loadConfig() {
 
-		try {
-			Properties cfg = new Properties();
-			InputStream in = new FileInputStream(cfgFile);
-			cfg.load(in);
-			in.close();
-			for (Object o : cfg.keySet()) {
-				String key = (String) o;
-				String value = cfg.getProperty(key);
-				if (key.equals("log.file")) {
-					logFile = value;
-					continue;
-				}
-				if (key.equals("log.level")) {
-					switch (value.toLowerCase()) {
-					case "error":
-					case "warn":
-					case "fatal":
-						logLevel = LogLevel.ERROR;
-						break;
-					case "info":
-					case "trace":
-						logLevel = LogLevel.INFO;
-						break;
-					case "debug":
-						logLevel = LogLevel.INFO;
-						AdviceInstance.debug = true;
-						break;
-					default:
-						break;
-					}
-					continue;
-				}
-				int p = key.indexOf("#");
-				if (p < 0) {
-					error("invalid key in sniffer config file, key="+key);
-					continue;
-				}
-				String clsName = key.substring(0, p);
-				int p2 = clsName.lastIndexOf(".");
-				if (p2 < 0) {
-					error("invalid key in sniffer config file, key="+key);
-					continue;
-				}
+        System.out.println("in loadConfig: " + getClass().getClassLoader().getClass().getName());
+        System.out.println("in loadConfig: " + getClass().getClassLoader());
 
-				String clsSimpleName = clsName.substring(p2 + 1);
-				String pattern = key.substring(p + 1);
-				String traceType = value;
+        try {
+            Properties cfg = new Properties();
+            InputStream in = new FileInputStream(cfgFile);
+            cfg.load(in);
+            in.close();
+            for (Object o : cfg.keySet()) {
+                String key = (String) o;
+                String value = cfg.getProperty(key);
+                if (key.equals("log.file")) {
+                    logFile = value;
+                    continue;
+                }
+                if (key.equals("log.level")) {
+                    switch (value.toLowerCase()) {
+                        case "error":
+                        case "warn":
+                        case "fatal":
+                            logLevel = LogLevel.ERROR;
+                            break;
+                        case "info":
+                        case "trace":
+                            logLevel = LogLevel.INFO;
+                            break;
+                        case "debug":
+                            logLevel = LogLevel.INFO;
+                            AdviceInstance.debug = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    continue;
+                }
+                int p = key.indexOf("#");
+                if (p < 0) {
+                    error("invalid key in sniffer config file, key=" + key);
+                    continue;
+                }
+                String clsName = key.substring(0, p);
+                int p2 = clsName.lastIndexOf(".");
+                if (p2 < 0) {
+                    error("invalid key in sniffer config file, key=" + key);
+                    continue;
+                }
 
-				Pattern methodPattern = Pattern.compile(pattern);
-				MethodPattern mc = new MethodPattern(clsSimpleName, methodPattern, traceType);
-				List<MethodPattern> list = classMap.get(clsName);
-				if (list == null) {
-					list = new ArrayList<MethodPattern>();
-					classMap.put(clsName, list);
-				}
-				list.add(mc);
-			}
-		} catch (Exception e) {
-			error("load sniffer config file exception, file=" + cfgFile + ", e=" + e.getMessage());
-		}
-	}
+                String clsSimpleName = clsName.substring(p2 + 1);
+                String pattern = key.substring(p + 1);
+                String traceType = value;
 
-	@Override
-	public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
-			ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+                Pattern methodPattern = Pattern.compile(pattern);
+                MethodPattern mc = new MethodPattern(clsSimpleName, methodPattern, traceType);
+                List<MethodPattern> list = classMap.get(clsName);
+                if (list == null) {
+                    list = new ArrayList<MethodPattern>();
+                    classMap.put(clsName, list);
+                }
+                list.add(mc);
+            }
+        } catch (Exception e) {
+            error("load sniffer config file exception, file=" + cfgFile + ", e=" + e.getMessage());
+        }
+    }
 
-		className = className.replace('/', '.');
-		List<MethodPattern> list = classMap.get(className);
-		if (list == null)
-			return classfileBuffer;
+    @Override
+    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
+                            ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
 
-		System.out.println("in transform: " + loader.getClass().getName());
-		System.out.println("in transform: " + loader);
-		System.out.println("in transform: " + Thread.currentThread().getContextClassLoader().getClass().getName());
-		System.out.println("in transform: " + Thread.currentThread().getContextClassLoader());
+        className = className.replace('/', '.');
+        List<MethodPattern> list = classMap.get(className);
+        if (list == null)
+            return classfileBuffer;
 
-		if (className.startsWith("krpc"))
-			System.out.println("in transform className:" + className);
+        System.out.println("in transform: " + loader.getClass().getName());
+        System.out.println("in transform: " + loader);
+        System.out.println("in transform: " + Thread.currentThread().getContextClassLoader().getClass().getName());
+        System.out.println("in transform: " + Thread.currentThread().getContextClassLoader());
 
-		try {
+        if (className.startsWith("krpc"))
+            System.out.println("in transform className:" + className);
 
-			if (pool == null) {
-				//pool = ClassPool.getDefault();
-				pool = new ClassPool(true);
-				pool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-			}
+        try {
 
-			CtClass ctClass = pool.get(className);
-			CtMethod[] methods = ctClass.getMethods();
-			for (CtMethod m : methods) {
+            if (pool == null) {
+                //pool = ClassPool.getDefault();
+                pool = new ClassPool(true);
+                pool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+            }
 
-				for (MethodPattern mp : list) {
+            CtClass ctClass = pool.get(className);
+            CtMethod[] methods = ctClass.getMethods();
+            for (CtMethod m : methods) {
 
-					String methodName = m.getName();
-					if (!mp.methodPattern.matcher(methodName).matches())
-						continue;
+                for (MethodPattern mp : list) {
 
-					String traceType = mp.traceType;
-					String traceAction = mp.clsSimpleName + "." + methodName;
+                    String methodName = m.getName();
+                    if (!mp.methodPattern.matcher(methodName).matches())
+                        continue;
 
-					String startExpr = String.format("krpc.trace.sniffer.AdviceInstance.instance.start(\"%s\",\"%s\");",
-							traceType, traceAction);
-					String stopExpr = "krpc.trace.sniffer.AdviceInstance.instance.stop(ok);";
-					String logExceptionExpr = "krpc.trace.sniffer.AdviceInstance.instance.logException(e);";
+                    String traceType = mp.traceType;
+                    String traceAction = mp.clsSimpleName + "." + methodName;
 
-					String oldMethodName = methodName + "$krpcsniffer";
-					m.setName(oldMethodName);
-					m = CtNewMethod.copy(m, methodName, ctClass, null);
+                    String startExpr = String.format("krpc.trace.sniffer.AdviceInstance.instance.start(\"%s\",\"%s\");",
+                            traceType, traceAction);
+                    String stopExpr = "krpc.trace.sniffer.AdviceInstance.instance.stop(ok);";
+                    String logExceptionExpr = "krpc.trace.sniffer.AdviceInstance.instance.logException(e);";
 
-					StringBuilder buff = new StringBuilder();
-					buff.append("{");
-					buff.append("boolean ok = true;");
-					buff.append(startExpr);
-					buff.append("try {");
-					if (m.getReturnType() != null)
-						buff.append("return ");
-					buff.append(oldMethodName + "($$);");
-					buff.append("} catch(Throwable e) {");
-					buff.append("ok = false;");
-					buff.append(logExceptionExpr);
-					buff.append("throw e;");
-					buff.append("} finally {");
-					buff.append(stopExpr);
-					buff.append("}");
-					buff.append("}");
+                    String oldMethodName = methodName + "$krpcsniffer";
+                    m.setName(oldMethodName);
+                    m = CtNewMethod.copy(m, methodName, ctClass, null);
 
-					m.setBody(buff.toString());
-					ctClass.addMethod(m);
+                    StringBuilder buff = new StringBuilder();
+                    buff.append("{");
+                    buff.append("boolean ok = true;");
+                    buff.append(startExpr);
+                    buff.append("try {");
+                    if (m.getReturnType() != null)
+                        buff.append("return ");
+                    buff.append(oldMethodName + "($$);");
+                    buff.append("} catch(Throwable e) {");
+                    buff.append("ok = false;");
+                    buff.append(logExceptionExpr);
+                    buff.append("throw e;");
+                    buff.append("} finally {");
+                    buff.append(stopExpr);
+                    buff.append("}");
+                    buff.append("}");
 
-					info("transform " + className + "." + methodName + " success");
+                    m.setBody(buff.toString());
+                    ctClass.addMethod(m);
 
-					break;
-				}
-			}
-			return ctClass.toBytecode();
-		} catch (Throwable e) {
-			error("transform " + className + " exception, e=" + e.getMessage());
-		}
-		return classfileBuffer;
-	}
+                    info("transform " + className + "." + methodName + " success");
 
-	void error(String s) {
-		log(s, LogLevel.ERROR);
-	}
+                    break;
+                }
+            }
+            return ctClass.toBytecode();
+        } catch (Throwable e) {
+            error("transform " + className + " exception, e=" + e.getMessage());
+        }
+        return classfileBuffer;
+    }
 
-	void info(String s) {
-		log(s, LogLevel.INFO);
-	}
+    void error(String s) {
+        log(s, LogLevel.ERROR);
+    }
 
-	void log(String s, LogLevel logLevel) {
+    void info(String s) {
+        log(s, LogLevel.INFO);
+    }
 
-		if (this.logLevel == LogLevel.ERROR && logLevel == LogLevel.INFO)
-			return;
+    void log(String s, LogLevel logLevel) {
 
-		s = LocalDateTime.now() + " " + s;
-		try {
-			FileOutputStream out = new FileOutputStream(logFile, true);
-			out.write((s + "\n").getBytes());
-			out.close();
-		} catch (Exception e) {
-			System.out.println(s);
-		}
-	}
+        if (this.logLevel == LogLevel.ERROR && logLevel == LogLevel.INFO)
+            return;
+
+        s = LocalDateTime.now() + " " + s;
+        try {
+            FileOutputStream out = new FileOutputStream(logFile, true);
+            out.write((s + "\n").getBytes());
+            out.close();
+        } catch (Exception e) {
+            System.out.println(s);
+        }
+    }
 
 }

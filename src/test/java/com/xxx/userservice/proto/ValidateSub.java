@@ -6,1025 +6,1093 @@ package com.xxx.userservice.proto;
 /**
  * Protobuf type {@code ValidateSub}
  */
-public  final class ValidateSub extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:ValidateSub)
-    ValidateSubOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use ValidateSub.newBuilder() to construct.
-  private ValidateSub(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private ValidateSub() {
-    s1_ = "";
-    s2_ = "";
-    i1_ = 0;
-    i2_ = "";
-    i3_ = 0;
-    i4_ = "";
-  }
+public final class ValidateSub extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:ValidateSub)
+        ValidateSubOrBuilder {
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  private ValidateSub(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
+    // Use ValidateSub.newBuilder() to construct.
+    private ValidateSub(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
     }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 90: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            s1_ = s;
-            break;
-          }
-          case 114: {
-            java.lang.String s = input.readStringRequireUtf8();
+    private ValidateSub() {
+        s1_ = "";
+        s2_ = "";
+        i1_ = 0;
+        i2_ = "";
+        i3_ = 0;
+        i4_ = "";
+    }
 
-            s2_ = s;
-            break;
-          }
-          case 120: {
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return this.unknownFields;
+    }
 
-            i1_ = input.readInt32();
-            break;
-          }
-          case 130: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            i2_ = s;
-            break;
-          }
-          case 136: {
-
-            i3_ = input.readInt32();
-            break;
-          }
-          case 146: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            i4_ = s;
-            break;
-          }
-          default: {
-            if (!parseUnknownFieldProto3(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
+    private ValidateSub(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
         }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_descriptor;
-  }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    case 90: {
+                        java.lang.String s = input.readStringRequireUtf8();
 
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            com.xxx.userservice.proto.ValidateSub.class, com.xxx.userservice.proto.ValidateSub.Builder.class);
-  }
+                        s1_ = s;
+                        break;
+                    }
+                    case 114: {
+                        java.lang.String s = input.readStringRequireUtf8();
 
-  public static final int S1_FIELD_NUMBER = 11;
-  private volatile java.lang.Object s1_;
-  /**
-   * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
-   */
-  public java.lang.String getS1() {
-    java.lang.Object ref = s1_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      s1_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
-   */
-  public com.google.protobuf.ByteString
-      getS1Bytes() {
-    java.lang.Object ref = s1_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      s1_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
+                        s2_ = s;
+                        break;
+                    }
+                    case 120: {
 
-  public static final int S2_FIELD_NUMBER = 14;
-  private volatile java.lang.Object s2_;
-  /**
-   * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
-   */
-  public java.lang.String getS2() {
-    java.lang.Object ref = s2_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      s2_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
-   */
-  public com.google.protobuf.ByteString
-      getS2Bytes() {
-    java.lang.Object ref = s2_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      s2_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
+                        i1_ = input.readInt32();
+                        break;
+                    }
+                    case 130: {
+                        java.lang.String s = input.readStringRequireUtf8();
 
-  public static final int I1_FIELD_NUMBER = 15;
-  private int i1_;
-  /**
-   * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
-   */
-  public int getI1() {
-    return i1_;
-  }
+                        i2_ = s;
+                        break;
+                    }
+                    case 136: {
 
-  public static final int I2_FIELD_NUMBER = 16;
-  private volatile java.lang.Object i2_;
-  /**
-   * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
-   */
-  public java.lang.String getI2() {
-    java.lang.Object ref = i2_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      i2_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
-   */
-  public com.google.protobuf.ByteString
-      getI2Bytes() {
-    java.lang.Object ref = i2_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      i2_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
+                        i3_ = input.readInt32();
+                        break;
+                    }
+                    case 146: {
+                        java.lang.String s = input.readStringRequireUtf8();
 
-  public static final int I3_FIELD_NUMBER = 17;
-  private int i3_;
-  /**
-   * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
-   */
-  public int getI3() {
-    return i3_;
-  }
+                        i4_ = s;
+                        break;
+                    }
+                    default: {
+                        if (!parseUnknownFieldProto3(
+                                input, unknownFields, extensionRegistry, tag)) {
+                            done = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                    e).setUnfinishedMessage(this);
+        } finally {
+            this.unknownFields = unknownFields.build();
+            makeExtensionsImmutable();
+        }
+    }
 
-  public static final int I4_FIELD_NUMBER = 18;
-  private volatile java.lang.Object i4_;
-  /**
-   * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
-   */
-  public java.lang.String getI4() {
-    java.lang.Object ref = i4_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      i4_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
-   */
-  public com.google.protobuf.ByteString
-      getI4Bytes() {
-    java.lang.Object ref = i4_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      i4_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (!getS1Bytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 11, s1_);
-    }
-    if (!getS2Bytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 14, s2_);
-    }
-    if (i1_ != 0) {
-      output.writeInt32(15, i1_);
-    }
-    if (!getI2Bytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 16, i2_);
-    }
-    if (i3_ != 0) {
-      output.writeInt32(17, i3_);
-    }
-    if (!getI4Bytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 18, i4_);
-    }
-    unknownFields.writeTo(output);
-  }
-
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (!getS1Bytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, s1_);
-    }
-    if (!getS2Bytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(14, s2_);
-    }
-    if (i1_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(15, i1_);
-    }
-    if (!getI2Bytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, i2_);
-    }
-    if (i3_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(17, i3_);
-    }
-    if (!getI4Bytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(18, i4_);
-    }
-    size += unknownFields.getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
-
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof com.xxx.userservice.proto.ValidateSub)) {
-      return super.equals(obj);
-    }
-    com.xxx.userservice.proto.ValidateSub other = (com.xxx.userservice.proto.ValidateSub) obj;
-
-    boolean result = true;
-    result = result && getS1()
-        .equals(other.getS1());
-    result = result && getS2()
-        .equals(other.getS2());
-    result = result && (getI1()
-        == other.getI1());
-    result = result && getI2()
-        .equals(other.getI2());
-    result = result && (getI3()
-        == other.getI3());
-    result = result && getI4()
-        .equals(other.getI4());
-    result = result && unknownFields.equals(other.unknownFields);
-    return result;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + S1_FIELD_NUMBER;
-    hash = (53 * hash) + getS1().hashCode();
-    hash = (37 * hash) + S2_FIELD_NUMBER;
-    hash = (53 * hash) + getS2().hashCode();
-    hash = (37 * hash) + I1_FIELD_NUMBER;
-    hash = (53 * hash) + getI1();
-    hash = (37 * hash) + I2_FIELD_NUMBER;
-    hash = (53 * hash) + getI2().hashCode();
-    hash = (37 * hash) + I3_FIELD_NUMBER;
-    hash = (53 * hash) + getI3();
-    hash = (37 * hash) + I4_FIELD_NUMBER;
-    hash = (53 * hash) + getI4().hashCode();
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static com.xxx.userservice.proto.ValidateSub parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(com.xxx.userservice.proto.ValidateSub prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code ValidateSub}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:ValidateSub)
-      com.xxx.userservice.proto.ValidateSubOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_descriptor;
+    getDescriptor() {
+        return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.xxx.userservice.proto.ValidateSub.class, com.xxx.userservice.proto.ValidateSub.Builder.class);
+    internalGetFieldAccessorTable() {
+        return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        com.xxx.userservice.proto.ValidateSub.class, com.xxx.userservice.proto.ValidateSub.Builder.class);
     }
 
-    // Construct using com.xxx.userservice.proto.ValidateSub.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
+    public static final int S1_FIELD_NUMBER = 11;
+    private volatile java.lang.Object s1_;
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      s1_ = "";
-
-      s2_ = "";
-
-      i1_ = 0;
-
-      i2_ = "";
-
-      i3_ = 0;
-
-      i4_ = "";
-
-      return this;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_descriptor;
-    }
-
-    @java.lang.Override
-    public com.xxx.userservice.proto.ValidateSub getDefaultInstanceForType() {
-      return com.xxx.userservice.proto.ValidateSub.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public com.xxx.userservice.proto.ValidateSub build() {
-      com.xxx.userservice.proto.ValidateSub result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public com.xxx.userservice.proto.ValidateSub buildPartial() {
-      com.xxx.userservice.proto.ValidateSub result = new com.xxx.userservice.proto.ValidateSub(this);
-      result.s1_ = s1_;
-      result.s2_ = s2_;
-      result.i1_ = i1_;
-      result.i2_ = i2_;
-      result.i3_ = i3_;
-      result.i4_ = i4_;
-      onBuilt();
-      return result;
-    }
-
-    @java.lang.Override
-    public Builder clone() {
-      return (Builder) super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return (Builder) super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return (Builder) super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return (Builder) super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return (Builder) super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return (Builder) super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.xxx.userservice.proto.ValidateSub) {
-        return mergeFrom((com.xxx.userservice.proto.ValidateSub)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(com.xxx.userservice.proto.ValidateSub other) {
-      if (other == com.xxx.userservice.proto.ValidateSub.getDefaultInstance()) return this;
-      if (!other.getS1().isEmpty()) {
-        s1_ = other.s1_;
-        onChanged();
-      }
-      if (!other.getS2().isEmpty()) {
-        s2_ = other.s2_;
-        onChanged();
-      }
-      if (other.getI1() != 0) {
-        setI1(other.getI1());
-      }
-      if (!other.getI2().isEmpty()) {
-        i2_ = other.i2_;
-        onChanged();
-      }
-      if (other.getI3() != 0) {
-        setI3(other.getI3());
-      }
-      if (!other.getI4().isEmpty()) {
-        i4_ = other.i4_;
-        onChanged();
-      }
-      this.mergeUnknownFields(other.unknownFields);
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      com.xxx.userservice.proto.ValidateSub parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.xxx.userservice.proto.ValidateSub) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
-      return this;
-    }
-
-    private java.lang.Object s1_ = "";
     /**
      * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
      */
     public java.lang.String getS1() {
-      java.lang.Object ref = s1_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        s1_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = s1_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            s1_ = s;
+            return s;
+        }
     }
+
     /**
      * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
      */
     public com.google.protobuf.ByteString
-        getS1Bytes() {
-      java.lang.Object ref = s1_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        s1_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setS1(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      s1_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder clearS1() {
-      
-      s1_ = getDefaultInstance().getS1();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setS1Bytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      s1_ = value;
-      onChanged();
-      return this;
+    getS1Bytes() {
+        java.lang.Object ref = s1_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            s1_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object s2_ = "";
+    public static final int S2_FIELD_NUMBER = 14;
+    private volatile java.lang.Object s2_;
+
     /**
      * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
      */
     public java.lang.String getS2() {
-      java.lang.Object ref = s2_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        s2_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = s2_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            s2_ = s;
+            return s;
+        }
     }
+
     /**
      * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
      */
     public com.google.protobuf.ByteString
-        getS2Bytes() {
-      java.lang.Object ref = s2_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        s2_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setS2(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      s2_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder clearS2() {
-      
-      s2_ = getDefaultInstance().getS2();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setS2Bytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      s2_ = value;
-      onChanged();
-      return this;
+    getS2Bytes() {
+        java.lang.Object ref = s2_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            s2_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private int i1_ ;
+    public static final int I1_FIELD_NUMBER = 15;
+    private int i1_;
+
     /**
      * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
      */
     public int getI1() {
-      return i1_;
-    }
-    /**
-     * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setI1(int value) {
-      
-      i1_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder clearI1() {
-      
-      i1_ = 0;
-      onChanged();
-      return this;
+        return i1_;
     }
 
-    private java.lang.Object i2_ = "";
+    public static final int I2_FIELD_NUMBER = 16;
+    private volatile java.lang.Object i2_;
+
     /**
      * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
      */
     public java.lang.String getI2() {
-      java.lang.Object ref = i2_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        i2_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = i2_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            i2_ = s;
+            return s;
+        }
     }
+
     /**
      * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
      */
     public com.google.protobuf.ByteString
-        getI2Bytes() {
-      java.lang.Object ref = i2_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        i2_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setI2(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      i2_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder clearI2() {
-      
-      i2_ = getDefaultInstance().getI2();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setI2Bytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      i2_ = value;
-      onChanged();
-      return this;
+    getI2Bytes() {
+        java.lang.Object ref = i2_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            i2_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private int i3_ ;
+    public static final int I3_FIELD_NUMBER = 17;
+    private int i3_;
+
     /**
      * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
      */
     public int getI3() {
-      return i3_;
-    }
-    /**
-     * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setI3(int value) {
-      
-      i3_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder clearI3() {
-      
-      i3_ = 0;
-      onChanged();
-      return this;
+        return i3_;
     }
 
-    private java.lang.Object i4_ = "";
+    public static final int I4_FIELD_NUMBER = 18;
+    private volatile java.lang.Object i4_;
+
     /**
      * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
      */
     public java.lang.String getI4() {
-      java.lang.Object ref = i4_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        i4_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = i4_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            i4_ = s;
+            return s;
+        }
     }
+
     /**
      * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
      */
     public com.google.protobuf.ByteString
+    getI4Bytes() {
+        java.lang.Object ref = i4_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            i4_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
+    private byte memoizedIsInitialized = -1;
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        if (!getS1Bytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 11, s1_);
+        }
+        if (!getS2Bytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 14, s2_);
+        }
+        if (i1_ != 0) {
+            output.writeInt32(15, i1_);
+        }
+        if (!getI2Bytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 16, i2_);
+        }
+        if (i3_ != 0) {
+            output.writeInt32(17, i3_);
+        }
+        if (!getI4Bytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 18, i4_);
+        }
+        unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getS1Bytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, s1_);
+        }
+        if (!getS2Bytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(14, s2_);
+        }
+        if (i1_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(15, i1_);
+        }
+        if (!getI2Bytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, i2_);
+        }
+        if (i3_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(17, i3_);
+        }
+        if (!getI4Bytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(18, i4_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof com.xxx.userservice.proto.ValidateSub)) {
+            return super.equals(obj);
+        }
+        com.xxx.userservice.proto.ValidateSub other = (com.xxx.userservice.proto.ValidateSub) obj;
+
+        boolean result = true;
+        result = result && getS1()
+                .equals(other.getS1());
+        result = result && getS2()
+                .equals(other.getS2());
+        result = result && (getI1()
+                == other.getI1());
+        result = result && getI2()
+                .equals(other.getI2());
+        result = result && (getI3()
+                == other.getI3());
+        result = result && getI4()
+                .equals(other.getI4());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + S1_FIELD_NUMBER;
+        hash = (53 * hash) + getS1().hashCode();
+        hash = (37 * hash) + S2_FIELD_NUMBER;
+        hash = (53 * hash) + getS2().hashCode();
+        hash = (37 * hash) + I1_FIELD_NUMBER;
+        hash = (53 * hash) + getI1();
+        hash = (37 * hash) + I2_FIELD_NUMBER;
+        hash = (53 * hash) + getI2().hashCode();
+        hash = (37 * hash) + I3_FIELD_NUMBER;
+        hash = (53 * hash) + getI3();
+        hash = (37 * hash) + I4_FIELD_NUMBER;
+        hash = (53 * hash) + getI4().hashCode();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static com.xxx.userservice.proto.ValidateSub parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(com.xxx.userservice.proto.ValidateSub prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * Protobuf type {@code ValidateSub}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:ValidateSub)
+            com.xxx.userservice.proto.ValidateSubOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            com.xxx.userservice.proto.ValidateSub.class, com.xxx.userservice.proto.ValidateSub.Builder.class);
+        }
+
+        // Construct using com.xxx.userservice.proto.ValidateSub.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessageV3
+                    .alwaysUseFieldBuilders) {
+            }
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            s1_ = "";
+
+            s2_ = "";
+
+            i1_ = 0;
+
+            i2_ = "";
+
+            i3_ = 0;
+
+            i4_ = "";
+
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateSub_descriptor;
+        }
+
+        @java.lang.Override
+        public com.xxx.userservice.proto.ValidateSub getDefaultInstanceForType() {
+            return com.xxx.userservice.proto.ValidateSub.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public com.xxx.userservice.proto.ValidateSub build() {
+            com.xxx.userservice.proto.ValidateSub result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public com.xxx.userservice.proto.ValidateSub buildPartial() {
+            com.xxx.userservice.proto.ValidateSub result = new com.xxx.userservice.proto.ValidateSub(this);
+            result.s1_ = s1_;
+            result.s2_ = s2_;
+            result.i1_ = i1_;
+            result.i2_ = i2_;
+            result.i3_ = i3_;
+            result.i4_ = i4_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return (Builder) super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return (Builder) super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return (Builder) super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return (Builder) super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, java.lang.Object value) {
+            return (Builder) super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return (Builder) super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof com.xxx.userservice.proto.ValidateSub) {
+                return mergeFrom((com.xxx.userservice.proto.ValidateSub) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(com.xxx.userservice.proto.ValidateSub other) {
+            if (other == com.xxx.userservice.proto.ValidateSub.getDefaultInstance()) return this;
+            if (!other.getS1().isEmpty()) {
+                s1_ = other.s1_;
+                onChanged();
+            }
+            if (!other.getS2().isEmpty()) {
+                s2_ = other.s2_;
+                onChanged();
+            }
+            if (other.getI1() != 0) {
+                setI1(other.getI1());
+            }
+            if (!other.getI2().isEmpty()) {
+                i2_ = other.i2_;
+                onChanged();
+            }
+            if (other.getI3() != 0) {
+                setI3(other.getI3());
+            }
+            if (!other.getI4().isEmpty()) {
+                i4_ = other.i4_;
+                onChanged();
+            }
+            this.mergeUnknownFields(other.unknownFields);
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            com.xxx.userservice.proto.ValidateSub parsedMessage = null;
+            try {
+                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage = (com.xxx.userservice.proto.ValidateSub) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private java.lang.Object s1_ = "";
+
+        /**
+         * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
+         */
+        public java.lang.String getS1() {
+            java.lang.Object ref = s1_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                s1_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
+         */
+        public com.google.protobuf.ByteString
+        getS1Bytes() {
+            java.lang.Object ref = s1_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                s1_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setS1(
+                java.lang.String value) {
+            if (value == null) value = "";
+
+            s1_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder clearS1() {
+
+            s1_ = getDefaultInstance().getS1();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setS1Bytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            s1_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object s2_ = "";
+
+        /**
+         * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
+         */
+        public java.lang.String getS2() {
+            java.lang.Object ref = s2_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                s2_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
+         */
+        public com.google.protobuf.ByteString
+        getS2Bytes() {
+            java.lang.Object ref = s2_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                s2_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setS2(
+                java.lang.String value) {
+            if (value == null) value = "";
+
+            s2_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder clearS2() {
+
+            s2_ = getDefaultInstance().getS2();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setS2Bytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            s2_ = value;
+            onChanged();
+            return this;
+        }
+
+        private int i1_;
+
+        /**
+         * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
+         */
+        public int getI1() {
+            return i1_;
+        }
+
+        /**
+         * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setI1(int value) {
+
+            i1_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder clearI1() {
+
+            i1_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object i2_ = "";
+
+        /**
+         * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
+         */
+        public java.lang.String getI2() {
+            java.lang.Object ref = i2_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                i2_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
+         */
+        public com.google.protobuf.ByteString
+        getI2Bytes() {
+            java.lang.Object ref = i2_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                i2_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setI2(
+                java.lang.String value) {
+            if (value == null) value = "";
+
+            i2_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder clearI2() {
+
+            i2_ = getDefaultInstance().getI2();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setI2Bytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            i2_ = value;
+            onChanged();
+            return this;
+        }
+
+        private int i3_;
+
+        /**
+         * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
+         */
+        public int getI3() {
+            return i3_;
+        }
+
+        /**
+         * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setI3(int value) {
+
+            i3_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder clearI3() {
+
+            i3_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object i4_ = "";
+
+        /**
+         * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
+         */
+        public java.lang.String getI4() {
+            java.lang.Object ref = i4_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                i4_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
+         */
+        public com.google.protobuf.ByteString
         getI4Bytes() {
-      java.lang.Object ref = i4_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        i4_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+            java.lang.Object ref = i4_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                i4_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setI4(
+                java.lang.String value) {
+            if (value == null) value = "";
+
+            i4_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder clearI4() {
+
+            i4_ = getDefaultInstance().getI4();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
+         */
+        public Builder setI4Bytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            i4_ = value;
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:ValidateSub)
     }
-    /**
-     * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setI4(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      i4_ = value;
-      onChanged();
-      return this;
+
+    // @@protoc_insertion_point(class_scope:ValidateSub)
+    private static final com.xxx.userservice.proto.ValidateSub DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new com.xxx.userservice.proto.ValidateSub();
     }
-    /**
-     * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder clearI4() {
-      
-      i4_ = getDefaultInstance().getI4();
-      onChanged();
-      return this;
+
+    public static com.xxx.userservice.proto.ValidateSub getDefaultInstance() {
+        return DEFAULT_INSTANCE;
     }
-    /**
-     * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
-     */
-    public Builder setI4Bytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      i4_ = value;
-      onChanged();
-      return this;
+
+    private static final com.google.protobuf.Parser<ValidateSub>
+            PARSER = new com.google.protobuf.AbstractParser<ValidateSub>() {
+        @java.lang.Override
+        public ValidateSub parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return new ValidateSub(input, extensionRegistry);
+        }
+    };
+
+    public static com.google.protobuf.Parser<ValidateSub> parser() {
+        return PARSER;
     }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFieldsProto3(unknownFields);
+    public com.google.protobuf.Parser<ValidateSub> getParserForType() {
+        return PARSER;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public com.xxx.userservice.proto.ValidateSub getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
     }
-
-
-    // @@protoc_insertion_point(builder_scope:ValidateSub)
-  }
-
-  // @@protoc_insertion_point(class_scope:ValidateSub)
-  private static final com.xxx.userservice.proto.ValidateSub DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new com.xxx.userservice.proto.ValidateSub();
-  }
-
-  public static com.xxx.userservice.proto.ValidateSub getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<ValidateSub>
-      PARSER = new com.google.protobuf.AbstractParser<ValidateSub>() {
-    @java.lang.Override
-    public ValidateSub parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new ValidateSub(input, extensionRegistry);
-    }
-  };
-
-  public static com.google.protobuf.Parser<ValidateSub> parser() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public com.google.protobuf.Parser<ValidateSub> getParserForType() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public com.xxx.userservice.proto.ValidateSub getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
 
 }
 

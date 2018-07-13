@@ -1,7 +1,7 @@
 package krpc.rpc.util;
 
 public interface QuickTimerCallback {
-	void timeout(Object a);
+    void timeout(Object a);
 }
 
 

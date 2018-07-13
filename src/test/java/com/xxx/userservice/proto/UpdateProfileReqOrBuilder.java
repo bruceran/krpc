@@ -4,26 +4,28 @@
 package com.xxx.userservice.proto;
 
 public interface UpdateProfileReqOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:UpdateProfileReq)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:UpdateProfileReq)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>string userId = 1;</code>
-   */
-  java.lang.String getUserId();
-  /**
-   * <code>string userId = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getUserIdBytes();
+    /**
+     * <code>string userId = 1;</code>
+     */
+    java.lang.String getUserId();
 
-  /**
-   * <code>string mobile = 2;</code>
-   */
-  java.lang.String getMobile();
-  /**
-   * <code>string mobile = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getMobileBytes();
+    /**
+     * <code>string userId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getUserIdBytes();
+
+    /**
+     * <code>string mobile = 2;</code>
+     */
+    java.lang.String getMobile();
+
+    /**
+     * <code>string mobile = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getMobileBytes();
 }

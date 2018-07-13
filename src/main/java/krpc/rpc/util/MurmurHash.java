@@ -31,11 +31,9 @@ import java.nio.ByteOrder;
 public class MurmurHash {
     /**
      * Hashes bytes in an array.
-     * 
-     * @param data
-     *            The bytes to hash.
-     * @param seed
-     *            The seed for the hash.
+     *
+     * @param data The bytes to hash.
+     * @param seed The seed for the hash.
      * @return The 32 bit hash of the bytes in question.
      */
     public static int hash(byte[] data, int seed) {
@@ -44,15 +42,11 @@ public class MurmurHash {
 
     /**
      * Hashes bytes in part of an array.
-     * 
-     * @param data
-     *            The data to hash.
-     * @param offset
-     *            Where to start munging.
-     * @param length
-     *            How many bytes to process.
-     * @param seed
-     *            The seed to start with.
+     *
+     * @param data   The data to hash.
+     * @param offset Where to start munging.
+     * @param length How many bytes to process.
+     * @param seed   The seed to start with.
      * @return The 32-bit hash of the data in question.
      */
     public static int hash(byte[] data, int offset, int length, int seed) {
@@ -61,11 +55,9 @@ public class MurmurHash {
 
     /**
      * Hashes the bytes in a buffer from the current position to the limit.
-     * 
-     * @param buf
-     *            The bytes to hash.
-     * @param seed
-     *            The seed for the hash.
+     *
+     * @param buf  The bytes to hash.
+     * @param seed The seed for the hash.
      * @return The 32 bit murmur hash of the bytes in the buffer.
      */
     public static int hash(ByteBuffer buf, int seed) {
@@ -160,10 +152,10 @@ public class MurmurHash {
     }
 
     public static long hash(String key) {
-    	try {
-    		return hash(key.getBytes("UTF-8"));
-    	} catch(Exception e) {
-    		return 0;
-    	}
+        try {
+            return hash(key.getBytes("UTF-8"));
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

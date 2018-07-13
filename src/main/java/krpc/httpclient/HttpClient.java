@@ -2,7 +2,7 @@ package krpc.httpclient;
 
 public interface HttpClient {
 
-	public HttpClientRes call(HttpClientReq req);
+    public HttpClientRes call(HttpClientReq req);
 
 }
 

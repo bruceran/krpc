@@ -6,2240 +6,1662 @@ package krpc.rpc.core.proto;
 /**
  * Protobuf type {@code krpc.rpc.core.proto.RpcMeta}
  */
-public  final class RpcMeta extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:krpc.rpc.core.proto.RpcMeta)
-    RpcMetaOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use RpcMeta.newBuilder() to construct.
-  private RpcMeta(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private RpcMeta() {
-    direction_ = 0;
-    serviceId_ = 0;
-    msgId_ = 0;
-    sequence_ = 0;
-    timeout_ = 0;
-    retCode_ = 0;
-    attachment_ = "";
-    compress_ = 0;
-  }
+public final class RpcMeta extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:krpc.rpc.core.proto.RpcMeta)
+        RpcMetaOrBuilder {
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  private RpcMeta(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-            int rawValue = input.readEnum();
-
-            direction_ = rawValue;
-            break;
-          }
-          case 16: {
-
-            serviceId_ = input.readInt32();
-            break;
-          }
-          case 24: {
-
-            msgId_ = input.readInt32();
-            break;
-          }
-          case 32: {
-
-            sequence_ = input.readInt32();
-            break;
-          }
-          case 40: {
-
-            timeout_ = input.readInt32();
-            break;
-          }
-          case 48: {
-
-            retCode_ = input.readInt32();
-            break;
-          }
-          case 58: {
-            krpc.rpc.core.proto.RpcMeta.Trace.Builder subBuilder = null;
-            if (trace_ != null) {
-              subBuilder = trace_.toBuilder();
-            }
-            trace_ = input.readMessage(krpc.rpc.core.proto.RpcMeta.Trace.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(trace_);
-              trace_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          case 66: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            attachment_ = s;
-            break;
-          }
-          case 72: {
-
-            compress_ = input.readInt32();
-            break;
-          }
-          default: {
-            if (!parseUnknownFieldProto3(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_descriptor;
-  }
-
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            krpc.rpc.core.proto.RpcMeta.class, krpc.rpc.core.proto.RpcMeta.Builder.class);
-  }
-
-  /**
-   * Protobuf enum {@code krpc.rpc.core.proto.RpcMeta.Direction}
-   */
-  public enum Direction
-      implements com.google.protobuf.ProtocolMessageEnum {
-    /**
-     * <code>INVALID_DIRECTION = 0;</code>
-     */
-    INVALID_DIRECTION(0),
-    /**
-     * <code>REQUEST = 1;</code>
-     */
-    REQUEST(1),
-    /**
-     * <code>RESPONSE = 2;</code>
-     */
-    RESPONSE(2),
-    UNRECOGNIZED(-1),
-    ;
-
-    /**
-     * <code>INVALID_DIRECTION = 0;</code>
-     */
-    public static final int INVALID_DIRECTION_VALUE = 0;
-    /**
-     * <code>REQUEST = 1;</code>
-     */
-    public static final int REQUEST_VALUE = 1;
-    /**
-     * <code>RESPONSE = 2;</code>
-     */
-    public static final int RESPONSE_VALUE = 2;
-
-
-    public final int getNumber() {
-      if (this == UNRECOGNIZED) {
-        throw new java.lang.IllegalArgumentException(
-            "Can't get the number of an unknown enum value.");
-      }
-      return value;
+    // Use RpcMeta.newBuilder() to construct.
+    private RpcMeta(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
     }
 
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static Direction valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static Direction forNumber(int value) {
-      switch (value) {
-        case 0: return INVALID_DIRECTION;
-        case 1: return REQUEST;
-        case 2: return RESPONSE;
-        default: return null;
-      }
-    }
-
-    public static com.google.protobuf.Internal.EnumLiteMap<Direction>
-        internalGetValueMap() {
-      return internalValueMap;
-    }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        Direction> internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<Direction>() {
-            public Direction findValueByNumber(int number) {
-              return Direction.forNumber(number);
-            }
-          };
-
-    public final com.google.protobuf.Descriptors.EnumValueDescriptor
-        getValueDescriptor() {
-      return getDescriptor().getValues().get(ordinal());
-    }
-    public final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptorForType() {
-      return getDescriptor();
-    }
-    public static final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptor() {
-      return krpc.rpc.core.proto.RpcMeta.getDescriptor().getEnumTypes().get(0);
-    }
-
-    private static final Direction[] VALUES = values();
-
-    public static Direction valueOf(
-        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-      if (desc.getType() != getDescriptor()) {
-        throw new java.lang.IllegalArgumentException(
-          "EnumValueDescriptor is not for this type.");
-      }
-      if (desc.getIndex() == -1) {
-        return UNRECOGNIZED;
-      }
-      return VALUES[desc.getIndex()];
-    }
-
-    private final int value;
-
-    private Direction(int value) {
-      this.value = value;
-    }
-
-    // @@protoc_insertion_point(enum_scope:krpc.rpc.core.proto.RpcMeta.Direction)
-  }
-
-  public interface TraceOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:krpc.rpc.core.proto.RpcMeta.Trace)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <pre>
-     * ip:port for each hop, format: addr1,addr2,...
-     * </pre>
-     *
-     * <code>string peers = 1;</code>
-     */
-    java.lang.String getPeers();
-    /**
-     * <pre>
-     * ip:port for each hop, format: addr1,addr2,...
-     * </pre>
-     *
-     * <code>string peers = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getPeersBytes();
-
-    /**
-     * <code>string traceId = 2;</code>
-     */
-    java.lang.String getTraceId();
-    /**
-     * <code>string traceId = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getTraceIdBytes();
-
-    /**
-     * <pre>
-     * may be empty
-     * </pre>
-     *
-     * <code>string parentSpanId = 3;</code>
-     */
-    java.lang.String getParentSpanId();
-    /**
-     * <pre>
-     * may be empty
-     * </pre>
-     *
-     * <code>string parentSpanId = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getParentSpanIdBytes();
-
-    /**
-     * <code>string spanId = 4;</code>
-     */
-    java.lang.String getSpanId();
-    /**
-     * <code>string spanId = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getSpanIdBytes();
-
-    /**
-     * <pre>
-     * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-     * </pre>
-     *
-     * <code>string tags = 5;</code>
-     */
-    java.lang.String getTags();
-    /**
-     * <pre>
-     * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-     * </pre>
-     *
-     * <code>string tags = 5;</code>
-     */
-    com.google.protobuf.ByteString
-        getTagsBytes();
-
-    /**
-     * <pre>
-     *  0=default(yes) 1=force 2=no
-     * </pre>
-     *
-     * <code>int32 sampleFlag = 6;</code>
-     */
-    int getSampleFlag();
-  }
-  /**
-   * Protobuf type {@code krpc.rpc.core.proto.RpcMeta.Trace}
-   */
-  public  static final class Trace extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:krpc.rpc.core.proto.RpcMeta.Trace)
-      TraceOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Trace.newBuilder() to construct.
-    private Trace(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private Trace() {
-      peers_ = "";
-      traceId_ = "";
-      parentSpanId_ = "";
-      spanId_ = "";
-      tags_ = "";
-      sampleFlag_ = 0;
+    private RpcMeta() {
+        direction_ = 0;
+        serviceId_ = 0;
+        msgId_ = 0;
+        sequence_ = 0;
+        timeout_ = 0;
+        retCode_ = 0;
+        attachment_ = "";
+        compress_ = 0;
     }
 
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
-      return this.unknownFields;
+        return this.unknownFields;
     }
-    private Trace(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
 
-              peers_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              traceId_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              parentSpanId_ = s;
-              break;
-            }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              spanId_ = s;
-              break;
-            }
-            case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              tags_ = s;
-              break;
-            }
-            case 48: {
-
-              sampleFlag_ = input.readInt32();
-              break;
-            }
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
+    private RpcMeta(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    case 8: {
+                        int rawValue = input.readEnum();
+
+                        direction_ = rawValue;
+                        break;
+                    }
+                    case 16: {
+
+                        serviceId_ = input.readInt32();
+                        break;
+                    }
+                    case 24: {
+
+                        msgId_ = input.readInt32();
+                        break;
+                    }
+                    case 32: {
+
+                        sequence_ = input.readInt32();
+                        break;
+                    }
+                    case 40: {
+
+                        timeout_ = input.readInt32();
+                        break;
+                    }
+                    case 48: {
+
+                        retCode_ = input.readInt32();
+                        break;
+                    }
+                    case 58: {
+                        krpc.rpc.core.proto.RpcMeta.Trace.Builder subBuilder = null;
+                        if (trace_ != null) {
+                            subBuilder = trace_.toBuilder();
+                        }
+                        trace_ = input.readMessage(krpc.rpc.core.proto.RpcMeta.Trace.parser(), extensionRegistry);
+                        if (subBuilder != null) {
+                            subBuilder.mergeFrom(trace_);
+                            trace_ = subBuilder.buildPartial();
+                        }
+
+                        break;
+                    }
+                    case 66: {
+                        java.lang.String s = input.readStringRequireUtf8();
+
+                        attachment_ = s;
+                        break;
+                    }
+                    case 72: {
+
+                        compress_ = input.readInt32();
+                        break;
+                    }
+                    default: {
+                        if (!parseUnknownFieldProto3(
+                                input, unknownFields, extensionRegistry, tag)) {
+                            done = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                    e).setUnfinishedMessage(this);
+        } finally {
+            this.unknownFields = unknownFields.build();
+            makeExtensionsImmutable();
+        }
     }
+
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
+    getDescriptor() {
+        return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              krpc.rpc.core.proto.RpcMeta.Trace.class, krpc.rpc.core.proto.RpcMeta.Trace.Builder.class);
+    internalGetFieldAccessorTable() {
+        return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        krpc.rpc.core.proto.RpcMeta.class, krpc.rpc.core.proto.RpcMeta.Builder.class);
     }
 
-    public static final int PEERS_FIELD_NUMBER = 1;
-    private volatile java.lang.Object peers_;
     /**
-     * <pre>
-     * ip:port for each hop, format: addr1,addr2,...
-     * </pre>
-     *
-     * <code>string peers = 1;</code>
+     * Protobuf enum {@code krpc.rpc.core.proto.RpcMeta.Direction}
      */
-    public java.lang.String getPeers() {
-      java.lang.Object ref = peers_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        peers_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * ip:port for each hop, format: addr1,addr2,...
-     * </pre>
-     *
-     * <code>string peers = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPeersBytes() {
-      java.lang.Object ref = peers_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        peers_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public enum Direction
+            implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>INVALID_DIRECTION = 0;</code>
+         */
+        INVALID_DIRECTION(0),
+        /**
+         * <code>REQUEST = 1;</code>
+         */
+        REQUEST(1),
+        /**
+         * <code>RESPONSE = 2;</code>
+         */
+        RESPONSE(2),
+        UNRECOGNIZED(-1),;
+
+        /**
+         * <code>INVALID_DIRECTION = 0;</code>
+         */
+        public static final int INVALID_DIRECTION_VALUE = 0;
+        /**
+         * <code>REQUEST = 1;</code>
+         */
+        public static final int REQUEST_VALUE = 1;
+        /**
+         * <code>RESPONSE = 2;</code>
+         */
+        public static final int RESPONSE_VALUE = 2;
+
+
+        public final int getNumber() {
+            if (this == UNRECOGNIZED) {
+                throw new java.lang.IllegalArgumentException(
+                        "Can't get the number of an unknown enum value.");
+            }
+            return value;
+        }
+
+        /**
+         * @deprecated Use {@link #forNumber(int)} instead.
+         */
+        @java.lang.Deprecated
+        public static Direction valueOf(int value) {
+            return forNumber(value);
+        }
+
+        public static Direction forNumber(int value) {
+            switch (value) {
+                case 0:
+                    return INVALID_DIRECTION;
+                case 1:
+                    return REQUEST;
+                case 2:
+                    return RESPONSE;
+                default:
+                    return null;
+            }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<Direction>
+        internalGetValueMap() {
+            return internalValueMap;
+        }
+
+        private static final com.google.protobuf.Internal.EnumLiteMap<
+                Direction> internalValueMap =
+                new com.google.protobuf.Internal.EnumLiteMap<Direction>() {
+                    public Direction findValueByNumber(int number) {
+                        return Direction.forNumber(number);
+                    }
+                };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+            return getDescriptor().getValues().get(ordinal());
+        }
+
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+            return getDescriptor();
+        }
+
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+            return krpc.rpc.core.proto.RpcMeta.getDescriptor().getEnumTypes().get(0);
+        }
+
+        private static final Direction[] VALUES = values();
+
+        public static Direction valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            if (desc.getType() != getDescriptor()) {
+                throw new java.lang.IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type.");
+            }
+            if (desc.getIndex() == -1) {
+                return UNRECOGNIZED;
+            }
+            return VALUES[desc.getIndex()];
+        }
+
+        private final int value;
+
+        private Direction(int value) {
+            this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:krpc.rpc.core.proto.RpcMeta.Direction)
     }
 
-    public static final int TRACEID_FIELD_NUMBER = 2;
-    private volatile java.lang.Object traceId_;
-    /**
-     * <code>string traceId = 2;</code>
-     */
-    public java.lang.String getTraceId() {
-      java.lang.Object ref = traceId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        traceId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string traceId = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTraceIdBytes() {
-      java.lang.Object ref = traceId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        traceId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public interface TraceOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:krpc.rpc.core.proto.RpcMeta.Trace)
+            com.google.protobuf.MessageOrBuilder {
+
+        /**
+         * <pre>
+         * ip:port for each hop, format: addr1,addr2,...
+         * </pre>
+         *
+         * <code>string peers = 1;</code>
+         */
+        java.lang.String getPeers();
+
+        /**
+         * <pre>
+         * ip:port for each hop, format: addr1,addr2,...
+         * </pre>
+         *
+         * <code>string peers = 1;</code>
+         */
+        com.google.protobuf.ByteString
+        getPeersBytes();
+
+        /**
+         * <code>string traceId = 2;</code>
+         */
+        java.lang.String getTraceId();
+
+        /**
+         * <code>string traceId = 2;</code>
+         */
+        com.google.protobuf.ByteString
+        getTraceIdBytes();
+
+        /**
+         * <pre>
+         * may be empty
+         * </pre>
+         *
+         * <code>string parentSpanId = 3;</code>
+         */
+        java.lang.String getParentSpanId();
+
+        /**
+         * <pre>
+         * may be empty
+         * </pre>
+         *
+         * <code>string parentSpanId = 3;</code>
+         */
+        com.google.protobuf.ByteString
+        getParentSpanIdBytes();
+
+        /**
+         * <code>string spanId = 4;</code>
+         */
+        java.lang.String getSpanId();
+
+        /**
+         * <code>string spanId = 4;</code>
+         */
+        com.google.protobuf.ByteString
+        getSpanIdBytes();
+
+        /**
+         * <pre>
+         * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+         * </pre>
+         *
+         * <code>string tags = 5;</code>
+         */
+        java.lang.String getTags();
+
+        /**
+         * <pre>
+         * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+         * </pre>
+         *
+         * <code>string tags = 5;</code>
+         */
+        com.google.protobuf.ByteString
+        getTagsBytes();
+
+        /**
+         * <pre>
+         *  0=default(yes) 1=force 2=no
+         * </pre>
+         *
+         * <code>int32 sampleFlag = 6;</code>
+         */
+        int getSampleFlag();
     }
 
-    public static final int PARENTSPANID_FIELD_NUMBER = 3;
-    private volatile java.lang.Object parentSpanId_;
-    /**
-     * <pre>
-     * may be empty
-     * </pre>
-     *
-     * <code>string parentSpanId = 3;</code>
-     */
-    public java.lang.String getParentSpanId() {
-      java.lang.Object ref = parentSpanId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        parentSpanId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * may be empty
-     * </pre>
-     *
-     * <code>string parentSpanId = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getParentSpanIdBytes() {
-      java.lang.Object ref = parentSpanId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        parentSpanId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int SPANID_FIELD_NUMBER = 4;
-    private volatile java.lang.Object spanId_;
-    /**
-     * <code>string spanId = 4;</code>
-     */
-    public java.lang.String getSpanId() {
-      java.lang.Object ref = spanId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        spanId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string spanId = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSpanIdBytes() {
-      java.lang.Object ref = spanId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        spanId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int TAGS_FIELD_NUMBER = 5;
-    private volatile java.lang.Object tags_;
-    /**
-     * <pre>
-     * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-     * </pre>
-     *
-     * <code>string tags = 5;</code>
-     */
-    public java.lang.String getTags() {
-      java.lang.Object ref = tags_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        tags_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-     * </pre>
-     *
-     * <code>string tags = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTagsBytes() {
-      java.lang.Object ref = tags_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        tags_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int SAMPLEFLAG_FIELD_NUMBER = 6;
-    private int sampleFlag_;
-    /**
-     * <pre>
-     *  0=default(yes) 1=force 2=no
-     * </pre>
-     *
-     * <code>int32 sampleFlag = 6;</code>
-     */
-    public int getSampleFlag() {
-      return sampleFlag_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getPeersBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, peers_);
-      }
-      if (!getTraceIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, traceId_);
-      }
-      if (!getParentSpanIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, parentSpanId_);
-      }
-      if (!getSpanIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, spanId_);
-      }
-      if (!getTagsBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, tags_);
-      }
-      if (sampleFlag_ != 0) {
-        output.writeInt32(6, sampleFlag_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getPeersBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, peers_);
-      }
-      if (!getTraceIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, traceId_);
-      }
-      if (!getParentSpanIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, parentSpanId_);
-      }
-      if (!getSpanIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, spanId_);
-      }
-      if (!getTagsBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, tags_);
-      }
-      if (sampleFlag_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(6, sampleFlag_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof krpc.rpc.core.proto.RpcMeta.Trace)) {
-        return super.equals(obj);
-      }
-      krpc.rpc.core.proto.RpcMeta.Trace other = (krpc.rpc.core.proto.RpcMeta.Trace) obj;
-
-      boolean result = true;
-      result = result && getPeers()
-          .equals(other.getPeers());
-      result = result && getTraceId()
-          .equals(other.getTraceId());
-      result = result && getParentSpanId()
-          .equals(other.getParentSpanId());
-      result = result && getSpanId()
-          .equals(other.getSpanId());
-      result = result && getTags()
-          .equals(other.getTags());
-      result = result && (getSampleFlag()
-          == other.getSampleFlag());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PEERS_FIELD_NUMBER;
-      hash = (53 * hash) + getPeers().hashCode();
-      hash = (37 * hash) + TRACEID_FIELD_NUMBER;
-      hash = (53 * hash) + getTraceId().hashCode();
-      hash = (37 * hash) + PARENTSPANID_FIELD_NUMBER;
-      hash = (53 * hash) + getParentSpanId().hashCode();
-      hash = (37 * hash) + SPANID_FIELD_NUMBER;
-      hash = (53 * hash) + getSpanId().hashCode();
-      hash = (37 * hash) + TAGS_FIELD_NUMBER;
-      hash = (53 * hash) + getTags().hashCode();
-      hash = (37 * hash) + SAMPLEFLAG_FIELD_NUMBER;
-      hash = (53 * hash) + getSampleFlag();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(krpc.rpc.core.proto.RpcMeta.Trace prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * Protobuf type {@code krpc.rpc.core.proto.RpcMeta.Trace}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:krpc.rpc.core.proto.RpcMeta.Trace)
-        krpc.rpc.core.proto.RpcMeta.TraceOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
-      }
+    public static final class Trace extends
+            com.google.protobuf.GeneratedMessageV3 implements
+            // @@protoc_insertion_point(message_implements:krpc.rpc.core.proto.RpcMeta.Trace)
+            TraceOrBuilder {
+        private static final long serialVersionUID = 0L;
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                krpc.rpc.core.proto.RpcMeta.Trace.class, krpc.rpc.core.proto.RpcMeta.Trace.Builder.class);
-      }
-
-      // Construct using krpc.rpc.core.proto.RpcMeta.Trace.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        // Use Trace.newBuilder() to construct.
+        private Trace(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            super(builder);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        peers_ = "";
 
-        traceId_ = "";
-
-        parentSpanId_ = "";
-
-        spanId_ = "";
-
-        tags_ = "";
-
-        sampleFlag_ = 0;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
-      }
-
-      @java.lang.Override
-      public krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstanceForType() {
-        return krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public krpc.rpc.core.proto.RpcMeta.Trace build() {
-        krpc.rpc.core.proto.RpcMeta.Trace result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        private Trace() {
+            peers_ = "";
+            traceId_ = "";
+            parentSpanId_ = "";
+            spanId_ = "";
+            tags_ = "";
+            sampleFlag_ = 0;
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public krpc.rpc.core.proto.RpcMeta.Trace buildPartial() {
-        krpc.rpc.core.proto.RpcMeta.Trace result = new krpc.rpc.core.proto.RpcMeta.Trace(this);
-        result.peers_ = peers_;
-        result.traceId_ = traceId_;
-        result.parentSpanId_ = parentSpanId_;
-        result.spanId_ = spanId_;
-        result.tags_ = tags_;
-        result.sampleFlag_ = sampleFlag_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof krpc.rpc.core.proto.RpcMeta.Trace) {
-          return mergeFrom((krpc.rpc.core.proto.RpcMeta.Trace)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+            return this.unknownFields;
         }
-      }
 
-      public Builder mergeFrom(krpc.rpc.core.proto.RpcMeta.Trace other) {
-        if (other == krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance()) return this;
-        if (!other.getPeers().isEmpty()) {
-          peers_ = other.peers_;
-          onChanged();
+        private Trace(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
+            }
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                    com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 10: {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            peers_ = s;
+                            break;
+                        }
+                        case 18: {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            traceId_ = s;
+                            break;
+                        }
+                        case 26: {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            parentSpanId_ = s;
+                            break;
+                        }
+                        case 34: {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            spanId_ = s;
+                            break;
+                        }
+                        case 42: {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            tags_ = s;
+                            break;
+                        }
+                        case 48: {
+
+                            sampleFlag_ = input.readInt32();
+                            break;
+                        }
+                        default: {
+                            if (!parseUnknownFieldProto3(
+                                    input, unknownFields, extensionRegistry, tag)) {
+                                done = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e).setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
         }
-        if (!other.getTraceId().isEmpty()) {
-          traceId_ = other.traceId_;
-          onChanged();
-        }
-        if (!other.getParentSpanId().isEmpty()) {
-          parentSpanId_ = other.parentSpanId_;
-          onChanged();
-        }
-        if (!other.getSpanId().isEmpty()) {
-          spanId_ = other.spanId_;
-          onChanged();
-        }
-        if (!other.getTags().isEmpty()) {
-          tags_ = other.tags_;
-          onChanged();
-        }
-        if (other.getSampleFlag() != 0) {
-          setSampleFlag(other.getSampleFlag());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
 
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        krpc.rpc.core.proto.RpcMeta.Trace parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (krpc.rpc.core.proto.RpcMeta.Trace) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object peers_ = "";
-      /**
-       * <pre>
-       * ip:port for each hop, format: addr1,addr2,...
-       * </pre>
-       *
-       * <code>string peers = 1;</code>
-       */
-      public java.lang.String getPeers() {
-        java.lang.Object ref = peers_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          peers_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ip:port for each hop, format: addr1,addr2,...
-       * </pre>
-       *
-       * <code>string peers = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getPeersBytes() {
-        java.lang.Object ref = peers_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          peers_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ip:port for each hop, format: addr1,addr2,...
-       * </pre>
-       *
-       * <code>string peers = 1;</code>
-       */
-      public Builder setPeers(
-          java.lang.String value) {
-        if (value == null) value = "";
-  
-        peers_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ip:port for each hop, format: addr1,addr2,...
-       * </pre>
-       *
-       * <code>string peers = 1;</code>
-       */
-      public Builder clearPeers() {
-        
-        peers_ = getDefaultInstance().getPeers();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ip:port for each hop, format: addr1,addr2,...
-       * </pre>
-       *
-       * <code>string peers = 1;</code>
-       */
-      public Builder setPeersBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        peers_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object traceId_ = "";
-      /**
-       * <code>string traceId = 2;</code>
-       */
-      public java.lang.String getTraceId() {
-        java.lang.Object ref = traceId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          traceId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string traceId = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getTraceIdBytes() {
-        java.lang.Object ref = traceId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          traceId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string traceId = 2;</code>
-       */
-      public Builder setTraceId(
-          java.lang.String value) {
-        if (value == null) value = "";
-  
-        traceId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string traceId = 2;</code>
-       */
-      public Builder clearTraceId() {
-        
-        traceId_ = getDefaultInstance().getTraceId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string traceId = 2;</code>
-       */
-      public Builder setTraceIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        traceId_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object parentSpanId_ = "";
-      /**
-       * <pre>
-       * may be empty
-       * </pre>
-       *
-       * <code>string parentSpanId = 3;</code>
-       */
-      public java.lang.String getParentSpanId() {
-        java.lang.Object ref = parentSpanId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          parentSpanId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * may be empty
-       * </pre>
-       *
-       * <code>string parentSpanId = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getParentSpanIdBytes() {
-        java.lang.Object ref = parentSpanId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          parentSpanId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * may be empty
-       * </pre>
-       *
-       * <code>string parentSpanId = 3;</code>
-       */
-      public Builder setParentSpanId(
-          java.lang.String value) {
-        if (value == null) value = "";
-  
-        parentSpanId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * may be empty
-       * </pre>
-       *
-       * <code>string parentSpanId = 3;</code>
-       */
-      public Builder clearParentSpanId() {
-        
-        parentSpanId_ = getDefaultInstance().getParentSpanId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * may be empty
-       * </pre>
-       *
-       * <code>string parentSpanId = 3;</code>
-       */
-      public Builder setParentSpanIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        parentSpanId_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object spanId_ = "";
-      /**
-       * <code>string spanId = 4;</code>
-       */
-      public java.lang.String getSpanId() {
-        java.lang.Object ref = spanId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          spanId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string spanId = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSpanIdBytes() {
-        java.lang.Object ref = spanId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          spanId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string spanId = 4;</code>
-       */
-      public Builder setSpanId(
-          java.lang.String value) {
-        if (value == null) value = "";
-  
-        spanId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string spanId = 4;</code>
-       */
-      public Builder clearSpanId() {
-        
-        spanId_ = getDefaultInstance().getSpanId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string spanId = 4;</code>
-       */
-      public Builder setSpanIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        spanId_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object tags_ = "";
-      /**
-       * <pre>
-       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-       * </pre>
-       *
-       * <code>string tags = 5;</code>
-       */
-      public java.lang.String getTags() {
-        java.lang.Object ref = tags_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          tags_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-       * </pre>
-       *
-       * <code>string tags = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getTagsBytes() {
-        java.lang.Object ref = tags_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          tags_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-       * </pre>
-       *
-       * <code>string tags = 5;</code>
-       */
-      public Builder setTags(
-          java.lang.String value) {
-        if (value == null) value = "";
-  
-        tags_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-       * </pre>
-       *
-       * <code>string tags = 5;</code>
-       */
-      public Builder clearTags() {
-        
-        tags_ = getDefaultInstance().getTags();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
-       * </pre>
-       *
-       * <code>string tags = 5;</code>
-       */
-      public Builder setTagsBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        tags_ = value;
-        onChanged();
-        return this;
-      }
-
-      private int sampleFlag_ ;
-      /**
-       * <pre>
-       *  0=default(yes) 1=force 2=no
-       * </pre>
-       *
-       * <code>int32 sampleFlag = 6;</code>
-       */
-      public int getSampleFlag() {
-        return sampleFlag_;
-      }
-      /**
-       * <pre>
-       *  0=default(yes) 1=force 2=no
-       * </pre>
-       *
-       * <code>int32 sampleFlag = 6;</code>
-       */
-      public Builder setSampleFlag(int value) {
-        
-        sampleFlag_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       *  0=default(yes) 1=force 2=no
-       * </pre>
-       *
-       * <code>int32 sampleFlag = 6;</code>
-       */
-      public Builder clearSampleFlag() {
-        
-        sampleFlag_ = 0;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:krpc.rpc.core.proto.RpcMeta.Trace)
-    }
-
-    // @@protoc_insertion_point(class_scope:krpc.rpc.core.proto.RpcMeta.Trace)
-    private static final krpc.rpc.core.proto.RpcMeta.Trace DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new krpc.rpc.core.proto.RpcMeta.Trace();
-    }
-
-    public static krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<Trace>
-        PARSER = new com.google.protobuf.AbstractParser<Trace>() {
-      @java.lang.Override
-      public Trace parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Trace(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Trace> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Trace> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public static final int DIRECTION_FIELD_NUMBER = 1;
-  private int direction_;
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
-   */
-  public int getDirectionValue() {
-    return direction_;
-  }
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
-   */
-  public krpc.rpc.core.proto.RpcMeta.Direction getDirection() {
-    @SuppressWarnings("deprecation")
-    krpc.rpc.core.proto.RpcMeta.Direction result = krpc.rpc.core.proto.RpcMeta.Direction.valueOf(direction_);
-    return result == null ? krpc.rpc.core.proto.RpcMeta.Direction.UNRECOGNIZED : result;
-  }
-
-  public static final int SERVICEID_FIELD_NUMBER = 2;
-  private int serviceId_;
-  /**
-   * <code>int32 serviceId = 2;</code>
-   */
-  public int getServiceId() {
-    return serviceId_;
-  }
-
-  public static final int MSGID_FIELD_NUMBER = 3;
-  private int msgId_;
-  /**
-   * <code>int32 msgId = 3;</code>
-   */
-  public int getMsgId() {
-    return msgId_;
-  }
-
-  public static final int SEQUENCE_FIELD_NUMBER = 4;
-  private int sequence_;
-  /**
-   * <code>int32 sequence = 4;</code>
-   */
-  public int getSequence() {
-    return sequence_;
-  }
-
-  public static final int TIMEOUT_FIELD_NUMBER = 5;
-  private int timeout_;
-  /**
-   * <pre>
-   * client side timeout in milliseconds
-   * </pre>
-   *
-   * <code>int32 timeout = 5;</code>
-   */
-  public int getTimeout() {
-    return timeout_;
-  }
-
-  public static final int RETCODE_FIELD_NUMBER = 6;
-  private int retCode_;
-  /**
-   * <code>int32 retCode = 6;</code>
-   */
-  public int getRetCode() {
-    return retCode_;
-  }
-
-  public static final int TRACE_FIELD_NUMBER = 7;
-  private krpc.rpc.core.proto.RpcMeta.Trace trace_;
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-   */
-  public boolean hasTrace() {
-    return trace_ != null;
-  }
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-   */
-  public krpc.rpc.core.proto.RpcMeta.Trace getTrace() {
-    return trace_ == null ? krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance() : trace_;
-  }
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-   */
-  public krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder() {
-    return getTrace();
-  }
-
-  public static final int ATTACHMENT_FIELD_NUMBER = 8;
-  private volatile java.lang.Object attachment_;
-  /**
-   * <pre>
-   * oob data
-   * </pre>
-   *
-   * <code>string attachment = 8;</code>
-   */
-  public java.lang.String getAttachment() {
-    java.lang.Object ref = attachment_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      attachment_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * oob data
-   * </pre>
-   *
-   * <code>string attachment = 8;</code>
-   */
-  public com.google.protobuf.ByteString
-      getAttachmentBytes() {
-    java.lang.Object ref = attachment_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      attachment_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int COMPRESS_FIELD_NUMBER = 9;
-  private int compress_;
-  /**
-   * <pre>
-   * compress type, 0=no compress, 1=gzip 2=snappy
-   * </pre>
-   *
-   * <code>int32 compress = 9;</code>
-   */
-  public int getCompress() {
-    return compress_;
-  }
-
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (direction_ != krpc.rpc.core.proto.RpcMeta.Direction.INVALID_DIRECTION.getNumber()) {
-      output.writeEnum(1, direction_);
-    }
-    if (serviceId_ != 0) {
-      output.writeInt32(2, serviceId_);
-    }
-    if (msgId_ != 0) {
-      output.writeInt32(3, msgId_);
-    }
-    if (sequence_ != 0) {
-      output.writeInt32(4, sequence_);
-    }
-    if (timeout_ != 0) {
-      output.writeInt32(5, timeout_);
-    }
-    if (retCode_ != 0) {
-      output.writeInt32(6, retCode_);
-    }
-    if (trace_ != null) {
-      output.writeMessage(7, getTrace());
-    }
-    if (!getAttachmentBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, attachment_);
-    }
-    if (compress_ != 0) {
-      output.writeInt32(9, compress_);
-    }
-    unknownFields.writeTo(output);
-  }
-
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (direction_ != krpc.rpc.core.proto.RpcMeta.Direction.INVALID_DIRECTION.getNumber()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(1, direction_);
-    }
-    if (serviceId_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(2, serviceId_);
-    }
-    if (msgId_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, msgId_);
-    }
-    if (sequence_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, sequence_);
-    }
-    if (timeout_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(5, timeout_);
-    }
-    if (retCode_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(6, retCode_);
-    }
-    if (trace_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(7, getTrace());
-    }
-    if (!getAttachmentBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, attachment_);
-    }
-    if (compress_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(9, compress_);
-    }
-    size += unknownFields.getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
-
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof krpc.rpc.core.proto.RpcMeta)) {
-      return super.equals(obj);
-    }
-    krpc.rpc.core.proto.RpcMeta other = (krpc.rpc.core.proto.RpcMeta) obj;
-
-    boolean result = true;
-    result = result && direction_ == other.direction_;
-    result = result && (getServiceId()
-        == other.getServiceId());
-    result = result && (getMsgId()
-        == other.getMsgId());
-    result = result && (getSequence()
-        == other.getSequence());
-    result = result && (getTimeout()
-        == other.getTimeout());
-    result = result && (getRetCode()
-        == other.getRetCode());
-    result = result && (hasTrace() == other.hasTrace());
-    if (hasTrace()) {
-      result = result && getTrace()
-          .equals(other.getTrace());
-    }
-    result = result && getAttachment()
-        .equals(other.getAttachment());
-    result = result && (getCompress()
-        == other.getCompress());
-    result = result && unknownFields.equals(other.unknownFields);
-    return result;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + DIRECTION_FIELD_NUMBER;
-    hash = (53 * hash) + direction_;
-    hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
-    hash = (53 * hash) + getServiceId();
-    hash = (37 * hash) + MSGID_FIELD_NUMBER;
-    hash = (53 * hash) + getMsgId();
-    hash = (37 * hash) + SEQUENCE_FIELD_NUMBER;
-    hash = (53 * hash) + getSequence();
-    hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
-    hash = (53 * hash) + getTimeout();
-    hash = (37 * hash) + RETCODE_FIELD_NUMBER;
-    hash = (53 * hash) + getRetCode();
-    if (hasTrace()) {
-      hash = (37 * hash) + TRACE_FIELD_NUMBER;
-      hash = (53 * hash) + getTrace().hashCode();
-    }
-    hash = (37 * hash) + ATTACHMENT_FIELD_NUMBER;
-    hash = (53 * hash) + getAttachment().hashCode();
-    hash = (37 * hash) + COMPRESS_FIELD_NUMBER;
-    hash = (53 * hash) + getCompress();
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static krpc.rpc.core.proto.RpcMeta parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(krpc.rpc.core.proto.RpcMeta prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code krpc.rpc.core.proto.RpcMeta}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:krpc.rpc.core.proto.RpcMeta)
-      krpc.rpc.core.proto.RpcMetaOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
+        public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              krpc.rpc.core.proto.RpcMeta.class, krpc.rpc.core.proto.RpcMeta.Builder.class);
-    }
-
-    // Construct using krpc.rpc.core.proto.RpcMeta.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
-
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      direction_ = 0;
-
-      serviceId_ = 0;
-
-      msgId_ = 0;
-
-      sequence_ = 0;
-
-      timeout_ = 0;
-
-      retCode_ = 0;
-
-      if (traceBuilder_ == null) {
-        trace_ = null;
-      } else {
-        trace_ = null;
-        traceBuilder_ = null;
-      }
-      attachment_ = "";
-
-      compress_ = 0;
-
-      return this;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_descriptor;
-    }
-
-    @java.lang.Override
-    public krpc.rpc.core.proto.RpcMeta getDefaultInstanceForType() {
-      return krpc.rpc.core.proto.RpcMeta.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public krpc.rpc.core.proto.RpcMeta build() {
-      krpc.rpc.core.proto.RpcMeta result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public krpc.rpc.core.proto.RpcMeta buildPartial() {
-      krpc.rpc.core.proto.RpcMeta result = new krpc.rpc.core.proto.RpcMeta(this);
-      result.direction_ = direction_;
-      result.serviceId_ = serviceId_;
-      result.msgId_ = msgId_;
-      result.sequence_ = sequence_;
-      result.timeout_ = timeout_;
-      result.retCode_ = retCode_;
-      if (traceBuilder_ == null) {
-        result.trace_ = trace_;
-      } else {
-        result.trace_ = traceBuilder_.build();
-      }
-      result.attachment_ = attachment_;
-      result.compress_ = compress_;
-      onBuilt();
-      return result;
-    }
-
-    @java.lang.Override
-    public Builder clone() {
-      return (Builder) super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return (Builder) super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return (Builder) super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return (Builder) super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return (Builder) super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return (Builder) super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof krpc.rpc.core.proto.RpcMeta) {
-        return mergeFrom((krpc.rpc.core.proto.RpcMeta)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(krpc.rpc.core.proto.RpcMeta other) {
-      if (other == krpc.rpc.core.proto.RpcMeta.getDefaultInstance()) return this;
-      if (other.direction_ != 0) {
-        setDirectionValue(other.getDirectionValue());
-      }
-      if (other.getServiceId() != 0) {
-        setServiceId(other.getServiceId());
-      }
-      if (other.getMsgId() != 0) {
-        setMsgId(other.getMsgId());
-      }
-      if (other.getSequence() != 0) {
-        setSequence(other.getSequence());
-      }
-      if (other.getTimeout() != 0) {
-        setTimeout(other.getTimeout());
-      }
-      if (other.getRetCode() != 0) {
-        setRetCode(other.getRetCode());
-      }
-      if (other.hasTrace()) {
-        mergeTrace(other.getTrace());
-      }
-      if (!other.getAttachment().isEmpty()) {
-        attachment_ = other.attachment_;
-        onChanged();
-      }
-      if (other.getCompress() != 0) {
-        setCompress(other.getCompress());
-      }
-      this.mergeUnknownFields(other.unknownFields);
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      krpc.rpc.core.proto.RpcMeta parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (krpc.rpc.core.proto.RpcMeta) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
+            return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
         }
-      }
-      return this;
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            krpc.rpc.core.proto.RpcMeta.Trace.class, krpc.rpc.core.proto.RpcMeta.Trace.Builder.class);
+        }
+
+        public static final int PEERS_FIELD_NUMBER = 1;
+        private volatile java.lang.Object peers_;
+
+        /**
+         * <pre>
+         * ip:port for each hop, format: addr1,addr2,...
+         * </pre>
+         *
+         * <code>string peers = 1;</code>
+         */
+        public java.lang.String getPeers() {
+            java.lang.Object ref = peers_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                peers_ = s;
+                return s;
+            }
+        }
+
+        /**
+         * <pre>
+         * ip:port for each hop, format: addr1,addr2,...
+         * </pre>
+         *
+         * <code>string peers = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+        getPeersBytes() {
+            java.lang.Object ref = peers_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                peers_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int TRACEID_FIELD_NUMBER = 2;
+        private volatile java.lang.Object traceId_;
+
+        /**
+         * <code>string traceId = 2;</code>
+         */
+        public java.lang.String getTraceId() {
+            java.lang.Object ref = traceId_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                traceId_ = s;
+                return s;
+            }
+        }
+
+        /**
+         * <code>string traceId = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+        getTraceIdBytes() {
+            java.lang.Object ref = traceId_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                traceId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int PARENTSPANID_FIELD_NUMBER = 3;
+        private volatile java.lang.Object parentSpanId_;
+
+        /**
+         * <pre>
+         * may be empty
+         * </pre>
+         *
+         * <code>string parentSpanId = 3;</code>
+         */
+        public java.lang.String getParentSpanId() {
+            java.lang.Object ref = parentSpanId_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                parentSpanId_ = s;
+                return s;
+            }
+        }
+
+        /**
+         * <pre>
+         * may be empty
+         * </pre>
+         *
+         * <code>string parentSpanId = 3;</code>
+         */
+        public com.google.protobuf.ByteString
+        getParentSpanIdBytes() {
+            java.lang.Object ref = parentSpanId_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                parentSpanId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int SPANID_FIELD_NUMBER = 4;
+        private volatile java.lang.Object spanId_;
+
+        /**
+         * <code>string spanId = 4;</code>
+         */
+        public java.lang.String getSpanId() {
+            java.lang.Object ref = spanId_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                spanId_ = s;
+                return s;
+            }
+        }
+
+        /**
+         * <code>string spanId = 4;</code>
+         */
+        public com.google.protobuf.ByteString
+        getSpanIdBytes() {
+            java.lang.Object ref = spanId_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                spanId_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int TAGS_FIELD_NUMBER = 5;
+        private volatile java.lang.Object tags_;
+
+        /**
+         * <pre>
+         * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+         * </pre>
+         *
+         * <code>string tags = 5;</code>
+         */
+        public java.lang.String getTags() {
+            java.lang.Object ref = tags_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                tags_ = s;
+                return s;
+            }
+        }
+
+        /**
+         * <pre>
+         * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+         * </pre>
+         *
+         * <code>string tags = 5;</code>
+         */
+        public com.google.protobuf.ByteString
+        getTagsBytes() {
+            java.lang.Object ref = tags_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                tags_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int SAMPLEFLAG_FIELD_NUMBER = 6;
+        private int sampleFlag_;
+
+        /**
+         * <pre>
+         *  0=default(yes) 1=force 2=no
+         * </pre>
+         *
+         * <code>int32 sampleFlag = 6;</code>
+         */
+        public int getSampleFlag() {
+            return sampleFlag_;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            if (!getPeersBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 1, peers_);
+            }
+            if (!getTraceIdBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 2, traceId_);
+            }
+            if (!getParentSpanIdBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 3, parentSpanId_);
+            }
+            if (!getSpanIdBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 4, spanId_);
+            }
+            if (!getTagsBytes().isEmpty()) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 5, tags_);
+            }
+            if (sampleFlag_ != 0) {
+                output.writeInt32(6, sampleFlag_);
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (!getPeersBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, peers_);
+            }
+            if (!getTraceIdBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, traceId_);
+            }
+            if (!getParentSpanIdBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, parentSpanId_);
+            }
+            if (!getSpanIdBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, spanId_);
+            }
+            if (!getTagsBytes().isEmpty()) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, tags_);
+            }
+            if (sampleFlag_ != 0) {
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt32Size(6, sampleFlag_);
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof krpc.rpc.core.proto.RpcMeta.Trace)) {
+                return super.equals(obj);
+            }
+            krpc.rpc.core.proto.RpcMeta.Trace other = (krpc.rpc.core.proto.RpcMeta.Trace) obj;
+
+            boolean result = true;
+            result = result && getPeers()
+                    .equals(other.getPeers());
+            result = result && getTraceId()
+                    .equals(other.getTraceId());
+            result = result && getParentSpanId()
+                    .equals(other.getParentSpanId());
+            result = result && getSpanId()
+                    .equals(other.getSpanId());
+            result = result && getTags()
+                    .equals(other.getTags());
+            result = result && (getSampleFlag()
+                    == other.getSampleFlag());
+            result = result && unknownFields.equals(other.unknownFields);
+            return result;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + PEERS_FIELD_NUMBER;
+            hash = (53 * hash) + getPeers().hashCode();
+            hash = (37 * hash) + TRACEID_FIELD_NUMBER;
+            hash = (53 * hash) + getTraceId().hashCode();
+            hash = (37 * hash) + PARENTSPANID_FIELD_NUMBER;
+            hash = (53 * hash) + getParentSpanId().hashCode();
+            hash = (37 * hash) + SPANID_FIELD_NUMBER;
+            hash = (53 * hash) + getSpanId().hashCode();
+            hash = (37 * hash) + TAGS_FIELD_NUMBER;
+            hash = (53 * hash) + getTags().hashCode();
+            hash = (37 * hash) + SAMPLEFLAG_FIELD_NUMBER;
+            hash = (53 * hash) + getSampleFlag();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+                java.nio.ByteBuffer data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input);
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3
+                    .parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(krpc.rpc.core.proto.RpcMeta.Trace prototype) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                    ? new Builder() : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * Protobuf type {@code krpc.rpc.core.proto.RpcMeta.Trace}
+         */
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                // @@protoc_insertion_point(builder_implements:krpc.rpc.core.proto.RpcMeta.Trace)
+                krpc.rpc.core.proto.RpcMeta.TraceOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+                return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+                return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_fieldAccessorTable
+                        .ensureFieldAccessorsInitialized(
+                                krpc.rpc.core.proto.RpcMeta.Trace.class, krpc.rpc.core.proto.RpcMeta.Trace.Builder.class);
+            }
+
+            // Construct using krpc.rpc.core.proto.RpcMeta.Trace.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessageV3
+                        .alwaysUseFieldBuilders) {
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                peers_ = "";
+
+                traceId_ = "";
+
+                parentSpanId_ = "";
+
+                spanId_ = "";
+
+                tags_ = "";
+
+                sampleFlag_ = 0;
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+                return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_Trace_descriptor;
+            }
+
+            @java.lang.Override
+            public krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstanceForType() {
+                return krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public krpc.rpc.core.proto.RpcMeta.Trace build() {
+                krpc.rpc.core.proto.RpcMeta.Trace result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public krpc.rpc.core.proto.RpcMeta.Trace buildPartial() {
+                krpc.rpc.core.proto.RpcMeta.Trace result = new krpc.rpc.core.proto.RpcMeta.Trace(this);
+                result.peers_ = peers_;
+                result.traceId_ = traceId_;
+                result.parentSpanId_ = parentSpanId_;
+                result.spanId_ = spanId_;
+                result.tags_ = tags_;
+                result.sampleFlag_ = sampleFlag_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return (Builder) super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return (Builder) super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return (Builder) super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index, java.lang.Object value) {
+                return (Builder) super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return (Builder) super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof krpc.rpc.core.proto.RpcMeta.Trace) {
+                    return mergeFrom((krpc.rpc.core.proto.RpcMeta.Trace) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(krpc.rpc.core.proto.RpcMeta.Trace other) {
+                if (other == krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance()) return this;
+                if (!other.getPeers().isEmpty()) {
+                    peers_ = other.peers_;
+                    onChanged();
+                }
+                if (!other.getTraceId().isEmpty()) {
+                    traceId_ = other.traceId_;
+                    onChanged();
+                }
+                if (!other.getParentSpanId().isEmpty()) {
+                    parentSpanId_ = other.parentSpanId_;
+                    onChanged();
+                }
+                if (!other.getSpanId().isEmpty()) {
+                    spanId_ = other.spanId_;
+                    onChanged();
+                }
+                if (!other.getTags().isEmpty()) {
+                    tags_ = other.tags_;
+                    onChanged();
+                }
+                if (other.getSampleFlag() != 0) {
+                    setSampleFlag(other.getSampleFlag());
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                krpc.rpc.core.proto.RpcMeta.Trace parsedMessage = null;
+                try {
+                    parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage = (krpc.rpc.core.proto.RpcMeta.Trace) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private java.lang.Object peers_ = "";
+
+            /**
+             * <pre>
+             * ip:port for each hop, format: addr1,addr2,...
+             * </pre>
+             *
+             * <code>string peers = 1;</code>
+             */
+            public java.lang.String getPeers() {
+                java.lang.Object ref = peers_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    peers_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * ip:port for each hop, format: addr1,addr2,...
+             * </pre>
+             *
+             * <code>string peers = 1;</code>
+             */
+            public com.google.protobuf.ByteString
+            getPeersBytes() {
+                java.lang.Object ref = peers_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    peers_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * ip:port for each hop, format: addr1,addr2,...
+             * </pre>
+             *
+             * <code>string peers = 1;</code>
+             */
+            public Builder setPeers(
+                    java.lang.String value) {
+                if (value == null) value = "";
+
+                peers_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * ip:port for each hop, format: addr1,addr2,...
+             * </pre>
+             *
+             * <code>string peers = 1;</code>
+             */
+            public Builder clearPeers() {
+
+                peers_ = getDefaultInstance().getPeers();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * ip:port for each hop, format: addr1,addr2,...
+             * </pre>
+             *
+             * <code>string peers = 1;</code>
+             */
+            public Builder setPeersBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                peers_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object traceId_ = "";
+
+            /**
+             * <code>string traceId = 2;</code>
+             */
+            public java.lang.String getTraceId() {
+                java.lang.Object ref = traceId_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    traceId_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>string traceId = 2;</code>
+             */
+            public com.google.protobuf.ByteString
+            getTraceIdBytes() {
+                java.lang.Object ref = traceId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    traceId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>string traceId = 2;</code>
+             */
+            public Builder setTraceId(
+                    java.lang.String value) {
+                if (value == null) value = "";
+
+                traceId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>string traceId = 2;</code>
+             */
+            public Builder clearTraceId() {
+
+                traceId_ = getDefaultInstance().getTraceId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>string traceId = 2;</code>
+             */
+            public Builder setTraceIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                traceId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object parentSpanId_ = "";
+
+            /**
+             * <pre>
+             * may be empty
+             * </pre>
+             *
+             * <code>string parentSpanId = 3;</code>
+             */
+            public java.lang.String getParentSpanId() {
+                java.lang.Object ref = parentSpanId_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    parentSpanId_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * may be empty
+             * </pre>
+             *
+             * <code>string parentSpanId = 3;</code>
+             */
+            public com.google.protobuf.ByteString
+            getParentSpanIdBytes() {
+                java.lang.Object ref = parentSpanId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    parentSpanId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * may be empty
+             * </pre>
+             *
+             * <code>string parentSpanId = 3;</code>
+             */
+            public Builder setParentSpanId(
+                    java.lang.String value) {
+                if (value == null) value = "";
+
+                parentSpanId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * may be empty
+             * </pre>
+             *
+             * <code>string parentSpanId = 3;</code>
+             */
+            public Builder clearParentSpanId() {
+
+                parentSpanId_ = getDefaultInstance().getParentSpanId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * may be empty
+             * </pre>
+             *
+             * <code>string parentSpanId = 3;</code>
+             */
+            public Builder setParentSpanIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                parentSpanId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object spanId_ = "";
+
+            /**
+             * <code>string spanId = 4;</code>
+             */
+            public java.lang.String getSpanId() {
+                java.lang.Object ref = spanId_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    spanId_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <code>string spanId = 4;</code>
+             */
+            public com.google.protobuf.ByteString
+            getSpanIdBytes() {
+                java.lang.Object ref = spanId_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    spanId_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <code>string spanId = 4;</code>
+             */
+            public Builder setSpanId(
+                    java.lang.String value) {
+                if (value == null) value = "";
+
+                spanId_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>string spanId = 4;</code>
+             */
+            public Builder clearSpanId() {
+
+                spanId_ = getDefaultInstance().getSpanId();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>string spanId = 4;</code>
+             */
+            public Builder setSpanIdBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                spanId_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object tags_ = "";
+
+            /**
+             * <pre>
+             * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+             * </pre>
+             *
+             * <code>string tags = 5;</code>
+             */
+            public java.lang.String getTags() {
+                java.lang.Object ref = tags_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs =
+                            (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    tags_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+             * </pre>
+             *
+             * <code>string tags = 5;</code>
+             */
+            public com.google.protobuf.ByteString
+            getTagsBytes() {
+                java.lang.Object ref = tags_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b =
+                            com.google.protobuf.ByteString.copyFromUtf8(
+                                    (java.lang.String) ref);
+                    tags_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+             * </pre>
+             *
+             * <code>string tags = 5;</code>
+             */
+            public Builder setTags(
+                    java.lang.String value) {
+                if (value == null) value = "";
+
+                tags_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+             * </pre>
+             *
+             * <code>string tags = 5;</code>
+             */
+            public Builder clearTags() {
+
+                tags_ = getDefaultInstance().getTags();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * key/value pairs passing in the chain, format: k1=v1&amp;k2=v2&amp;...
+             * </pre>
+             *
+             * <code>string tags = 5;</code>
+             */
+            public Builder setTagsBytes(
+                    com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                tags_ = value;
+                onChanged();
+                return this;
+            }
+
+            private int sampleFlag_;
+
+            /**
+             * <pre>
+             *  0=default(yes) 1=force 2=no
+             * </pre>
+             *
+             * <code>int32 sampleFlag = 6;</code>
+             */
+            public int getSampleFlag() {
+                return sampleFlag_;
+            }
+
+            /**
+             * <pre>
+             *  0=default(yes) 1=force 2=no
+             * </pre>
+             *
+             * <code>int32 sampleFlag = 6;</code>
+             */
+            public Builder setSampleFlag(int value) {
+
+                sampleFlag_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             *  0=default(yes) 1=force 2=no
+             * </pre>
+             *
+             * <code>int32 sampleFlag = 6;</code>
+             */
+            public Builder clearSampleFlag() {
+
+                sampleFlag_ = 0;
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.setUnknownFieldsProto3(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+
+
+            // @@protoc_insertion_point(builder_scope:krpc.rpc.core.proto.RpcMeta.Trace)
+        }
+
+        // @@protoc_insertion_point(class_scope:krpc.rpc.core.proto.RpcMeta.Trace)
+        private static final krpc.rpc.core.proto.RpcMeta.Trace DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new krpc.rpc.core.proto.RpcMeta.Trace();
+        }
+
+        public static krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<Trace>
+                PARSER = new com.google.protobuf.AbstractParser<Trace>() {
+            @java.lang.Override
+            public Trace parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                return new Trace(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<Trace> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<Trace> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public krpc.rpc.core.proto.RpcMeta.Trace getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
+
     }
 
-    private int direction_ = 0;
+    public static final int DIRECTION_FIELD_NUMBER = 1;
+    private int direction_;
+
     /**
      * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
      */
     public int getDirectionValue() {
-      return direction_;
+        return direction_;
     }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
-     */
-    public Builder setDirectionValue(int value) {
-      direction_ = value;
-      onChanged();
-      return this;
-    }
+
     /**
      * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
      */
     public krpc.rpc.core.proto.RpcMeta.Direction getDirection() {
-      @SuppressWarnings("deprecation")
-      krpc.rpc.core.proto.RpcMeta.Direction result = krpc.rpc.core.proto.RpcMeta.Direction.valueOf(direction_);
-      return result == null ? krpc.rpc.core.proto.RpcMeta.Direction.UNRECOGNIZED : result;
-    }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
-     */
-    public Builder setDirection(krpc.rpc.core.proto.RpcMeta.Direction value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      
-      direction_ = value.getNumber();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
-     */
-    public Builder clearDirection() {
-      
-      direction_ = 0;
-      onChanged();
-      return this;
+        @SuppressWarnings("deprecation")
+        krpc.rpc.core.proto.RpcMeta.Direction result = krpc.rpc.core.proto.RpcMeta.Direction.valueOf(direction_);
+        return result == null ? krpc.rpc.core.proto.RpcMeta.Direction.UNRECOGNIZED : result;
     }
 
-    private int serviceId_ ;
+    public static final int SERVICEID_FIELD_NUMBER = 2;
+    private int serviceId_;
+
     /**
      * <code>int32 serviceId = 2;</code>
      */
     public int getServiceId() {
-      return serviceId_;
-    }
-    /**
-     * <code>int32 serviceId = 2;</code>
-     */
-    public Builder setServiceId(int value) {
-      
-      serviceId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 serviceId = 2;</code>
-     */
-    public Builder clearServiceId() {
-      
-      serviceId_ = 0;
-      onChanged();
-      return this;
+        return serviceId_;
     }
 
-    private int msgId_ ;
+    public static final int MSGID_FIELD_NUMBER = 3;
+    private int msgId_;
+
     /**
      * <code>int32 msgId = 3;</code>
      */
     public int getMsgId() {
-      return msgId_;
-    }
-    /**
-     * <code>int32 msgId = 3;</code>
-     */
-    public Builder setMsgId(int value) {
-      
-      msgId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 msgId = 3;</code>
-     */
-    public Builder clearMsgId() {
-      
-      msgId_ = 0;
-      onChanged();
-      return this;
+        return msgId_;
     }
 
-    private int sequence_ ;
+    public static final int SEQUENCE_FIELD_NUMBER = 4;
+    private int sequence_;
+
     /**
      * <code>int32 sequence = 4;</code>
      */
     public int getSequence() {
-      return sequence_;
-    }
-    /**
-     * <code>int32 sequence = 4;</code>
-     */
-    public Builder setSequence(int value) {
-      
-      sequence_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 sequence = 4;</code>
-     */
-    public Builder clearSequence() {
-      
-      sequence_ = 0;
-      onChanged();
-      return this;
+        return sequence_;
     }
 
-    private int timeout_ ;
+    public static final int TIMEOUT_FIELD_NUMBER = 5;
+    private int timeout_;
+
     /**
      * <pre>
      * client side timeout in milliseconds
@@ -2248,179 +1670,46 @@ private static final long serialVersionUID = 0L;
      * <code>int32 timeout = 5;</code>
      */
     public int getTimeout() {
-      return timeout_;
-    }
-    /**
-     * <pre>
-     * client side timeout in milliseconds
-     * </pre>
-     *
-     * <code>int32 timeout = 5;</code>
-     */
-    public Builder setTimeout(int value) {
-      
-      timeout_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * client side timeout in milliseconds
-     * </pre>
-     *
-     * <code>int32 timeout = 5;</code>
-     */
-    public Builder clearTimeout() {
-      
-      timeout_ = 0;
-      onChanged();
-      return this;
+        return timeout_;
     }
 
-    private int retCode_ ;
+    public static final int RETCODE_FIELD_NUMBER = 6;
+    private int retCode_;
+
     /**
      * <code>int32 retCode = 6;</code>
      */
     public int getRetCode() {
-      return retCode_;
-    }
-    /**
-     * <code>int32 retCode = 6;</code>
-     */
-    public Builder setRetCode(int value) {
-      
-      retCode_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 retCode = 6;</code>
-     */
-    public Builder clearRetCode() {
-      
-      retCode_ = 0;
-      onChanged();
-      return this;
+        return retCode_;
     }
 
-    private krpc.rpc.core.proto.RpcMeta.Trace trace_ = null;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder> traceBuilder_;
+    public static final int TRACE_FIELD_NUMBER = 7;
+    private krpc.rpc.core.proto.RpcMeta.Trace trace_;
+
     /**
      * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
      */
     public boolean hasTrace() {
-      return traceBuilder_ != null || trace_ != null;
+        return trace_ != null;
     }
+
     /**
      * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
      */
     public krpc.rpc.core.proto.RpcMeta.Trace getTrace() {
-      if (traceBuilder_ == null) {
         return trace_ == null ? krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance() : trace_;
-      } else {
-        return traceBuilder_.getMessage();
-      }
     }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-     */
-    public Builder setTrace(krpc.rpc.core.proto.RpcMeta.Trace value) {
-      if (traceBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        trace_ = value;
-        onChanged();
-      } else {
-        traceBuilder_.setMessage(value);
-      }
 
-      return this;
-    }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-     */
-    public Builder setTrace(
-        krpc.rpc.core.proto.RpcMeta.Trace.Builder builderForValue) {
-      if (traceBuilder_ == null) {
-        trace_ = builderForValue.build();
-        onChanged();
-      } else {
-        traceBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-     */
-    public Builder mergeTrace(krpc.rpc.core.proto.RpcMeta.Trace value) {
-      if (traceBuilder_ == null) {
-        if (trace_ != null) {
-          trace_ =
-            krpc.rpc.core.proto.RpcMeta.Trace.newBuilder(trace_).mergeFrom(value).buildPartial();
-        } else {
-          trace_ = value;
-        }
-        onChanged();
-      } else {
-        traceBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-     */
-    public Builder clearTrace() {
-      if (traceBuilder_ == null) {
-        trace_ = null;
-        onChanged();
-      } else {
-        trace_ = null;
-        traceBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-     */
-    public krpc.rpc.core.proto.RpcMeta.Trace.Builder getTraceBuilder() {
-      
-      onChanged();
-      return getTraceFieldBuilder().getBuilder();
-    }
     /**
      * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
      */
     public krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder() {
-      if (traceBuilder_ != null) {
-        return traceBuilder_.getMessageOrBuilder();
-      } else {
-        return trace_ == null ?
-            krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance() : trace_;
-      }
-    }
-    /**
-     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder> 
-        getTraceFieldBuilder() {
-      if (traceBuilder_ == null) {
-        traceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder>(
-                getTrace(),
-                getParentForChildren(),
-                isClean());
-        trace_ = null;
-      }
-      return traceBuilder_;
+        return getTrace();
     }
 
-    private java.lang.Object attachment_ = "";
+    public static final int ATTACHMENT_FIELD_NUMBER = 8;
+    private volatile java.lang.Object attachment_;
+
     /**
      * <pre>
      * oob data
@@ -2429,17 +1718,18 @@ private static final long serialVersionUID = 0L;
      * <code>string attachment = 8;</code>
      */
     public java.lang.String getAttachment() {
-      java.lang.Object ref = attachment_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        attachment_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = attachment_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            attachment_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
      * oob data
@@ -2448,66 +1738,22 @@ private static final long serialVersionUID = 0L;
      * <code>string attachment = 8;</code>
      */
     public com.google.protobuf.ByteString
-        getAttachmentBytes() {
-      java.lang.Object ref = attachment_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        attachment_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * oob data
-     * </pre>
-     *
-     * <code>string attachment = 8;</code>
-     */
-    public Builder setAttachment(
-        java.lang.String value) {
-      if (value == null) value = "";
-  
-      attachment_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * oob data
-     * </pre>
-     *
-     * <code>string attachment = 8;</code>
-     */
-    public Builder clearAttachment() {
-      
-      attachment_ = getDefaultInstance().getAttachment();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * oob data
-     * </pre>
-     *
-     * <code>string attachment = 8;</code>
-     */
-    public Builder setAttachmentBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      attachment_ = value;
-      onChanged();
-      return this;
+    getAttachmentBytes() {
+        java.lang.Object ref = attachment_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            attachment_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private int compress_ ;
+    public static final int COMPRESS_FIELD_NUMBER = 9;
+    private int compress_;
+
     /**
      * <pre>
      * compress type, 0=no compress, 1=gzip 2=snappy
@@ -2516,84 +1762,1003 @@ private static final long serialVersionUID = 0L;
      * <code>int32 compress = 9;</code>
      */
     public int getCompress() {
-      return compress_;
+        return compress_;
     }
+
+    private byte memoizedIsInitialized = -1;
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        if (direction_ != krpc.rpc.core.proto.RpcMeta.Direction.INVALID_DIRECTION.getNumber()) {
+            output.writeEnum(1, direction_);
+        }
+        if (serviceId_ != 0) {
+            output.writeInt32(2, serviceId_);
+        }
+        if (msgId_ != 0) {
+            output.writeInt32(3, msgId_);
+        }
+        if (sequence_ != 0) {
+            output.writeInt32(4, sequence_);
+        }
+        if (timeout_ != 0) {
+            output.writeInt32(5, timeout_);
+        }
+        if (retCode_ != 0) {
+            output.writeInt32(6, retCode_);
+        }
+        if (trace_ != null) {
+            output.writeMessage(7, getTrace());
+        }
+        if (!getAttachmentBytes().isEmpty()) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 8, attachment_);
+        }
+        if (compress_ != 0) {
+            output.writeInt32(9, compress_);
+        }
+        unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (direction_ != krpc.rpc.core.proto.RpcMeta.Direction.INVALID_DIRECTION.getNumber()) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeEnumSize(1, direction_);
+        }
+        if (serviceId_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(2, serviceId_);
+        }
+        if (msgId_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(3, msgId_);
+        }
+        if (sequence_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(4, sequence_);
+        }
+        if (timeout_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(5, timeout_);
+        }
+        if (retCode_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(6, retCode_);
+        }
+        if (trace_ != null) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeMessageSize(7, getTrace());
+        }
+        if (!getAttachmentBytes().isEmpty()) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, attachment_);
+        }
+        if (compress_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(9, compress_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof krpc.rpc.core.proto.RpcMeta)) {
+            return super.equals(obj);
+        }
+        krpc.rpc.core.proto.RpcMeta other = (krpc.rpc.core.proto.RpcMeta) obj;
+
+        boolean result = true;
+        result = result && direction_ == other.direction_;
+        result = result && (getServiceId()
+                == other.getServiceId());
+        result = result && (getMsgId()
+                == other.getMsgId());
+        result = result && (getSequence()
+                == other.getSequence());
+        result = result && (getTimeout()
+                == other.getTimeout());
+        result = result && (getRetCode()
+                == other.getRetCode());
+        result = result && (hasTrace() == other.hasTrace());
+        if (hasTrace()) {
+            result = result && getTrace()
+                    .equals(other.getTrace());
+        }
+        result = result && getAttachment()
+                .equals(other.getAttachment());
+        result = result && (getCompress()
+                == other.getCompress());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + DIRECTION_FIELD_NUMBER;
+        hash = (53 * hash) + direction_;
+        hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
+        hash = (53 * hash) + getServiceId();
+        hash = (37 * hash) + MSGID_FIELD_NUMBER;
+        hash = (53 * hash) + getMsgId();
+        hash = (37 * hash) + SEQUENCE_FIELD_NUMBER;
+        hash = (53 * hash) + getSequence();
+        hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
+        hash = (53 * hash) + getTimeout();
+        hash = (37 * hash) + RETCODE_FIELD_NUMBER;
+        hash = (53 * hash) + getRetCode();
+        if (hasTrace()) {
+            hash = (37 * hash) + TRACE_FIELD_NUMBER;
+            hash = (53 * hash) + getTrace().hashCode();
+        }
+        hash = (37 * hash) + ATTACHMENT_FIELD_NUMBER;
+        hash = (53 * hash) + getAttachment().hashCode();
+        hash = (37 * hash) + COMPRESS_FIELD_NUMBER;
+        hash = (53 * hash) + getCompress();
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static krpc.rpc.core.proto.RpcMeta parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(krpc.rpc.core.proto.RpcMeta prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
     /**
-     * <pre>
-     * compress type, 0=no compress, 1=gzip 2=snappy
-     * </pre>
-     *
-     * <code>int32 compress = 9;</code>
+     * Protobuf type {@code krpc.rpc.core.proto.RpcMeta}
      */
-    public Builder setCompress(int value) {
-      
-      compress_ = value;
-      onChanged();
-      return this;
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:krpc.rpc.core.proto.RpcMeta)
+            krpc.rpc.core.proto.RpcMetaOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            krpc.rpc.core.proto.RpcMeta.class, krpc.rpc.core.proto.RpcMeta.Builder.class);
+        }
+
+        // Construct using krpc.rpc.core.proto.RpcMeta.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessageV3
+                    .alwaysUseFieldBuilders) {
+            }
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            direction_ = 0;
+
+            serviceId_ = 0;
+
+            msgId_ = 0;
+
+            sequence_ = 0;
+
+            timeout_ = 0;
+
+            retCode_ = 0;
+
+            if (traceBuilder_ == null) {
+                trace_ = null;
+            } else {
+                trace_ = null;
+                traceBuilder_ = null;
+            }
+            attachment_ = "";
+
+            compress_ = 0;
+
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return krpc.rpc.core.proto.RpcMetas.internal_static_krpc_rpc_core_proto_RpcMeta_descriptor;
+        }
+
+        @java.lang.Override
+        public krpc.rpc.core.proto.RpcMeta getDefaultInstanceForType() {
+            return krpc.rpc.core.proto.RpcMeta.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public krpc.rpc.core.proto.RpcMeta build() {
+            krpc.rpc.core.proto.RpcMeta result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public krpc.rpc.core.proto.RpcMeta buildPartial() {
+            krpc.rpc.core.proto.RpcMeta result = new krpc.rpc.core.proto.RpcMeta(this);
+            result.direction_ = direction_;
+            result.serviceId_ = serviceId_;
+            result.msgId_ = msgId_;
+            result.sequence_ = sequence_;
+            result.timeout_ = timeout_;
+            result.retCode_ = retCode_;
+            if (traceBuilder_ == null) {
+                result.trace_ = trace_;
+            } else {
+                result.trace_ = traceBuilder_.build();
+            }
+            result.attachment_ = attachment_;
+            result.compress_ = compress_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return (Builder) super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return (Builder) super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return (Builder) super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return (Builder) super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, java.lang.Object value) {
+            return (Builder) super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return (Builder) super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof krpc.rpc.core.proto.RpcMeta) {
+                return mergeFrom((krpc.rpc.core.proto.RpcMeta) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(krpc.rpc.core.proto.RpcMeta other) {
+            if (other == krpc.rpc.core.proto.RpcMeta.getDefaultInstance()) return this;
+            if (other.direction_ != 0) {
+                setDirectionValue(other.getDirectionValue());
+            }
+            if (other.getServiceId() != 0) {
+                setServiceId(other.getServiceId());
+            }
+            if (other.getMsgId() != 0) {
+                setMsgId(other.getMsgId());
+            }
+            if (other.getSequence() != 0) {
+                setSequence(other.getSequence());
+            }
+            if (other.getTimeout() != 0) {
+                setTimeout(other.getTimeout());
+            }
+            if (other.getRetCode() != 0) {
+                setRetCode(other.getRetCode());
+            }
+            if (other.hasTrace()) {
+                mergeTrace(other.getTrace());
+            }
+            if (!other.getAttachment().isEmpty()) {
+                attachment_ = other.attachment_;
+                onChanged();
+            }
+            if (other.getCompress() != 0) {
+                setCompress(other.getCompress());
+            }
+            this.mergeUnknownFields(other.unknownFields);
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            krpc.rpc.core.proto.RpcMeta parsedMessage = null;
+            try {
+                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage = (krpc.rpc.core.proto.RpcMeta) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private int direction_ = 0;
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
+         */
+        public int getDirectionValue() {
+            return direction_;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
+         */
+        public Builder setDirectionValue(int value) {
+            direction_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
+         */
+        public krpc.rpc.core.proto.RpcMeta.Direction getDirection() {
+            @SuppressWarnings("deprecation")
+            krpc.rpc.core.proto.RpcMeta.Direction result = krpc.rpc.core.proto.RpcMeta.Direction.valueOf(direction_);
+            return result == null ? krpc.rpc.core.proto.RpcMeta.Direction.UNRECOGNIZED : result;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
+         */
+        public Builder setDirection(krpc.rpc.core.proto.RpcMeta.Direction value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            direction_ = value.getNumber();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
+         */
+        public Builder clearDirection() {
+
+            direction_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int serviceId_;
+
+        /**
+         * <code>int32 serviceId = 2;</code>
+         */
+        public int getServiceId() {
+            return serviceId_;
+        }
+
+        /**
+         * <code>int32 serviceId = 2;</code>
+         */
+        public Builder setServiceId(int value) {
+
+            serviceId_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 serviceId = 2;</code>
+         */
+        public Builder clearServiceId() {
+
+            serviceId_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int msgId_;
+
+        /**
+         * <code>int32 msgId = 3;</code>
+         */
+        public int getMsgId() {
+            return msgId_;
+        }
+
+        /**
+         * <code>int32 msgId = 3;</code>
+         */
+        public Builder setMsgId(int value) {
+
+            msgId_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 msgId = 3;</code>
+         */
+        public Builder clearMsgId() {
+
+            msgId_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int sequence_;
+
+        /**
+         * <code>int32 sequence = 4;</code>
+         */
+        public int getSequence() {
+            return sequence_;
+        }
+
+        /**
+         * <code>int32 sequence = 4;</code>
+         */
+        public Builder setSequence(int value) {
+
+            sequence_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 sequence = 4;</code>
+         */
+        public Builder clearSequence() {
+
+            sequence_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int timeout_;
+
+        /**
+         * <pre>
+         * client side timeout in milliseconds
+         * </pre>
+         *
+         * <code>int32 timeout = 5;</code>
+         */
+        public int getTimeout() {
+            return timeout_;
+        }
+
+        /**
+         * <pre>
+         * client side timeout in milliseconds
+         * </pre>
+         *
+         * <code>int32 timeout = 5;</code>
+         */
+        public Builder setTimeout(int value) {
+
+            timeout_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * client side timeout in milliseconds
+         * </pre>
+         *
+         * <code>int32 timeout = 5;</code>
+         */
+        public Builder clearTimeout() {
+
+            timeout_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int retCode_;
+
+        /**
+         * <code>int32 retCode = 6;</code>
+         */
+        public int getRetCode() {
+            return retCode_;
+        }
+
+        /**
+         * <code>int32 retCode = 6;</code>
+         */
+        public Builder setRetCode(int value) {
+
+            retCode_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 retCode = 6;</code>
+         */
+        public Builder clearRetCode() {
+
+            retCode_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private krpc.rpc.core.proto.RpcMeta.Trace trace_ = null;
+        private com.google.protobuf.SingleFieldBuilderV3<
+                krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder> traceBuilder_;
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        public boolean hasTrace() {
+            return traceBuilder_ != null || trace_ != null;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        public krpc.rpc.core.proto.RpcMeta.Trace getTrace() {
+            if (traceBuilder_ == null) {
+                return trace_ == null ? krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance() : trace_;
+            } else {
+                return traceBuilder_.getMessage();
+            }
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        public Builder setTrace(krpc.rpc.core.proto.RpcMeta.Trace value) {
+            if (traceBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                trace_ = value;
+                onChanged();
+            } else {
+                traceBuilder_.setMessage(value);
+            }
+
+            return this;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        public Builder setTrace(
+                krpc.rpc.core.proto.RpcMeta.Trace.Builder builderForValue) {
+            if (traceBuilder_ == null) {
+                trace_ = builderForValue.build();
+                onChanged();
+            } else {
+                traceBuilder_.setMessage(builderForValue.build());
+            }
+
+            return this;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        public Builder mergeTrace(krpc.rpc.core.proto.RpcMeta.Trace value) {
+            if (traceBuilder_ == null) {
+                if (trace_ != null) {
+                    trace_ =
+                            krpc.rpc.core.proto.RpcMeta.Trace.newBuilder(trace_).mergeFrom(value).buildPartial();
+                } else {
+                    trace_ = value;
+                }
+                onChanged();
+            } else {
+                traceBuilder_.mergeFrom(value);
+            }
+
+            return this;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        public Builder clearTrace() {
+            if (traceBuilder_ == null) {
+                trace_ = null;
+                onChanged();
+            } else {
+                trace_ = null;
+                traceBuilder_ = null;
+            }
+
+            return this;
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        public krpc.rpc.core.proto.RpcMeta.Trace.Builder getTraceBuilder() {
+
+            onChanged();
+            return getTraceFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        public krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder() {
+            if (traceBuilder_ != null) {
+                return traceBuilder_.getMessageOrBuilder();
+            } else {
+                return trace_ == null ?
+                        krpc.rpc.core.proto.RpcMeta.Trace.getDefaultInstance() : trace_;
+            }
+        }
+
+        /**
+         * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+                krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder>
+        getTraceFieldBuilder() {
+            if (traceBuilder_ == null) {
+                traceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                        krpc.rpc.core.proto.RpcMeta.Trace, krpc.rpc.core.proto.RpcMeta.Trace.Builder, krpc.rpc.core.proto.RpcMeta.TraceOrBuilder>(
+                        getTrace(),
+                        getParentForChildren(),
+                        isClean());
+                trace_ = null;
+            }
+            return traceBuilder_;
+        }
+
+        private java.lang.Object attachment_ = "";
+
+        /**
+         * <pre>
+         * oob data
+         * </pre>
+         *
+         * <code>string attachment = 8;</code>
+         */
+        public java.lang.String getAttachment() {
+            java.lang.Object ref = attachment_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                attachment_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * oob data
+         * </pre>
+         *
+         * <code>string attachment = 8;</code>
+         */
+        public com.google.protobuf.ByteString
+        getAttachmentBytes() {
+            java.lang.Object ref = attachment_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                attachment_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * oob data
+         * </pre>
+         *
+         * <code>string attachment = 8;</code>
+         */
+        public Builder setAttachment(
+                java.lang.String value) {
+            if (value == null) value = "";
+
+            attachment_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * oob data
+         * </pre>
+         *
+         * <code>string attachment = 8;</code>
+         */
+        public Builder clearAttachment() {
+
+            attachment_ = getDefaultInstance().getAttachment();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * oob data
+         * </pre>
+         *
+         * <code>string attachment = 8;</code>
+         */
+        public Builder setAttachmentBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            attachment_ = value;
+            onChanged();
+            return this;
+        }
+
+        private int compress_;
+
+        /**
+         * <pre>
+         * compress type, 0=no compress, 1=gzip 2=snappy
+         * </pre>
+         *
+         * <code>int32 compress = 9;</code>
+         */
+        public int getCompress() {
+            return compress_;
+        }
+
+        /**
+         * <pre>
+         * compress type, 0=no compress, 1=gzip 2=snappy
+         * </pre>
+         *
+         * <code>int32 compress = 9;</code>
+         */
+        public Builder setCompress(int value) {
+
+            compress_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * compress type, 0=no compress, 1=gzip 2=snappy
+         * </pre>
+         *
+         * <code>int32 compress = 9;</code>
+         */
+        public Builder clearCompress() {
+
+            compress_ = 0;
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:krpc.rpc.core.proto.RpcMeta)
     }
-    /**
-     * <pre>
-     * compress type, 0=no compress, 1=gzip 2=snappy
-     * </pre>
-     *
-     * <code>int32 compress = 9;</code>
-     */
-    public Builder clearCompress() {
-      
-      compress_ = 0;
-      onChanged();
-      return this;
+
+    // @@protoc_insertion_point(class_scope:krpc.rpc.core.proto.RpcMeta)
+    private static final krpc.rpc.core.proto.RpcMeta DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new krpc.rpc.core.proto.RpcMeta();
     }
+
+    public static krpc.rpc.core.proto.RpcMeta getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<RpcMeta>
+            PARSER = new com.google.protobuf.AbstractParser<RpcMeta>() {
+        @java.lang.Override
+        public RpcMeta parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return new RpcMeta(input, extensionRegistry);
+        }
+    };
+
+    public static com.google.protobuf.Parser<RpcMeta> parser() {
+        return PARSER;
+    }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFieldsProto3(unknownFields);
+    public com.google.protobuf.Parser<RpcMeta> getParserForType() {
+        return PARSER;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public krpc.rpc.core.proto.RpcMeta getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
     }
-
-
-    // @@protoc_insertion_point(builder_scope:krpc.rpc.core.proto.RpcMeta)
-  }
-
-  // @@protoc_insertion_point(class_scope:krpc.rpc.core.proto.RpcMeta)
-  private static final krpc.rpc.core.proto.RpcMeta DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new krpc.rpc.core.proto.RpcMeta();
-  }
-
-  public static krpc.rpc.core.proto.RpcMeta getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<RpcMeta>
-      PARSER = new com.google.protobuf.AbstractParser<RpcMeta>() {
-    @java.lang.Override
-    public RpcMeta parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new RpcMeta(input, extensionRegistry);
-    }
-  };
-
-  public static com.google.protobuf.Parser<RpcMeta> parser() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public com.google.protobuf.Parser<RpcMeta> getParserForType() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public krpc.rpc.core.proto.RpcMeta getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
 
 }
 

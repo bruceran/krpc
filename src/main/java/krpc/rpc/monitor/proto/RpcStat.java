@@ -6,692 +6,149 @@ package krpc.rpc.monitor.proto;
 /**
  * Protobuf type {@code RpcStat}
  */
-public  final class RpcStat extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:RpcStat)
-    RpcStatOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use RpcStat.newBuilder() to construct.
-  private RpcStat(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private RpcStat() {
-    type_ = 0;
-    time_ = 0L;
-    serviceId_ = 0;
-    msgId_ = 0;
-    success_ = 0;
-    failed_ = 0;
-    timeout_ = 0;
-    timeUsed_ = java.util.Collections.emptyList();
-  }
+public final class RpcStat extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:RpcStat)
+        RpcStatOrBuilder {
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  private RpcStat(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
+    // Use RpcStat.newBuilder() to construct.
+    private RpcStat(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
     }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
 
-            type_ = input.readInt32();
-            break;
-          }
-          case 16: {
+    private RpcStat() {
+        type_ = 0;
+        time_ = 0L;
+        serviceId_ = 0;
+        msgId_ = 0;
+        success_ = 0;
+        failed_ = 0;
+        timeout_ = 0;
+        timeUsed_ = java.util.Collections.emptyList();
+    }
 
-            time_ = input.readInt64();
-            break;
-          }
-          case 24: {
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return this.unknownFields;
+    }
 
-            serviceId_ = input.readInt32();
-            break;
-          }
-          case 32: {
-
-            msgId_ = input.readInt32();
-            break;
-          }
-          case 40: {
-
-            success_ = input.readInt32();
-            break;
-          }
-          case 48: {
-
-            failed_ = input.readInt32();
-            break;
-          }
-          case 56: {
-
-            timeout_ = input.readInt32();
-            break;
-          }
-          case 64: {
-            if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-              timeUsed_ = new java.util.ArrayList<java.lang.Integer>();
-              mutable_bitField0_ |= 0x00000080;
-            }
-            timeUsed_.add(input.readInt32());
-            break;
-          }
-          case 66: {
-            int length = input.readRawVarint32();
-            int limit = input.pushLimit(length);
-            if (!((mutable_bitField0_ & 0x00000080) == 0x00000080) && input.getBytesUntilLimit() > 0) {
-              timeUsed_ = new java.util.ArrayList<java.lang.Integer>();
-              mutable_bitField0_ |= 0x00000080;
-            }
-            while (input.getBytesUntilLimit() > 0) {
-              timeUsed_.add(input.readInt32());
-            }
-            input.popLimit(limit);
-            break;
-          }
-          default: {
-            if (!parseUnknownFieldProto3(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
+    private RpcStat(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
         }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-        timeUsed_ = java.util.Collections.unmodifiableList(timeUsed_);
-      }
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_descriptor;
-  }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    case 8: {
 
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            krpc.rpc.monitor.proto.RpcStat.class, krpc.rpc.monitor.proto.RpcStat.Builder.class);
-  }
+                        type_ = input.readInt32();
+                        break;
+                    }
+                    case 16: {
 
-  private int bitField0_;
-  public static final int TYPE_FIELD_NUMBER = 1;
-  private int type_;
-  /**
-   * <pre>
-   * 1=req 2=call 3=web
-   * </pre>
-   *
-   * <code>int32 type = 1;</code>
-   */
-  public int getType() {
-    return type_;
-  }
+                        time_ = input.readInt64();
+                        break;
+                    }
+                    case 24: {
 
-  public static final int TIME_FIELD_NUMBER = 2;
-  private long time_;
-  /**
-   * <pre>
-   * seconds from 1970
-   * </pre>
-   *
-   * <code>int64 time = 2;</code>
-   */
-  public long getTime() {
-    return time_;
-  }
+                        serviceId_ = input.readInt32();
+                        break;
+                    }
+                    case 32: {
 
-  public static final int SERVICEID_FIELD_NUMBER = 3;
-  private int serviceId_;
-  /**
-   * <code>int32 serviceId = 3;</code>
-   */
-  public int getServiceId() {
-    return serviceId_;
-  }
+                        msgId_ = input.readInt32();
+                        break;
+                    }
+                    case 40: {
 
-  public static final int MSGID_FIELD_NUMBER = 4;
-  private int msgId_;
-  /**
-   * <code>int32 msgId = 4;</code>
-   */
-  public int getMsgId() {
-    return msgId_;
-  }
+                        success_ = input.readInt32();
+                        break;
+                    }
+                    case 48: {
 
-  public static final int SUCCESS_FIELD_NUMBER = 5;
-  private int success_;
-  /**
-   * <code>int32 success = 5;</code>
-   */
-  public int getSuccess() {
-    return success_;
-  }
+                        failed_ = input.readInt32();
+                        break;
+                    }
+                    case 56: {
 
-  public static final int FAILED_FIELD_NUMBER = 6;
-  private int failed_;
-  /**
-   * <code>int32 failed = 6;</code>
-   */
-  public int getFailed() {
-    return failed_;
-  }
+                        timeout_ = input.readInt32();
+                        break;
+                    }
+                    case 64: {
+                        if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+                            timeUsed_ = new java.util.ArrayList<java.lang.Integer>();
+                            mutable_bitField0_ |= 0x00000080;
+                        }
+                        timeUsed_.add(input.readInt32());
+                        break;
+                    }
+                    case 66: {
+                        int length = input.readRawVarint32();
+                        int limit = input.pushLimit(length);
+                        if (!((mutable_bitField0_ & 0x00000080) == 0x00000080) && input.getBytesUntilLimit() > 0) {
+                            timeUsed_ = new java.util.ArrayList<java.lang.Integer>();
+                            mutable_bitField0_ |= 0x00000080;
+                        }
+                        while (input.getBytesUntilLimit() > 0) {
+                            timeUsed_.add(input.readInt32());
+                        }
+                        input.popLimit(limit);
+                        break;
+                    }
+                    default: {
+                        if (!parseUnknownFieldProto3(
+                                input, unknownFields, extensionRegistry, tag)) {
+                            done = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(
+                    e).setUnfinishedMessage(this);
+        } finally {
+            if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+                timeUsed_ = java.util.Collections.unmodifiableList(timeUsed_);
+            }
+            this.unknownFields = unknownFields.build();
+            makeExtensionsImmutable();
+        }
+    }
 
-  public static final int TIMEOUT_FIELD_NUMBER = 7;
-  private int timeout_;
-  /**
-   * <code>int32 timeout = 7;</code>
-   */
-  public int getTimeout() {
-    return timeout_;
-  }
-
-  public static final int TIMEUSED_FIELD_NUMBER = 8;
-  private java.util.List<java.lang.Integer> timeUsed_;
-  /**
-   * <code>repeated int32 timeUsed = 8;</code>
-   */
-  public java.util.List<java.lang.Integer>
-      getTimeUsedList() {
-    return timeUsed_;
-  }
-  /**
-   * <code>repeated int32 timeUsed = 8;</code>
-   */
-  public int getTimeUsedCount() {
-    return timeUsed_.size();
-  }
-  /**
-   * <code>repeated int32 timeUsed = 8;</code>
-   */
-  public int getTimeUsed(int index) {
-    return timeUsed_.get(index);
-  }
-  private int timeUsedMemoizedSerializedSize = -1;
-
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    getSerializedSize();
-    if (type_ != 0) {
-      output.writeInt32(1, type_);
-    }
-    if (time_ != 0L) {
-      output.writeInt64(2, time_);
-    }
-    if (serviceId_ != 0) {
-      output.writeInt32(3, serviceId_);
-    }
-    if (msgId_ != 0) {
-      output.writeInt32(4, msgId_);
-    }
-    if (success_ != 0) {
-      output.writeInt32(5, success_);
-    }
-    if (failed_ != 0) {
-      output.writeInt32(6, failed_);
-    }
-    if (timeout_ != 0) {
-      output.writeInt32(7, timeout_);
-    }
-    if (getTimeUsedList().size() > 0) {
-      output.writeUInt32NoTag(66);
-      output.writeUInt32NoTag(timeUsedMemoizedSerializedSize);
-    }
-    for (int i = 0; i < timeUsed_.size(); i++) {
-      output.writeInt32NoTag(timeUsed_.get(i));
-    }
-    unknownFields.writeTo(output);
-  }
-
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (type_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, type_);
-    }
-    if (time_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, time_);
-    }
-    if (serviceId_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, serviceId_);
-    }
-    if (msgId_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, msgId_);
-    }
-    if (success_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(5, success_);
-    }
-    if (failed_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(6, failed_);
-    }
-    if (timeout_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(7, timeout_);
-    }
-    {
-      int dataSize = 0;
-      for (int i = 0; i < timeUsed_.size(); i++) {
-        dataSize += com.google.protobuf.CodedOutputStream
-          .computeInt32SizeNoTag(timeUsed_.get(i));
-      }
-      size += dataSize;
-      if (!getTimeUsedList().isEmpty()) {
-        size += 1;
-        size += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(dataSize);
-      }
-      timeUsedMemoizedSerializedSize = dataSize;
-    }
-    size += unknownFields.getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
-
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof krpc.rpc.monitor.proto.RpcStat)) {
-      return super.equals(obj);
-    }
-    krpc.rpc.monitor.proto.RpcStat other = (krpc.rpc.monitor.proto.RpcStat) obj;
-
-    boolean result = true;
-    result = result && (getType()
-        == other.getType());
-    result = result && (getTime()
-        == other.getTime());
-    result = result && (getServiceId()
-        == other.getServiceId());
-    result = result && (getMsgId()
-        == other.getMsgId());
-    result = result && (getSuccess()
-        == other.getSuccess());
-    result = result && (getFailed()
-        == other.getFailed());
-    result = result && (getTimeout()
-        == other.getTimeout());
-    result = result && getTimeUsedList()
-        .equals(other.getTimeUsedList());
-    result = result && unknownFields.equals(other.unknownFields);
-    return result;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + TYPE_FIELD_NUMBER;
-    hash = (53 * hash) + getType();
-    hash = (37 * hash) + TIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getTime());
-    hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
-    hash = (53 * hash) + getServiceId();
-    hash = (37 * hash) + MSGID_FIELD_NUMBER;
-    hash = (53 * hash) + getMsgId();
-    hash = (37 * hash) + SUCCESS_FIELD_NUMBER;
-    hash = (53 * hash) + getSuccess();
-    hash = (37 * hash) + FAILED_FIELD_NUMBER;
-    hash = (53 * hash) + getFailed();
-    hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
-    hash = (53 * hash) + getTimeout();
-    if (getTimeUsedCount() > 0) {
-      hash = (37 * hash) + TIMEUSED_FIELD_NUMBER;
-      hash = (53 * hash) + getTimeUsedList().hashCode();
-    }
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static krpc.rpc.monitor.proto.RpcStat parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(krpc.rpc.monitor.proto.RpcStat prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code RpcStat}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:RpcStat)
-      krpc.rpc.monitor.proto.RpcStatOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_descriptor;
+    getDescriptor() {
+        return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              krpc.rpc.monitor.proto.RpcStat.class, krpc.rpc.monitor.proto.RpcStat.Builder.class);
+    internalGetFieldAccessorTable() {
+        return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        krpc.rpc.monitor.proto.RpcStat.class, krpc.rpc.monitor.proto.RpcStat.Builder.class);
     }
 
-    // Construct using krpc.rpc.monitor.proto.RpcStat.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
-
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      type_ = 0;
-
-      time_ = 0L;
-
-      serviceId_ = 0;
-
-      msgId_ = 0;
-
-      success_ = 0;
-
-      failed_ = 0;
-
-      timeout_ = 0;
-
-      timeUsed_ = java.util.Collections.emptyList();
-      bitField0_ = (bitField0_ & ~0x00000080);
-      return this;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_descriptor;
-    }
-
-    @java.lang.Override
-    public krpc.rpc.monitor.proto.RpcStat getDefaultInstanceForType() {
-      return krpc.rpc.monitor.proto.RpcStat.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public krpc.rpc.monitor.proto.RpcStat build() {
-      krpc.rpc.monitor.proto.RpcStat result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public krpc.rpc.monitor.proto.RpcStat buildPartial() {
-      krpc.rpc.monitor.proto.RpcStat result = new krpc.rpc.monitor.proto.RpcStat(this);
-      int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
-      result.type_ = type_;
-      result.time_ = time_;
-      result.serviceId_ = serviceId_;
-      result.msgId_ = msgId_;
-      result.success_ = success_;
-      result.failed_ = failed_;
-      result.timeout_ = timeout_;
-      if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        timeUsed_ = java.util.Collections.unmodifiableList(timeUsed_);
-        bitField0_ = (bitField0_ & ~0x00000080);
-      }
-      result.timeUsed_ = timeUsed_;
-      result.bitField0_ = to_bitField0_;
-      onBuilt();
-      return result;
-    }
-
-    @java.lang.Override
-    public Builder clone() {
-      return (Builder) super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return (Builder) super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return (Builder) super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return (Builder) super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return (Builder) super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return (Builder) super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof krpc.rpc.monitor.proto.RpcStat) {
-        return mergeFrom((krpc.rpc.monitor.proto.RpcStat)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(krpc.rpc.monitor.proto.RpcStat other) {
-      if (other == krpc.rpc.monitor.proto.RpcStat.getDefaultInstance()) return this;
-      if (other.getType() != 0) {
-        setType(other.getType());
-      }
-      if (other.getTime() != 0L) {
-        setTime(other.getTime());
-      }
-      if (other.getServiceId() != 0) {
-        setServiceId(other.getServiceId());
-      }
-      if (other.getMsgId() != 0) {
-        setMsgId(other.getMsgId());
-      }
-      if (other.getSuccess() != 0) {
-        setSuccess(other.getSuccess());
-      }
-      if (other.getFailed() != 0) {
-        setFailed(other.getFailed());
-      }
-      if (other.getTimeout() != 0) {
-        setTimeout(other.getTimeout());
-      }
-      if (!other.timeUsed_.isEmpty()) {
-        if (timeUsed_.isEmpty()) {
-          timeUsed_ = other.timeUsed_;
-          bitField0_ = (bitField0_ & ~0x00000080);
-        } else {
-          ensureTimeUsedIsMutable();
-          timeUsed_.addAll(other.timeUsed_);
-        }
-        onChanged();
-      }
-      this.mergeUnknownFields(other.unknownFields);
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      krpc.rpc.monitor.proto.RpcStat parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (krpc.rpc.monitor.proto.RpcStat) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
-      return this;
-    }
     private int bitField0_;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private int type_;
 
-    private int type_ ;
     /**
      * <pre>
      * 1=req 2=call 3=web
@@ -700,36 +157,12 @@ private static final long serialVersionUID = 0L;
      * <code>int32 type = 1;</code>
      */
     public int getType() {
-      return type_;
-    }
-    /**
-     * <pre>
-     * 1=req 2=call 3=web
-     * </pre>
-     *
-     * <code>int32 type = 1;</code>
-     */
-    public Builder setType(int value) {
-      
-      type_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * 1=req 2=call 3=web
-     * </pre>
-     *
-     * <code>int32 type = 1;</code>
-     */
-    public Builder clearType() {
-      
-      type_ = 0;
-      onChanged();
-      return this;
+        return type_;
     }
 
-    private long time_ ;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private long time_;
+
     /**
      * <pre>
      * seconds from 1970
@@ -738,280 +171,920 @@ private static final long serialVersionUID = 0L;
      * <code>int64 time = 2;</code>
      */
     public long getTime() {
-      return time_;
-    }
-    /**
-     * <pre>
-     * seconds from 1970
-     * </pre>
-     *
-     * <code>int64 time = 2;</code>
-     */
-    public Builder setTime(long value) {
-      
-      time_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * seconds from 1970
-     * </pre>
-     *
-     * <code>int64 time = 2;</code>
-     */
-    public Builder clearTime() {
-      
-      time_ = 0L;
-      onChanged();
-      return this;
+        return time_;
     }
 
-    private int serviceId_ ;
+    public static final int SERVICEID_FIELD_NUMBER = 3;
+    private int serviceId_;
+
     /**
      * <code>int32 serviceId = 3;</code>
      */
     public int getServiceId() {
-      return serviceId_;
-    }
-    /**
-     * <code>int32 serviceId = 3;</code>
-     */
-    public Builder setServiceId(int value) {
-      
-      serviceId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 serviceId = 3;</code>
-     */
-    public Builder clearServiceId() {
-      
-      serviceId_ = 0;
-      onChanged();
-      return this;
+        return serviceId_;
     }
 
-    private int msgId_ ;
+    public static final int MSGID_FIELD_NUMBER = 4;
+    private int msgId_;
+
     /**
      * <code>int32 msgId = 4;</code>
      */
     public int getMsgId() {
-      return msgId_;
-    }
-    /**
-     * <code>int32 msgId = 4;</code>
-     */
-    public Builder setMsgId(int value) {
-      
-      msgId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 msgId = 4;</code>
-     */
-    public Builder clearMsgId() {
-      
-      msgId_ = 0;
-      onChanged();
-      return this;
+        return msgId_;
     }
 
-    private int success_ ;
+    public static final int SUCCESS_FIELD_NUMBER = 5;
+    private int success_;
+
     /**
      * <code>int32 success = 5;</code>
      */
     public int getSuccess() {
-      return success_;
-    }
-    /**
-     * <code>int32 success = 5;</code>
-     */
-    public Builder setSuccess(int value) {
-      
-      success_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 success = 5;</code>
-     */
-    public Builder clearSuccess() {
-      
-      success_ = 0;
-      onChanged();
-      return this;
+        return success_;
     }
 
-    private int failed_ ;
+    public static final int FAILED_FIELD_NUMBER = 6;
+    private int failed_;
+
     /**
      * <code>int32 failed = 6;</code>
      */
     public int getFailed() {
-      return failed_;
-    }
-    /**
-     * <code>int32 failed = 6;</code>
-     */
-    public Builder setFailed(int value) {
-      
-      failed_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 failed = 6;</code>
-     */
-    public Builder clearFailed() {
-      
-      failed_ = 0;
-      onChanged();
-      return this;
+        return failed_;
     }
 
-    private int timeout_ ;
+    public static final int TIMEOUT_FIELD_NUMBER = 7;
+    private int timeout_;
+
     /**
      * <code>int32 timeout = 7;</code>
      */
     public int getTimeout() {
-      return timeout_;
-    }
-    /**
-     * <code>int32 timeout = 7;</code>
-     */
-    public Builder setTimeout(int value) {
-      
-      timeout_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 timeout = 7;</code>
-     */
-    public Builder clearTimeout() {
-      
-      timeout_ = 0;
-      onChanged();
-      return this;
+        return timeout_;
     }
 
-    private java.util.List<java.lang.Integer> timeUsed_ = java.util.Collections.emptyList();
-    private void ensureTimeUsedIsMutable() {
-      if (!((bitField0_ & 0x00000080) == 0x00000080)) {
-        timeUsed_ = new java.util.ArrayList<java.lang.Integer>(timeUsed_);
-        bitField0_ |= 0x00000080;
-       }
-    }
+    public static final int TIMEUSED_FIELD_NUMBER = 8;
+    private java.util.List<java.lang.Integer> timeUsed_;
+
     /**
      * <code>repeated int32 timeUsed = 8;</code>
      */
     public java.util.List<java.lang.Integer>
-        getTimeUsedList() {
-      return java.util.Collections.unmodifiableList(timeUsed_);
+    getTimeUsedList() {
+        return timeUsed_;
     }
+
     /**
      * <code>repeated int32 timeUsed = 8;</code>
      */
     public int getTimeUsedCount() {
-      return timeUsed_.size();
+        return timeUsed_.size();
     }
+
     /**
      * <code>repeated int32 timeUsed = 8;</code>
      */
     public int getTimeUsed(int index) {
-      return timeUsed_.get(index);
+        return timeUsed_.get(index);
     }
-    /**
-     * <code>repeated int32 timeUsed = 8;</code>
-     */
-    public Builder setTimeUsed(
-        int index, int value) {
-      ensureTimeUsedIsMutable();
-      timeUsed_.set(index, value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated int32 timeUsed = 8;</code>
-     */
-    public Builder addTimeUsed(int value) {
-      ensureTimeUsedIsMutable();
-      timeUsed_.add(value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated int32 timeUsed = 8;</code>
-     */
-    public Builder addAllTimeUsed(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureTimeUsedIsMutable();
-      com.google.protobuf.AbstractMessageLite.Builder.addAll(
-          values, timeUsed_);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated int32 timeUsed = 8;</code>
-     */
-    public Builder clearTimeUsed() {
-      timeUsed_ = java.util.Collections.emptyList();
-      bitField0_ = (bitField0_ & ~0x00000080);
-      onChanged();
-      return this;
-    }
+
+    private int timeUsedMemoizedSerializedSize = -1;
+
+    private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFieldsProto3(unknownFields);
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        getSerializedSize();
+        if (type_ != 0) {
+            output.writeInt32(1, type_);
+        }
+        if (time_ != 0L) {
+            output.writeInt64(2, time_);
+        }
+        if (serviceId_ != 0) {
+            output.writeInt32(3, serviceId_);
+        }
+        if (msgId_ != 0) {
+            output.writeInt32(4, msgId_);
+        }
+        if (success_ != 0) {
+            output.writeInt32(5, success_);
+        }
+        if (failed_ != 0) {
+            output.writeInt32(6, failed_);
+        }
+        if (timeout_ != 0) {
+            output.writeInt32(7, timeout_);
+        }
+        if (getTimeUsedList().size() > 0) {
+            output.writeUInt32NoTag(66);
+            output.writeUInt32NoTag(timeUsedMemoizedSerializedSize);
+        }
+        for (int i = 0; i < timeUsed_.size(); i++) {
+            output.writeInt32NoTag(timeUsed_.get(i));
+        }
+        unknownFields.writeTo(output);
     }
 
-
-    // @@protoc_insertion_point(builder_scope:RpcStat)
-  }
-
-  // @@protoc_insertion_point(class_scope:RpcStat)
-  private static final krpc.rpc.monitor.proto.RpcStat DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new krpc.rpc.monitor.proto.RpcStat();
-  }
-
-  public static krpc.rpc.monitor.proto.RpcStat getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<RpcStat>
-      PARSER = new com.google.protobuf.AbstractParser<RpcStat>() {
     @java.lang.Override
-    public RpcStat parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new RpcStat(input, extensionRegistry);
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (type_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(1, type_);
+        }
+        if (time_ != 0L) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt64Size(2, time_);
+        }
+        if (serviceId_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(3, serviceId_);
+        }
+        if (msgId_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(4, msgId_);
+        }
+        if (success_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(5, success_);
+        }
+        if (failed_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(6, failed_);
+        }
+        if (timeout_ != 0) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt32Size(7, timeout_);
+        }
+        {
+            int dataSize = 0;
+            for (int i = 0; i < timeUsed_.size(); i++) {
+                dataSize += com.google.protobuf.CodedOutputStream
+                        .computeInt32SizeNoTag(timeUsed_.get(i));
+            }
+            size += dataSize;
+            if (!getTimeUsedList().isEmpty()) {
+                size += 1;
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt32SizeNoTag(dataSize);
+            }
+            timeUsedMemoizedSerializedSize = dataSize;
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
     }
-  };
 
-  public static com.google.protobuf.Parser<RpcStat> parser() {
-    return PARSER;
-  }
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof krpc.rpc.monitor.proto.RpcStat)) {
+            return super.equals(obj);
+        }
+        krpc.rpc.monitor.proto.RpcStat other = (krpc.rpc.monitor.proto.RpcStat) obj;
 
-  @java.lang.Override
-  public com.google.protobuf.Parser<RpcStat> getParserForType() {
-    return PARSER;
-  }
+        boolean result = true;
+        result = result && (getType()
+                == other.getType());
+        result = result && (getTime()
+                == other.getTime());
+        result = result && (getServiceId()
+                == other.getServiceId());
+        result = result && (getMsgId()
+                == other.getMsgId());
+        result = result && (getSuccess()
+                == other.getSuccess());
+        result = result && (getFailed()
+                == other.getFailed());
+        result = result && (getTimeout()
+                == other.getTimeout());
+        result = result && getTimeUsedList()
+                .equals(other.getTimeUsedList());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+    }
 
-  @java.lang.Override
-  public krpc.rpc.monitor.proto.RpcStat getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getType();
+        hash = (37 * hash) + TIME_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                getTime());
+        hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
+        hash = (53 * hash) + getServiceId();
+        hash = (37 * hash) + MSGID_FIELD_NUMBER;
+        hash = (53 * hash) + getMsgId();
+        hash = (37 * hash) + SUCCESS_FIELD_NUMBER;
+        hash = (53 * hash) + getSuccess();
+        hash = (37 * hash) + FAILED_FIELD_NUMBER;
+        hash = (53 * hash) + getFailed();
+        hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
+        hash = (53 * hash) + getTimeout();
+        if (getTimeUsedCount() > 0) {
+            hash = (37 * hash) + TIMEUSED_FIELD_NUMBER;
+            hash = (53 * hash) + getTimeUsedList().hashCode();
+        }
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(krpc.rpc.monitor.proto.RpcStat prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * Protobuf type {@code RpcStat}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:RpcStat)
+            krpc.rpc.monitor.proto.RpcStatOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            krpc.rpc.monitor.proto.RpcStat.class, krpc.rpc.monitor.proto.RpcStat.Builder.class);
+        }
+
+        // Construct using krpc.rpc.monitor.proto.RpcStat.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessageV3
+                    .alwaysUseFieldBuilders) {
+            }
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            type_ = 0;
+
+            time_ = 0L;
+
+            serviceId_ = 0;
+
+            msgId_ = 0;
+
+            success_ = 0;
+
+            failed_ = 0;
+
+            timeout_ = 0;
+
+            timeUsed_ = java.util.Collections.emptyList();
+            bitField0_ = (bitField0_ & ~0x00000080);
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return krpc.rpc.monitor.proto.MonitorProtos.internal_static_RpcStat_descriptor;
+        }
+
+        @java.lang.Override
+        public krpc.rpc.monitor.proto.RpcStat getDefaultInstanceForType() {
+            return krpc.rpc.monitor.proto.RpcStat.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public krpc.rpc.monitor.proto.RpcStat build() {
+            krpc.rpc.monitor.proto.RpcStat result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public krpc.rpc.monitor.proto.RpcStat buildPartial() {
+            krpc.rpc.monitor.proto.RpcStat result = new krpc.rpc.monitor.proto.RpcStat(this);
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            result.type_ = type_;
+            result.time_ = time_;
+            result.serviceId_ = serviceId_;
+            result.msgId_ = msgId_;
+            result.success_ = success_;
+            result.failed_ = failed_;
+            result.timeout_ = timeout_;
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                timeUsed_ = java.util.Collections.unmodifiableList(timeUsed_);
+                bitField0_ = (bitField0_ & ~0x00000080);
+            }
+            result.timeUsed_ = timeUsed_;
+            result.bitField0_ = to_bitField0_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return (Builder) super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return (Builder) super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return (Builder) super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return (Builder) super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, java.lang.Object value) {
+            return (Builder) super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return (Builder) super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof krpc.rpc.monitor.proto.RpcStat) {
+                return mergeFrom((krpc.rpc.monitor.proto.RpcStat) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(krpc.rpc.monitor.proto.RpcStat other) {
+            if (other == krpc.rpc.monitor.proto.RpcStat.getDefaultInstance()) return this;
+            if (other.getType() != 0) {
+                setType(other.getType());
+            }
+            if (other.getTime() != 0L) {
+                setTime(other.getTime());
+            }
+            if (other.getServiceId() != 0) {
+                setServiceId(other.getServiceId());
+            }
+            if (other.getMsgId() != 0) {
+                setMsgId(other.getMsgId());
+            }
+            if (other.getSuccess() != 0) {
+                setSuccess(other.getSuccess());
+            }
+            if (other.getFailed() != 0) {
+                setFailed(other.getFailed());
+            }
+            if (other.getTimeout() != 0) {
+                setTimeout(other.getTimeout());
+            }
+            if (!other.timeUsed_.isEmpty()) {
+                if (timeUsed_.isEmpty()) {
+                    timeUsed_ = other.timeUsed_;
+                    bitField0_ = (bitField0_ & ~0x00000080);
+                } else {
+                    ensureTimeUsedIsMutable();
+                    timeUsed_.addAll(other.timeUsed_);
+                }
+                onChanged();
+            }
+            this.mergeUnknownFields(other.unknownFields);
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            krpc.rpc.monitor.proto.RpcStat parsedMessage = null;
+            try {
+                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage = (krpc.rpc.monitor.proto.RpcStat) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private int bitField0_;
+
+        private int type_;
+
+        /**
+         * <pre>
+         * 1=req 2=call 3=web
+         * </pre>
+         *
+         * <code>int32 type = 1;</code>
+         */
+        public int getType() {
+            return type_;
+        }
+
+        /**
+         * <pre>
+         * 1=req 2=call 3=web
+         * </pre>
+         *
+         * <code>int32 type = 1;</code>
+         */
+        public Builder setType(int value) {
+
+            type_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * 1=req 2=call 3=web
+         * </pre>
+         *
+         * <code>int32 type = 1;</code>
+         */
+        public Builder clearType() {
+
+            type_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private long time_;
+
+        /**
+         * <pre>
+         * seconds from 1970
+         * </pre>
+         *
+         * <code>int64 time = 2;</code>
+         */
+        public long getTime() {
+            return time_;
+        }
+
+        /**
+         * <pre>
+         * seconds from 1970
+         * </pre>
+         *
+         * <code>int64 time = 2;</code>
+         */
+        public Builder setTime(long value) {
+
+            time_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * seconds from 1970
+         * </pre>
+         *
+         * <code>int64 time = 2;</code>
+         */
+        public Builder clearTime() {
+
+            time_ = 0L;
+            onChanged();
+            return this;
+        }
+
+        private int serviceId_;
+
+        /**
+         * <code>int32 serviceId = 3;</code>
+         */
+        public int getServiceId() {
+            return serviceId_;
+        }
+
+        /**
+         * <code>int32 serviceId = 3;</code>
+         */
+        public Builder setServiceId(int value) {
+
+            serviceId_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 serviceId = 3;</code>
+         */
+        public Builder clearServiceId() {
+
+            serviceId_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int msgId_;
+
+        /**
+         * <code>int32 msgId = 4;</code>
+         */
+        public int getMsgId() {
+            return msgId_;
+        }
+
+        /**
+         * <code>int32 msgId = 4;</code>
+         */
+        public Builder setMsgId(int value) {
+
+            msgId_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 msgId = 4;</code>
+         */
+        public Builder clearMsgId() {
+
+            msgId_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int success_;
+
+        /**
+         * <code>int32 success = 5;</code>
+         */
+        public int getSuccess() {
+            return success_;
+        }
+
+        /**
+         * <code>int32 success = 5;</code>
+         */
+        public Builder setSuccess(int value) {
+
+            success_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 success = 5;</code>
+         */
+        public Builder clearSuccess() {
+
+            success_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int failed_;
+
+        /**
+         * <code>int32 failed = 6;</code>
+         */
+        public int getFailed() {
+            return failed_;
+        }
+
+        /**
+         * <code>int32 failed = 6;</code>
+         */
+        public Builder setFailed(int value) {
+
+            failed_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 failed = 6;</code>
+         */
+        public Builder clearFailed() {
+
+            failed_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private int timeout_;
+
+        /**
+         * <code>int32 timeout = 7;</code>
+         */
+        public int getTimeout() {
+            return timeout_;
+        }
+
+        /**
+         * <code>int32 timeout = 7;</code>
+         */
+        public Builder setTimeout(int value) {
+
+            timeout_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int32 timeout = 7;</code>
+         */
+        public Builder clearTimeout() {
+
+            timeout_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private java.util.List<java.lang.Integer> timeUsed_ = java.util.Collections.emptyList();
+
+        private void ensureTimeUsedIsMutable() {
+            if (!((bitField0_ & 0x00000080) == 0x00000080)) {
+                timeUsed_ = new java.util.ArrayList<java.lang.Integer>(timeUsed_);
+                bitField0_ |= 0x00000080;
+            }
+        }
+
+        /**
+         * <code>repeated int32 timeUsed = 8;</code>
+         */
+        public java.util.List<java.lang.Integer>
+        getTimeUsedList() {
+            return java.util.Collections.unmodifiableList(timeUsed_);
+        }
+
+        /**
+         * <code>repeated int32 timeUsed = 8;</code>
+         */
+        public int getTimeUsedCount() {
+            return timeUsed_.size();
+        }
+
+        /**
+         * <code>repeated int32 timeUsed = 8;</code>
+         */
+        public int getTimeUsed(int index) {
+            return timeUsed_.get(index);
+        }
+
+        /**
+         * <code>repeated int32 timeUsed = 8;</code>
+         */
+        public Builder setTimeUsed(
+                int index, int value) {
+            ensureTimeUsedIsMutable();
+            timeUsed_.set(index, value);
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 timeUsed = 8;</code>
+         */
+        public Builder addTimeUsed(int value) {
+            ensureTimeUsedIsMutable();
+            timeUsed_.add(value);
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 timeUsed = 8;</code>
+         */
+        public Builder addAllTimeUsed(
+                java.lang.Iterable<? extends java.lang.Integer> values) {
+            ensureTimeUsedIsMutable();
+            com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                    values, timeUsed_);
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 timeUsed = 8;</code>
+         */
+        public Builder clearTimeUsed() {
+            timeUsed_ = java.util.Collections.emptyList();
+            bitField0_ = (bitField0_ & ~0x00000080);
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:RpcStat)
+    }
+
+    // @@protoc_insertion_point(class_scope:RpcStat)
+    private static final krpc.rpc.monitor.proto.RpcStat DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new krpc.rpc.monitor.proto.RpcStat();
+    }
+
+    public static krpc.rpc.monitor.proto.RpcStat getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<RpcStat>
+            PARSER = new com.google.protobuf.AbstractParser<RpcStat>() {
+        @java.lang.Override
+        public RpcStat parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return new RpcStat(input, extensionRegistry);
+        }
+    };
+
+    public static com.google.protobuf.Parser<RpcStat> parser() {
+        return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<RpcStat> getParserForType() {
+        return PARSER;
+    }
+
+    @java.lang.Override
+    public krpc.rpc.monitor.proto.RpcStat getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+    }
 
 }
 

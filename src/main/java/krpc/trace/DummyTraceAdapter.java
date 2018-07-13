@@ -1,209 +1,208 @@
 package krpc.trace;
 
+import krpc.rpc.core.proto.RpcMeta;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import krpc.rpc.core.proto.RpcMeta;
-import krpc.trace.Span;
-import krpc.trace.TraceAdapter;
-import krpc.trace.TraceContext;
-
 public class DummyTraceAdapter implements TraceAdapter {
 
-	RpcMeta.Trace dummyTrace = RpcMeta.Trace.newBuilder().build();
+    RpcMeta.Trace dummyTrace = RpcMeta.Trace.newBuilder().build();
 
-	TraceIds dummyTraceIds = new TraceIds("", "", "");
-	SpanIds dummySpanIds = new SpanIds("", "");
+    TraceIds dummyTraceIds = new TraceIds("", "", "");
+    SpanIds dummySpanIds = new SpanIds("", "");
 
-	Span dummySpan = new Span() {
+    Span dummySpan = new Span() {
 
-		public Span newChild(String type, String action) {
-			return dummySpan;
-		}
+        public Span newChild(String type, String action) {
+            return dummySpan;
+        }
 
-		public long stop() {
-			return 0;
-		}
+        public long stop() {
+            return 0;
+        }
 
-		public long stop(boolean ok) {
-			return 0;
-		}
+        public long stop(boolean ok) {
+            return 0;
+        }
 
-		public long stop(String result) {
-			return 0;
-		}
+        public long stop(String result) {
+            return 0;
+        }
 
-		public void logEvent(String type, String action, String status, String data) {
-		}
+        public void logEvent(String type, String action, String status, String data) {
+        }
 
-		public void logException(Throwable c) {
-		}
+        public void logException(Throwable c) {
+        }
 
-		public void logException(String message, Throwable c) {
-		}
+        public void logException(String message, Throwable c) {
+        }
 
-		public void tag(String key, String value) {
-		}
+        public void tag(String key, String value) {
+        }
 
-		public void setRemoteAddr(String addr) {
-		}
+        public void setRemoteAddr(String addr) {
+        }
 
-		public Span getRootSpan() {
-			return this;
-		}
-		
-		public String getRootSpanId() {
-			return "";
-		}
+        public Span getRootSpan() {
+            return this;
+        }
 
-		public SpanIds getSpanIds() {
-			return dummySpanIds;
-		}
+        public String getRootSpanId() {
+            return "";
+        }
 
-		public String getParentSpanId() {
-			return "";
-		}
+        public SpanIds getSpanIds() {
+            return dummySpanIds;
+        }
 
-		public String getSpanId() {
-			return "";
-		}
+        public String getParentSpanId() {
+            return "";
+        }
 
-		public String getType() {
-			return "";
-		}
+        public String getSpanId() {
+            return "";
+        }
 
-		public String getAction() {
-			return "";
-		}
+        public String getType() {
+            return "";
+        }
 
-		public long getStartMicros() {
-			return 0;
-		}
+        public String getAction() {
+            return "";
+        }
 
-		public long getTimeUsedMicros() {
-			return 0;
-		}
+        public long getStartMicros() {
+            return 0;
+        }
 
-		public String getStatus() {
-			return "";
-		}
+        public long getTimeUsedMicros() {
+            return 0;
+        }
 
-		public String getRemoteAddr() {
-			return "";
-		}
+        public String getStatus() {
+            return "";
+        }
 
-		public Map<String, String> getTags() {
-			return null;
-		}
+        public String getRemoteAddr() {
+            return "";
+        }
 
-		public List<Event> getEvents() {
-			return null;
-		}
+        public Map<String, String> getTags() {
+            return null;
+        }
 
-		public List<Span> getChildren() {
-			return null;
-		}
+        public List<Event> getEvents() {
+            return null;
+        }
 
-		public List<Metric> getMetrics() {
-			return null;
-		}
+        public List<Span> getChildren() {
+            return null;
+        }
 
-		public void incCount(String key) {
-		}
+        public List<Metric> getMetrics() {
+            return null;
+        }
 
-		public void incQuantity(String key, long value) {
-		}
+        public void incCount(String key) {
+        }
 
-		public void incSum(String key, double value) {
-		}
+        public void incQuantity(String key, long value) {
+        }
 
-		public void incQuantitySum(String key, long v1, double v2) {
-		}
-	};
+        public void incSum(String key, double value) {
+        }
 
-	TraceContext dummyTraceContext = new TraceContext() {
+        public void incQuantitySum(String key, long v1, double v2) {
+        }
+    };
 
-		public void startForServer(String type, String action) {
-		}
+    TraceContext dummyTraceContext = new TraceContext() {
 
-		public void start(String type, String action) {
-		}
+        public void startForServer(String type, String action) {
+        }
 
-		public Span startAsync(String type, String action) {
-			return dummySpan;
-		}
+        public void start(String type, String action) {
+        }
 
-		public Span currentSpan() {
-			return dummySpan;
-		}
+        public Span startAsync(String type, String action) {
+            return dummySpan;
+        }
 
-		public RpcMeta.Trace getTrace() {
-			return dummyTrace;
-		}
+        public Span currentSpan() {
+            return dummySpan;
+        }
 
-		public long getThreadId() {
-			return 0;
-		}
+        public RpcMeta.Trace getTrace() {
+            return dummyTrace;
+        }
 
-		public String getThreadName() {
-			return "";
-		}
+        public long getThreadId() {
+            return 0;
+        }
 
-		public String getThreadGroupName() {
-			return "";
-		}
+        public String getThreadName() {
+            return "";
+        }
 
-		public long getRequestTimeMicros() {
-			return 0;
-		}
+        public String getThreadGroupName() {
+            return "";
+        }
 
-		public long getStartMicros() {
-			return 0;
-		}
+        public long getRequestTimeMicros() {
+            return 0;
+        }
 
-		public void stopForServer(String result) {
-		}
+        public long getStartMicros() {
+            return 0;
+        }
 
-		public void tagForRpc(String key, String value) {
+        public void stopForServer(String result) {
+        }
 
-		}
-		public void tagForRpcIfAbsent(String key, String value) {
+        public void tagForRpc(String key, String value) {
 
-		}
-		public String getTagsForRpc() {
-			return "";
-		}
+        }
 
-		public String getTagForRpc(String key) {
-			return "";
-		}
-	};
+        public void tagForRpcIfAbsent(String key, String value) {
 
-	public TraceContext newTraceContext() {
-		return dummyTraceContext;
-	}
+        }
 
-	public TraceContext newTraceContext(RpcMeta.Trace trace, String type, String action) {
-		return dummyTraceContext;
-	}
+        public String getTagsForRpc() {
+            return "";
+        }
 
-	public TraceIds newStartTraceIds(boolean isServer) {
-		return dummyTraceIds;
-	}
+        public String getTagForRpc(String key) {
+            return "";
+        }
+    };
 
-	public SpanIds newChildSpanIds(String spanId, AtomicInteger subCalls) {
-		return dummySpanIds;
-	}
+    public TraceContext newTraceContext() {
+        return dummyTraceContext;
+    }
 
-	public void inject(TraceContext ctx, Span span,RpcMeta.Trace.Builder traceBuilder) {
-	}
+    public TraceContext newTraceContext(RpcMeta.Trace trace, String type, String action) {
+        return dummyTraceContext;
+    }
 
-	public SpanIds restore(String parentSpanId, String spanId) {
-		return dummySpanIds;
-	}
+    public TraceIds newStartTraceIds(boolean isServer) {
+        return dummyTraceIds;
+    }
 
-	public void send(TraceContext ctx, Span span) {
-	}
+    public SpanIds newChildSpanIds(String spanId, AtomicInteger subCalls) {
+        return dummySpanIds;
+    }
+
+    public void inject(TraceContext ctx, Span span, RpcMeta.Trace.Builder traceBuilder) {
+    }
+
+    public SpanIds restore(String parentSpanId, String spanId) {
+        return dummySpanIds;
+    }
+
+    public void send(TraceContext ctx, Span span) {
+    }
 
 }

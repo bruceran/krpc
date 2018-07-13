@@ -1,22 +1,8 @@
 package krpc.rpc.impl.transport;
 
-import java.net.InetSocketAddress;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.ChannelGroupFuture;
@@ -32,241 +18,244 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import krpc.rpc.core.RpcCodec;
-import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.core.Transport;
-import krpc.rpc.core.TransportCallback;
-import krpc.rpc.core.TransportChannel;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
 import krpc.common.StartStop;
+import krpc.rpc.core.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Sharable
-public class NettyClient extends TransportBase implements Transport, TransportChannel,InitClose,StartStop {
+public class NettyClient extends TransportBase implements Transport, TransportChannel, InitClose, StartStop {
 
-	static Logger log = LoggerFactory.getLogger(NettyClient.class);
+    static Logger log = LoggerFactory.getLogger(NettyClient.class);
 
-	int pingSeconds = 60;
-	int maxPackageSize = 1000000;
-	int connectTimeout = 15000;
-	int reconnectSeconds = 1;
-	int workerThreads = 0;
+    int pingSeconds = 60;
+    int maxPackageSize = 1000000;
+    int connectTimeout = 15000;
+    int reconnectSeconds = 1;
+    int workerThreads = 0;
 
-	NamedThreadFactory workThreadFactory = new NamedThreadFactory("cli_work");
-	NamedThreadFactory timerThreadFactory = new NamedThreadFactory("cli_timer");
+    NamedThreadFactory workThreadFactory = new NamedThreadFactory("cli_work");
+    NamedThreadFactory timerThreadFactory = new NamedThreadFactory("cli_timer");
 
-	EventLoopGroup workerGroup;
-	HashedWheelTimer timer;
+    EventLoopGroup workerGroup;
+    HashedWheelTimer timer;
 
-	Bootstrap bootstrap;
+    Bootstrap bootstrap;
 
-	Object dummyChannel = new Object();
-	ConcurrentHashMap<String, Object> conns = new ConcurrentHashMap<>(); // value cannot be null, so use Object type but Channel type
-	ConcurrentHashMap<String, String> connIdMap = new ConcurrentHashMap<>(); // channel.id() -> outside connId
+    Object dummyChannel = new Object();
+    ConcurrentHashMap<String, Object> conns = new ConcurrentHashMap<>(); // value cannot be null, so use Object type but Channel type
+    ConcurrentHashMap<String, String> connIdMap = new ConcurrentHashMap<>(); // channel.id() -> outside connId
 
-	public NettyClient() {}
-	
-	public NettyClient(TransportCallback callback,RpcCodec codec,ServiceMetas serviceMetas) {
-		this.callback = callback;
-		this.codec = codec;
-		this.serviceMetas = serviceMetas;
-	}
+    public NettyClient() {
+    }
 
-	public void init() {
+    public NettyClient(TransportCallback callback, RpcCodec codec, ServiceMetas serviceMetas) {
+        this.callback = callback;
+        this.codec = codec;
+        this.serviceMetas = serviceMetas;
+    }
 
-		workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
-		timer = new HashedWheelTimer(timerThreadFactory, 1, TimeUnit.SECONDS);
+    public void init() {
 
-		bootstrap = new Bootstrap();
-		bootstrap.group(workerGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
-			@Override
-			protected void initChannel(SocketChannel ch) throws Exception {
-				ChannelPipeline pipeline = ch.pipeline();
-				pipeline.addLast("frame-decoder", new LengthFieldBasedFrameDecoder(maxPackageSize, 4, 4, 0, 0));
-				pipeline.addLast("timeout", new IdleStateHandler(0, 0, pingSeconds));
-				pipeline.addLast("handler", NettyClient.this);
-			}
-		});
-		bootstrap.option(ChannelOption.TCP_NODELAY, true);
-		bootstrap.option(ChannelOption.SO_REUSEADDR, true);
-		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-		// bootstrap.option(ChannelOption.SO_RCVBUF, 65536);
-		bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout);
+        workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
+        timer = new HashedWheelTimer(timerThreadFactory, 1, TimeUnit.SECONDS);
 
-		log.info("netty client started");
-	}
+        bootstrap = new Bootstrap();
+        bootstrap.group(workerGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel ch) throws Exception {
+                ChannelPipeline pipeline = ch.pipeline();
+                pipeline.addLast("frame-decoder", new LengthFieldBasedFrameDecoder(maxPackageSize, 4, 4, 0, 0));
+                pipeline.addLast("timeout", new IdleStateHandler(0, 0, pingSeconds));
+                pipeline.addLast("handler", NettyClient.this);
+            }
+        });
+        bootstrap.option(ChannelOption.TCP_NODELAY, true);
+        bootstrap.option(ChannelOption.SO_REUSEADDR, true);
+        bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+        // bootstrap.option(ChannelOption.SO_RCVBUF, 65536);
+        bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout);
 
-	public void start() {
-	}
-	
-	public void close() {
+        log.info("netty client started");
+    }
 
-		if (workerGroup != null) {
+    public void start() {
+    }
 
-			log.info("stopping netty client");
+    public void close() {
 
-			timer.stop();
-			timer = null;
+        if (workerGroup != null) {
 
-			ChannelGroup allChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-			for (Object ch : conns.values()) {
-				if (ch != null && ch != dummyChannel)
-					allChannels.add((Channel) ch);
-			}
-			ChannelGroupFuture future = allChannels.close();
-			future.awaitUninterruptibly();
+            log.info("stopping netty client");
 
-			workerGroup.shutdownGracefully();
-			workerGroup = null;
+            timer.stop();
+            timer = null;
 
-			log.info("netty client stopped");
-		}
-	}
+            ChannelGroup allChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+            for (Object ch : conns.values()) {
+                if (ch != null && ch != dummyChannel)
+                    allChannels.add((Channel) ch);
+            }
+            ChannelGroupFuture future = allChannels.close();
+            future.awaitUninterruptibly();
 
-	boolean isServerSide() {
-		return false;
-	}
+            workerGroup.shutdownGracefully();
+            workerGroup = null;
 
-	Channel getChannel(String connId) {
-		Object o = conns.get(connId);
-		if (o == dummyChannel)
-			return null;
-		return (Channel) o;
-	}
+            log.info("netty client stopped");
+        }
+    }
 
-	public String getConnId(ChannelHandlerContext ctx) {
-		Channel ch = ctx.channel();
-		return connIdMap.get(ch.id().asLongText());
-	}
+    boolean isServerSide() {
+        return false;
+    }
 
-	public void connect(String connId, String addr) {
-		conns.put(connId, dummyChannel);
-		reconnect(connId, addr);
-	}
+    Channel getChannel(String connId) {
+        Object o = conns.get(connId);
+        if (o == dummyChannel)
+            return null;
+        return (Channel) o;
+    }
 
-	public void disconnect(String connId) {
-		Channel ch = getChannel(connId);
-		if (ch == null)
-			return;
-		conns.remove(connId);
-		ch.close();
-	}
+    public String getConnId(ChannelHandlerContext ctx) {
+        Channel ch = ctx.channel();
+        return connIdMap.get(ch.id().asLongText());
+    }
 
-	void reconnect(final String connId, final String addr) {
+    public void connect(String connId, String addr) {
+        conns.put(connId, dummyChannel);
+        reconnect(connId, addr);
+    }
 
-		if (!conns.containsKey(connId)) {
-			return;
-		}
+    public void disconnect(String connId) {
+        Channel ch = getChannel(connId);
+        if (ch == null)
+            return;
+        conns.remove(connId);
+        ch.close();
+    }
 
-		String[] ss = addr.split(":");
-		String host = ss[0];
-		int port = Integer.parseInt(ss[1]);
+    void reconnect(final String connId, final String addr) {
 
-		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
-		future.addListener(new ChannelFutureListener() {
-			public void operationComplete(ChannelFuture future) {
-				NettyClient.this.onConnectCompleted(future, connId, addr);
-			}
-		});
-	}
+        if (!conns.containsKey(connId)) {
+            return;
+        }
 
-	void scheduleToReconnect(final String connId, final String addr) {
+        String[] ss = addr.split(":");
+        String host = ss[0];
+        int port = Integer.parseInt(ss[1]);
 
-		if (timer != null) { // maybe stopping
-			timer.newTimeout(new TimerTask() {
+        ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+        future.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture future) {
+                NettyClient.this.onConnectCompleted(future, connId, addr);
+            }
+        });
+    }
 
-				public void run(Timeout timeout) {
-					reconnect(connId, addr);
-				}
+    void scheduleToReconnect(final String connId, final String addr) {
 
-			}, reconnectSeconds, TimeUnit.SECONDS);
-		}
-	}
+        if (timer != null) { // maybe stopping
+            timer.newTimeout(new TimerTask() {
 
-	void onConnectCompleted(ChannelFuture f, String connId, String addr) {
+                public void run(Timeout timeout) {
+                    reconnect(connId, addr);
+                }
 
-		if (!f.isSuccess()) {
-			log.error("connect failed, connId=" + connId + ", e=" + f.cause().getMessage());
-			scheduleToReconnect(connId, addr);
-			return;
-		}
+            }, reconnectSeconds, TimeUnit.SECONDS);
+        }
+    }
 
-		Channel ch = f.channel();
-		connIdMap.put(ch.id().asLongText(), connId);
-		conns.put(connId, ch);
-		log.info("connection started, connId={}", connId);
-		if( callback != null)
-			callback.connected(connId, parseIpPort(ch.localAddress().toString()));
-	}
+    void onConnectCompleted(ChannelFuture f, String connId, String addr) {
 
-	@Override
-	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		//debugLog("channelInactive called");
-		String connId = getConnId(ctx);
-		connIdMap.remove(ctx.channel().id().asLongText());
-		if (connId == null)
-			return;
-		conns.put(connId, dummyChannel);
-		log.info("connection ended, connId={}", connId);
-		if( callback != null)
-			callback.disconnected(connId);
+        if (!f.isSuccess()) {
+            log.error("connect failed, connId=" + connId + ", e=" + f.cause().getMessage());
+            scheduleToReconnect(connId, addr);
+            return;
+        }
 
-		String addr = getAddr(connId);
-		scheduleToReconnect(connId, addr);
-	}
+        Channel ch = f.channel();
+        connIdMap.put(ch.id().asLongText(), connId);
+        conns.put(connId, ch);
+        log.info("connection started, connId={}", connId);
+        if (callback != null)
+            callback.connected(connId, parseIpPort(ch.localAddress().toString()));
+    }
 
-	@Override
-	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-		//debugLog("userEventTriggered called, evt="+evt);
-		if (evt instanceof IdleStateEvent) {
-			IdleStateEvent e = (IdleStateEvent) evt;
-			if (e.state() == IdleState.ALL_IDLE) {
-				Channel ch = ctx.channel();
-				ByteBuf encoded = ctx.alloc().buffer(32);
-				codec.getReqHeartBeat(encoded);
-				ch.writeAndFlush(encoded);
-			}
-		}
-	}
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        //debugLog("channelInactive called");
+        String connId = getConnId(ctx);
+        connIdMap.remove(ctx.channel().id().asLongText());
+        if (connId == null)
+            return;
+        conns.put(connId, dummyChannel);
+        log.info("connection ended, connId={}", connId);
+        if (callback != null)
+            callback.disconnected(connId);
 
-	public int getPingSeconds() {
-		return pingSeconds;
-	}
+        String addr = getAddr(connId);
+        scheduleToReconnect(connId, addr);
+    }
 
-	public void setPingSeconds(int pingSeconds) {
-		this.pingSeconds = pingSeconds;
-	}
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        //debugLog("userEventTriggered called, evt="+evt);
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent e = (IdleStateEvent) evt;
+            if (e.state() == IdleState.ALL_IDLE) {
+                Channel ch = ctx.channel();
+                ByteBuf encoded = ctx.alloc().buffer(32);
+                codec.getReqHeartBeat(encoded);
+                ch.writeAndFlush(encoded);
+            }
+        }
+    }
 
-	public int getMaxPackageSize() {
-		return maxPackageSize;
-	}
+    public int getPingSeconds() {
+        return pingSeconds;
+    }
 
-	public void setMaxPackageSize(int maxPackageSize) {
-		this.maxPackageSize = maxPackageSize;
-	}
+    public void setPingSeconds(int pingSeconds) {
+        this.pingSeconds = pingSeconds;
+    }
 
-	public int getConnectTimeout() {
-		return connectTimeout;
-	}
+    public int getMaxPackageSize() {
+        return maxPackageSize;
+    }
 
-	public void setConnectTimeout(int connectTimeout) {
-		this.connectTimeout = connectTimeout;
-	}
+    public void setMaxPackageSize(int maxPackageSize) {
+        this.maxPackageSize = maxPackageSize;
+    }
 
-	public int getReconnectSeconds() {
-		return reconnectSeconds;
-	}
+    public int getConnectTimeout() {
+        return connectTimeout;
+    }
 
-	public void setReconnectSeconds(int reconnectSeconds) {
-		this.reconnectSeconds = reconnectSeconds;
-	}
+    public void setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
 
-	public int getWorkerThreads() {
-		return workerThreads;
-	}
+    public int getReconnectSeconds() {
+        return reconnectSeconds;
+    }
 
-	public void setWorkerThreads(int workerThreads) {
-		this.workerThreads = workerThreads;
-	}
+    public void setReconnectSeconds(int reconnectSeconds) {
+        this.reconnectSeconds = reconnectSeconds;
+    }
+
+    public int getWorkerThreads() {
+        return workerThreads;
+    }
+
+    public void setWorkerThreads(int workerThreads) {
+        this.workerThreads = workerThreads;
+    }
 
 }

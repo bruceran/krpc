@@ -4,68 +4,76 @@
 package com.xxx.userservice.proto;
 
 public interface HttpUploadTestReq2OrBuilder extends
-    // @@protoc_insertion_point(interface_extends:HttpUploadTestReq2)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:HttpUploadTestReq2)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>string httpContentType = 1;</code>
-   */
-  java.lang.String getHttpContentType();
-  /**
-   * <code>string httpContentType = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getHttpContentTypeBytes();
+    /**
+     * <code>string httpContentType = 1;</code>
+     */
+    java.lang.String getHttpContentType();
 
-  /**
-   * <code>string httpContent = 2;</code>
-   */
-  java.lang.String getHttpContent();
-  /**
-   * <code>string httpContent = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getHttpContentBytes();
+    /**
+     * <code>string httpContentType = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getHttpContentTypeBytes();
 
-  /**
-   * <code>repeated string a = 3;</code>
-   */
-  java.util.List<java.lang.String>
-      getAList();
-  /**
-   * <code>repeated string a = 3;</code>
-   */
-  int getACount();
-  /**
-   * <code>repeated string a = 3;</code>
-   */
-  java.lang.String getA(int index);
-  /**
-   * <code>repeated string a = 3;</code>
-   */
-  com.google.protobuf.ByteString
-      getABytes(int index);
+    /**
+     * <code>string httpContent = 2;</code>
+     */
+    java.lang.String getHttpContent();
 
-  /**
-   * <code>string b = 4;</code>
-   */
-  java.lang.String getB();
-  /**
-   * <code>string b = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getBBytes();
+    /**
+     * <code>string httpContent = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getHttpContentBytes();
 
-  /**
-   * <code>.UploadFile files = 5;</code>
-   */
-  boolean hasFiles();
-  /**
-   * <code>.UploadFile files = 5;</code>
-   */
-  com.xxx.userservice.proto.UploadFile getFiles();
-  /**
-   * <code>.UploadFile files = 5;</code>
-   */
-  com.xxx.userservice.proto.UploadFileOrBuilder getFilesOrBuilder();
+    /**
+     * <code>repeated string a = 3;</code>
+     */
+    java.util.List<java.lang.String>
+    getAList();
+
+    /**
+     * <code>repeated string a = 3;</code>
+     */
+    int getACount();
+
+    /**
+     * <code>repeated string a = 3;</code>
+     */
+    java.lang.String getA(int index);
+
+    /**
+     * <code>repeated string a = 3;</code>
+     */
+    com.google.protobuf.ByteString
+    getABytes(int index);
+
+    /**
+     * <code>string b = 4;</code>
+     */
+    java.lang.String getB();
+
+    /**
+     * <code>string b = 4;</code>
+     */
+    com.google.protobuf.ByteString
+    getBBytes();
+
+    /**
+     * <code>.UploadFile files = 5;</code>
+     */
+    boolean hasFiles();
+
+    /**
+     * <code>.UploadFile files = 5;</code>
+     */
+    com.xxx.userservice.proto.UploadFile getFiles();
+
+    /**
+     * <code>.UploadFile files = 5;</code>
+     */
+    com.xxx.userservice.proto.UploadFileOrBuilder getFilesOrBuilder();
 }

@@ -1,19 +1,8 @@
 package krpc.rpc.impl.transport;
 
-import java.net.InetSocketAddress;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
+import io.netty.channel.*;
 import io.netty.channel.ChannelHandler.Sharable;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.ChannelGroupFuture;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -32,224 +21,230 @@ import krpc.rpc.core.RpcCodec;
 import krpc.rpc.core.ServiceMetas;
 import krpc.rpc.core.Transport;
 import krpc.rpc.core.TransportCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Sharable
-public class NettyServer extends TransportBase implements Transport,InitClose,StartStop {
+public class NettyServer extends TransportBase implements Transport, InitClose, StartStop {
 
-	static Logger log = LoggerFactory.getLogger(NettyServer.class);
+    static Logger log = LoggerFactory.getLogger(NettyServer.class);
 
-	int port = 5600;
-	String host = "*";
-	int idleSeconds = 180;
-	int maxPackageSize = 1000000;
-	int maxConns = 500000;
-	int workerThreads = 0;
-	int backlog = 300;
-	
-	NamedThreadFactory bossThreadFactory = new NamedThreadFactory("svr_boss");
-	NamedThreadFactory workThreadFactory = new NamedThreadFactory("svr_work");
+    int port = 5600;
+    String host = "*";
+    int idleSeconds = 180;
+    int maxPackageSize = 1000000;
+    int maxConns = 500000;
+    int workerThreads = 0;
+    int backlog = 300;
 
-	EventLoopGroup bossGroup;
-	EventLoopGroup workerGroup;
-	Channel serverChannel;
+    NamedThreadFactory bossThreadFactory = new NamedThreadFactory("svr_boss");
+    NamedThreadFactory workThreadFactory = new NamedThreadFactory("svr_work");
 
-	ConcurrentHashMap<String, Channel> conns = new ConcurrentHashMap<String, Channel>();
+    EventLoopGroup bossGroup;
+    EventLoopGroup workerGroup;
+    Channel serverChannel;
 
-	ServerBootstrap serverBootstrap;
-	
-	public NettyServer() {}
-	
-	public NettyServer(int port,TransportCallback callback,RpcCodec codec,ServiceMetas serviceMetas) {
-		this.callback = callback;
-		this.codec = codec;
-		this.serviceMetas = serviceMetas;
-		this.port = port;
-	}
-	
-	public void init() {
+    ConcurrentHashMap<String, Channel> conns = new ConcurrentHashMap<String, Channel>();
 
-		bossGroup = new NioEventLoopGroup(1, bossThreadFactory);
-		workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
+    ServerBootstrap serverBootstrap;
 
-		serverBootstrap = new ServerBootstrap();
-		serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-				.childHandler(new ChannelInitializer<SocketChannel>() {
-					@Override
-					protected void initChannel(SocketChannel ch) throws Exception {
-						ChannelPipeline pipeline = ch.pipeline();
-						pipeline.addLast("frame-decoder", new LengthFieldBasedFrameDecoder(maxPackageSize, 4, 4, 0, 0));
-						pipeline.addLast("timeout", new IdleStateHandler(0, 0, idleSeconds));
-						pipeline.addLast("handler", NettyServer.this);
-					}
-				});
-		serverBootstrap.option(ChannelOption.SO_BACKLOG, backlog);		
-		serverBootstrap.option(ChannelOption.SO_REUSEADDR, true);
-		serverBootstrap.childOption(ChannelOption.TCP_NODELAY, true);
-		serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
-		// serverBootstrap.childOption(ChannelOption.SO_RCVBUF, 65536);
-	}
-	
-	public void start() {
-		InetSocketAddress addr = null;
-		if (host == null || "*".equals(host)) {
-			addr = new InetSocketAddress(port);
-		} else {
-			addr = new InetSocketAddress(host, port);
-		}
-		serverChannel = serverBootstrap.bind(addr).syncUninterruptibly().channel();
-		log.info("netty server started on host(" + host + ") port(" + port + ")");		
-	}
+    public NettyServer() {
+    }
 
-	public void close() {
+    public NettyServer(int port, TransportCallback callback, RpcCodec codec, ServiceMetas serviceMetas) {
+        this.callback = callback;
+        this.codec = codec;
+        this.serviceMetas = serviceMetas;
+        this.port = port;
+    }
 
-		if (workerGroup != null) {
+    public void init() {
 
-			log.info("stopping netty server");
+        bossGroup = new NioEventLoopGroup(1, bossThreadFactory);
+        workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
 
-			bossGroup.shutdownGracefully();
-			bossGroup = null;
+        serverBootstrap = new ServerBootstrap();
+        serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast("frame-decoder", new LengthFieldBasedFrameDecoder(maxPackageSize, 4, 4, 0, 0));
+                        pipeline.addLast("timeout", new IdleStateHandler(0, 0, idleSeconds));
+                        pipeline.addLast("handler", NettyServer.this);
+                    }
+                });
+        serverBootstrap.option(ChannelOption.SO_BACKLOG, backlog);
+        serverBootstrap.option(ChannelOption.SO_REUSEADDR, true);
+        serverBootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+        serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+        // serverBootstrap.childOption(ChannelOption.SO_RCVBUF, 65536);
+    }
 
-			ChannelGroup allChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-			allChannels.add(serverChannel);
-			for (Channel ch : conns.values()) {
-				allChannels.add(ch);
-			}
-			ChannelGroupFuture future = allChannels.close();
-			future.awaitUninterruptibly();
+    public void start() {
+        InetSocketAddress addr = null;
+        if (host == null || "*".equals(host)) {
+            addr = new InetSocketAddress(port);
+        } else {
+            addr = new InetSocketAddress(host, port);
+        }
+        serverChannel = serverBootstrap.bind(addr).syncUninterruptibly().channel();
+        log.info("netty server started on host(" + host + ") port(" + port + ")");
+    }
 
-			workerGroup.shutdownGracefully();
-			workerGroup = null;
+    public void close() {
 
-			log.info("netty server stopped");
-		}
-	}
+        if (workerGroup != null) {
 
-	boolean isServerSide() {
-		return true;
-	}
+            log.info("stopping netty server");
 
-	Channel getChannel(String connId) {
-		Channel o = conns.get(connId);
-		if (o == null)
-			return null;
-		return o;
-	}
+            bossGroup.shutdownGracefully();
+            bossGroup = null;
 
-	String getConnId(ChannelHandlerContext ctx) {
-		Channel ch = ctx.channel();
-		return parseIpPort(ch.remoteAddress().toString()) + ":" + ch.id().asShortText();
-	}
+            ChannelGroup allChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+            allChannels.add(serverChannel);
+            for (Channel ch : conns.values()) {
+                allChannels.add(ch);
+            }
+            ChannelGroupFuture future = allChannels.close();
+            future.awaitUninterruptibly();
 
-	public void disconnect(String connId) {
-		Channel ch = getChannel(connId);
-		if (ch == null) {
-			log.error("connection not found, connId={}", connId);
-			return;
-		}
-		ch.close();
-	}
+            workerGroup.shutdownGracefully();
+            workerGroup = null;
 
-	@Override
-	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+            log.info("netty server stopped");
+        }
+    }
 
-		//debugLog("channelActive");
-		if (stopFlag.get()) {
-			ctx.close();
-			return;
-		}
+    boolean isServerSide() {
+        return true;
+    }
 
-		String connId = getConnId(ctx);
+    Channel getChannel(String connId) {
+        Channel o = conns.get(connId);
+        if (o == null)
+            return null;
+        return o;
+    }
 
-		if (conns.size() >= maxConns) {
-			log.error("connection started, connId={}, but max connections exceeded, conn not allowed", connId);
-			ctx.close();
-			return;
-		}
+    String getConnId(ChannelHandlerContext ctx) {
+        Channel ch = ctx.channel();
+        return parseIpPort(ch.remoteAddress().toString()) + ":" + ch.id().asShortText();
+    }
 
-		log.info("connection started, connId={}", connId);
+    public void disconnect(String connId) {
+        Channel ch = getChannel(connId);
+        if (ch == null) {
+            log.error("connection not found, connId={}", connId);
+            return;
+        }
+        ch.close();
+    }
 
-		conns.put(connId, ctx.channel());
-		if( callback != null)
-			callback.connected(connId, parseIpPort(ctx.channel().localAddress().toString()));
-	}
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
-	@Override
-	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		//debugLog("channelInactive");
-		String connId = getConnId(ctx);
-		conns.remove(connId);
-		log.info("connection ended, connId={}", connId);
-		if( callback != null)
-			callback.disconnected(connId);
-	}
+        //debugLog("channelActive");
+        if (stopFlag.get()) {
+            ctx.close();
+            return;
+        }
 
-	@Override
-	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-		//debugLog("userEventTriggered, evt="+evt);
-		if (evt instanceof IdleStateEvent) {
-			IdleStateEvent e = (IdleStateEvent) evt;
-			if (e.state() == IdleState.ALL_IDLE) {
-				String connId = getConnId(ctx);
-				log.error("connection timeout, connId={}", connId);
-				ctx.close();
-			}
-		}
-	}
+        String connId = getConnId(ctx);
 
-	public int getPort() {
-		return port;
-	}
+        if (conns.size() >= maxConns) {
+            log.error("connection started, connId={}, but max connections exceeded, conn not allowed", connId);
+            ctx.close();
+            return;
+        }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+        log.info("connection started, connId={}", connId);
 
-	public String getHost() {
-		return host;
-	}
+        conns.put(connId, ctx.channel());
+        if (callback != null)
+            callback.connected(connId, parseIpPort(ctx.channel().localAddress().toString()));
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        //debugLog("channelInactive");
+        String connId = getConnId(ctx);
+        conns.remove(connId);
+        log.info("connection ended, connId={}", connId);
+        if (callback != null)
+            callback.disconnected(connId);
+    }
 
-	public int getMaxPackageSize() {
-		return maxPackageSize;
-	}
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        //debugLog("userEventTriggered, evt="+evt);
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent e = (IdleStateEvent) evt;
+            if (e.state() == IdleState.ALL_IDLE) {
+                String connId = getConnId(ctx);
+                log.error("connection timeout, connId={}", connId);
+                ctx.close();
+            }
+        }
+    }
 
-	public void setMaxPackageSize(int maxPackageSize) {
-		this.maxPackageSize = maxPackageSize;
-	}
+    public int getPort() {
+        return port;
+    }
 
-	public int getMaxConns() {
-		return maxConns;
-	}
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-	public void setMaxConns(int maxConns) {
-		this.maxConns = maxConns;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public int getIdleSeconds() {
-		return idleSeconds;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public void setIdleSeconds(int idleSeconds) {
-		this.idleSeconds = idleSeconds;
-	}
+    public int getMaxPackageSize() {
+        return maxPackageSize;
+    }
 
-	public int getWorkerThreads() {
-		return workerThreads;
-	}
+    public void setMaxPackageSize(int maxPackageSize) {
+        this.maxPackageSize = maxPackageSize;
+    }
 
-	public void setWorkerThreads(int workerThreads) {
-		this.workerThreads = workerThreads;
-	}
+    public int getMaxConns() {
+        return maxConns;
+    }
 
-	public int getBacklog() {
-		return backlog;
-	}
+    public void setMaxConns(int maxConns) {
+        this.maxConns = maxConns;
+    }
 
-	public void setBacklog(int backlog) {
-		this.backlog = backlog;
-	}
+    public int getIdleSeconds() {
+        return idleSeconds;
+    }
+
+    public void setIdleSeconds(int idleSeconds) {
+        this.idleSeconds = idleSeconds;
+    }
+
+    public int getWorkerThreads() {
+        return workerThreads;
+    }
+
+    public void setWorkerThreads(int workerThreads) {
+        this.workerThreads = workerThreads;
+    }
+
+    public int getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(int backlog) {
+        this.backlog = backlog;
+    }
 
 }

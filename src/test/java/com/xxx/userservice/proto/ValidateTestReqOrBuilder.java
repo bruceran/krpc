@@ -4,256 +4,284 @@
 package com.xxx.userservice.proto;
 
 public interface ValidateTestReqOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:ValidateTestReq)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:ValidateTestReq)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getUserId();
-  /**
-   * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getUserIdBytes();
+    /**
+     * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getUserId();
 
-  /**
-   * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS1();
-  /**
-   * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS1Bytes();
+    /**
+     * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getUserIdBytes();
 
-  /**
-   * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS2();
-  /**
-   * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS2Bytes();
+    /**
+     * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS1();
 
-  /**
-   * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
-   */
-  int getI1();
+    /**
+     * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS1Bytes();
 
-  /**
-   * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getI2();
-  /**
-   * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getI2Bytes();
+    /**
+     * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS2();
 
-  /**
-   * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
-   */
-  int getI3();
+    /**
+     * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS2Bytes();
 
-  /**
-   * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getI4();
-  /**
-   * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getI4Bytes();
+    /**
+     * <code>int32 i1 = 15 [(.krpc.vld) = { ... }</code>
+     */
+    int getI1();
 
-  /**
-   * <code>.ValidateSub m = 8;</code>
-   */
-  boolean hasM();
-  /**
-   * <code>.ValidateSub m = 8;</code>
-   */
-  com.xxx.userservice.proto.ValidateSub getM();
-  /**
-   * <code>.ValidateSub m = 8;</code>
-   */
-  com.xxx.userservice.proto.ValidateSubOrBuilder getMOrBuilder();
+    /**
+     * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getI2();
 
-  /**
-   * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS5();
-  /**
-   * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS5Bytes();
+    /**
+     * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getI2Bytes();
 
-  /**
-   * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS6();
-  /**
-   * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS6Bytes();
+    /**
+     * <code>int32 i3 = 17 [(.krpc.vld) = { ... }</code>
+     */
+    int getI3();
 
-  /**
-   * <code>int32 i5 = 23 [(.krpc.vld) = { ... }</code>
-   */
-  int getI5();
+    /**
+     * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getI4();
 
-  /**
-   * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
-   */
-  java.util.List<java.lang.String>
-      getS7List();
-  /**
-   * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
-   */
-  int getS7Count();
-  /**
-   * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS7(int index);
-  /**
-   * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS7Bytes(int index);
+    /**
+     * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getI4Bytes();
 
-  /**
-   * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS31();
-  /**
-   * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS31Bytes();
+    /**
+     * <code>.ValidateSub m = 8;</code>
+     */
+    boolean hasM();
 
-  /**
-   * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS32();
-  /**
-   * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS32Bytes();
+    /**
+     * <code>.ValidateSub m = 8;</code>
+     */
+    com.xxx.userservice.proto.ValidateSub getM();
 
-  /**
-   * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS33();
-  /**
-   * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS33Bytes();
+    /**
+     * <code>.ValidateSub m = 8;</code>
+     */
+    com.xxx.userservice.proto.ValidateSubOrBuilder getMOrBuilder();
 
-  /**
-   * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS34();
-  /**
-   * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS34Bytes();
+    /**
+     * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS5();
 
-  /**
-   * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS35();
-  /**
-   * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS35Bytes();
+    /**
+     * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS5Bytes();
 
-  /**
-   * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS36();
-  /**
-   * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS36Bytes();
+    /**
+     * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS6();
 
-  /**
-   * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS37();
-  /**
-   * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS37Bytes();
+    /**
+     * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS6Bytes();
 
-  /**
-   * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS38();
-  /**
-   * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS38Bytes();
+    /**
+     * <code>int32 i5 = 23 [(.krpc.vld) = { ... }</code>
+     */
+    int getI5();
 
-  /**
-   * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS39();
-  /**
-   * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS39Bytes();
+    /**
+     * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
+     */
+    java.util.List<java.lang.String>
+    getS7List();
 
-  /**
-   * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
-   */
-  java.util.List<com.xxx.userservice.proto.ValidateSub> 
-      getKList();
-  /**
-   * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
-   */
-  com.xxx.userservice.proto.ValidateSub getK(int index);
-  /**
-   * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
-   */
-  int getKCount();
-  /**
-   * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
-   */
-  java.util.List<? extends com.xxx.userservice.proto.ValidateSubOrBuilder> 
-      getKOrBuilderList();
-  /**
-   * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
-   */
-  com.xxx.userservice.proto.ValidateSubOrBuilder getKOrBuilder(
-      int index);
+    /**
+     * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
+     */
+    int getS7Count();
 
-  /**
-   * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
-   */
-  java.util.List<java.lang.String>
-      getS41List();
-  /**
-   * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
-   */
-  int getS41Count();
-  /**
-   * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
-   */
-  java.lang.String getS41(int index);
-  /**
-   * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
-   */
-  com.google.protobuf.ByteString
-      getS41Bytes(int index);
+    /**
+     * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS7(int index);
+
+    /**
+     * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS7Bytes(int index);
+
+    /**
+     * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS31();
+
+    /**
+     * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS31Bytes();
+
+    /**
+     * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS32();
+
+    /**
+     * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS32Bytes();
+
+    /**
+     * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS33();
+
+    /**
+     * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS33Bytes();
+
+    /**
+     * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS34();
+
+    /**
+     * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS34Bytes();
+
+    /**
+     * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS35();
+
+    /**
+     * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS35Bytes();
+
+    /**
+     * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS36();
+
+    /**
+     * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS36Bytes();
+
+    /**
+     * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS37();
+
+    /**
+     * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS37Bytes();
+
+    /**
+     * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS38();
+
+    /**
+     * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS38Bytes();
+
+    /**
+     * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS39();
+
+    /**
+     * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS39Bytes();
+
+    /**
+     * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
+     */
+    java.util.List<com.xxx.userservice.proto.ValidateSub>
+    getKList();
+
+    /**
+     * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
+     */
+    com.xxx.userservice.proto.ValidateSub getK(int index);
+
+    /**
+     * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
+     */
+    int getKCount();
+
+    /**
+     * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
+     */
+    java.util.List<? extends com.xxx.userservice.proto.ValidateSubOrBuilder>
+    getKOrBuilderList();
+
+    /**
+     * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
+     */
+    com.xxx.userservice.proto.ValidateSubOrBuilder getKOrBuilder(
+            int index);
+
+    /**
+     * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
+     */
+    java.util.List<java.lang.String>
+    getS41List();
+
+    /**
+     * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
+     */
+    int getS41Count();
+
+    /**
+     * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
+     */
+    java.lang.String getS41(int index);
+
+    /**
+     * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
+     */
+    com.google.protobuf.ByteString
+    getS41Bytes(int index);
 }

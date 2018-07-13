@@ -4,84 +4,88 @@
 package krpc.rpc.core.proto;
 
 public interface RpcMetaOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:krpc.rpc.core.proto.RpcMeta)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:krpc.rpc.core.proto.RpcMeta)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
-   */
-  int getDirectionValue();
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
-   */
-  krpc.rpc.core.proto.RpcMeta.Direction getDirection();
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
+     */
+    int getDirectionValue();
 
-  /**
-   * <code>int32 serviceId = 2;</code>
-   */
-  int getServiceId();
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Direction direction = 1;</code>
+     */
+    krpc.rpc.core.proto.RpcMeta.Direction getDirection();
 
-  /**
-   * <code>int32 msgId = 3;</code>
-   */
-  int getMsgId();
+    /**
+     * <code>int32 serviceId = 2;</code>
+     */
+    int getServiceId();
 
-  /**
-   * <code>int32 sequence = 4;</code>
-   */
-  int getSequence();
+    /**
+     * <code>int32 msgId = 3;</code>
+     */
+    int getMsgId();
 
-  /**
-   * <pre>
-   * client side timeout in milliseconds
-   * </pre>
-   *
-   * <code>int32 timeout = 5;</code>
-   */
-  int getTimeout();
+    /**
+     * <code>int32 sequence = 4;</code>
+     */
+    int getSequence();
 
-  /**
-   * <code>int32 retCode = 6;</code>
-   */
-  int getRetCode();
+    /**
+     * <pre>
+     * client side timeout in milliseconds
+     * </pre>
+     *
+     * <code>int32 timeout = 5;</code>
+     */
+    int getTimeout();
 
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-   */
-  boolean hasTrace();
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-   */
-  krpc.rpc.core.proto.RpcMeta.Trace getTrace();
-  /**
-   * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
-   */
-  krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder();
+    /**
+     * <code>int32 retCode = 6;</code>
+     */
+    int getRetCode();
 
-  /**
-   * <pre>
-   * oob data
-   * </pre>
-   *
-   * <code>string attachment = 8;</code>
-   */
-  java.lang.String getAttachment();
-  /**
-   * <pre>
-   * oob data
-   * </pre>
-   *
-   * <code>string attachment = 8;</code>
-   */
-  com.google.protobuf.ByteString
-      getAttachmentBytes();
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    boolean hasTrace();
 
-  /**
-   * <pre>
-   * compress type, 0=no compress, 1=gzip 2=snappy
-   * </pre>
-   *
-   * <code>int32 compress = 9;</code>
-   */
-  int getCompress();
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    krpc.rpc.core.proto.RpcMeta.Trace getTrace();
+
+    /**
+     * <code>.krpc.rpc.core.proto.RpcMeta.Trace trace = 7;</code>
+     */
+    krpc.rpc.core.proto.RpcMeta.TraceOrBuilder getTraceOrBuilder();
+
+    /**
+     * <pre>
+     * oob data
+     * </pre>
+     *
+     * <code>string attachment = 8;</code>
+     */
+    java.lang.String getAttachment();
+
+    /**
+     * <pre>
+     * oob data
+     * </pre>
+     *
+     * <code>string attachment = 8;</code>
+     */
+    com.google.protobuf.ByteString
+    getAttachmentBytes();
+
+    /**
+     * <pre>
+     * compress type, 0=no compress, 1=gzip 2=snappy
+     * </pre>
+     *
+     * <code>int32 compress = 9;</code>
+     */
+    int getCompress();
 }
