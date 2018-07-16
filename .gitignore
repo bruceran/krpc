@@ -2,7 +2,7 @@
 .gradle/
 .project
 .settings/
-.idea
+.idea/
 bin/
 build/
 out/
@@ -11,4 +11,4 @@ jarcache/
 upload/
 krpcsniffer.cfg
 tracesniffer.cfg
-tracesniffer.cfg
+tracesniffer.log
