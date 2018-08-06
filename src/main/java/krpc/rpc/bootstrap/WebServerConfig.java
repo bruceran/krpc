@@ -27,6 +27,8 @@ public class WebServerConfig {
     int expireSeconds = 0;
     boolean autoTrim = true;
 
+    boolean autoRoute = false;
+
     int maxInitialLineLength = 4096;
     int maxHeaderSize = 8192;
     int maxChunkSize = 8192;
@@ -256,6 +258,15 @@ public class WebServerConfig {
 
     public WebServerConfig setMaxUploadLength(long maxUploadLength) {
         this.maxUploadLength = maxUploadLength;
+        return this;
+    }
+
+    public boolean isAutoRoute() {
+        return autoRoute;
+    }
+
+    public WebServerConfig setAutoRoute(boolean autoRoute) {
+        this.autoRoute = autoRoute;
         return this;
     }
 

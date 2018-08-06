@@ -224,8 +224,10 @@ public class Bootstrap {
         DefaultWebRouteService rs = new DefaultWebRouteService();
         rs.setDataDir(dataDir);
 
-        if (!isEmpty(c.routesFile)) {
-            loadRoutes(rs, c.routesFile);
+        if( !c.autoRoute ) {
+            if (!isEmpty(c.routesFile)) {
+                loadRoutes(rs, c.routesFile);
+            }
         }
 
         return rs;
@@ -727,6 +729,8 @@ public class Bootstrap {
             app.servers.put(name, server);
         }
 
+        List<WebRouteService> autoRouteServices = new ArrayList<>();
+
         for (Map.Entry<String, WebServerConfig> entry : webServers.entrySet()) {
             String name = entry.getKey();
             WebServerConfig c = entry.getValue();
@@ -739,7 +743,9 @@ public class Bootstrap {
             server.setServiceMetas(app.serviceMetas);
             server.setErrorMsgConverter(app.errorMsgConverter);
             server.setMonitorService(app.monitorService);
-            server.setRouteService(newRouteService(c, appConfig.dataDir));
+            WebRouteService wrs = newRouteService(c, appConfig.dataDir);
+            if( c.autoRoute) autoRouteServices.add(wrs);
+            server.setRouteService(wrs);
             server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
             server.setDefaultSessionService(ss);
             server.setSessionIdCookieName(c.sessionIdCookieName);
@@ -773,7 +779,6 @@ public class Bootstrap {
 
             app.webServers.put(name, server);
 
-            loadProtos(app, c.protoDir);
         }
 
         for (Map.Entry<String, ClientConfig> entry : clients.entrySet()) {
@@ -867,6 +872,10 @@ public class Bootstrap {
             }
 
             app.serviceMetas.addService(cls, c.impl, callable);
+
+            for(WebRouteService wrs: autoRouteServices) {
+                loadAutoRoutes(wrs,serviceId, app.serviceMetas);
+            }
 
             if (!isEmpty(c.registryNames) && addr != null) {
                 String[] ss = c.registryNames.split(",");
@@ -1283,6 +1292,7 @@ public class Bootstrap {
         return "";
     }
 
+
     private void loadRoutes(DefaultWebRouteService rs, String routesFile) {
 
         try {
@@ -1489,6 +1499,21 @@ public class Bootstrap {
         url.setMethods(methods).setServiceId(serviceId).setMsgId(msgId).setPlugins(pluginList)
                 .setSessionMode(sessionMode).setAttrs(attrs).setOrigins(origins);
         rs.addUrl(url);
+    }
+
+    private void loadAutoRoutes(WebRouteService rs, int serviceId, ServiceMetas serviceMetas) {
+        String serviceName = serviceMetas.getServiceName(serviceId);
+        Map<Integer, String> msgNames = serviceMetas.getMsgNames(serviceId);
+        for(Map.Entry<Integer,String> entry:msgNames.entrySet()) {
+            int msgId = entry.getKey();
+            String msgName = entry.getValue();
+            String path = "/"+serviceName.toLowerCase()+"/"+msgName.toLowerCase();
+            WebUrl url = new WebUrl("*", path);
+            url.setMethods("get,post").setServiceId(serviceId).setMsgId(msgId);
+            rs.addUrl(url);
+            log.info("add auto route, path="+path+", serviceId="+serviceId+", msgId="+msgId);
+        }
+
     }
 
     private void loadDir(DefaultWebRouteService rs, Node node) {
