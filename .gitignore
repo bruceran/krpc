@@ -12,3 +12,4 @@ upload/
 krpcsniffer.cfg
 tracesniffer.cfg
 tracesniffer.log
+*.iml

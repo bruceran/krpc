@@ -1510,6 +1510,7 @@ public class Bootstrap {
             String path = "/"+serviceName.toLowerCase()+"/"+msgName.toLowerCase();
             WebUrl url = new WebUrl("*", path);
             url.setMethods("get,post").setServiceId(serviceId).setMsgId(msgId);
+            url.setOrigins("*");
             rs.addUrl(url);
             log.info("add auto route, path="+path+", serviceId="+serviceId+", msgId="+msgId);
         }

@@ -7,6 +7,8 @@ import krpc.common.InitClose;
 import krpc.common.Plugin;
 import krpc.rpc.core.*;
 import krpc.rpc.util.MapToMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -16,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, ServiceMetasAware {
+
+    static Logger log = LoggerFactory.getLogger(DefaultFallbackPlugin.class);
 
     String file = "fallback.yaml";
 
@@ -57,20 +61,26 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
 
         for (Item item : items) {
             String[] ss = item.forName.split("\\.");
-            if (ss.length != 2)
-                throw new RuntimeException("invalid fallback file, for is not valid, for=" + item.forName);
+            if (ss.length != 2) {
+                log.error("invalid fallback file, for is not valid, for=" + item.forName);
+                continue;
+            }
             String serviceName = ss[0];
             String msgName = ss[1];
             String key = "";
             if (isInt(serviceName) && isInt(msgName)) {
                 key = toInt(serviceName) + "." + toInt(msgName);
                 String name = serviceMetas.getName(toInt(serviceName), toInt(msgName));
-                if (name == null)
-                    throw new RuntimeException("invalid fallback file, for is not valid, for=" + item.forName);
+                if (name == null) {
+                    log.error("invalid fallback file, for is not valid, for=" + item.forName);
+                    continue;
+                }
             } else {
                 key = serviceMetas.getServiceIdMsgId(serviceName, msgName);
-                if (key == null)
-                    throw new RuntimeException("invalid fallback file, for is not valid, for=" + item.forName);
+                if (key == null) {
+                    log.error("invalid fallback file, for is not valid, for=" + item.forName);
+                    continue;
+                }
             }
 
             List<Rule> list = rules.get(key);
@@ -82,7 +92,8 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
             if (!isEmpty(item.match)) {
                 r.expr = parser.parse(item.match);
                 if (r.expr == null) {
-                    throw new RuntimeException("invalid fallback file, match is not valid, for=" + item.match);
+                    log.error("invalid fallback file, match is not valid, for=" + item.match);
+                    continue;
                 }
             }
             r.results = item.results;
@@ -162,17 +173,23 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
             }
             Object result = yaml.load(in);
             if (!(result instanceof List)) {
-                throw new RuntimeException("invalid fallback file, not a list");
+                // throw new RuntimeException("invalid fallback file, not a list");
+                log.error("invalid fallback file, not a list");
+                return;
             }
+
             List l = (List) result;
             for (Object o : l) {
                 if (!(o instanceof Map)) {
-                    throw new RuntimeException("invalid fallback file, not a map");
+                    log.error("invalid fallback file, not a map, line="+o);
+                    continue;
                 }
                 Map m = (Map) o;
                 Object s = m.get("for");
-                if (s == null)
-                    throw new RuntimeException("invalid fallback file, for not found");
+                if (s == null) {
+                    log.error("invalid fallback file, for not found, line="+o);
+                    continue;
+                }
                 String forName = s.toString();
                 s = m.get("match");
                 String match = s != null ? s.toString() : "";
@@ -182,7 +199,8 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
                 Object r = m.get("results");
                 if (r != null) {
                     if (!(r instanceof Map)) {
-                        throw new RuntimeException("invalid fallback file, not a map");
+                        log.error("invalid fallback file, not a map, line="+o);
+                        continue;
                     }
                     results = (Map) r;
                 }
@@ -193,7 +211,7 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
                 items.add(i);
             }
         } catch (Exception e) {
-            throw new RuntimeException("fallback file load  exception", e);
+            log.error("fallback file load  exception", e);
         } finally {
             if (in != null) {
                 try {

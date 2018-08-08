@@ -258,6 +258,10 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
 
         if (m.containsKey("filename")) {
 
+            if( !new File(uploadDir).exists() ) {
+                new File(uploadDir).mkdirs();
+            }
+
             tempFile = uploadDir + "/" + uuid() + ".tmp";
             tempFileOutputStream = new BufferedOutputStream(new FileOutputStream(tempFile), 5000000);
 

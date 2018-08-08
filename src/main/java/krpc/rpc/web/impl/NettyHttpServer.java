@@ -86,7 +86,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
     public void init() {
 
         String uploadDir = dataDir + "/upload";
-        new File(uploadDir).mkdirs();
+        // new File(uploadDir).mkdirs();
 
         bossGroup = new NioEventLoopGroup(1, bossThreadFactory);
         workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
