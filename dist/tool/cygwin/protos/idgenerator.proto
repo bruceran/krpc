@@ -1,0 +1,33 @@
+syntax="proto3";
+
+// a test proto file 
+
+import "krpcext.proto";
+option java_multiple_files=true;
+option java_generic_services=true;
+
+option java_package="com.saicmobility.platform.idgenerator.proto";
+option java_outer_classname="IdGeneratorMetas";
+
+enum ID_Type
+{
+	ORDER = 0;
+	PASSENGER = 2;
+	DRIVER = 3;
+}
+
+message NextIdReq {
+	ID_Type type = 1;
+}
+message NextIdRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+	string newId = 3;
+}
+
+service IdGeneratorService {
+   option (krpc.serviceId) = 100;
+	rpc nextId(NextIdReq) returns (NextIdRes)  { option (krpc.msgId) = 1; };
+}
+
+	

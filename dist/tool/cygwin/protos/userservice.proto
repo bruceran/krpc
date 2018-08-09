@@ -1,0 +1,254 @@
+syntax="proto3";
+
+// a test proto file 
+
+import "krpcext.proto";
+option java_multiple_files=true;
+option java_generic_services=true;
+
+option java_package="com.xxx.userservice.proto";
+option java_outer_classname="UserServiceMetas";
+
+message LoginReq {
+	string userName = 1;
+	string password = 2;
+}
+
+message LoginRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+	string userId = 3;
+}
+
+message UpdateProfileReq {
+	string userId = 1;
+	string mobile = 2;
+}
+
+message UpdateProfileRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+}
+
+service UserService {
+	option (krpc.serviceId) = 100;
+	rpc login(LoginReq) returns (LoginRes)  { option (krpc.msgId) = 1; };
+	rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)   { option (krpc.msgId) = 2; };
+}
+
+
+message ValidateSub {
+	string s1 = 11  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
+	string s2 = 14  [  (krpc.vld) = {srange :"mmm"} ] ;
+	int32 i1 = 15  [  (krpc.vld) = {nrange :"20,50"} ] ;
+	string i2 = 16  [  (krpc.vld) = {nrange :"20,-"} ] ;
+	int32 i3 = 17  [  (krpc.vld) = {nrange :"-,50"} ] ;
+	string i4 = 18  [  (krpc.vld) = {nrange :"21"} ] ;
+}
+
+message ValidateTestReq {
+	string userId = 1 [  (krpc.vld).required = true  ] ;
+	string s1 = 11  [  (krpc.vld) = {srange :"bbb,ccc"} ] ;
+	string s2 = 14  [  (krpc.vld) = {srange :"mmm"} ] ;
+	int32 i1 = 15  [  (krpc.vld) = {nrange :"20,50"} ] ;
+	string i2 = 16  [  (krpc.vld) = {nrange :"20,-"} ] ;
+	int32 i3 = 17  [  (krpc.vld) = {nrange :"-,50"} ] ;
+	string i4 = 18  [  (krpc.vld) = {nrange :"21"} ] ;
+	ValidateSub m = 8;
+	string s5 = 21  [  (krpc.vld) = { values :"aaa,bbb,ccc"} ] ;	
+	string s6 = 22  [  (krpc.vld) = { length :"4,8"} ] ;
+	int32 i5 = 23  [  (krpc.vld) = { length :"4,8"} ] ;
+	repeated string s7 = 24  [  (krpc.vld) = { arrlen :"2,8"} ];
+	string s31 = 31  [  (krpc.vld).match="int" ] ;
+	string s32 = 32  [  (krpc.vld).match="double" ] ;	
+	string s33 = 33  [  (krpc.vld).match="long" ] ;	
+	string s34 = 34  [  (krpc.vld).match="email" ] ;	
+	string s35 = 35  [  (krpc.vld).match="date" ] ;	
+	string s36 = 36  [  (krpc.vld).match="timestamp" ] ;	
+	string s37 = 37  [  (krpc.vld).match="19[0-9]+m" ] ;		
+	string s38 = 38  [  (krpc.vld).match="a.*c" ] ;	
+	string s39 = 39  [  (krpc.vld).match="^a.*c$" ] ;	
+	repeated ValidateSub k = 40  [  (krpc.vld) = { arrlen :"2,8"} ];
+	
+	repeated string s41 = 41  [  (krpc.vld) = { arrlen:"1,-"; values:"111,222" } ];
+}
+
+ message ValidateTestRes {
+	int32 retCode = 1;
+}
+
+service TestService {
+	option (krpc.serviceId) = 101;
+	rpc test1(ValidateTestReq) returns (ValidateTestRes)  { option (krpc.msgId) = 1; };
+}
+
+message PushReq {
+	string clientId = 1;
+	string message = 2;
+}
+message PushRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+}
+
+service PushService {
+   option (krpc.serviceId) = 102;
+	rpc push(PushReq) returns (PushRes)  { option (krpc.msgId) = 1; };
+}
+
+service PushServicev2 {
+  option (krpc.serviceId) = 103;
+	rpc pushv2(PushReq) returns (PushRes)  { option (krpc.msgId) = 1; };
+}
+
+message OrderItemAttr {
+	string name = 1;
+	string value = 2;
+}
+
+message OrderItem {
+	string itemId = 1;
+	string name = 2;
+	int32 price = 3;
+	repeated OrderItemAttr attrs = 4;
+}
+
+message Order {
+	string orderId = 1;
+	repeated OrderItem items = 2;
+}
+
+
+message Session {
+	string loginFlag = 1;
+	string userId = 2;
+	string userName = 3;
+	string mobile = 4;
+}
+
+enum Status {
+	NOT_READY = 0;
+	READY = 1;
+	PAID = 2;
+}
+
+message OrderDetail {
+	string name = 1;
+	int32 quantity = 2;
+	double price = 3;
+	string note = 4;
+}
+	
+message HttpTestReq {
+	string httpMethod = 1;
+	string httpSchema = 2;
+	string httpPath = 3;
+	string httpQueryString = 4;
+	string httpContentType = 5;
+	string httpContent = 6;
+
+	Session session = 7;
+	
+	string orderId = 8;
+	int32 quantity1 = 9;
+	uint32 quantity2 = 10;
+	int64 quantity3 = 11;
+	uint64 quantity4 = 12;
+	float price1 = 13;
+	double price2 = 14;
+	
+	Status status = 15;
+	repeated OrderDetail items = 16;
+
+	string userId = 17;
+	string userName = 18;
+	string mobile = 19;
+	
+	string sessionId = 20;
+	string headerHost = 21;
+	string cookieTnk = 22;
+	
+	repeated string colors = 23;
+}
+				
+message HttpTestRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+	
+	string userId = 3;
+	Session session = 4;
+	
+	int32 httpCode = 5;
+	string httpContentType = 6;
+	
+	string headerLocation = 7;
+	string headerXmmDddCcc = 8;
+	string cookieTnk = 9;	
+	
+	int32 totalPrice = 10;
+}
+
+message HttpPluginTestReq {
+	string username = 1;
+}
+				
+message HttpPluginTestRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+	string plainText = 3;
+	string redirectUrl = 4;
+	string gender = 5;
+	string mobile = 6;
+	string email = 7;
+}
+
+message HttpDownloadStaticRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+	string downloadFile = 3;
+	string autoDelete = 4;
+	int32 attachment = 5;
+	int32 expire = 6;
+	
+	bytes downloadStream = 7;
+	string filename = 8;
+}
+
+message UploadFile {
+	string file = 1;
+	string filename = 2;
+	int64 size = 3;
+	string ext = 4;
+	string contentType = 5;
+}
+
+message HttpUploadTestReq1 {
+	string httpContentType = 1;
+	string httpContent = 2;
+	string a = 3;
+	string b = 4;
+	repeated UploadFile files = 5;
+}
+				
+message HttpUploadTestReq2 {
+	string httpContentType = 1;
+	string httpContent = 2;
+	repeated string a = 3;
+	string b = 4;
+	UploadFile files = 5;
+}
+				
+								
+message HttpUploadTestRes {
+	int32 retCode = 1;
+	string retMsg = 2;
+}
+
+service HttpPluginTestService {
+  option (krpc.serviceId) = 104;
+	rpc test1(HttpPluginTestReq) returns (HttpPluginTestRes)  { option (krpc.msgId) = 1; };
+	rpc test2(HttpPluginTestReq) returns (HttpDownloadStaticRes)  { option (krpc.msgId) = 2; };
+	rpc upload1(HttpUploadTestReq1) returns (HttpUploadTestRes)  { option (krpc.msgId) = 3; };
+	rpc upload2(HttpUploadTestReq2) returns (HttpUploadTestRes)  { option (krpc.msgId) = 4; };
+}
+	

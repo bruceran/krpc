@@ -12,16 +12,20 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, ServiceMetasAware {
 
     static Logger log = LoggerFactory.getLogger(DefaultFallbackPlugin.class);
 
     String file = "fallback.yaml";
+
+    ThreadLocal<SimpleDateFormat> f = new ThreadLocal<SimpleDateFormat>() {
+        public SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+    };
 
     static class Item {
         String forName;
@@ -114,14 +118,40 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
             if (r.match(req)) {
                 int serviceId = ctx.getMeta().getServiceId();
                 int msgId = ctx.getMeta().getMsgId();
-                return toMessage(serviceId, msgId, r.results);
+                return toMessage(serviceId, msgId, req, r.results);
             }
         }
 
         return null;
     }
 
-    public Message toMessage(int serviceId, int msgId, Map<String, Object> results) {
+    void preProcessResults(Message req, Map<String, Object> results) {
+
+        // TODO get value from req
+        // TODO generate random
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String timestampStr = f.get().format(new Date());
+        for(Map.Entry<String,Object> entry: results.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if( value instanceof String ) {
+                String s = (String)value;
+                if( s.indexOf("{ts}") >= 0 ) {
+                    s = s.replace("{ts}",timestamp);
+                    results.put(key,s);
+                }
+                if( s.indexOf("{now}") >= 0 ) {
+                    s = s.replace("{now}",timestampStr);
+                    results.put(key,s);
+                }
+            }
+        }
+    }
+
+    public Message toMessage(int serviceId, int msgId, Message req, Map<String, Object> results) {
+
+        preProcessResults(req,results);
+
         Builder b = null;
         Class<?> cls = serviceMetas.findResClass(serviceId, msgId);
         if (cls != null) {
