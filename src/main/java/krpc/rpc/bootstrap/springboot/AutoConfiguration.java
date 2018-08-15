@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -21,6 +22,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
 
@@ -257,8 +259,30 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
                     registerReferer(id, s, beanFactory);
                 } else break;
             }
-        }
 
+/*
+            s = environment.getProperty("krpc.service.interfaceName");
+            if (s != null) {
+                changeServiceLazy(s, beanFactory);
+            }
+*/
+        }
+/*
+        void changeServiceLazy(String interfaceName, DefaultListableBeanFactory beanFactory) {
+            try {
+                String[] beanNames = beanFactory.getBeanNamesForType(Class.forName(interfaceName));
+                if (beanNames == null) return;
+                for (String beanName : beanNames) {
+                    BeanDefinition bd = beanFactory.getBeanDefinition(beanName);
+                    ScannedGenericBeanDefinition bd2 = (ScannedGenericBeanDefinition)bd;
+                    bd2.set
+                    System.out.println("555 beanName="+beanName+","+bd2.getMetadata().toString());
+                }
+            } catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+*/
         void registerReferer(String id, String interfaceName, DefaultListableBeanFactory beanFactory) {
             String beanName = generateBeanName(id, interfaceName);
             //log.info("register referer "+interfaceName+", beanName="+beanName);

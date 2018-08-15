@@ -288,16 +288,16 @@ public class ReflectionUtils {
     public static HashMap<String, Integer> getMsgNames(Class<?> intf) {
         try {
             Field[] declaredFields = intf.getDeclaredFields();
-            HashMap<String, Integer> msgIds = new HashMap<String, Integer>();
+            HashMap<String, Integer> msgNames = new HashMap<String, Integer>();
             for (Field field : declaredFields) {
                 if (Modifier.isStatic(field.getModifiers())) {
                     if (field.getName().endsWith("MsgId")) {
                         int msgId = field.getInt(null);
-                        msgIds.put(field.getName().substring(0, field.getName().length() - 5), msgId);
+                        msgNames.put(field.getName().substring(0, field.getName().length() - 5), msgId);
                     }
                 }
             }
-            return msgIds;
+            return msgNames;
         } catch (Exception e) {
             throw new RuntimeException("interface_parse_msgId_exception");
         }

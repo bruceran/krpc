@@ -118,7 +118,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
 
         try {
             cr = getConnection(req);
-            if (cr == null || cr.retCode != 0) return new HttpClientRes(cr.retCode);
+            if (  cr.retCode != 0) return new HttpClientRes(cr.retCode);
 
             Channel channel = cr.channelInfo.channel;
             connId = getConnId(channel);
@@ -337,13 +337,13 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String connId = getConnId(ctx.channel());
-        log.info("http connection started, connId={}", connId);
+        log.debug("http connection started, connId={}", connId);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String connId = getConnId(ctx.channel());
-        log.info("http connection ended, connId={}", connId);
+        log.debug("http connection ended, connId={}", connId);
     }
 
     @Override

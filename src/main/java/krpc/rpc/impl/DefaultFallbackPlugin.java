@@ -125,12 +125,18 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
         return null;
     }
 
+    String uuidStr() {
+        String s = UUID.randomUUID().toString();
+        return s.replaceAll("-", "");
+    }
+
     void preProcessResults(Message req, Map<String, Object> results) {
 
         // TODO get value from req
         // TODO generate random
         String timestamp = String.valueOf(System.currentTimeMillis());
         String timestampStr = f.get().format(new Date());
+        String uuid = uuidStr();
         for(Map.Entry<String,Object> entry: results.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
@@ -142,6 +148,10 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
                 }
                 if( s.indexOf("{now}") >= 0 ) {
                     s = s.replace("{now}",timestampStr);
+                    results.put(key,s);
+                }
+                if( s.indexOf("{uuid}") >= 0 ) {
+                    s = s.replace("{uuid}",uuid);
                     results.put(key,s);
                 }
             }

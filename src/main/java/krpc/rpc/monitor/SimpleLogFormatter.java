@@ -320,7 +320,7 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
         char[] ca = input.toCharArray();
         for (int i = 0; i < ca.length; i++) {
             char b = ca[i];
-            if (b >= 0 && b < 32 || b == '^' || b == ',' || b == ':') {
+            if (b >= 0 && b < 32 || b == '^' ) {
                 builder.append(" ");
             } else {
                 builder.append(b);

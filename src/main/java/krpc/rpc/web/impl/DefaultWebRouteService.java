@@ -121,7 +121,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
         String origins; // * for all
 
         ServiceMapping(String hosts, String path, String methods, String origins, int serviceId, int msgId,
-                       int sessionMode, WebPlugins plugins, Map<String, String> attrs) {
+                       int sessionMode, WebPlugins plugins, Map<String, String> attrs,boolean caseSensitive) {
 
             this.hosts = hosts;
             this.originalPath = path;
@@ -138,10 +138,14 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
                     if (t.startsWith("{")) {
                         placeHolderFlags[i] = true;
                         placeHolders[i] = t.substring(1, t.length() - 1);
+                    } else {
+                        if(!caseSensitive) placeHolders[i] = placeHolders[i].toLowerCase();
                     }
                 }
+                if(!caseSensitive) this.path = this.path.toLowerCase();
             } else {
                 this.path = path;
+                if(!caseSensitive) this.path = this.path.toLowerCase();
             }
 
             this.methods = methods;
@@ -231,6 +235,8 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
     private String jarCacheDir;
     private String defaultCorsAllowOrigin = "*";
 
+    private boolean caseSensitive = false;
+
     private List<WebUrl> urlList = new ArrayList<WebUrl>();
     private List<WebDir> dirList = new ArrayList<WebDir>();
 
@@ -284,7 +290,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
             ServiceMapping sm = new ServiceMapping(url.getHosts(), url.getPath(),
                     url.getMethods(), url.getOrigins(),
                     url.getServiceId(), url.getMsgId(),
-                    url.getSessionMode(), url.getPlugins(), url.getAttrs());
+                    url.getSessionMode(), url.getPlugins(), url.getAttrs(),caseSensitive);
 
             String host = url.getHosts();
             String[] ss = host.split(",");
@@ -319,10 +325,11 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
             hostMappings.put(host, hm);
         }
 
-        List<ServiceMapping> lsm = hm.pathMappings.get(sm.path);
+        String t = sm.path;
+        List<ServiceMapping> lsm = hm.pathMappings.get(t);
         if (lsm == null) {
             lsm = new ArrayList<ServiceMapping>();
-            hm.pathMappings.put(sm.path, lsm);
+            hm.pathMappings.put(t, lsm);
         }
 
         lsm.add(sm);
@@ -372,6 +379,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
 
         HashMap<String, String> variables = new HashMap<String, String>();
         String t = path;
+        if(!caseSensitive) t = t.toLowerCase();
         while (!t.isEmpty()) {
             List<ServiceMapping> lm = hm.pathMappings.get(t);
             if (lm != null) {
@@ -544,6 +552,15 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
 
     public void setDefaultCorsAllowOrigin(String defaultCorsAllowOrigin) {
         this.defaultCorsAllowOrigin = defaultCorsAllowOrigin;
+    }
+
+
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
+    public void setCaseSensitive(boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
     }
 
 }

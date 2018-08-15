@@ -106,6 +106,7 @@
               <attribute name="expireSeconds" type="string" use="optional"/>
               <attribute name="autoTrim" type="string" use="optional"/>
               <attribute name="autoRoute" type="string" use="optional"/>
+              <attribute name="caseSensitive" type="string" use="optional"/>
               <attribute name="maxInitialLineLength" type="string" use="optional"/>
               <attribute name="maxHeaderSize" type="string" use="optional"/>
               <attribute name="maxChunkSize" type="string" use="optional"/>

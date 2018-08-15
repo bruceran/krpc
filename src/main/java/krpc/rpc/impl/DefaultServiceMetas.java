@@ -8,6 +8,7 @@ import krpc.rpc.core.*;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class DefaultServiceMetas implements ServiceMetas {
@@ -121,6 +122,17 @@ public class DefaultServiceMetas implements ServiceMetas {
 
         String serviceName = intf.getSimpleName();
 
+        if( isService ) {
+            HashMap<String, Integer> msgNameMap = ReflectionUtils.getMsgNames(intf);
+            HashSet<Integer> msgIds = new HashSet<>();
+            for (Map.Entry<String, Integer> entry : msgNameMap.entrySet()) {
+                int msgId = entry.getValue();
+                if( msgIds.contains(msgId)) {
+                    throw new RuntimeException("msgId duplicated, serviceId="+serviceId+",msgId="+msgId);
+                }
+                msgIds.add(msgId);
+            }
+        }
         HashMap<Integer, String> msgIdMap = ReflectionUtils.getMsgIds(intf);
         HashMap<String, Object> msgNameMap = ReflectionUtils.getMethodInfo(intf);
         for (Map.Entry<Integer, String> entry : msgIdMap.entrySet()) {

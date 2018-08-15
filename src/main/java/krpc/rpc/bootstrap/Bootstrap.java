@@ -223,6 +223,7 @@ public class Bootstrap {
     public WebRouteService newRouteService(WebServerConfig c, String dataDir) {
         DefaultWebRouteService rs = new DefaultWebRouteService();
         rs.setDataDir(dataDir);
+        rs.setCaseSensitive(c.getCaseSensitive());
 
         if( !c.autoRoute ) {
             if (!isEmpty(c.routesFile)) {
@@ -1507,11 +1508,13 @@ public class Bootstrap {
         for(Map.Entry<Integer,String> entry:msgNames.entrySet()) {
             int msgId = entry.getKey();
             String msgName = entry.getValue();
+
             String path = "/"+serviceName.toLowerCase()+"/"+msgName.toLowerCase();
             WebUrl url = new WebUrl("*", path);
             url.setMethods("get,post").setServiceId(serviceId).setMsgId(msgId);
             url.setOrigins("*");
             rs.addUrl(url);
+
             log.info("add auto route, path="+path+", serviceId="+serviceId+", msgId="+msgId);
         }
 

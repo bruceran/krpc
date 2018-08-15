@@ -220,6 +220,7 @@ class RouterExprBuilder {
                 last = null;
             }
         }
+        // TBD not used code, to be tested
         if (and != null) {
             or.list.add(and);
             and = null;

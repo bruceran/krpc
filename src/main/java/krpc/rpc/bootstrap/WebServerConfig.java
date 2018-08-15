@@ -27,6 +27,7 @@ public class WebServerConfig {
     int expireSeconds = 0;
     boolean autoTrim = true;
 
+    boolean caseSensitive = false;
     boolean autoRoute = false;
 
     int maxInitialLineLength = 4096;
@@ -267,6 +268,15 @@ public class WebServerConfig {
 
     public WebServerConfig setAutoRoute(boolean autoRoute) {
         this.autoRoute = autoRoute;
+        return this;
+    }
+
+    public boolean getCaseSensitive() {
+        return caseSensitive;
+    }
+
+    public WebServerConfig setCaseSensitive(boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
         return this;
     }
 
