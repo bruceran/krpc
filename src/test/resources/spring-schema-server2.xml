@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:krpc="http://krpc.org/schema/krpc"
+  
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://krpc.org/schema/krpc
+       http://krpc.org/schema/krpc.xsd ">
+
+	<context:annotation-config />
+    <context:component-scan base-package="krpc.test.rpc.schema2" />
+
+	<!-- test "Cyclic Dependency" -->
+	<krpc:application name="testapp"  delayStart="0"/>
+    <krpc:referer interfaceName="com.xxx.userservice.proto.PushService"/>
+	<krpc:referer interfaceName="com.xxx.userservice.proto.PushServicev2"/>
+	<krpc:service interfaceName="com.xxx.userservice.proto.UserService"  />
+
+</beans>
