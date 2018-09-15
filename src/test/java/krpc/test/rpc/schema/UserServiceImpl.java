@@ -1,6 +1,9 @@
 package krpc.test.rpc.schema;
 
 import com.xxx.userservice.proto.*;
+import krpc.rpc.core.ClientContext;
+import krpc.rpc.core.RpcContextData;
+import krpc.rpc.core.ServerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

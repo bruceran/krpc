@@ -157,7 +157,7 @@
 
   * 不建议使用pb3里的新特性：Any和OneOf
 
-  * 使用krpc.bat  xxx.proto 文件来生成该文件的服务描述文件
+  * 使用  ./c.sh xxxxx (不要带.proto后缀) 文件来生成该文件的服务描述文件
 
 	生成的接口：
 
@@ -423,6 +423,7 @@
         	queueSize 队列大小,默认为1000
         	retryCount 重试次数，默认为3
         	retryInterval 重试间隔时间，默认为1秒
+			enabld 是否开启 默认为true, 不开启的状态仅用于打日志不上报
         cat插件, 配置参数：
         	server  cat服务的地址，多个用逗号隔开, 示例：server=192.168.213.128:8080
         	实际的接收数据服务器地址通过server获取，每分钟检查一次地址是否有变更
@@ -431,6 +432,7 @@
         	此插件不使用Cat客户端SDK，无需Cat客户端SDK所需的两个配置文件：
         			 META-INF/app.properties
         			 /data/appdatas/cat/client.xml
+			enabld 是否开启 默认为true, 不开启的状态仅用于打日志不上报		 
         skywalking插件, 配置参数：
         	server  skywalking服务的地址，多个用逗号隔开, 示例：server=127.0.0.1:10800
         	实际的接收数据服务器地址通过server获取，每分钟检查一次地址是否有变更
@@ -438,6 +440,7 @@
         	retryCount 重试次数，默认为3
         	retryInterval 重试间隔时间，默认为1秒
         	此插件不使用Skywalking探针，无需Skywalking探针所需的配置
+			enabld 是否开启 默认为true, 不开启的状态仅用于打日志不上报
 
 ## registry
 
@@ -595,7 +598,7 @@
     registryName  注册与发现服务名, 只能填一个
     group  册与发现服务里的分组
     timeout 超时时间, 毫秒，默认为3000
-    retryCount 重试次数，默认为0
+    retryCount 重试次数，默认为2
     loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,hash,
                       leastactiveweight,roudrobinweight,randomweight 默认为roundrobin
                       hash插件可带参数，其他参数无配置参数
@@ -622,7 +625,7 @@
 
     以下3个参数只用于referer
     timeout 消息级别的超时时间，毫秒，默认为3000
-    retryCount 消息级别的试次数，默认为0
+    retryCount 消息级别的试次数，默认为2
 
     以下4个参数只用于service
     threads 消息级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池

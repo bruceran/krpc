@@ -38,7 +38,7 @@ public class MemorySessionService implements WebPlugin, SessionService, InitClos
     }
 
     public void init() {
-        t = new Timer();
+        t = new Timer("krpc_memorysession_cleaner");
         t.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 MemorySessionService.this.clearExpired();

@@ -30,6 +30,8 @@ public interface ServiceMetas {
 
     String getName(int serviceId, int msgId);
 
+    String getOriginalName(int serviceId, int msgId);
+
     Map<Integer, String> getMsgNames(int serviceId);
 
     String getServiceIdMsgId(String serviceName, String msgName);

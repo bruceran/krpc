@@ -6,7 +6,8 @@ public class MethodConfig {
 
     // for referer's methods
     int timeout = 3000;
-    int retryCount = 0;
+    int retryCount = 2;
+    boolean retryBroken = false; // not safe, the receiver may receive more than once
 
     // for service's methods
     int threads = -1;
@@ -74,4 +75,12 @@ public class MethodConfig {
         return this;
     }
 
+    public boolean isRetryBroken() {
+        return retryBroken;
+    }
+
+    public MethodConfig setRetryBroken(boolean retryBroken) {
+        this.retryBroken = retryBroken;
+        return this;
+    }
 }

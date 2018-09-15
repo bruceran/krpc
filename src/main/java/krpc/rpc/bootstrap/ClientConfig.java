@@ -26,6 +26,8 @@ public class ClientConfig {
     String plugins = ""; // comma seperated RpcPlugin names
     List<String> pluginParams = new ArrayList<>(); // config RpcPlugins if needed
 
+    String connectionPlugin = "";
+
     public ClientConfig() {
     }
 
@@ -173,4 +175,12 @@ public class ClientConfig {
         return this;
     }
 
+    public String getConnectionPlugin() {
+        return connectionPlugin;
+    }
+
+    public ClientConfig setConnectionPlugin(String connectionPlugin) {
+        this.connectionPlugin = connectionPlugin;
+        return this;
+    }
 }

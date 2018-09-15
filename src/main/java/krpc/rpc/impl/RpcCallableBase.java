@@ -21,6 +21,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
     static Logger log = LoggerFactory.getLogger(RpcCallableBase.class);
 
+    private static final String NO_CONNECTION_STR = "no_connection:0:0";
+
     ServiceMetas serviceMetas;
     MonitorService monitorService;
     ErrorMsgConverter errorMsgConverter;
@@ -34,6 +36,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     int retryQueueSize = 1000;
     ThreadPoolExecutor retryPool;
 
+    RpcRetrier rpcRetrier;
+
     // for server functions: as a service
     ExecutorManager executorManager;
     Validator validator;
@@ -45,6 +49,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     HashSet<Integer> allowedReferers = new HashSet<Integer>();
     HashMap<String, Integer> timeoutMap = new HashMap<String, Integer>();
     HashMap<String, Integer> retryCountMap = new HashMap<String, Integer>();
+    HashMap<String, Boolean> retryBrokenMap = new HashMap<String, Boolean>();
 
     ArrayList<Object> resources = new ArrayList<Object>();
 
@@ -62,7 +67,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
     public void init() {
         if (!isServerSide()) {
-            NamedThreadFactory threadFactory2 = new NamedThreadFactory("rpcretry_thread");
+            NamedThreadFactory threadFactory2 = new NamedThreadFactory("krpc_retry_thread");
             retryPool = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(retryQueueSize), threadFactory2);
             retryPool.prestartAllCoreThreads();
         }
@@ -75,6 +80,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         for (RpcPlugin p : plugins) {
             resources.add(p);
         }
+
+        resources.add(rpcRetrier);
 
         InitCloseUtils.init(resources);
     }
@@ -102,11 +109,12 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         allowedReferers.add(serviceId);
     }
 
-    public void addRetryPolicy(int serviceId, int msgId, int timeout, int retryCount) {
-        String key = serviceId + ":" + msgId;
+    public void addRetryPolicy(int serviceId, int msgId, int timeout, int retryCount, boolean retryBroken) {
+        String key = serviceId + "." + msgId;
         if (timeoutMap.get(key) == null) {
             timeoutMap.put(key, timeout);
             retryCountMap.put(key, retryCount);
+            retryBrokenMap.put(key, retryBroken);
         }
     }
 
@@ -122,7 +130,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     public Message call(int serviceId, int msgId, Message req) {
         int timeout = ClientContext.getTimeout();
         if (timeout <= 0) timeout = getTimeout(serviceId, msgId);
-
         try {
             CompletableFuture<Message> future = callAsyncInner(serviceId, msgId, req, false);
             return future.get(timeout, TimeUnit.MILLISECONDS);
@@ -160,17 +167,33 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         Span span = Trace.startAsync("RPCCLIENT", action);
         TraceContext tctx = Trace.currentContext();
 
-        String connId = "no_connection:0:0";
+        String connId = NO_CONNECTION_STR;
         span.setRemoteAddr(getAddr(connId));
+
 
         RpcMeta.Trace trace = generateTraceInfo(tctx, span);
 
         RpcMeta meta = builder.setTrace(trace).build();
-        ClientContextData ctx = new ClientContextData("no_connection:0:0", meta, tctx, span);
+        ClientContextData ctx = new ClientContextData(NO_CONNECTION_STR, meta, tctx, span);
         CompletableFuture<Message> future = futureFactory.newFuture(meta.getServiceId(), meta.getMsgId(), isAsync, ctx.getTraceContext());
         ctx.setFuture(future);
         ClientContext.set(ctx); // user code can call RpcClientContext.get() to obtain call information
         RpcClosure closure = new RpcClosure(ctx, req);
+
+        ClientContext.RetrierInfo retrierInfo = ClientContext.removeRetrier();
+        if( retrierInfo != null ) {
+
+            RpcRetryTask task = new RpcRetryTask();
+            task.setServiceId(closure.getCtx().getMeta().getServiceId());
+            task.setMsgId(closure.getCtx().getMeta().getMsgId());
+            task.setMessage(closure.getReq());
+            task.setMaxTimes(retrierInfo.maxTimes);
+            task.setWaitSeconds(retrierInfo.waitSeconds);
+            task.setTimeout(timeout);
+            task.setAttachement(clientAttachment);
+
+            closure.asClientCtx().setAttribute("retryTask",task);
+        }
 
         if (!allowedReferers.contains(serviceId)) {
             endCall(closure, RetCodes.REFERER_NOT_ALLOWED);
@@ -178,7 +201,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         }
 
         connId = nextConnId(ctx, req); // may be null
-        if (connId == null) { // no connection, no need to retry
+        if (connId == null || connId.equals(NO_CONNECTION_STR) ) { // no connection, no need to retry
 
             if (fallbackPlugin != null) {
                 Message res = fallbackPlugin.fallback(ctx, req);
@@ -223,13 +246,15 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     }
 
     void sendCall(RpcClosure closure, boolean allowRetry) {
+
         RpcMeta meta = closure.getCtx().getMeta();
+
         try {
             dataManager.add(closure);
 
             RpcData data = new RpcData(meta, closure.getReq());
             boolean ok = transport.send(closure.getCtx().getConnId(), data);
-            if (!ok) { // can retry
+            if (!ok) { // safe if retry
                 if (allowRetry) {
                     if (retryCall(closure)) return;
                 }
@@ -253,7 +278,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         if (retryCount == 0 || closure.asClientCtx().getRetryTimes() >= retryCount) return false;
         closure.asClientCtx().incRetryTimes(closure.getCtx().getConnId());
         final String newConnId = nextConnId(closure.asClientCtx(), closure.getReq()); // may be null
-        if (newConnId == null) return false;
+        if (newConnId == null || newConnId.equals(NO_CONNECTION_STR)  ) return false;
 
         try {
             retryPool.execute(new Runnable() {
@@ -274,50 +299,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             log.error("rpcclient retry pool is full");
             return false;
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    void endCall(RpcClosure closure, Message res) {
-
-        List<RpcPlugin> calledPlugins = (List<RpcPlugin>) closure.getCtx().getAttribute("calledClientPlugins");
-        if (calledPlugins != null) {
-            for (RpcPlugin p : calledPlugins) {
-                p.postCall(closure.getCtx(), closure.getReq(), closure.getRes());
-            }
-        }
-
-        closure.done(res);
-        closure.asClientCtx().getFuture().complete(res);
-        String status = closure.getRetCode() == 0 ? "SUCCESS" : "ERROR";
-        closure.asClientCtx().getSpan().stop(status);
-        if (monitorService != null) {
-            monitorService.callDone(closure);
-        }
-    }
-
-    void endCall(RpcClosure closure, int retCode) {
-        RpcMeta meta = closure.getCtx().getMeta();
-        Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), retCode);
-        endCall(closure, res);
-    }
-
-    public void timeout(RpcClosure closure) {
-        RpcMeta meta = closure.getCtx().getMeta();
-        Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), RetCodes.RPC_TIMEOUT);
-        endCall(closure, res);
-    }
-
-    public void disconnected(RpcClosure closure) {
-        RpcMeta meta = closure.getCtx().getMeta();
-        Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), RetCodes.CONNECTION_BROKEN);
-        endCall(closure, res);
-    }
-
-    public String getAddr(String connId) {
-        if (connId == null) return "no_connection:0:0";
-        int p = connId.lastIndexOf(":");
-        if (p < 0) return connId;
-        return connId.substring(0, p);
     }
 
     public void receive(String connId, RpcData data) {
@@ -346,12 +327,71 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             if (closure == null) return; // data removed, ignore
 
             int retCode = data.getMeta().getRetCode();
-            if (RetCodes.canRetry(retCode)) {
+            if (RetCodes.canSafeRetry(retCode)) { // safe if retry
                 if (retryCall(closure)) return;
             }
 
             endCall(closure, res);
         }
+    }
+
+    public void timeout(RpcClosure closure) {
+        RpcMeta meta = closure.getCtx().getMeta();
+
+        // donot support retry, the caller may use ClientContext.setRetrier( ... ) method to retry
+
+        Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), RetCodes.RPC_TIMEOUT);
+        endCall(closure, res);
+    }
+
+    public void disconnected(RpcClosure closure) {
+        RpcMeta meta = closure.getCtx().getMeta();
+
+        boolean retryBroken = getRetryBroken(meta.getServiceId(),meta.getMsgId());
+        if( retryBroken ) {
+            if (retryCall(closure)) return;
+        }
+
+        Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), RetCodes.CONNECTION_BROKEN);
+        endCall(closure, res);
+    }
+
+    void endCall(RpcClosure closure, int retCode) {
+        RpcMeta meta = closure.getCtx().getMeta();
+        Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), retCode);
+        endCall(closure, res);
+    }
+
+    @SuppressWarnings("unchecked")
+    void endCall(RpcClosure closure, Message res) {
+
+        List<RpcPlugin> calledPlugins = (List<RpcPlugin>) closure.getCtx().getAttribute("calledClientPlugins");
+        if (calledPlugins != null) {
+            for (RpcPlugin p : calledPlugins) {
+                p.postCall(closure.getCtx(), closure.getReq(), closure.getRes());
+            }
+        }
+
+        closure.done(res);
+        closure.asClientCtx().getFuture().complete(res);
+
+        RpcRetryTask retryTask = (RpcRetryTask) closure.getCtx().getAttribute("retryTask");
+        if (retryTask != null) {
+            rpcRetrier.submit(closure.getRetCode(),retryTask);
+        }
+
+        String status = closure.getRetCode() == 0 ? "SUCCESS" : "ERROR";
+        closure.asClientCtx().getSpan().stop(status);
+        if (monitorService != null) {
+            monitorService.callDone(closure);
+        }
+    }
+
+    public String getAddr(String connId) {
+        if (connId == null) connId = NO_CONNECTION_STR;
+        int p = connId.lastIndexOf(":");
+        if (p < 0) return connId;
+        return connId.substring(0, p);
     }
 
     private void continue1(ServerContextData ctx, final RpcData data) {
@@ -365,13 +405,13 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             }
         }
         callService(ctx, data);
-
     }
 
     private void callServiceInPool(ThreadPoolExecutor pool, ServerContextData ctx, final RpcData data) {
         try {
             pool.execute(new Runnable() {
                 public void run() {
+                    ctx.afterQueue();
                     ServerContext.set(ctx);
 
                     callService(ctx, data);
@@ -446,8 +486,11 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             RpcClosure closure = new RpcClosure(ctx, req, res);
             readyToContinue(closure);
         } catch (Exception e) {
+            String traceId = "no_trace_id";
+            if( Trace.currentContext() != null && Trace.currentContext().getTrace() != null )
+                traceId  = Trace.currentContext().getTrace().getTraceId();
             sendErrorResponse(ctx, data.getBody(), RetCodes.BUSINESS_ERROR);
-            log.error("callService exception", e);
+            log.error("callService exception, traceId="+traceId, e);
             Trace.logException(e);
             return;
         }
@@ -536,6 +579,13 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         if (retryCount == null) retryCount = retryCountMap.get(serviceId + ".-1");
         if (retryCount == null) retryCount = retryCountMap.get("-1.-1");
         return retryCount == null ? 0 : retryCount;
+    }
+
+    boolean getRetryBroken(int serviceId, int msgId) {
+        Boolean retryBroken = retryBrokenMap.get(serviceId + "." + msgId);
+        if (retryBroken == null) retryBroken = retryBrokenMap.get(serviceId + ".-1");
+        if (retryBroken == null) retryBroken = retryBrokenMap.get("-1.-1");
+        return retryBroken == null ? false : retryBroken;
     }
 
     boolean isEmpty(String s) {
@@ -630,4 +680,11 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         this.fallbackPlugin = fallbackPlugin;
     }
 
+    public RpcRetrier getRpcRetrier() {
+        return rpcRetrier;
+    }
+
+    public void setRpcRetrier(RpcRetrier rpcRetrier) {
+        this.rpcRetrier = rpcRetrier;
+    }
 }

@@ -57,6 +57,7 @@
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
               <attribute name="plugins" type="string" use="optional"/>
+              <attribute name="connectionPlugin" type="string" use="optional"/>
 	    </complexType>    
     </element>
 	
@@ -80,6 +81,7 @@
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
               <attribute name="plugins" type="string" use="optional"/>
+              <attribute name="connectionPlugin" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
@@ -185,7 +187,7 @@
               <attribute name="maxRepeatedSizeToLog" type="string" use="optional"/>
               <attribute name="serverAddr" type="string" use="optional"/>
               <attribute name="printDefault" type="string" use="optional"/>
-              <attribute name="plugins" type="string" use="optional"/>
+              <attribute name="printOriginalMsgName" type="string" use="optional"/>
 	    </complexType>    
     </element>
     

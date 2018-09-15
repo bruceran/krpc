@@ -41,8 +41,11 @@ abstract public class RpcContextData {
 
     public String getClientIp() {
         String peers = meta.getTrace().getPeers();
-        if (peers.isEmpty()) return getClientIp();
-        return peers.split(",")[0];
+        if (peers.isEmpty()) return getRemoteIp();
+        String s = peers.split(",")[0];
+        int p = s.indexOf(":");
+        if( p >= 0 ) return s.substring(0,p);
+        return s;
     }
 
     public String getRemoteIp() {

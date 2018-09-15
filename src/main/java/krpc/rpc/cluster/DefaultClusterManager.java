@@ -24,7 +24,7 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
     Map<Integer, BreakerInfo> breakers = new HashMap<>(); // serviceId->BreakerInfo
 
     Set<String> lastAddrs = new HashSet<String>();
-    Map<Integer, ServiceInfo> serviceMap = new HashMap<Integer, ServiceInfo>();
+    ConcurrentHashMap<Integer, ServiceInfo> serviceMap = new ConcurrentHashMap<Integer, ServiceInfo>();
     ConcurrentHashMap<String, AddrInfo> addrMap = new ConcurrentHashMap<String, AddrInfo>();
 
     public DefaultClusterManager(TransportChannel transportChannel) {

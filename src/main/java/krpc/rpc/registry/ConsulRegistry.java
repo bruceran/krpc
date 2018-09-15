@@ -30,7 +30,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
     // curl "http://192.168.31.144:8500/v1/agent/services"
     // curl "http://192.168.31.144:8500/v1/catalog/services"
-    // curl "http://192.168.31.144:8500/v1/health/service/100"
+    // curl "http://192.168.31.144:8500/v1/health/service/403"
     // curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json.version -d 1
     // curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
 

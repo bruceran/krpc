@@ -7,6 +7,7 @@ public class ServerContextData extends RpcContextData {
 
     Continue<RpcClosure> cont; // used in server side async call
     TraceContext traceContext;
+    long waitInQueueMicros = 0;
 
     public ServerContextData(String connId, RpcMeta meta, TraceContext traceContext) {
         super(connId, meta);
@@ -27,4 +28,9 @@ public class ServerContextData extends RpcContextData {
         return traceContext;
     }
 
+    public void afterQueue() {
+        waitInQueueMicros = System.nanoTime() / 1000 - startMicros;
+    }
+
+    public long getWaitInQueueMicros() { return waitInQueueMicros;}
 }

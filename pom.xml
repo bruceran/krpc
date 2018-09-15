@@ -5,7 +5,7 @@
   
   <groupId>krpc</groupId>
   <artifactId>krpc</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.16</version>
 	  
   <dependencies>
     <dependency>
@@ -187,5 +187,6 @@
       </snapshots>      
     </pluginRepository>  
 </pluginRepositories>  
-  
+
+	
 </project>

@@ -506,6 +506,8 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
     void callService(WebContextData ctx, DefaultWebReq req, Message msgReq) {
 
+        ctx.afterQueue();
+
         String connId = ctx.getConnId();
 
         if (!isConnected(connId)) {
@@ -533,8 +535,11 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
             RpcClosure closure = new RpcClosure(ctx, msgReq, res);
             callServiceEnd(ctx, req, closure);
         } catch (Exception e) {
+            String traceId = "no_trace_id";
+            if( Trace.currentContext() != null && Trace.currentContext().getTrace() != null )
+                traceId  = Trace.currentContext().getTrace().getTraceId();
             sendErrorResponse(ctx, req, RetCodes.BUSINESS_ERROR);
-            log.error("callService exception", e);
+            log.error("callService exception, traceId="+traceId, e);
             Trace.logException(e);
             return;
         }
@@ -579,6 +584,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
     }
 
     void callClient(WebContextData ctx, DefaultWebReq req, Object referer) {
+
+        ctx.afterQueue();
+
         RpcCallable callable = serviceMetas.findCallable(referer.getClass().getName());
         if (callable == null) {
             sendErrorResponse(ctx, req, RetCodes.HTTP_SERVICE_NOT_FOUND);
@@ -606,6 +614,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
     }
 
     void callDynamic(WebContextData ctx, DefaultWebReq req) {
+
+        ctx.afterQueue();
+
         RpcCallable callable = serviceMetas.findDynamicCallable(ctx.getMeta().getServiceId());
         if (callable == null) {
             sendErrorResponse(ctx, req, RetCodes.HTTP_SERVICE_NOT_FOUND);
@@ -731,7 +742,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
 
     void parseJsonContent(DefaultWebReq req) {
         String contentType = req.getContentType();
-        if (!isEmpty(contentType) && contentType.equals(MIMETYPE_JSON)) {
+        if (!isEmpty(contentType) && contentType.equals(MIMETYPE_JSON) && !isEmpty(req.getContent())) {
             Map<String, Object> map = Json.toMap(req.getContent());
             if (map != null) {
                 req.getParameters().putAll(map);
@@ -937,12 +948,18 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop {
     DefaultWebRes generateError(DefaultWebReq req, int retCode, int httpCode, String retMsg) {
         DefaultWebRes res = new DefaultWebRes(req, httpCode);
         res.setContentType(MIMETYPE_JSON);
-        if (errorMsgConverter != null) {
-            retMsg = errorMsgConverter.getErrorMsg(retCode);
-        }
+
         if (isEmpty(retMsg)) {
-            retMsg = RetCodes.retCodeText(retCode);
+            if (errorMsgConverter != null) {
+                retMsg = errorMsgConverter.getErrorMsg(retCode);
+            }
+            if (isEmpty(retMsg)) {
+                retMsg = RetCodes.retCodeText(retCode);
+            }
         }
+
+        res.setRetCode(retCode);
+        res.setRetMsg(retMsg);
         String content = String.format(ContentFormat, retCode, retMsg);
         res.setContent(content);
         return res;

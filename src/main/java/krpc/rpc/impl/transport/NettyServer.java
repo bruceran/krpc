@@ -40,8 +40,8 @@ public class NettyServer extends TransportBase implements Transport, InitClose, 
     int workerThreads = 0;
     int backlog = 300;
 
-    NamedThreadFactory bossThreadFactory = new NamedThreadFactory("svr_boss");
-    NamedThreadFactory workThreadFactory = new NamedThreadFactory("svr_work");
+    NamedThreadFactory bossThreadFactory = new NamedThreadFactory("krpc_nettyserver_boss");
+    NamedThreadFactory workThreadFactory = new NamedThreadFactory("krpc_nettyserver_worker");
 
     EventLoopGroup bossGroup;
     EventLoopGroup workerGroup;

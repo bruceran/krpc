@@ -70,4 +70,11 @@ public class RpcClosure {
         return res;
     }
 
+    public <T extends Message> T asReq() {
+        return (T)req;
+    }
+
+    public <T extends Message> T asRes() {
+        return (T)res;
+    }
 }

@@ -3,6 +3,7 @@ package krpc.rpc.impl;
 import com.google.protobuf.Message;
 import krpc.rpc.core.ClientContext;
 import krpc.rpc.core.ClientContextData;
+import krpc.rpc.core.ConnectionPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,7 @@ public class RpcServer extends RpcCallableBase {
     }
 
     ConcurrentHashMap<String, ConnInfo> clientConns = new ConcurrentHashMap<String, ConnInfo>();
+    ConnectionPlugin connectionPlugin;
 
     boolean isServerSide() {
         return true;
@@ -51,15 +53,28 @@ public class RpcServer extends RpcCallableBase {
         super.connected(connId, localAddr);
         ConnInfo ci = new ConnInfo(localAddr);
         clientConns.put(connId, ci);
+        if( connectionPlugin != null ) {
+            connectionPlugin.connected(connId,localAddr);
+        }
     }
 
     public void disconnected(String connId) {
         super.disconnected(connId);
         clientConns.remove(connId);
+        if( connectionPlugin != null ) {
+            connectionPlugin.disconnected(connId);
+        }
     }
 
     public boolean isConnected(String connId) {
         return clientConns.containsKey(connId);
     }
 
+    public ConnectionPlugin getConnectionPlugin() {
+        return connectionPlugin;
+    }
+
+    public void setConnectionPlugin(ConnectionPlugin connectionPlugin) {
+        this.connectionPlugin = connectionPlugin;
+    }
 }

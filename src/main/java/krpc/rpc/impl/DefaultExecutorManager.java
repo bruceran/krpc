@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DefaultExecutorManager implements ExecutorManager, InitClose {
 
-    NamedThreadFactory threadFactory = new NamedThreadFactory("rpc_server_worker");
+    NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_service_worker");
     HashMap<String, ThreadPoolExecutor> pools = new HashMap<String, ThreadPoolExecutor>();
 
     public ThreadPoolExecutor getExecutor(int serviceId, int msgId) {

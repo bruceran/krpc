@@ -37,7 +37,7 @@ public class QuickTimerEngine {
     }
 
     public void init() {
-        thread.setName("QuickTimerEngine-" + QuickTimerEngine.count.getAndIncrement());
+        thread.setName("krpc_quicktimer_" + QuickTimerEngine.count.getAndIncrement());
         thread.start();
     }
 

@@ -18,7 +18,7 @@ public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugi
     Timer t;
 
     public void init() {
-        t = new Timer();
+        t = new Timer("krpc_logonlyplugin_timer");
         log.info("init called");
     }
 

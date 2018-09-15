@@ -56,16 +56,17 @@ public class SpringBootstrap {
         if (spring == null) return beanPlugins;
 
         try {
-            loadBean(LoadBalance.class, beanPlugins);
-            loadBean(RpcPlugin.class, beanPlugins);
-            loadBean(Registry.class, beanPlugins);
-            loadBean(ErrorMsgConverter.class, beanPlugins);
-            loadBean(LogFormatter.class, beanPlugins);
-            loadBean(WebPlugin.class, beanPlugins);
-            loadBean(DynamicRoutePlugin.class, beanPlugins);
-            loadBean(MonitorPlugin.class, beanPlugins);
-            loadBean(FallbackPlugin.class, beanPlugins);
-            loadBean(TraceAdapter.class, beanPlugins);
+            loadPluginBean(LoadBalance.class, beanPlugins);
+            loadPluginBean(RpcPlugin.class, beanPlugins);
+            loadPluginBean(Registry.class, beanPlugins);
+            loadPluginBean(ErrorMsgConverter.class, beanPlugins);
+            loadPluginBean(LogFormatter.class, beanPlugins);
+            loadPluginBean(WebPlugin.class, beanPlugins);
+            loadPluginBean(DynamicRoutePlugin.class, beanPlugins);
+            loadPluginBean(MonitorPlugin.class, beanPlugins);
+            loadPluginBean(FallbackPlugin.class, beanPlugins);
+            loadPluginBean(TraceAdapter.class, beanPlugins);
+            loadPluginBean(ConnectionPlugin.class, beanPlugins);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -74,7 +75,7 @@ public class SpringBootstrap {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    void loadBean(Class cls, HashMap<String, List<PluginInfo>> beanPlugins) throws Exception {
+    void loadPluginBean(Class cls, HashMap<String, List<PluginInfo>> beanPlugins) throws Exception {
 
         Map<String, Object> map = spring.getBeansOfType(cls);
         if (map == null) return;

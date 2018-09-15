@@ -169,7 +169,7 @@ public class ReflectionUtils {
     }
 
     public static Object generateResponseObject(Class<?> cls, int retCode, String retMsg) {
-        String key = cls.getName() + ":" + retCode;
+        String key = cls.getName() + ":" + retCode+":"+retMsg;
         Object o = errors.get(key);
         if (o != null) return o;
         o = generateResponseObjectNoCache(cls, retCode, retMsg);
@@ -332,7 +332,7 @@ public class ReflectionUtils {
             }
             return msgNames;
         } catch (Exception e) {
-            throw new RuntimeException("getMethodInfo", e);
+            throw new RuntimeException("getMethodInfo intf="+intf.getName(), e);
         }
     }
 
@@ -353,7 +353,7 @@ public class ReflectionUtils {
             }
             return map;
         } catch (Exception e) {
-            throw new RuntimeException("getMethodInfo", e);
+            throw new RuntimeException("getMethodInfo reqCls="+reqCls+",resCls="+resCls, e);
         }
     }
 
@@ -406,7 +406,7 @@ public class ReflectionUtils {
     }
 
     public static Object generateResponseObject(DynamicMessage.Builder b, String cacheName, int retCode, String retMsg) {
-        String key = cacheName + ":" + retCode;
+        String key = cacheName + ":" + retCode+":"+retMsg;
         Object o = errors.get(key);
         if (o != null) return o;
         o = generateResponseObjectNoCache(b, retCode, retMsg);

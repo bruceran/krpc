@@ -18,7 +18,8 @@ public class RefererConfig {
     String group;
 
     int timeout = 3000;
-    int retryCount = 0;
+    int retryCount = 2;
+    boolean retryBroken = false; // not safe, the receiver may receive more than once
 
     String loadBalance = "roundrobin"; // can be empty (use client default), or random, roundrobin, ...
 
@@ -246,4 +247,12 @@ public class RefererConfig {
         return this;
     }
 
+    public boolean isRetryBroken() {
+        return retryBroken;
+    }
+
+    public RefererConfig setRetryBroken(boolean retryBroken) {
+        this.retryBroken = retryBroken;
+        return this;
+    }
 }

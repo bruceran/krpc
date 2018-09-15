@@ -29,9 +29,10 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
     int queueSize = 1000;
     int retryCount = 3;
     int retryInterval = 1000;
+    boolean enabled = true;
 
     DefaultHttpClient hc;
-    NamedThreadFactory threadFactory = new NamedThreadFactory("zipkin_report");
+    NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_zipkin_reporter");
     ThreadPoolExecutor pool;
 
     String[] serverAddrs;
@@ -51,15 +52,26 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
 
         s = params.get("retryInterval");
         if (!isEmpty(s)) retryInterval = Integer.parseInt(s);
+
+        s = params.get("enabled");
+        if (!isEmpty(s)) enabled = Boolean.parseBoolean(s);
     }
 
     public void init() {
+        if(!enabled) {
+            log.info("cat disabled");
+            return;
+        }
+
         hc = new DefaultHttpClient();
         hc.init();
         pool = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize), threadFactory);
     }
 
     public void close() {
+        if(!enabled) {
+            return;
+        }
         if (hc == null) return;
         pool.shutdownNow();
         pool = null;
@@ -68,6 +80,10 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
     }
 
     public void send(TraceContext ctx, Span span) {
+        if(!enabled) {
+            return;
+        }
+
         try {
             pool.execute(new Runnable() {
                 public void run() {

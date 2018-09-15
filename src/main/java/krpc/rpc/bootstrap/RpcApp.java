@@ -140,7 +140,7 @@ public class RpcApp implements InitClose, StartStop {
         }
 
         if (delayStart > 0) {
-            Timer t = new Timer();
+            Timer t = new Timer("krpc_delay_init_timer");
             t.schedule(new TimerTask() {
                 public void run() {
                     start();

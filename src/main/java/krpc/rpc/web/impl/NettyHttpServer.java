@@ -60,8 +60,8 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
     String dataDir = ".";
     long maxUploadLength = 5000000;
 
-    NamedThreadFactory bossThreadFactory = new NamedThreadFactory("web_boss");
-    NamedThreadFactory workThreadFactory = new NamedThreadFactory("web_work");
+    NamedThreadFactory bossThreadFactory = new NamedThreadFactory("krpc_webserver_boss");
+    NamedThreadFactory workThreadFactory = new NamedThreadFactory("krpc_webserver_worker");
 
     EventLoopGroup bossGroup;
     EventLoopGroup workerGroup;
@@ -117,7 +117,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
     public void start() {
         InetSocketAddress addr = null;
         if (host == null || "*".equals(host)) {
-            addr = new InetSocketAddress(port);
+            addr = new InetSocketAddress(port); // "0.0.0.0",
         } else {
             addr = new InetSocketAddress(host, port);
         }
@@ -221,8 +221,9 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         String connId = getConnId(ctx);
-        //log.error("connection exception, connId="+connId+",msg="+cause.toString(),cause);
-        log.error("connection exception, connId=" + connId + ",msg=" + cause.toString(), cause);
+        if(log.isDebugEnabled()) {
+            log.debug("connection exception, connId="+connId+",msg="+cause.toString(),cause);
+        }
         ctx.close();
     }
 

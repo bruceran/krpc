@@ -36,6 +36,8 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     int logQueueSize = 10000;
     boolean accessLog = true;
 
+    boolean printOriginalMsgName = true;
+
     LogFormatter logFormatter = new SimpleLogFormatter();
     ThreadPoolExecutor logPool;
     ConcurrentHashMap<String, Logger> serverLogMap = new ConcurrentHashMap<String, Logger>();
@@ -66,7 +68,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     public void init() {
 
-        timer = new Timer("asyncstatstimer");
+        timer = new Timer("krpc_asyncstats_timer");
         timer.schedule(new TimerTask() {
             public void run() {
                 statsTimer();
@@ -89,12 +91,12 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         InitCloseUtils.init(resources);
 
         if (accessLog) {
-            ThreadFactory logThreadFactory = new NamedThreadFactory("asynclog");
+            ThreadFactory logThreadFactory = new NamedThreadFactory("krpc_asynclog");
             logPool = new ThreadPoolExecutor(logThreads, logThreads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(logQueueSize), logThreadFactory);
             logPool.prestartAllCoreThreads();
         }
 
-        ThreadFactory statsThreadFactory = new NamedThreadFactory("asyncstats");
+        ThreadFactory statsThreadFactory = new NamedThreadFactory("krpc_asyncstats");
         statsPool = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(statsQueueSize), statsThreadFactory);
         statsPool.prestartAllCoreThreads();
 
@@ -286,9 +288,12 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         RpcMeta meta = ctx.getMeta();
         RpcMeta.Trace trace = meta.getTrace();
         String spanId = trace.getSpanId();
+        String extraInfo = "";
         if (ctx instanceof ServerContextData) {
             RpcMeta.Trace ctxTrace = ((ServerContextData) ctx).getTraceContext().getTrace();
-            if (!ctxTrace.getSpanId().equals(spanId)) spanId += "#" + ctxTrace.getSpanId();
+//            if (!ctxTrace.getSpanId().equals(spanId)) spanId += "#" + ctxTrace.getSpanId();
+            spanId = ctxTrace.getSpanId();
+            extraInfo = "q:"+((ServerContextData) ctx).getWaitInQueueMicros();
         }
 
         long responseTime = ctx.getResponseTimeMicros();
@@ -307,7 +312,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         b.append(sep);
         b.append(meta.getMsgId());
         b.append(sep);
-        String serviceName = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
+        String serviceName = "";
+        if( printOriginalMsgName )
+            serviceName = serviceMetas.getOriginalName(meta.getServiceId(), meta.getMsgId());
+        else
+            serviceName = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
         b.append(serviceName);
         b.append(sep);
         b.append(closure.getRetCode());
@@ -321,6 +330,10 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(closure.getRes());
         if (resStr.indexOf(sep) >= 0) resStr = resStr.replace(sep, ",");
         b.append(resStr);
+        if( !extraInfo.isEmpty() ) {
+            b.append(sep);
+            b.append(extraInfo);
+        }
 
         return b.toString();
     }
@@ -330,6 +343,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         RpcContextData ctx = closure.getCtx();
         RpcMeta meta = ctx.getMeta();
         RpcMeta.Trace trace = meta.getTrace();
+        String extraInfo = "";
+
+        if (ctx instanceof ServerContextData) {
+            extraInfo = "q:"+((ServerContextData) ctx).getWaitInQueueMicros();
+        }
 
         long responseTime = ctx.getResponseTimeMicros();
         String timestamp = logFormat.format(LocalDateTime.ofEpochSecond(responseTime / 1000000, (int) ((responseTime % 1000000) * 1000), offset));
@@ -347,7 +365,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         b.append(sep);
         b.append(meta.getMsgId());
         b.append(sep);
-        String serviceName = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
+        String serviceName = "";
+        if( printOriginalMsgName )
+            serviceName = serviceMetas.getOriginalName(meta.getServiceId(), meta.getMsgId());
+        else
+            serviceName = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
         b.append(serviceName);
         b.append(sep);
         b.append(closure.getRes().getRetCode());
@@ -361,6 +383,10 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(closure.getRes());
         if (resStr.indexOf(sep) >= 0) resStr = resStr.replace(sep, ",");
         b.append(resStr);
+        if( !extraInfo.isEmpty() ) {
+            b.append(sep);
+            b.append(extraInfo);
+        }
 
         return b.toString();
     }
@@ -641,5 +667,13 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         this.plugins = plugins;
     }
 
+
+    public boolean isPrintOriginalMsgName() {
+        return printOriginalMsgName;
+    }
+
+    public void setPrintOriginalMsgName(boolean printOriginalMsgName) {
+        this.printOriginalMsgName = printOriginalMsgName;
+    }
 
 }

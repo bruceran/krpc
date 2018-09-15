@@ -31,7 +31,7 @@ public class CatNettyClient extends ChannelDuplexHandler implements InitClose {
     int reconnectSeconds = 1;
     int workerThreads = 1;
 
-    NamedThreadFactory workThreadFactory = new NamedThreadFactory("cat_work");
+    NamedThreadFactory workThreadFactory = new NamedThreadFactory("krpc_cat_worker");
 
     EventLoopGroup workerGroup;
     Timer timer;
@@ -44,7 +44,7 @@ public class CatNettyClient extends ChannelDuplexHandler implements InitClose {
 
     public void init() {
 
-        timer = new Timer("catnettytimer");
+        timer = new Timer("krpc_cat_netty_timer");
 
         workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
 

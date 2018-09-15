@@ -51,6 +51,16 @@ public class Json {
         }
     }
 
+    static public Object toRawObject(String s, Class cls) {
+        try {
+            Object results = mapper.readValue(s, cls);
+            return results;
+        } catch (Exception e) {
+            log.error("json convert exception", e);
+            return null;
+        }
+    }
+
     static public <T> T toObject(String s, Class<T> cls) {
         try {
             T results = mapper.readValue(s, cls);

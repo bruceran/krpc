@@ -31,28 +31,50 @@ public class RetCodes {
     static public final int SERVER_CONNECTION_BROKEN = -631; // just for server log, not returned to client
 
     // krpc.httpclient component error
-    static public final int HTTPCLIENT_NO_CONNECT = -700;
-    static public final int HTTPCLIENT_CONNECTION_BROKEN = -701;
-    static public final int HTTPCLIENT_TIMEOUT = -702;
-    static public final int HTTPCLIENT_INTERRUPTED = -703;
-    static public final int HTTPCLIENT_URL_PARSE_ERROR = -704;
-    static public final int HTTPCLIENT_RES_PARSE_ERROR = -705;
+    static public final int HTTPCLIENT_NO_CONNECT = -640;
+    static public final int HTTPCLIENT_CONNECTION_BROKEN = -641;
+    static public final int HTTPCLIENT_TIMEOUT = -642;
+    static public final int HTTPCLIENT_INTERRUPTED = -643;
+    static public final int HTTPCLIENT_URL_PARSE_ERROR = -644;
+    static public final int HTTPCLIENT_RES_PARSE_ERROR = -645;
 
     // http server error
-    static public final int HTTP_FORBIDDEN = -720;
-    static public final int HTTP_URL_NOT_FOUND = -721;
-    static public final int HTTP_METHOD_NOT_ALLOWED = -722;
-    static public final int HTTP_TOO_LARGE = -723;
-    static public final int HTTP_NO_LOGIN = -724;
-    static public final int HTTP_NO_SESSIONSERVICE = -725;
-    static public final int HTTP_SERVICE_NOT_FOUND = -726;
+    static public final int HTTP_FORBIDDEN = -660;
+    static public final int HTTP_URL_NOT_FOUND = -661;
+    static public final int HTTP_METHOD_NOT_ALLOWED = -662;
+    static public final int HTTP_TOO_LARGE = -663;
+    static public final int HTTP_NO_LOGIN = -664;
+    static public final int HTTP_NO_SESSIONSERVICE = -665;
+    static public final int HTTP_SERVICE_NOT_FOUND = -666;
+
+    static public final int BIZ_NOT_IMPLEMENTED = -700;
+    static public final int BIZ_DISCARDED = -701;
+    static public final int BIZ_PARAM_ERROR = -702;
 
     static public boolean isTimeout(int retCode) {
         return retCode == RPC_TIMEOUT || retCode == QUEUE_TIMEOUT;
     }
 
-    static public boolean canRetry(int retCode) {
-        return retCode == QUEUE_FULL || retCode == SERVER_SHUTDOWN || retCode == FLOW_LIMIT;
+    static public boolean canSafeRetry(int retCode) {
+        switch( retCode ) {
+            case SERVER_SHUTDOWN:
+            case QUEUE_FULL:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    static public boolean canRecover(int retCode) {
+        switch( retCode ) {
+            case VALIDATE_ERROR:
+            case BIZ_NOT_IMPLEMENTED:
+            case BIZ_DISCARDED:
+            case BIZ_PARAM_ERROR:
+                return false;
+            default:
+                return true;
+        }
     }
 
     static public String retCodeText(int retCode) {

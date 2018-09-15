@@ -5,7 +5,7 @@
 
 	<groupId>krpc</groupId>
 	<artifactId>spring-boot-starter</artifactId>
-	<version>0.1.2</version>
+	<version>0.1.16</version>
 	<packaging>pom</packaging>
 
 	<name>spring-boot-starter</name>
@@ -29,69 +29,25 @@
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 
-<!--
-		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>3.5.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
-			<version>4.1.16.Final</version>
-		</dependency>
-		 
-		<dependency>
-			<groupId>javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.12.1.GA</version>
-		</dependency>
-				  
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-		</dependency>
-    
-		<dependency>
-			<groupId>org.xerial.snappy</groupId>
-			<artifactId>snappy-java</artifactId>
-			<version>1.1.2.3</version>
-			<optional>true</optional>
-		</dependency>
-		
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>2.9.0</version>
-			<optional>true</optional>
-		</dependency>
--->
-
 		<dependency>
 			<groupId>krpc</groupId>
 			<artifactId>krpc</artifactId>
-			<version>0.1.2</version>
+			<version>0.1.16</version>
 		</dependency>
 	
 	</dependencies>	    
-	<!--
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-   -->
-
+		
+	<distributionManagement>
+			<repository>
+				<id>saicdt-cxpt-release</id>
+				<name>Repository for saicdt cxpt release builds</name>
+				<url>http://10.135.81.160:8081/repository/cxpt-releases/</url>
+			</repository>
+			<snapshotRepository>
+				<id>saicdt-cxpt-snapshots</id>
+				<name>Repository for saicdt cxpt snapshots builds</name>
+				<url>http://10.135.81.160:8081/repository/cxpt-snapshots/</url>
+			</snapshotRepository>
+	</distributionManagement>
+	
 </project>

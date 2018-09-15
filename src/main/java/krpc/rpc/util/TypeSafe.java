@@ -15,6 +15,14 @@ public class TypeSafe {
         return v.toString();
     }
 
+    public static String anyToString(Object v,String defaultValue) {
+        if (v == null) return defaultValue;
+        if (v instanceof String) {
+            return (String) v;
+        }
+        return v.toString();
+    }
+
     public static int anyToInt(Object v) {
         return anyToInt(v, 0);
     }
@@ -87,9 +95,12 @@ public class TypeSafe {
         }
     }
 
-
     public static double anyToDouble(Object v) {
-        if (v == null) return 0;
+        return anyToDouble(v, 0.0);
+    }
+
+    public static double anyToDouble(Object v,double defaultValue) {
+        if (v == null) return defaultValue;
         if (v instanceof Double) {
             return (Double) v;
         }

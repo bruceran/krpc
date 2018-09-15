@@ -24,6 +24,7 @@ public class DefaultServiceMetas implements ServiceMetas {
     HashMap<String, Method> resParserMap = new HashMap<String, Method>();
     HashMap<Integer, String> serviceNames = new HashMap<Integer, String>();
     HashMap<String, String> msgNames = new HashMap<String, String>();
+    HashMap<String, String> originalMsgNames = new HashMap<String, String>();
     HashMap<String, RpcCallable> callableMap = new HashMap<String, RpcCallable>();
     HashMap<String, Descriptor> reqDescMap = new HashMap<String, Descriptor>();
     HashMap<String, Descriptor> resDescMap = new HashMap<String, Descriptor>();
@@ -75,6 +76,9 @@ public class DefaultServiceMetas implements ServiceMetas {
         return msgNames.get(serviceId + "." + msgId);
     }
 
+    public String getOriginalName(int serviceId, int msgId) {
+        return originalMsgNames.get(serviceId + "." + msgId);
+    }
     public RpcCallable findCallable(String implClsName) {
         return callableMap.get(implClsName);
     }
@@ -100,7 +104,7 @@ public class DefaultServiceMetas implements ServiceMetas {
 
         String s = serviceName + "." + msgName;
         for (Map.Entry<String, String> entry : msgNames.entrySet()) {
-            if (entry.getValue().equals(s)) {
+            if (entry.getValue().equalsIgnoreCase(s)) {
                 return entry.getKey();
             }
         }
@@ -155,6 +159,7 @@ public class DefaultServiceMetas implements ServiceMetas {
                 resParserMap.put(serviceId + "." + msgId, resParser);
                 serviceNames.put(serviceId, serviceName.toLowerCase());
                 msgNames.put(serviceId + "." + msgId, (serviceName + "." + msgName).toLowerCase());
+                originalMsgNames.put(serviceId + "." + msgId, serviceName + "." + msgName);
             }
         }
     }
@@ -188,6 +193,7 @@ public class DefaultServiceMetas implements ServiceMetas {
                 resParserMap.putIfAbsent(serviceId + "." + msgId, resParser);
                 serviceNames.putIfAbsent(serviceId, serviceName.toLowerCase());
                 msgNames.putIfAbsent(serviceId + "." + msgId, (serviceName + "." + msgName).toLowerCase());
+                originalMsgNames.putIfAbsent(serviceId + "." + msgId, serviceName + "." + msgName);
             }
         }
     }
@@ -220,7 +226,8 @@ public class DefaultServiceMetas implements ServiceMetas {
         reqDescMap.put(serviceId + "." + msgId, reqDesc);
         resDescMap.put(serviceId + "." + msgId, resDesc);
         serviceNames.put(serviceId, serviceName.toLowerCase());
-        msgNames.put(serviceId + "." + msgId, serviceName + "." + msgName);
+        msgNames.put(serviceId + "." + msgId, (serviceName + "." + msgName).toLowerCase());
+        originalMsgNames.put(serviceId + "." + msgId, serviceName + "." + msgName);
     }
 
     public void addDynamic(int serviceId, RpcCallable callable) {

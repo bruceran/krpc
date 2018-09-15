@@ -6,6 +6,7 @@ public class ClientContext {
     static private ThreadLocal<String> tlConnId = new ThreadLocal<String>();
     static private ThreadLocal<Integer> tlTimeout = new ThreadLocal<Integer>();
     static private ThreadLocal<String> tlAttachment = new ThreadLocal<String>();
+    static private ThreadLocal<RetrierInfo> tlRetrier = new ThreadLocal<RetrierInfo>(); // persist to disk and retry
 
     public static ClientContextData get() {
         return tlData.get();
@@ -19,7 +20,9 @@ public class ClientContext {
         tlData.remove();
     }
 
-    // setConnId is used only in reverse call: server -> client
+    // may be used for 2 cases:
+    // 1:  reverse call, server -> client
+    // 2:  stateful call, client -> server
     public static void setConnId(String connId) {
         tlConnId.set(connId);
     }
@@ -66,6 +69,27 @@ public class ClientContext {
         if (s != null)
             tlAttachment.remove();
         return s;
+    }
+
+    static public class RetrierInfo {
+        public int maxTimes = 0;
+        public int[] waitSeconds = new int[] {1};
+    }
+
+    public static void setRetrier(int  maxTimes,int  ... waitSeconds) {
+        RetrierInfo r = new RetrierInfo();
+        r.maxTimes = maxTimes;
+        if( waitSeconds != null && waitSeconds.length > 0 ) {
+            r.waitSeconds = waitSeconds;
+        }
+        tlRetrier.set(r);
+    }
+
+    public static RetrierInfo removeRetrier() {
+        RetrierInfo r = (RetrierInfo) tlRetrier.get();
+        if (r != null)
+            tlRetrier.remove();
+        return r;
     }
 
 }

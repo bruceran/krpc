@@ -2,9 +2,7 @@ package krpc.rpc.impl;
 
 import com.google.protobuf.Message;
 import krpc.common.InitCloseUtils;
-import krpc.rpc.core.ClientContextData;
-import krpc.rpc.core.ClusterManager;
-import krpc.rpc.core.RpcClosure;
+import krpc.rpc.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +11,7 @@ public class RpcClient extends RpcCallableBase {
     static Logger log = LoggerFactory.getLogger(RpcClient.class);
 
     ClusterManager clusterManager;
+    ConnectionPlugin connectionPlugin;
 
     public void init() {
         super.init();
@@ -29,6 +28,8 @@ public class RpcClient extends RpcCallableBase {
     }
 
     String nextConnId(ClientContextData ctx, Message req) {
+        String connId = ClientContext.removeConnId();
+        if( connId != null ) return connId;
         return clusterManager.nextConnId(ctx, req);
     }
 
@@ -39,11 +40,17 @@ public class RpcClient extends RpcCallableBase {
     public void connected(String connId, String localAddr) {
         clusterManager.connected(connId, localAddr);
         super.connected(connId, localAddr);
+        if( connectionPlugin != null ) {
+            connectionPlugin.connected(connId,localAddr);
+        }
     }
 
     public void disconnected(String connId) {
         clusterManager.disconnected(connId);
         super.disconnected(connId);
+        if( connectionPlugin != null ) {
+            connectionPlugin.disconnected(connId);
+        }
     }
 
     public boolean isConnected(String connId) {
@@ -63,4 +70,11 @@ public class RpcClient extends RpcCallableBase {
         this.clusterManager = clusterManager;
     }
 
+    public ConnectionPlugin getConnectionPlugin() {
+        return connectionPlugin;
+    }
+
+    public void setConnectionPlugin(ConnectionPlugin connectionPlugin) {
+        this.connectionPlugin = connectionPlugin;
+    }
 }

@@ -1,6 +1,6 @@
 package krpc.rpc.web;
 
-import krpc.rpc.util.CryptHelper;
+import krpc.rpc.util.Md5;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
@@ -53,7 +53,7 @@ public class WebUtils {
         long lastModified = file.lastModified();
         long size = file.length();
         String s = lastModified + ":" + size;
-        String etag = "\"" + CryptHelper.md5(s) + "\"";
+        String etag = "\"" + Md5.md5(s) + "\"";
         return etag;
     }
 

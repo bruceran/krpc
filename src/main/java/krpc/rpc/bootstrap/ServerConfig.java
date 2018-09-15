@@ -26,6 +26,8 @@ public class ServerConfig {
     String plugins = ""; // comma seperated RpcPlugin names
     List<String> pluginParams = new ArrayList<>(); // config RpcPlugins if needed
 
+    String connectionPlugin = "";
+
     public ServerConfig() {
     }
 
@@ -179,6 +181,15 @@ public class ServerConfig {
 
     public ServerConfig setPluginParams(List<String> pluginParams) {
         this.pluginParams = pluginParams;
+        return this;
+    }
+
+    public String getConnectionPlugin() {
+        return connectionPlugin;
+    }
+
+    public ServerConfig setConnectionPlugin(String connectionPlugin) {
+        this.connectionPlugin = connectionPlugin;
         return this;
     }
 }

@@ -201,6 +201,10 @@ public class Trace {
         tlContext.set(traceContext);
     }
 
+    public static void clearCurrentContext() {
+        tlContext.remove();
+    }
+
     public static int getSampleRate() {
         return sampleRate;
     }

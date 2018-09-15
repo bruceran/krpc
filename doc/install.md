@@ -61,11 +61,11 @@
       main/
         java/
           krpc/
-            common/ trace,httpclient,redis,rpc 组件共同依赖的文件，只有非常少的几个接口和类
-            trace/  和rpc框架完全独立的调用链跟踪的trace框架, 可对接主流的zipkin,skywalking,cat等APM系统
+            common/ trace,httpclient,rpc 组件共同依赖的文件，只有非常少的几个接口和类
             httpclient/  和rpc框架完全独立的http客户端
-            redis/  和rpc框架完全独立的redis客户端
+			persistqueue 基于文件的持久化队列
             rpc/    krpc框架本身
+			trace/  和rpc框架完全独立的调用链跟踪的trace框架, 可对接主流的zipkin,skywalking,cat等APM系统
         resources/
           META-INF/
             services/ 框架支持的SPI接口
@@ -87,11 +87,13 @@
     dist/
     dist/sniffer 使用krpc的探针所需的jar包和配置文件
     dist/tools/ protoc工具
-                 changed_code.zip 修改后的源码文件以及diff文件, 原始文件位置：/src/google/protobuf/compiler/java
-                 test.proto 用来测试工具的proto文件
-    			 win/ windows版本下的工具
-    			 linux/ lilux版本下的工具
-    			 mac/ mac版本下的工具
+                 
+                 test/  编译工具测试文件， test.proto 用来测试工具的proto文件
+    			 win/ windows版本下的工具    protoc-3.5.1.exe  
+    			 linux/ lilux版本下的工具   暂无
+    			 mac/ mac版本下的工具  暂无
+				 protoc_changed_code/ 修改过的pb源码， 原始文件位置：/src/google/protobuf/compiler/java
+				 
 
 # 框架外部依赖说明
 
@@ -139,6 +141,7 @@
   * krpc.common 通用接口和实现类，所有模块依赖此包
   * krpc.trace 全链路跟踪API, 目前krpc.rpc模块依赖此模块
   * krpc.httpclient 基于netty4的http client
+  * krpc.persistqueue 基于文件的持久化队列
   * krpc.rpc rpc框架本身
   
   * krpc.rpc.core.proto krpc协议头的proto生成的类文件
@@ -159,16 +162,33 @@
   
 # PROTOC工具安装及使用
 
-  * 必须使用定制的protoc-3.5.1.exe文件来生成service接口，标准的protoc-3.5.1.exe根据service定义生成的java接口不能满足要求
+  * 必须使用定制的protoc编译命令来生成java类和java接口，标准的protoc 命令生成的java接口和java类不能满足要求
+  
+        Windows下： protoc-3.5.1.exe    放入path路径中以便c.sh脚本能找到此命令
+		linux/mac下：protoc-3.5.1       放入path路径中以便c.sh脚本能找到此命令, 若生成的可执行文件protoc， 可手工建一个软链
 
-  * dist/tool 目录下包含文件 changed_code.zip，此文件包括修改后的源文件以及git diff内容，复制4个文件到 /src/google/protobuf/compiler/java 再运行pb的make程序就可以编译出定制版本的protoc可执行程序
-
-  * 修改点： 1) 生成的接口形式（同步接口和异步接口） 2) 输入输出类，对string类型的入参允许 null, null参数不报异常而是设置为默认值
+  * 从源码编译 (cygwin/linux/mac)
+	  
+		git clone https://github.com/bruceran/protobuf.git
+		cd protobuf
+		git checkout v3.5.1-krpc  # 必须使用此分支，其它分支不支持krpc
+		
+		./autogen.sh
+		./confgure
+		make
+		make install
+		
+  * 3.5.1版本的源码修改点： 
+          1) 生成的接口形式（同步接口和异步接口） 
+		  2) 输入输出类，对string类型的入参允许 null, null参数不报异常而是设置为默认值
+		  3) 输出类增加ok,failed方法简化相应类的生成
+		
+  * 使用方式
   
-  * 将本项目的 dist/tool 目录加入path环境变量, 输入命令：protoc-3.5.1.exe --version  看到有输出 "libprotoc 3.5.1" 字样表示成功
+        cygwin/linux/mac下先确认 可通过命令行直接访问 protoc-3.5.1 了
+				输入命令：  protoc-3.5.1 --version  看到有输出 "libprotoc 3.5.1" 字样表示成功
   
-  * 编译proto文件的命令： krpc.bat  yourprotofile.proto  此脚本每次只能处理一个文件
-  
-  * 生成的java文件放在target子目录下，同时会在proto文件相同目录生成一个时间戳完全一致的 yourprotofile.proto.pb (此文件只用于动态http网关，一般不用)
-  
-  * bin目录下附带了一个简单的 test.proto, 可进入此目录，输入krpc.bat test.proto查看示例输出文件
+		进入 test 目录，运行 ./c.sh   test  若无报错则表示安装成功， 成功后可生成 test_protos.jar  test_sources.jar  test.proto.pb 3个文件
+		test_protos.jar  用于项目导入，加入此jar包后就可以直接进行开发了
+		test_sources.jar  test_protos.jar 对应的源文件，不用可修改c.sh不生成
+		test.proto.pb  对应的pb文件，仅用于http网关不使用test_protos.jar做动态路由，不用可修改c.sh不生成

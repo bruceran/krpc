@@ -51,7 +51,7 @@ public class JedisFlowControl extends AbstractFlowControl implements RpcPlugin, 
     int maxThreads = 0;
     int queueSize = 10000;
 
-    NamedThreadFactory threadFactory = new NamedThreadFactory("jedisflowcontrol_threads");
+    NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_jedis_flowcontrol");
     ThreadPoolExecutor pool = null;
 
     public void config(String paramsStr) {

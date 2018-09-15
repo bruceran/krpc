@@ -22,6 +22,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /*
+
+curl -i -X GET "http://10.135.81.101:10800/agent/jetty"
+curl -X POST "http://10.135.81.101:12800/application/register" -H "Content-Type: application/json"  --data '["boot2"]'
+
+10.135.81.101:10800
+
 curl -i -X GET "http://localhost:10800/agent/jetty"
 ["localhost:12800/"]
 curl -i -X GET "http://localhost:10800/agent/gRPC"
@@ -55,11 +61,12 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
     int retryInterval = 1000;
 
     DefaultHttpClient hc;
-    NamedThreadFactory threadFactory = new NamedThreadFactory("skywalking_report");
+    NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_skywalking_reporter");
     ThreadPoolExecutor pool;
 
     String[] queryAddrs;
     int queryAddrsIndex = 0;
+    boolean enabled = true;
 
     String[] serverAddrs = new String[0];
     int serverAddrIndex = -1;
@@ -88,14 +95,23 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
 
         s = params.get("retryInterval");
         if (!isEmpty(s)) retryInterval = Integer.parseInt(s);
+
+        s = params.get("enabled");
+        if (!isEmpty(s)) enabled = Boolean.parseBoolean(s);
     }
 
     public void init() {
+
         appName = Trace.getAppName();
 
         getOsInfo();
 
         instanceUuid = uuid();
+
+        if(!enabled) {
+            log.info("cat disabled");
+            return;
+        }
 
         hc = new DefaultHttpClient();
         hc.init();
@@ -103,18 +119,21 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
 
         boolean ok = register();
         if (!ok) {
-            timer = new Timer("skywalkingtimer");
+            timer = new Timer("krpc_skywalking_timer");
             timer.schedule(new TimerTask() {
                 public void run() {
                     retryRegister();
                 }
-            }, 3000, 3000);
+            }, 60000, 60000);
         } else {
             startQueryRoutesTimer();
         }
     }
 
     public void close() {
+        if(!enabled) {
+            return;
+        }
         if (hc == null) return;
 
         if (timer != null) {
@@ -128,7 +147,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
     }
 
     void startQueryRoutesTimer() {
-        timer = new Timer("skywalkingtimer");
+        timer = new Timer("krpc_skywalking_timer");
         timer.schedule(new TimerTask() {
             public void run() {
                 heartBeatAndQueryRoutes();
@@ -292,6 +311,11 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
     }
 
     public void send(TraceContext ctx, Span span) {
+
+        if(!enabled) {
+            return;
+        }
+
         if (instanceId == 0) return;
 
         try {
@@ -312,7 +336,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
     void report(TraceContext ctx, Span span) {
         String json = convert(ctx, span);
 
-        System.out.println("segments json=" + json);
+        // System.out.println("segments json=" + json);
 
         String postUrl = "http://%s/segments";
         String url = String.format(postUrl, currentServerAddr());
@@ -322,7 +346,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
         while (true) {
             HttpClientRes res = hc.call(req);
             if (res.getRetCode() == 0 && res.getHttpCode() == 200) {
-                log.info("report span ok, content=" + lastContent);
+                log.debug("report span ok, content=" + lastContent);
                 return;
             }
             lastContent = res.getContent();

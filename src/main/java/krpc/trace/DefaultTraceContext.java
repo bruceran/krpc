@@ -105,15 +105,18 @@ public class DefaultTraceContext implements TraceContext {
             stack.removeLast();
             if (stack.isEmpty()) {
                 doSend(span);
+                Trace.clearCurrentContext();
                 return;
             }
         } else {
             if (span == stack.peekFirst()) {
                 stack.clear();
                 sendToTrace(span);
+                Trace.clearCurrentContext();
                 return;
             } else if (stack.isEmpty()) {
                 sendToTrace(span);
+                Trace.clearCurrentContext();
                 return;
             }
         }

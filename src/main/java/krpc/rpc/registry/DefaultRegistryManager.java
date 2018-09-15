@@ -11,6 +11,7 @@ import krpc.rpc.core.ServiceMetas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -79,9 +80,7 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
         }
 
         loadFromLocal();
-    }
 
-    public void start() {
         for (Registry r : registries.values()) {
             InitCloseUtils.start(r);
         }
@@ -93,9 +92,12 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
         if (changed) {
             saveToLocal();
         }
+    }
+
+    public void start() {
 
         if (registries.size() > 0) {
-            timer = new Timer();
+            timer = new Timer("krpc_registry_heartbeat_timer");
             timer.schedule(new TimerTask() {
                 public void run() {
                     heartBeat();
@@ -113,13 +115,13 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
         }
 
         unregister();
+    }
+
+    public void close() {
 
         for (Registry r : registries.values()) {
             InitCloseUtils.stop(r);
         }
-    }
-
-    public void close() {
 
         if (timer != null) {
             stop();
@@ -236,6 +238,11 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
     }
 
     void saveToLocal() {
+
+        if( !new File(dataDir).exists() ) {
+            new File(dataDir).mkdirs();
+        }
+
         Path path = Paths.get(dataDir, localFile);
         try {
             String json = Json.toJson(localData);

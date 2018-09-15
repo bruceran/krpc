@@ -40,7 +40,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
     int keepAliveRequests = 100;
     int keepAliveConnections = 1; // cached connections
 
-    NamedThreadFactory workThreadFactory = new NamedThreadFactory("httpclient");
+    NamedThreadFactory workThreadFactory = new NamedThreadFactory("krpc_httpclient");
     EventLoopGroup workerGroup;
 
     GZip gzip;
@@ -330,7 +330,7 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
             String content = bb.toString(Charset.forName("utf-8"));
             res.setContent(content);
         }
-        System.out.println(HttpUtil.isKeepAlive(data));
+        // System.out.println(HttpUtil.isKeepAlive(data));
         return res;
     }
 

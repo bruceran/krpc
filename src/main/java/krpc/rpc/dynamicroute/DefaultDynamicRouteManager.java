@@ -64,7 +64,7 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager, InitClos
         }
 
         if (configItems.size() > 0) {
-            timer = new Timer();
+            timer = new Timer("krpc_dynamicroute_timer");
             timer.schedule(new TimerTask() {
                 public void run() {
                     refresh();

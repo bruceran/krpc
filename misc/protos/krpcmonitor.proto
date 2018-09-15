@@ -16,7 +16,7 @@ message RpcStat {
     int32 success = 5;
     int32 failed = 6;
     int32 timeout = 7;
-    repeated int32 timeUsed = 8;
+    repeated int32 timeUsed = 8; // 间隔： 10毫秒, 25毫秒, 50毫秒, 100毫秒, 250毫秒, 500毫秒, 1秒, 3秒，超过3秒
     
 };
 

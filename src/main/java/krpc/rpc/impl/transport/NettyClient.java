@@ -40,8 +40,8 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
     int reconnectSeconds = 1;
     int workerThreads = 0;
 
-    NamedThreadFactory workThreadFactory = new NamedThreadFactory("cli_work");
-    NamedThreadFactory timerThreadFactory = new NamedThreadFactory("cli_timer");
+    NamedThreadFactory workThreadFactory = new NamedThreadFactory("krpc_nettyclient_worker");
+    NamedThreadFactory timerThreadFactory = new NamedThreadFactory("krpc_nettyclient_timer");
 
     EventLoopGroup workerGroup;
     HashedWheelTimer timer;

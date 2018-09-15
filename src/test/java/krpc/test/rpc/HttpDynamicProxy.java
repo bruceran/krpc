@@ -14,7 +14,7 @@ public class HttpDynamicProxy {
         RpcApp app = new Bootstrap()
                 .addWebServer(8888)
                 .addReferer("us", 100, "127.0.0.1:5600")
-                .setTraceAdapter("skywalking")
+                //.setTraceAdapter("skywalking:server=127.0.0.1:11100")
                 .build();
 
         app.initAndStart();

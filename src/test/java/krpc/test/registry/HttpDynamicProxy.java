@@ -18,7 +18,7 @@ public class HttpDynamicProxy {
                 .addRegistry(new RegistryConfig().setType("consul").setAddrs("192.168.31.144:8500"))
                 .addReferer(new RefererConfig("us").setServiceId(100).setRegistryName("consul"))
                 //.addReferer("us",100,"127.0.0.1:5600")
-                .setTraceAdapter("skywalking")
+                //.setTraceAdapter("skywalking")
                 .build();
 
         app.initAndStart();

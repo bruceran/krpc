@@ -45,6 +45,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
 
     String[] queryAddrs;
     int queryAddrsIndex = 0;
+    boolean enabled = true;
 
     String[] serverAddrs = new String[0];
     volatile int serverAddrIndex = -1;
@@ -52,7 +53,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
 
     DefaultHttpClient hc;
     CatNettyClient client;
-    NamedThreadFactory threadFactory = new NamedThreadFactory("cat_report");
+    NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_cat_reporter");
     ThreadPoolExecutor pool;
     Timer timer;
 
@@ -71,6 +72,9 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
 
         s = params.get("indexMultiplier");
         if (!isEmpty(s)) indexMultiplier = Integer.parseInt(s);
+
+        s = params.get("enabled");
+        if (!isEmpty(s)) enabled = Boolean.parseBoolean(s);
     }
 
     public void init() {
@@ -80,6 +84,11 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
         domain = Trace.getAppName();
 
         getHostInfo();
+
+        if(!enabled) {
+            log.info("cat disabled");
+            return;
+        }
 
         routeQueryUrl = "http://%s/cat/s/router?op=json&domain=" + domain + "&ip=" + localIp;
 
@@ -92,18 +101,21 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
 
         boolean ok = queryRoutes();
         if (!ok) {
-            timer = new Timer("cattimer");
+            timer = new Timer("krpc_cat_timer");
             timer.schedule(new TimerTask() {
                 public void run() {
                     queryRoutesForInit();
                 }
-            }, 3000, 3000);
+            }, 60000, 60000);
         } else {
             startQueryRoutesTimer();
         }
     }
 
     public void close() {
+        if(!enabled) {
+            return;
+        }
         if (hc == null) return;
         client.close();
         client = null;
@@ -116,7 +128,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
     }
 
     void startQueryRoutesTimer() {
-        timer = new Timer("cattimer");
+        timer = new Timer("krpc_cat_timer");
         timer.schedule(new TimerTask() {
             public void run() {
                 queryRoutes();
@@ -217,6 +229,11 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
     }
 
     public void send(TraceContext ctx, Span span) {
+
+        if(!enabled) {
+            return;
+        }
+
         if (serverAddrIndex == -1) return;
 
         try {
@@ -409,7 +426,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
         b.append(span.getType()).append(TAB);
         b.append(span.getAction()).append(TAB);
         String status = span.getStatus();
-        if (status.equals("SUCCESS")) status = "0";
+        if (status.equals("SUCCESS") || status.equals("ASYNC") ) status = "0";
         b.append(status).append(TAB);
         long us = span.getTimeUsedMicros();
         b.append(us).append("us").append(TAB);
@@ -424,9 +441,9 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
     public void inject(TraceContext ctx, Span span, RpcMeta.Trace.Builder traceBuilder) {
         String traceId = ctx.getTrace().getTraceId();
         String rootSpanId = span.getRootSpanId();  // escape parent link error in cat ui
-        if (!span.getType().equals("RPCSERVER")) { // escape root link error in cat ui
-            traceId = rootSpanId;
-        }
+//        if (!span.getType().equals("RPCSERVER")) { // escape root link error in cat ui
+//            traceId = rootSpanId;
+//        }
 
         ctx.tagForRpc("p-root-span-id", rootSpanId);
 

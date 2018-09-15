@@ -14,6 +14,8 @@ public class MonitorConfig {
     int maxRepeatedSizeToLog = 1;
     boolean printDefault = false;
 
+    boolean printOriginalMsgName = true;
+
     String serverAddr;
 
     String plugins = ""; // comma seperated MonitorPlugin names
@@ -111,6 +113,15 @@ public class MonitorConfig {
 
     public MonitorConfig setPluginParams(List<String> pluginParams) {
         this.pluginParams = pluginParams;
+        return this;
+    }
+
+    public boolean isPrintOriginalMsgName() {
+        return printOriginalMsgName;
+    }
+
+    public MonitorConfig setPrintOriginalMsgName(boolean printOriginalMsgName) {
+        this.printOriginalMsgName = printOriginalMsgName;
         return this;
     }
 

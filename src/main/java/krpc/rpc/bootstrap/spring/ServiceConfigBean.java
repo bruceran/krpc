@@ -29,35 +29,6 @@ public class ServiceConfigBean extends ServiceConfig implements InitializingBean
             setGroup(group);
         }
 
-        String impl = this.getImpl() == null ? null : this.getImpl().toString();
-        Object bean = loadBean(impl, this.getInterfaceName(), SpringBootstrap.instance.spring);
-        if (bean == null) throw new RuntimeException("bean not found for service " + this.getInterfaceName());
-        this.setImpl(bean);
-    }
-
-    Object loadBean(String impl, String interfaceName, BeanFactory beanFactory) {
-        if (interfaceName == null) return null;
-
-        String beanName;
-        if (impl != null && !impl.isEmpty()) {
-            beanName = impl;
-        } else {
-            int p = interfaceName.lastIndexOf(".");
-            if (p < 0) return null;
-            String name = interfaceName.substring(p + 1);
-            beanName = name.substring(0, 1).toLowerCase() + name.substring(1);
-        }
-        try {
-            Object o = beanFactory.getBean(beanName);
-            return o;
-        } catch (Exception e1) {
-            try {
-                Object o = beanFactory.getBean(Class.forName(interfaceName));
-                return o;
-            } catch (Throwable e2) {
-                return null;
-            }
-        }
     }
 
 }
