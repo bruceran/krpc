@@ -63,9 +63,9 @@
           krpc/
             common/ trace,httpclient,rpc 组件共同依赖的文件，只有非常少的几个接口和类
             httpclient/  和rpc框架完全独立的http客户端
-			persistqueue 基于文件的持久化队列
+            persistqueue 基于文件的持久化队列
             rpc/    krpc框架本身
-			trace/  和rpc框架完全独立的调用链跟踪的trace框架, 可对接主流的zipkin,skywalking,cat等APM系统
+            trace/  和rpc框架完全独立的调用链跟踪的trace框架, 可对接主流的zipkin,skywalking,cat等APM系统
         resources/
           META-INF/
             services/ 框架支持的SPI接口
@@ -86,14 +86,10 @@
 
     dist/
     dist/sniffer 使用krpc的探针所需的jar包和配置文件
-    dist/tools/ protoc工具
-                 
-                 test/  编译工具测试文件， test.proto 用来测试工具的proto文件
-    			 win/ windows版本下的工具    protoc-3.5.1.exe  
-    			 linux/ lilux版本下的工具   暂无
-    			 mac/ mac版本下的工具  暂无
-				 protoc_changed_code/ 修改过的pb源码， 原始文件位置：/src/google/protobuf/compiler/java
-				 
+    dist/tool/ 
+	          install.txt pb工具安装说明
+			  test/  编译工具测试文件， test.proto 用来测试工具的proto文件
+			  protoc_changed_code/ 修改过的pb源码， 原始文件位置：/src/google/protobuf/compiler/java
 
 # 框架外部依赖说明
 

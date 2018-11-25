@@ -37,17 +37,5 @@
 	
 	</dependencies>	    
 		
-	<distributionManagement>
-		<repository>
-			<id>saicdt-cxpt-release</id>
-			<name>Repository for saicdt cxpt release builds</name>
-			<url>http://10.1.10.182:8081/repository/cxpt-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>saicdt-cxpt-snapshots</id>
-			<name>Repository for saicdt cxpt snapshots builds</name>
-			<url>http://10.1.10.182:8081/repository/cxpt-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 	
 </project>

@@ -1,4 +1,20 @@
 
+# version 0.2.5
+
+	将报警功能作为核心接口，krpc内部异常主动报警给monitorservice
+	根据自检端口获取每个进程唯一的服务号标识用于报警
+	队列满，无连接都进行自动报警
+	端口无法绑定时直接 System.exit
+	webroutes.xml支持Retrier
+    修改downloadstream bug
+	
+# version 0.2.0
+
+    支持native epoll netty
+	增加包体加密
+	修改cat数据上报问题
+	修改数组长度日志打印bug
+	
 # version 0.1.21
 
     增加RpcFutureUtils类, 通过系列wrap函数来包装CompelatbleFuture回调lamdba,
