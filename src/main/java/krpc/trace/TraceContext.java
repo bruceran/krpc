@@ -6,7 +6,7 @@ public interface TraceContext {
 
     public void startForServer(String type, String action);
 
-    public void stopForServer(String result); // the server span ended
+    public Span stopForServer(String result); // the server span ended
 
     public void start(String type, String action);
 

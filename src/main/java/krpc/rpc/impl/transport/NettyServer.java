@@ -3,6 +3,7 @@ package krpc.rpc.impl.transport;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.ChannelGroupFuture;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -17,18 +18,16 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
 import krpc.common.StartStop;
-import krpc.rpc.core.RpcCodec;
-import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.core.Transport;
-import krpc.rpc.core.TransportCallback;
+import krpc.rpc.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Sharable
-public class NettyServer extends TransportBase implements Transport, InitClose, StartStop {
+public class NettyServer extends TransportBase implements Transport, InitClose, StartStop , DumpPlugin {
 
     static Logger log = LoggerFactory.getLogger(NettyServer.class);
 
@@ -39,6 +38,7 @@ public class NettyServer extends TransportBase implements Transport, InitClose, 
     int maxConns = 500000;
     int workerThreads = 0;
     int backlog = 300;
+    boolean nativeNetty = false;
 
     NamedThreadFactory bossThreadFactory = new NamedThreadFactory("krpc_nettyserver_boss");
     NamedThreadFactory workThreadFactory = new NamedThreadFactory("krpc_nettyserver_worker");
@@ -63,9 +63,23 @@ public class NettyServer extends TransportBase implements Transport, InitClose, 
 
     public void init() {
 
-        bossGroup = new NioEventLoopGroup(1, bossThreadFactory);
-        workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
+        int processors = Runtime.getRuntime().availableProcessors();
+        if( workerThreads == 0 ) workerThreads = processors;
 
+        String osName = System.getProperty("os.name");
+        if( nativeNetty && osName != null && osName.toLowerCase().indexOf("linux") >= 0 ) {
+            nativeNetty = true;
+        } else {
+            nativeNetty = false;
+        }
+
+        if( nativeNetty) {
+            bossGroup = new EpollEventLoopGroup(1, bossThreadFactory);
+            workerGroup = new EpollEventLoopGroup(workerThreads, workThreadFactory);
+        } else {
+            bossGroup = new NioEventLoopGroup(1, bossThreadFactory);
+            workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
+        }
         serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -91,8 +105,13 @@ public class NettyServer extends TransportBase implements Transport, InitClose, 
         } else {
             addr = new InetSocketAddress(host, port);
         }
-        serverChannel = serverBootstrap.bind(addr).syncUninterruptibly().channel();
-        log.info("netty server started on host(" + host + ") port(" + port + ")");
+        try {
+            serverChannel = serverBootstrap.bind(addr).syncUninterruptibly().channel();
+            log.info("netty server started on host(" + host + ") port(" + port + ")");
+        } catch(Exception e) {
+            log.error("netty server bind exception, port="+port);
+            System.exit(-1);
+        }
     }
 
     public void close() {
@@ -173,6 +192,9 @@ public class NettyServer extends TransportBase implements Transport, InitClose, 
         //debugLog("channelInactive");
         String connId = getConnId(ctx);
         conns.remove(connId);
+        if( enableEncrypt) {
+            keyMap.remove(connId);
+        }
         log.info("connection ended, connId={}", connId);
         if (callback != null)
             callback.disconnected(connId);
@@ -247,4 +269,31 @@ public class NettyServer extends TransportBase implements Transport, InitClose, 
         this.backlog = backlog;
     }
 
+    public boolean isNativeNetty() {
+        return nativeNetty;
+    }
+
+    public void setNativeNetty(boolean nativeNetty) {
+        this.nativeNetty = nativeNetty;
+    }
+
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        if( nativeNetty) {
+            metrics.put("krpc.server.nativeNetty", true);
+            metrics.put("krpc.server.boss.threads", ((EpollEventLoopGroup)bossGroup).executorCount());
+            metrics.put("krpc.server.worker.threads",  ((EpollEventLoopGroup)workerGroup).executorCount());
+        } else {
+            metrics.put("krpc.server.boss.threads", ((NioEventLoopGroup)bossGroup).executorCount());
+            metrics.put("krpc.server.worker.threads",  ((NioEventLoopGroup)workerGroup).executorCount());
+        }
+        metrics.put("krpc.server.conns.size",conns.size());
+
+        metrics.put("krpc.server.port",port);
+        metrics.put("krpc.server.host",host);
+        metrics.put("krpc.server.idleSeconds",idleSeconds);
+        metrics.put("krpc.server.maxPackageSize",maxPackageSize);
+        metrics.put("krpc.server.maxConns",maxConns);
+        metrics.put("krpc.server.backlog",backlog);
+    }
 }

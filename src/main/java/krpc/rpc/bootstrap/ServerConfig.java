@@ -14,6 +14,8 @@ public class ServerConfig {
     int maxPackageSize = 1000000;
     int maxConns = 500000;
     int ioThreads = 0;    // auto
+    boolean nativeNetty = false;
+    boolean enableEncrypt = false;
 
     int notifyThreads = -1; // // for reverse call, future listener, 0=auto -1=no threads
     int notifyMaxThreads = 0;
@@ -190,6 +192,24 @@ public class ServerConfig {
 
     public ServerConfig setConnectionPlugin(String connectionPlugin) {
         this.connectionPlugin = connectionPlugin;
+        return this;
+    }
+
+    public boolean isNativeNetty() {
+        return nativeNetty;
+    }
+
+    public ServerConfig setNativeNetty(boolean nativeNetty) {
+        this.nativeNetty = nativeNetty;
+        return this;
+    }
+
+    public boolean isEnableEncrypt() {
+        return enableEncrypt;
+    }
+
+    public ServerConfig setEnableEncrypt(boolean enableEncrypt) {
+        this.enableEncrypt = enableEncrypt;
         return this;
     }
 }

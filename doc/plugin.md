@@ -39,7 +39,7 @@
 	   对Spring Bean 扩展的插件，无需使用上面的插件参数传递机制
 	   
 	   krpc默认的插件参数的风格是  k=v;k=v;...   以分号和等号做分隔符。  
-	   routes.xml 里的插件要传递参数需在webserver.pluginParams里定义参数。
+	   weboutes.xml 里的插件要传递参数需在webserver.pluginParams里定义参数。
 	
 	   krpc的插件可以通过实现InitClose接口来在服务启动关闭时做初始化和清理工作。
 	   krpc的大部分插件支持两阶段启动，可通过实现StartStop接口来实现，包括：Registry,DynamicRoutePlugin,RpcPlugin,WebPlugin
@@ -97,6 +97,10 @@
 	   WEB插件 krpc.rpc.web.WebPlugin 接口
 		        可用来自定义流控策略
 		        通过webroutes.xml配置
+
+	   连接事件插件 krpc.rpc.core.ConnectionPlugin 接口
+		        可用来接收krpc服务端或krpc客户端的tcp连接成功和连接断开事件实现一些特殊的功能，如有状态的连接
+		        通过ClientConfig.connectionPlugin和ServerConfig.connectionPlugin配置
 
 # HTTP网关插件
 

@@ -17,16 +17,14 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
     int serviceId;
     int msgId;
     boolean isAsync;
-    TraceContext traceContext;
+    TraceContext tctx;
 
-    DefaultRpcFuture(DefaultRpcFutureFactory factory, int serviceId, int msgId, boolean isAsync, TraceContext traceContext) {
+    DefaultRpcFuture(DefaultRpcFutureFactory factory, int serviceId, int msgId, boolean isAsync, TraceContext tctx) {
         this.factory = factory;
         this.serviceId = serviceId;
         this.msgId = msgId;
         this.isAsync = isAsync;
-        if (isAsync) {
-            this.traceContext = traceContext;
-        }
+        this.tctx = tctx;
     }
 
     public boolean complete(Message m) {
@@ -34,16 +32,15 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
             return super.complete(m);
         }
         try {
-
             if (factory.notifyPool != null) {
                 factory.notifyPool.execute(new Runnable() {
                     public void run() {
-                        Trace.setCurrentContext(DefaultRpcFuture.this.traceContext);
+                        Trace.setCurrentContext(tctx);
                         DefaultRpcFuture.super.complete(m);
                     }
                 });
             } else {
-                Trace.setCurrentContext(DefaultRpcFuture.this.traceContext);
+                Trace.setCurrentContext(tctx);
                 DefaultRpcFuture.super.complete(m);
             }
             return true;
@@ -58,10 +55,10 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
         try {
             return super.get();
         } catch (InterruptedException e) {
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.USER_CANCEL);
+            return generateError(RetCodes.USER_CANCEL);
         } catch (Exception e) {
             log.error("exception", e);
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.EXEC_EXCEPTION); // impossible
+            return generateError(RetCodes.EXEC_EXCEPTION); // impossible
         }
     }
 
@@ -70,12 +67,12 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
         try {
             return super.get(timeout, unit);
         } catch (TimeoutException e) {
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.RPC_TIMEOUT);
+            return generateError(RetCodes.RPC_TIMEOUT);
         } catch (InterruptedException e) {
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.USER_CANCEL);
+            return generateError(RetCodes.USER_CANCEL);
         } catch (Exception e) {
             log.error("exception", e);
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.EXEC_EXCEPTION);  // impossible
+            return generateError(RetCodes.EXEC_EXCEPTION);  // impossible
         }
     }
 
@@ -84,10 +81,10 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
         try {
             return super.getNow(valueIfAbsent);
         } catch (CancellationException e) {
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.USER_CANCEL);
+            return generateError(RetCodes.USER_CANCEL);
         } catch (CompletionException e) {
             log.error("exception", e);
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.EXEC_EXCEPTION);
+            return generateError(RetCodes.EXEC_EXCEPTION);
         }
     }
 
@@ -96,11 +93,15 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
         try {
             return super.join();
         } catch (CancellationException e) {
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.USER_CANCEL);
+            return generateError(RetCodes.USER_CANCEL);
         } catch (CompletionException e) {
             log.error("exception", e);
-            return factory.serviceMetas.generateRes(serviceId, msgId, RetCodes.EXEC_EXCEPTION);
+            return generateError(RetCodes.EXEC_EXCEPTION);
         }
+    }
+
+    Message generateError(int retCode) {
+        return factory.serviceMetas.generateRes(serviceId, msgId, retCode);
     }
 
 }

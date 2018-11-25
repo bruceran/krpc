@@ -92,6 +92,7 @@
 	      sampleFlag int32 采样标志 0=默认(是) 1=强制(暂未使用) 2=否
       attachment string OOB数据
       compress int32 包体是否做了压缩以及压缩方式  0=不压缩 1=zlib 2=snappy
+	  encrypt int32 是否加密 1=是 0=否 
 
       目前服务号1已被框架使用，其中 serviceId=1 msgId=1 为心跳包, 心跳包无sequence
       目前服务号2被框架预留作为监控服务端，接收krpc监控服务上报的数据
@@ -599,6 +600,7 @@
     group  册与发现服务里的分组
     timeout 超时时间, 毫秒，默认为3000
     retryCount 重试次数，默认为2
+    retryBroken 连接断开时是否重试，默认为false
     loadBalance 负载均衡策略，可配置为 leastactive,roundrobin,random,hash,
                       leastactiveweight,roudrobinweight,randomweight 默认为roundrobin
                       hash插件可带参数，其他参数无配置参数
@@ -626,6 +628,7 @@
     以下3个参数只用于referer
     timeout 消息级别的超时时间，毫秒，默认为3000
     retryCount 消息级别的试次数，默认为2
+    retryBroken 连接断开时是否重试，默认为false
 
     以下4个参数只用于service
     threads 消息级别的线程池配置参数, 含义同server, 默认为-1，不启用单独的线程池
@@ -642,6 +645,7 @@
     logQueueSize 异步输出日志的固定队列大小，默认为10000
     serverAddr 监控服务地址
     printDefault 是否输出protobuff消息里的默认值, 默认为false
+    printOriginalName  打印的服务名消息名是否区分大小写，默认为true
 
 # RPC调用超时配置
 
@@ -969,6 +973,33 @@
 
        krpc的retry一定是会更换不同的服务器地址来重试，如无可用的候选服务器，则放弃重试
        对重试肯定会失败的错误也不会进行重试 （如编解码错误，参数验证错误等 )
+
+       krpc的默认策略是 retryCount = 2, retryBroken = false 也就是只会对服务端肯定尚未执行过的请求进行重试
+       而服务端可能已经执行过的则不做重试； 如果希望对连接异常断开的场景重试，可设置retryBroken=true
+
+       krpc的重试一定是在未超时的情况下进行重试，如果耗时已达到超时时间，会放弃重试。
+
+       如果需要更复杂的krpc支持
+
+# 持久化重试策略
+
+        krpc支持强大的持久化重试策略，即使进程重启，仍然能够继续重试。
+
+        在rpc调用(同步或异步)前插入一行代码, 该行代码会影响随后的一个且仅一个rpc调用：
+        ClientContext.setRetrier(int  maxTimes,int  ... waitSeconds) {
+        maxTimes 重试次数，可根据自己的需要设置
+        waitSeconds 重试间隔，可不设置，默认为1秒，也可以设置多个值，如 1,2,4,
+        表示前3次间隔1秒，2秒，4秒，后续所有间隔4秒
+
+        结束重试机制： rpc调用返回错误码为0或达到最大重试次数时 结束重试
+        如果重试的过程中进程重启，重启后会继续重试，不过重试次数重新从0开始计数
+
+        krpc持久化重试的临时数据会写入ApplicationConfig.dataDir的目录下。
+
+        krpc持久化重试采用的是异步机制，不会阻塞当前线程。
+
+        krpc内部对每个rpc调用的服务号+消息号维护一个单独的持久化队列，在同一个队列中，按先后顺序重试，如果前一个
+        消息尚未完成重试，后面的消息不会进行重试，理由是前一个消息如果无法成功，后面的消息肯定也不会成功。
 
 # 启动和关闭
 

@@ -3,6 +3,10 @@ package krpc.rpc.bootstrap.springboot;
 import krpc.rpc.bootstrap.*;
 import krpc.rpc.bootstrap.spring.RefererFactory;
 import krpc.rpc.bootstrap.spring.SpringBootstrap;
+import krpc.rpc.core.DumpPlugin;
+import krpc.rpc.core.HealthPlugin;
+import krpc.rpc.core.RefreshPlugin;
+import krpc.rpc.monitor.SelfCheckHttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -25,6 +29,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
 
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 @EnableConfigurationProperties(BootProperties.class)
@@ -139,14 +144,19 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
 
         bootstrap.mergePlugins(SpringBootstrap.instance.loadSpiBeans());
 
-        String profile = environment.getProperty("spring.profiles.active");
+        String profileGroup = environment.getProperty("spring.profiles.active");
+        String forceGroup = environment.getProperty("krpc.registry.group");
+        if( forceGroup != null ) {
+            profileGroup = forceGroup;
+        }
+        log.info("krpc default group is " + profileGroup);
 
         if (bootProperties.referer != null) {
             RefererConfig c = bootProperties.referer;
 
             String group = c.getGroup();
             if (group == null || group.isEmpty()) {
-                c.setGroup(profile);
+                c.setGroup(profileGroup);
             }
 
             bootstrap.addReferer(c);
@@ -156,7 +166,7 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
 
                 String group = c.getGroup();
                 if (group == null || group.isEmpty()) {
-                    c.setGroup(profile);
+                    c.setGroup(profileGroup);
                 }
 
                 bootstrap.addReferer(c);
@@ -168,7 +178,7 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
 
             String group = c.getGroup();
             if (group == null || group.isEmpty()) {
-                c.setGroup(profile);
+                c.setGroup(profileGroup);
             }
 
             bootstrap.addService(c);
@@ -178,7 +188,7 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
 
                 String group = c.getGroup();
                 if (group == null || group.isEmpty()) {
-                    c.setGroup(profile);
+                    c.setGroup(profileGroup);
                 }
 
                 bootstrap.addService(c);
@@ -209,7 +219,31 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
         }
 
         b.postBuild();
+
+        startSelfCheckServer(rpcApp,context);
         return b;
+    }
+
+    public void startSelfCheckServer(RpcApp rpcApp, ApplicationContext context) {
+        SelfCheckHttpServer selfCheckServer =  rpcApp.getSelfCheckHttpServer();
+        if( selfCheckServer != null ) {
+            Map<String, DumpPlugin> plugins1 = loadBeanByType(DumpPlugin.class, context);
+            for(DumpPlugin o:plugins1.values() ) {
+                selfCheckServer.addDumpPlugin(o);
+            }
+            Map<String, RefreshPlugin> plugins2 = loadBeanByType(RefreshPlugin.class, context);
+            for(RefreshPlugin o:plugins2.values() ) {
+                selfCheckServer.addRefreshPlugin(o);
+            }
+            Map<String, HealthPlugin> plugins3 = loadBeanByType(HealthPlugin.class, context);
+            for(HealthPlugin o:plugins3.values() ) {
+                selfCheckServer.addHealthPlugin(o);
+            }
+        }
+    }
+
+    <T> Map<String, T> loadBeanByType(Class<T> cls, ApplicationContext context) {
+        return  context.getBeansOfType(cls);
     }
 
     public void onApplicationEvent(ApplicationEvent event) {
@@ -217,7 +251,6 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
         if (event instanceof ContextRefreshedEvent) {
             int delayStart = SpringBootstrap.instance.getBootstrap().getAppConfig().getDelayStart();
             SpringBootstrap.instance.getRpcApp().start(delayStart);
-            System.clearProperty("jasypt.encryptor.password");
         }
     }
 

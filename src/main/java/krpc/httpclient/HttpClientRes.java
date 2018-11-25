@@ -5,11 +5,11 @@ import io.netty.handler.codec.http.HttpHeaders;
 public class HttpClientRes {
 
     private int retCode;
-
     private int httpCode = 0;
+    private HttpHeaders headers;
     private String contentType = "application/json";
     private String content;
-    private HttpHeaders headers;
+    private byte[] rawContent;
 
     public HttpClientRes(int retCode) {
         this.retCode = retCode;
@@ -18,6 +18,11 @@ public class HttpClientRes {
     public HttpClientRes(int httpCode, String content, HttpHeaders headers) {
         this.httpCode = httpCode;
         this.content = content;
+        this.headers = headers;
+    }
+    public HttpClientRes(int httpCode, byte[] rawContent, HttpHeaders headers) {
+        this.httpCode = httpCode;
+        this.rawContent = rawContent;
         this.headers = headers;
     }
 
@@ -62,6 +67,12 @@ public class HttpClientRes {
         this.contentType = contentType;
     }
 
+    public byte[] getRawContent() {
+        return rawContent;
+    }
 
+    public void setRawContent(byte[] rawContent) {
+        this.rawContent = rawContent;
+    }
 }
 

@@ -1,5 +1,31 @@
 
-# version 0.1
+# version 0.1.21
+
+    增加RpcFutureUtils类, 通过系列wrap函数来包装CompelatbleFuture回调lamdba,
+    用于上下文场景恢复，异常日志打印，异常时自动响应
+
+    增加krpc server健康检查
+    修改注册与发现过程中创建多余的长连接bug
+
+# version 0.1.19
+
+    监控服务接口增加： 系统信息上报接口，实时报警接口
+    增加自检功能， 提供alive,dump,health,refresh接口
+    实现krpc框架自身的健康检查
+    实现系统信息dump和上报
+
+# version 0.1.15
+
+    增加connection plugin
+    将discovery调整为在krpc框架init的时候进行
+    增加持久化重试 retryier 功能
+
+# version 0.1.9
+
+    彻底解决启动过程中的业务层和krpc框架的循环依赖问题
+    修改rpcclient超时配置错误bug
+
+# version 0.1.0
 
     初始版本
     提供基本的rpc功能和http通用网关功能

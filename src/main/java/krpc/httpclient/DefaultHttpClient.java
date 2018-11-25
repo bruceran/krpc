@@ -16,7 +16,7 @@ import io.netty.util.ReferenceCountUtil;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
 import krpc.common.RetCodes;
-import krpc.rpc.util.GZip;
+import krpc.rpc.util.compress.GZip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -327,8 +327,14 @@ public class DefaultHttpClient extends ChannelDuplexHandler implements HttpClien
             res.setContentType(contentType);
         ByteBuf bb = data.content();
         if (bb != null) {
-            String content = bb.toString(Charset.forName("utf-8"));
-            res.setContent(content);
+            if( contentType != null && contentType.equals("application/octet-stream")) {
+                byte[] buff = new byte[bb.readableBytes()];
+                bb.readBytes(buff);
+                res.setRawContent(buff);
+            } else {
+                String content = bb.toString(Charset.forName("utf-8"));
+                res.setContent(content);
+            }
         }
         // System.out.println(HttpUtil.isKeepAlive(data));
         return res;

@@ -4,97 +4,173 @@
 package krpc.rpc.monitor.proto;
 
 public final class MonitorProtos {
-    private MonitorProtos() {
-    }
+  private MonitorProtos() {}
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistryLite registry) {
+  }
 
-    public static void registerAllExtensions(
-            com.google.protobuf.ExtensionRegistryLite registry) {
-    }
-
-    public static void registerAllExtensions(
-            com.google.protobuf.ExtensionRegistry registry) {
-        registerAllExtensions(
-                (com.google.protobuf.ExtensionRegistryLite) registry);
-    }
-
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_RpcStat_descriptor;
-    static final
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions(
+        (com.google.protobuf.ExtensionRegistryLite) registry);
+  }
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_RpcStat_descriptor;
+  static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_RpcStat_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_ReportRpcStatReq_descriptor;
-    static final
+      internal_static_RpcStat_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReportRpcStatReq_descriptor;
+  static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_ReportRpcStatReq_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_ReportRpcStatRes_descriptor;
-    static final
+      internal_static_ReportRpcStatReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReportRpcStatRes_descriptor;
+  static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_ReportRpcStatRes_fieldAccessorTable;
+      internal_static_ReportRpcStatRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_SystemInfoKV_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_SystemInfoKV_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReportSystemInfoReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReportSystemInfoReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReportSystemInfoRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReportSystemInfoRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_AlarmInfo_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_AlarmInfo_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReportAlarmReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReportAlarmReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReportAlarmRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReportAlarmRes_fieldAccessorTable;
 
-    public static com.google.protobuf.Descriptors.FileDescriptor
-    getDescriptor() {
-        return descriptor;
-    }
-
-    private static com.google.protobuf.Descriptors.FileDescriptor
-            descriptor;
-
-    static {
-        java.lang.String[] descriptorData = {
-                "\n\021krpcmonitor.proto\032\rkrpcext.proto\"\213\001\n\007R" +
-                        "pcStat\022\014\n\004type\030\001 \001(\005\022\014\n\004time\030\002 \001(\003\022\021\n\tse" +
-                        "rviceId\030\003 \001(\005\022\r\n\005msgId\030\004 \001(\005\022\017\n\007success\030" +
-                        "\005 \001(\005\022\016\n\006failed\030\006 \001(\005\022\017\n\007timeout\030\007 \001(\005\022\020" +
-                        "\n\010timeUsed\030\010 \003(\005\"Y\n\020ReportRpcStatReq\022\021\n\t" +
-                        "timestamp\030\001 \001(\003\022\014\n\004host\030\002 \001(\t\022\013\n\003app\030\003 \001" +
-                        "(\t\022\027\n\005stats\030\004 \003(\0132\010.RpcStat\"#\n\020ReportRpc" +
-                        "StatRes\022\017\n\007retCode\030\001 \001(\0052S\n\016MonitorServi" +
-                        "ce\022;\n\rreportRpcStat\022\021.ReportRpcStatReq\032\021" +
-                        ".ReportRpcStatRes\"\004\220\265\030\001\032\004\210\265\030\002B,\n\026krpc.rp" +
-                        "c.monitor.protoB\rMonitorProtosP\001\210\001\001b\006pro" +
-                        "to3"
+  public static com.google.protobuf.Descriptors.FileDescriptor
+      getDescriptor() {
+    return descriptor;
+  }
+  private static  com.google.protobuf.Descriptors.FileDescriptor
+      descriptor;
+  static {
+    String[] descriptorData = {
+      "\n\021krpcmonitor.proto\032\rkrpcext.proto\"\213\001\n\007R" +
+      "pcStat\022\014\n\004type\030\001 \001(\005\022\014\n\004time\030\002 \001(\003\022\021\n\tse" +
+      "rviceId\030\003 \001(\005\022\r\n\005msgId\030\004 \001(\005\022\017\n\007success\030" +
+      "\005 \001(\005\022\016\n\006failed\030\006 \001(\005\022\017\n\007timeout\030\007 \001(\005\022\020" +
+      "\n\010timeUsed\030\010 \003(\005\"o\n\020ReportRpcStatReq\022\021\n\t" +
+      "timestamp\030\001 \001(\003\022\014\n\004host\030\002 \001(\t\022\013\n\003app\030\003 \001" +
+      "(\t\022\027\n\005stats\030\004 \003(\0132\010.RpcStat\022\024\n\014appServic" +
+      "eId\030\005 \001(\005\"3\n\020ReportRpcStatRes\022\017\n\007retCode" +
+      "\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\"*\n\014SystemInfoKV\022\013" +
+      "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"u\n\023ReportSyst" +
+      "emInfoReq\022\021\n\ttimestamp\030\001 \001(\003\022\014\n\004host\030\002 \001" +
+      "(\t\022\013\n\003app\030\003 \001(\t\022\032\n\003kvs\030\004 \003(\0132\r.SystemInf" +
+      "oKV\022\024\n\014appServiceId\030\005 \001(\005\"6\n\023ReportSyste" +
+      "mInfoRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(" +
+      "\t\"C\n\tAlarmInfo\022\014\n\004time\030\001 \001(\003\022\014\n\004type\030\004 \001" +
+      "(\t\022\013\n\003msg\030\005 \001(\t\022\r\n\005count\030\006 \001(\005\"n\n\016Report" +
+      "AlarmReq\022\021\n\ttimestamp\030\001 \001(\003\022\014\n\004host\030\002 \001(" +
+      "\t\022\013\n\003app\030\003 \001(\t\022\030\n\004info\030\004 \003(\0132\n.AlarmInfo" +
+      "\022\024\n\014appServiceId\030\005 \001(\005\"1\n\016ReportAlarmRes" +
+      "\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t2\320\001\n\016Mo" +
+      "nitorService\022;\n\rreportRpcStat\022\021.ReportRp" +
+      "cStatReq\032\021.ReportRpcStatRes\"\004\220\265\030\001\022D\n\020rep" +
+      "ortSystemInfo\022\024.ReportSystemInfoReq\032\024.Re" +
+      "portSystemInfoRes\"\004\220\265\030\002\0225\n\013reportAlarm\022\017" +
+      ".ReportAlarmReq\032\017.ReportAlarmRes\"\004\220\265\030\003\032\004" +
+      "\210\265\030\002B,\n\026krpc.rpc.monitor.protoB\rMonitorP" +
+      "rotosP\001\210\001\001b\006proto3"
+    };
+    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
+        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
+          public com.google.protobuf.ExtensionRegistry assignDescriptors(
+              com.google.protobuf.Descriptors.FileDescriptor root) {
+            descriptor = root;
+            return null;
+          }
         };
-        com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-                new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-                    public com.google.protobuf.ExtensionRegistry assignDescriptors(
-                            com.google.protobuf.Descriptors.FileDescriptor root) {
-                        descriptor = root;
-                        return null;
-                    }
-                };
-        com.google.protobuf.Descriptors.FileDescriptor
-                .internalBuildGeneratedFileFrom(descriptorData,
-                        new com.google.protobuf.Descriptors.FileDescriptor[]{
-                                krpc.KrpcExt.getDescriptor(),
-                        }, assigner);
-        internal_static_RpcStat_descriptor =
-                getDescriptor().getMessageTypes().get(0);
-        internal_static_RpcStat_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_RpcStat_descriptor,
-                new java.lang.String[]{"Type", "Time", "ServiceId", "MsgId", "Success", "Failed", "Timeout", "TimeUsed",});
-        internal_static_ReportRpcStatReq_descriptor =
-                getDescriptor().getMessageTypes().get(1);
-        internal_static_ReportRpcStatReq_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_ReportRpcStatReq_descriptor,
-                new java.lang.String[]{"Timestamp", "Host", "App", "Stats",});
-        internal_static_ReportRpcStatRes_descriptor =
-                getDescriptor().getMessageTypes().get(2);
-        internal_static_ReportRpcStatRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_ReportRpcStatRes_descriptor,
-                new java.lang.String[]{"RetCode",});
-        com.google.protobuf.ExtensionRegistry registry =
-                com.google.protobuf.ExtensionRegistry.newInstance();
-        registry.add(krpc.KrpcExt.msgId);
-        registry.add(krpc.KrpcExt.serviceId);
-        com.google.protobuf.Descriptors.FileDescriptor
-                .internalUpdateFileDescriptor(descriptor, registry);
-        krpc.KrpcExt.getDescriptor();
-    }
+    com.google.protobuf.Descriptors.FileDescriptor
+      .internalBuildGeneratedFileFrom(descriptorData,
+        new com.google.protobuf.Descriptors.FileDescriptor[] {
+          krpc.KrpcExt.getDescriptor(),
+        }, assigner);
+    internal_static_RpcStat_descriptor =
+      getDescriptor().getMessageTypes().get(0);
+    internal_static_RpcStat_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_RpcStat_descriptor,
+        new String[] { "Type", "Time", "ServiceId", "MsgId", "Success", "Failed", "Timeout", "TimeUsed", });
+    internal_static_ReportRpcStatReq_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_ReportRpcStatReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReportRpcStatReq_descriptor,
+        new String[] { "Timestamp", "Host", "App", "Stats", "AppServiceId", });
+    internal_static_ReportRpcStatRes_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_ReportRpcStatRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReportRpcStatRes_descriptor,
+        new String[] { "RetCode", "RetMsg", });
+    internal_static_SystemInfoKV_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_SystemInfoKV_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_SystemInfoKV_descriptor,
+        new String[] { "Key", "Value", });
+    internal_static_ReportSystemInfoReq_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_ReportSystemInfoReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReportSystemInfoReq_descriptor,
+        new String[] { "Timestamp", "Host", "App", "Kvs", "AppServiceId", });
+    internal_static_ReportSystemInfoRes_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_ReportSystemInfoRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReportSystemInfoRes_descriptor,
+        new String[] { "RetCode", "RetMsg", });
+    internal_static_AlarmInfo_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_AlarmInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_AlarmInfo_descriptor,
+        new String[] { "Time", "Type", "Msg", "Count", });
+    internal_static_ReportAlarmReq_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_ReportAlarmReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReportAlarmReq_descriptor,
+        new String[] { "Timestamp", "Host", "App", "Info", "AppServiceId", });
+    internal_static_ReportAlarmRes_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_ReportAlarmRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReportAlarmRes_descriptor,
+        new String[] { "RetCode", "RetMsg", });
+    com.google.protobuf.ExtensionRegistry registry =
+        com.google.protobuf.ExtensionRegistry.newInstance();
+    registry.add(krpc.KrpcExt.msgId);
+    registry.add(krpc.KrpcExt.serviceId);
+    com.google.protobuf.Descriptors.FileDescriptor
+        .internalUpdateFileDescriptor(descriptor, registry);
+    krpc.KrpcExt.getDescriptor();
+  }
 
-    // @@protoc_insertion_point(outer_class_scope)
+  // @@protoc_insertion_point(outer_class_scope)
 }

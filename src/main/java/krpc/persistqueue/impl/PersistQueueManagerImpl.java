@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2011 Shanda Corporation. All rights reserved.
- *
- * Created on 2011-12-19.
- */
 package krpc.persistqueue.impl;
 
 import java.io.File;
@@ -42,6 +37,10 @@ public class PersistQueueManagerImpl implements PersistQueueManager {
 
         // check completed first
         File[] files = new File(dataDir).listFiles();
+        if( files == null ) {
+            throw new RuntimeException("data dir cannot be created, dataDir="+dataDir);
+        }
+
         for (File f : files) {
             String name = f.getName();
             if (!name.startsWith("queue_")) {

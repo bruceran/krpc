@@ -1,5 +1,6 @@
 package krpc.rpc.registry;
 
+import krpc.common.AlarmAware;
 import krpc.common.InitClose;
 import krpc.common.Plugin;
 import krpc.httpclient.DefaultHttpClient;
@@ -9,7 +10,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Map;
 
-abstract public class AbstractHttpRegistry implements Registry, InitClose {
+abstract public class AbstractHttpRegistry implements Registry, InitClose, AlarmAware {
 
     String[] addrArray;
     int addrIndex = 0;

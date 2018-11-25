@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.*;
 import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.ChannelGroupFuture;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -25,6 +26,7 @@ import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
 import krpc.common.RetCodes;
 import krpc.common.StartStop;
+import krpc.rpc.core.DumpPlugin;
 import krpc.rpc.web.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +39,12 @@ import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Sharable
-public class NettyHttpServer extends ChannelDuplexHandler implements HttpTransport, InitClose, StartStop {
+public class NettyHttpServer extends ChannelDuplexHandler implements HttpTransport, InitClose, StartStop , DumpPlugin {
 
     static Logger log = LoggerFactory.getLogger(NettyHttpServer.class);
 
@@ -51,6 +54,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
     int maxConns = 500000;
     int workerThreads = 0;
     int backlog = 128;
+    boolean nativeNetty = false;
 
     int maxInitialLineLength = 4096;
     int maxHeaderSize = 8192;
@@ -88,9 +92,23 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
         String uploadDir = dataDir + "/upload";
         // new File(uploadDir).mkdirs();
 
-        bossGroup = new NioEventLoopGroup(1, bossThreadFactory);
-        workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
+        int processors = Runtime.getRuntime().availableProcessors();
+        if( workerThreads == 0 ) workerThreads = processors;
 
+        String osName = System.getProperty("os.name");
+        if( nativeNetty && osName != null && osName.toLowerCase().indexOf("linux") >= 0 ) {
+            nativeNetty = true;
+        } else {
+            nativeNetty = false;
+        }
+
+        if( nativeNetty) {
+            bossGroup = new EpollEventLoopGroup(1, bossThreadFactory);
+            workerGroup = new EpollEventLoopGroup(workerThreads, workThreadFactory);
+        } else {
+            bossGroup = new NioEventLoopGroup(1, bossThreadFactory);
+            workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
+        }
         serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -121,8 +139,13 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
         } else {
             addr = new InetSocketAddress(host, port);
         }
-        serverChannel = serverBootstrap.bind(addr).syncUninterruptibly().channel();
-        log.info("netty http server started on host(" + host + ") port(" + port + ")");
+        try {
+            serverChannel = serverBootstrap.bind(addr).syncUninterruptibly().channel();
+            log.info("netty http server started on host(" + host + ") port(" + port + ")");
+        } catch(Exception e) {
+            log.error("netty http server bind exception, port="+port);
+            System.exit(-1);
+        }
     }
 
     public void close() {
@@ -318,7 +341,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 
             String downloadFileStr = data.getStringResult(WebConstants.DOWNLOAD_FILE_FIELD);
 
-            if (downloadFileStr != null) {
+            if (downloadFileStr != null &&  !downloadFileStr.isEmpty() ) {
                 writeStaticFile(ch, data, downloadFileStr);
             } else {
                 ch.writeAndFlush(data);
@@ -434,7 +457,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
         if (msg instanceof DefaultWebRes) {
             DefaultWebRes data = (DefaultWebRes) msg;
             ByteString downloadStream = data.getByteStringResult(WebConstants.DOWNLOAD_STREAM_FIELD);
-            if (downloadStream != null) {
+            if (downloadStream != null && !downloadStream.isEmpty() ) {
                 writeStream(ctx, promise, data, downloadStream);
             } else {
                 writeDynamicContent(ctx, promise, data);
@@ -737,4 +760,38 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
         this.maxChunkSize = maxChunkSize;
     }
 
+    public boolean isNativeNetty() {
+        return nativeNetty;
+    }
+
+    public void setNativeNetty(boolean nativeNetty) {
+        this.nativeNetty = nativeNetty;
+    }
+
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        if( nativeNetty) {
+            metrics.put("krpc.webserver.nativeNetty", true);
+            metrics.put("krpc.webserver.boss.threads", ((EpollEventLoopGroup)bossGroup).executorCount());
+            metrics.put("krpc.webserver.worker.threads",  ((EpollEventLoopGroup)workerGroup).executorCount());
+        } else {
+            metrics.put("krpc.webserver.boss.threads", ((NioEventLoopGroup)bossGroup).executorCount());
+            metrics.put("krpc.webserver.worker.threads",  ((NioEventLoopGroup)workerGroup).executorCount());
+        }
+
+        metrics.put("krpc.webserver.conns.size",conns.size());
+
+        metrics.put("krpc.webserver.port",port);
+        metrics.put("krpc.webserver.host",host);
+        metrics.put("krpc.webserver.idleSeconds",idleSeconds);
+        metrics.put("krpc.webserver.maxConns",maxConns);
+        metrics.put("krpc.webserver.backlog",backlog);
+
+        metrics.put("krpc.webserver.maxInitialLineLength",maxInitialLineLength);
+        metrics.put("krpc.webserver.maxHeaderSize",maxHeaderSize);
+        metrics.put("krpc.webserver.maxChunkSize",maxChunkSize);
+        metrics.put("krpc.webserver.maxContentLength",maxContentLength);
+        metrics.put("krpc.webserver.maxUploadLength",maxUploadLength);
+
+    }
 }

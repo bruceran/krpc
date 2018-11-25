@@ -1,16 +1,7 @@
-/*
- * Copyright (c) 2011 Shanda Corporation. All rights reserved.
- *
- * Created on 2011-12-19.
- */
 package krpc.persistqueue;
 
 import java.io.IOException;
 
-/**
- * queue based mm file
- *
- */
 public interface PersistQueue {
 
     void init() throws IOException;

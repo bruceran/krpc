@@ -1,15 +1,12 @@
 package krpc.rpc.monitor;
 
+import com.google.protobuf.Message;
 import krpc.common.InitClose;
 import krpc.common.StartStop;
-import krpc.rpc.core.RpcCodec;
-import krpc.rpc.core.RpcData;
-import krpc.rpc.core.ServiceMetas;
-import krpc.rpc.core.TransportCallback;
+import krpc.rpc.core.*;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.rpc.impl.transport.NettyClient;
-import krpc.rpc.monitor.proto.ReportRpcStatReq;
-import krpc.rpc.monitor.proto.ReportRpcStatRes;
+import krpc.rpc.monitor.proto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +22,9 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
     static Logger log = LoggerFactory.getLogger(MonitorClient.class);
 
     static final public int MONITOR_SERVICEID = 2;
-    static final public int MONITOR_REPORT_MSGID = 1;
+    static final public int MONITOR_RPCSTATS_MSGID = 1;
+    static final public int MONITOR_SYSTEMINFO_MSGID = 2;
+    static final public int MONITOR_ALARM_MSGID = 3;
 
     static class AddrInfo {
         String addr;
@@ -38,22 +37,29 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
         }
     }
 
-    int maxRetryTime = 300; // seconds
-    int retryInterval = 10; // seconds
-    int sendTimeout = 5; // seconds
+    int maxRetryTime = 3; // seconds
+    int retryInterval = 1; // seconds
+    int sendTimeout = 1; // seconds
 
-    ArrayList<AddrInfo> addrList = new ArrayList<AddrInfo>();
+    ArrayList<AddrInfo> addrList = new ArrayList<>();
     AtomicInteger addrIndex = new AtomicInteger(-1);
     AtomicInteger seq = new AtomicInteger(0);
     Timer timer;
     NettyClient nettyClient;
 
-    ConcurrentHashMap<Integer, ReportRpcStatReq> dataManager = new ConcurrentHashMap<Integer, ReportRpcStatReq>();
+    ConcurrentHashMap<Integer, Message> dataManager = new ConcurrentHashMap<>();
+
+    AtomicInteger errorCount = new AtomicInteger();
 
     public MonitorClient(String addrs, RpcCodec codec, ServiceMetas serviceMetas, Timer timer) {
 
-        serviceMetas.addDirect(MONITOR_SERVICEID, MONITOR_REPORT_MSGID,
+        serviceMetas.addDirect(MONITOR_SERVICEID, MONITOR_RPCSTATS_MSGID,
                 ReportRpcStatReq.class, ReportRpcStatRes.class);
+        serviceMetas.addDirect(MONITOR_SERVICEID, MONITOR_SYSTEMINFO_MSGID,
+                ReportSystemInfoReq.class, ReportSystemInfoRes.class);
+        serviceMetas.addDirect(MONITOR_SERVICEID, MONITOR_ALARM_MSGID,
+                ReportAlarmReq.class, ReportAlarmRes.class);
+
         this.timer = timer;
 
         String[] ss = addrs.split(",");
@@ -111,18 +117,34 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
         return null;
     }
 
-    public void send(ReportRpcStatReq statsReq) {
+    public void send(ReportRpcStatReq req) {
         timer.schedule(new TimerTask() {
             public void run() {
-                doReport(statsReq);
+                doReport(req);
             }
         }, 0);
     }
 
-    void doReport(ReportRpcStatReq statsReq) {
+    public void send(ReportSystemInfoReq req) {
+        timer.schedule(new TimerTask() {
+            public void run() {
+                doReport(req);
+            }
+        }, 0);
+    }
+
+    public void send(ReportAlarmReq req) {
+        timer.schedule(new TimerTask() {
+            public void run() {
+                doReport(req);
+            }
+        }, 0);
+    }
+
+    void doReport(Message req) {
         int sequence = nextSequence();
-        dataManager.put(sequence, statsReq);
-        boolean ok = send(sequence, statsReq);
+        dataManager.put(sequence, req);
+        boolean ok = send(sequence, req);
         if (ok) {
             timer.schedule(new TimerTask() {
                 public void run() {
@@ -131,39 +153,63 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
             }, sendTimeout * 1000);
         } else {
             dataManager.remove(sequence);
-            retry(statsReq);
+            retry(req);
         }
     }
 
-    void retry(ReportRpcStatReq statsReq) {
+    void retry(Message req) {
         long now = System.currentTimeMillis();
-        if (now - statsReq.getTimestamp() >= maxRetryTime * 1000) return;
+        if (now - getStartTime(req) >= maxRetryTime * 1000) return;
 
         timer.schedule(new TimerTask() {
             public void run() {
-                doReport(statsReq);
+                doReport(req);
             }
         }, retryInterval * 1000);
     }
 
     void checkTimeout(int sequence) {
-        ReportRpcStatReq req = dataManager.remove(sequence);
+        Message req = dataManager.remove(sequence);
         if (req == null) return;
         retry(req);
     }
 
-    boolean send(int sequence, ReportRpcStatReq statsReq) {
+    long getStartTime(Message req) {
+        if( req instanceof  ReportRpcStatReq ) return ((ReportRpcStatReq)req).getTimestamp();
+        if( req instanceof  ReportSystemInfoReq ) return ((ReportSystemInfoReq)req).getTimestamp();
+        if( req instanceof  ReportAlarmReq ) return ((ReportAlarmReq)req).getTimestamp();
+        return 0;
+    }
+
+    int getMsgId(Message req) {
+        if( req instanceof  ReportRpcStatReq ) return MONITOR_RPCSTATS_MSGID;
+        if( req instanceof  ReportSystemInfoReq ) return MONITOR_SYSTEMINFO_MSGID;
+        if( req instanceof  ReportAlarmReq ) return MONITOR_ALARM_MSGID;
+        return 0;
+    }
+
+    boolean send(int sequence, Message req) {
+        boolean ok = sendInternal(sequence,req);
+        if(!ok) {
+            errorCount.incrementAndGet();
+        }
+        return ok;
+    }
+
+    boolean sendInternal(int sequence, Message req) {
         AddrInfo ai = nextAddrInfo();
         if (ai == null) return false;
-        RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(MONITOR_SERVICEID).setMsgId(MONITOR_REPORT_MSGID).setSequence(sequence);
+        int msgId = getMsgId(req);
+        if( msgId == 0 ) return false;
+        RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(MONITOR_SERVICEID).setMsgId(msgId).setSequence(sequence);
         RpcMeta meta = builder.build();
-        RpcData data = new RpcData(meta, statsReq);
+        RpcData data = new RpcData(meta, req);
         return nettyClient.send(ai.connId, data);
     }
 
     public void receive(String connId, RpcData data) {
         if (data.getMeta().getDirection() == RpcMeta.Direction.REQUEST) return;
-        ReportRpcStatReq req = dataManager.remove(data.getMeta().getSequence());
+        Message req = dataManager.remove(data.getMeta().getSequence());
         if (req == null) return;
         int retCode = data.getMeta().getRetCode();
         if (retCode == 0) return;
@@ -188,4 +234,7 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
         return v;
     }
 
+    int getErrorCount() {
+        return errorCount.getAndSet(0);
+    }
 }

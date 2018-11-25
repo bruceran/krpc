@@ -2,6 +2,7 @@ package krpc.trace;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public interface Span {
 
@@ -61,4 +62,9 @@ public interface Span {
 
     public List<Metric> getMetrics();
 
+    public AtomicInteger getCompleted();
+
+    public void removeTag(String key);
+
+    public void removeTags();
 }

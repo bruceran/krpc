@@ -15,11 +15,14 @@ public class MonitorConfig {
     boolean printDefault = false;
 
     boolean printOriginalMsgName = true;
+    String tags;
 
     String serverAddr;
 
     String plugins = ""; // comma seperated MonitorPlugin names
     List<String> pluginParams = new ArrayList<>(); // config MonitorPlugin if needed
+
+    int selfCheckPort = 0; // self check port
 
     public MonitorConfig addPluginParams(String params) {
         pluginParams.add(params);
@@ -122,6 +125,24 @@ public class MonitorConfig {
 
     public MonitorConfig setPrintOriginalMsgName(boolean printOriginalMsgName) {
         this.printOriginalMsgName = printOriginalMsgName;
+        return this;
+    }
+
+    public int getSelfCheckPort() {
+        return selfCheckPort;
+    }
+
+    public MonitorConfig setSelfCheckPort(int selfCheckPort) {
+        this.selfCheckPort = selfCheckPort;
+        return this;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public MonitorConfig setTags(String tags) {
+        this.tags = tags;
         return this;
     }
 

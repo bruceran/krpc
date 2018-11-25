@@ -3,11 +3,14 @@ package krpc.rpc.core;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.trace.TraceContext;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class ServerContextData extends RpcContextData {
 
     Continue<RpcClosure> cont; // used in server side async call
     TraceContext traceContext;
     long waitInQueueMicros = 0;
+    AtomicBoolean replied = new AtomicBoolean(false);
 
     public ServerContextData(String connId, RpcMeta meta, TraceContext traceContext) {
         super(connId, meta);
@@ -33,4 +36,8 @@ public class ServerContextData extends RpcContextData {
     }
 
     public long getWaitInQueueMicros() { return waitInQueueMicros;}
+
+    public boolean isReplied() { return replied.get(); }
+
+    public boolean setReplied() { return replied.compareAndSet(false,true); }
 }

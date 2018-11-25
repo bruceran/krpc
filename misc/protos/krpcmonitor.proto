@@ -9,30 +9,79 @@ option java_outer_classname="MonitorProtos";
 
 message RpcStat {
 
-    int32 type = 1;  // 1=req 2=call 3=web
-    int64 time = 2; // seconds from 1970
-    int32 serviceId = 3;
-    int32 msgId = 4;
-    int32 success = 5;
-    int32 failed = 6;
-    int32 timeout = 7;
-    repeated int32 timeUsed = 8; // 间隔： 10毫秒, 25毫秒, 50毫秒, 100毫秒, 250毫秒, 500毫秒, 1秒, 3秒，超过3秒
+    int32 type = 1; 
+    int64 time = 2; 
+    int32 serviceId = 3; 
+    int32 msgId = 4; 
+    int32 success = 5;  
+    int32 failed = 6; 
+    int32 timeout = 7;  
+    repeated int32 timeUsed = 8; 
     
 };
 
 message ReportRpcStatReq {
-    int64 timestamp = 1; // timestamp to generate the stats
-    string host = 2; // machine
-    string app = 3;
+    int64 timestamp = 1; 
+    string host = 2;  
+    string app = 3;  
     repeated RpcStat stats = 4;
+    int32 appServiceId = 5;
 };
 
 message ReportRpcStatRes {
     int32 retCode = 1;
+	string retMsg = 2;
 };
 
+
+message SystemInfoKV {
+    string key = 1;  
+    string value = 2; 
+};
+
+message ReportSystemInfoReq {
+    int64 timestamp = 1;  
+    string host = 2; 
+    string app = 3;  
+    repeated SystemInfoKV kvs = 4;
+    int32 appServiceId = 5;
+};
+
+message ReportSystemInfoRes {
+    int32 retCode = 1;
+	string retMsg = 2;
+};
+
+
+message AlarmInfo {
+	int64 time = 1; 
+    string type = 4; 
+	string msg = 5; 
+	int32  count = 6;  
+};
+
+message ReportAlarmReq {
+    int64 timestamp = 1;  
+    string host = 2;  
+    string app = 3;  
+	
+	repeated AlarmInfo info = 4;
+	int32 appServiceId = 5;
+};
+
+message ReportAlarmRes {
+    int32 retCode = 1;
+	string retMsg = 2;
+};
+
+
 service MonitorService {
+
 	option (krpc.serviceId) = 2;
+	
 	rpc reportRpcStat(ReportRpcStatReq) returns (ReportRpcStatRes)  { option (krpc.msgId) = 1; };
+	rpc reportSystemInfo(ReportSystemInfoReq) returns (ReportSystemInfoRes)  { option (krpc.msgId) = 2; };
+	rpc reportAlarm(ReportAlarmReq) returns (ReportAlarmRes)  { option (krpc.msgId) = 3; };
+		
 }
 

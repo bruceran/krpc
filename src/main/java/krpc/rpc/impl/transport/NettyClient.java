@@ -4,6 +4,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.ChannelGroupFuture;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -18,19 +19,20 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import krpc.common.InitClose;
-import krpc.common.NamedThreadFactory;
-import krpc.common.StartStop;
+import krpc.common.*;
 import krpc.rpc.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Sharable
-public class NettyClient extends TransportBase implements Transport, TransportChannel, InitClose, StartStop {
+public class NettyClient extends TransportBase implements Transport, TransportChannel, InitClose, StartStop, AlarmAware,
+        DumpPlugin, HealthPlugin {
 
     static Logger log = LoggerFactory.getLogger(NettyClient.class);
 
@@ -39,6 +41,7 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
     int connectTimeout = 15000;
     int reconnectSeconds = 1;
     int workerThreads = 0;
+    boolean nativeNetty = false;
 
     NamedThreadFactory workThreadFactory = new NamedThreadFactory("krpc_nettyclient_worker");
     NamedThreadFactory timerThreadFactory = new NamedThreadFactory("krpc_nettyclient_timer");
@@ -51,6 +54,9 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
     Object dummyChannel = new Object();
     ConcurrentHashMap<String, Object> conns = new ConcurrentHashMap<>(); // value cannot be null, so use Object type but Channel type
     ConcurrentHashMap<String, String> connIdMap = new ConcurrentHashMap<>(); // channel.id() -> outside connId
+    ConcurrentHashMap<String, Long> reconnectingConns = new ConcurrentHashMap<>(); // addr -> timestamp milliseconds
+
+    Alarm alarm = new DummyAlarm();
 
     public NettyClient() {
     }
@@ -63,7 +69,21 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
 
     public void init() {
 
-        workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
+        int processors = Runtime.getRuntime().availableProcessors();
+        if( workerThreads == 0 ) workerThreads = processors;
+
+        String osName = System.getProperty("os.name");
+        if( nativeNetty && osName != null && osName.toLowerCase().indexOf("linux") >= 0 ) {
+            nativeNetty = true;
+        } else {
+            nativeNetty = false;
+        }
+
+        if( nativeNetty) {
+            workerGroup = new EpollEventLoopGroup(workerThreads, workThreadFactory);
+        } else {
+            workerGroup = new NioEventLoopGroup(workerThreads, workThreadFactory);
+        }
         timer = new HashedWheelTimer(timerThreadFactory, 1, TimeUnit.SECONDS);
 
         bootstrap = new Bootstrap();
@@ -129,20 +149,26 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
     }
 
     public void connect(String connId, String addr) {
+// log.info("connect called connId="+connId);
         conns.put(connId, dummyChannel);
         reconnect(connId, addr);
     }
 
     public void disconnect(String connId) {
+// log.info("disconnect called connId="+connId);
         Channel ch = getChannel(connId);
-        if (ch == null)
+        if (ch == null) {
+            if( conns.get(connId) == dummyChannel ) {
+                conns.remove(connId);
+            }
             return;
+        }
         conns.remove(connId);
         ch.close();
     }
 
     void reconnect(final String connId, final String addr) {
-
+//log.info("reconnecting connId="+connId+",addr="+addr);
         if (!conns.containsKey(connId)) {
             return;
         }
@@ -162,6 +188,9 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
     void scheduleToReconnect(final String connId, final String addr) {
 
         if (timer != null) { // maybe stopping
+
+            reconnectingConns.put(connId,System.currentTimeMillis());
+
             timer.newTimeout(new TimerTask() {
 
                 public void run(Timeout timeout) {
@@ -184,6 +213,9 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
         connIdMap.put(ch.id().asLongText(), connId);
         conns.put(connId, ch);
         log.info("connection started, connId={}", connId);
+
+        reconnectingConns.remove(connId);
+
         if (callback != null)
             callback.connected(connId, parseIpPort(ch.localAddress().toString()));
     }
@@ -196,6 +228,9 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
         if (connId == null)
             return;
         conns.put(connId, dummyChannel);
+        if( enableEncrypt) {
+            keyMap.remove(connId);
+        }
         log.info("connection ended, connId={}", connId);
         if (callback != null)
             callback.disconnected(connId);
@@ -258,4 +293,47 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
         this.workerThreads = workerThreads;
     }
 
+    public boolean isNativeNetty() {
+        return nativeNetty;
+    }
+
+    public void setNativeNetty(boolean nativeNetty) {
+        this.nativeNetty = nativeNetty;
+    }
+
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        if( nativeNetty) {
+            metrics.put("krpc.client.nativeNetty", true);
+            metrics.put("krpc.client.worker.threads",  ((EpollEventLoopGroup)workerGroup).executorCount());
+        } else {
+            metrics.put("krpc.client.worker.threads",  ((NioEventLoopGroup)workerGroup).executorCount());
+        }
+        metrics.put("krpc.client.conns.size",connIdMap.size());
+
+        metrics.put("krpc.client.pingSeconds",pingSeconds);
+        metrics.put("krpc.client.maxPackageSize",maxPackageSize);
+        metrics.put("krpc.client.connectTimeout",connectTimeout);
+        metrics.put("krpc.client.reconnectSeconds",reconnectSeconds);
+
+        if( reconnectingConns.size() > 0 ) {
+            alarm.alarm(Alarm.ALARM_TYPE_RPCSERVER,"krpc connection failed");
+            metrics.put("krpc.client.reconnectingConns",reconnectingConns.size());
+        }
+    }
+
+    @Override
+    public void healthCheck(List<HealthStatus> list) {
+        String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_RPCSERVER);
+        for (String connId: reconnectingConns.keySet()) {
+            list.add(new HealthStatus(alarmId,false,"krpc connection failed: "+getAddr(connId)));
+            return;
+        }
+        // list.add(new HealthStatus(alarmId,true,"krpc connection ok"));
+    }
+
+    @Override
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
+    }
 }

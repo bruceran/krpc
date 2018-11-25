@@ -2,14 +2,16 @@ package krpc.rpc.impl;
 
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
+import krpc.rpc.core.DumpPlugin;
 import krpc.rpc.core.ExecutorManager;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class DefaultExecutorManager implements ExecutorManager, InitClose {
+public class DefaultExecutorManager implements ExecutorManager, InitClose, DumpPlugin {
 
     NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_service_worker");
     HashMap<String, ThreadPoolExecutor> pools = new HashMap<String, ThreadPoolExecutor>();
@@ -56,6 +58,17 @@ public class DefaultExecutorManager implements ExecutorManager, InitClose {
     public void close() {
         for (ThreadPoolExecutor pool : pools.values()) {
             pool.shutdown();
+        }
+    }
+
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        for (Map.Entry<String,ThreadPoolExecutor> entry: pools.entrySet()) {
+            String name = entry.getKey();
+            ThreadPoolExecutor pool = entry.getValue();
+            metrics.put("krpc.service_pool["+name+"].poolSize",pool.getPoolSize());
+            metrics.put("krpc.service_pool["+name+"].activeCount",pool.getActiveCount());
+            metrics.put("krpc.service_pool["+name+"].waitingInQueue",pool.getQueue().size());
         }
     }
 }

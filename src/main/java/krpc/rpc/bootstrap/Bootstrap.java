@@ -6,6 +6,8 @@ import com.google.protobuf.Descriptors.*;
 import com.google.protobuf.Descriptors.FileDescriptor;
 import com.google.protobuf.UnknownFieldSet.Field;
 import krpc.KrpcExt;
+import krpc.common.Alarm;
+import krpc.common.AlarmAware;
 import krpc.common.Plugin;
 import krpc.common.RetCodes;
 import krpc.rpc.cluster.*;
@@ -20,6 +22,7 @@ import krpc.rpc.monitor.DefaultMonitorService;
 import krpc.rpc.monitor.LogFormatter;
 import krpc.rpc.monitor.MonitorPlugin;
 import krpc.rpc.registry.DefaultRegistryManager;
+import krpc.rpc.monitor.SelfCheckHttpServer;
 import krpc.rpc.util.IpUtils;
 import krpc.rpc.web.*;
 import krpc.rpc.web.impl.DefaultRpcDataConverter;
@@ -50,7 +53,7 @@ public class Bootstrap {
 
     static Logger log = LoggerFactory.getLogger(Bootstrap.class);
 
-    static private final String versionString = "krpc version 0.1.16 build 1 @ 20180909";
+    static private final String versionString = "krpc version 0.2.5 build 1 @ 20181123";
 
     private ApplicationConfig appConfig = new ApplicationConfig();
     private MonitorConfig monitorConfig = new MonitorConfig();
@@ -200,7 +203,13 @@ public class Bootstrap {
         return v;
     }
 
-    public WebMonitorService newMonitorService(RpcCodec codec, ServiceMetas serviceMetas, MonitorConfig c) {
+    public SelfCheckHttpServer newSelfCheckHttpServer(int port) {
+        SelfCheckHttpServer s = new SelfCheckHttpServer(port);
+        s.setVersionString(versionString);
+        return s;
+    }
+
+    public DefaultMonitorService newMonitorService(RpcCodec codec, ServiceMetas serviceMetas, MonitorConfig c,SelfCheckHttpServer shs) {
         DefaultMonitorService m = new DefaultMonitorService(codec, serviceMetas);
         m.setAppName(appConfig.name);
 
@@ -208,6 +217,9 @@ public class Bootstrap {
         m.setLogQueueSize(c.logQueueSize);
         m.setAccessLog(c.accessLog);
         m.setPrintOriginalMsgName(c.printOriginalMsgName);
+        m.setSelfCheckHttpServer(shs);
+        m.setTags(c.tags);
+        m.setSelfCheckPort(c.selfCheckPort);
 
         if (!isEmpty(c.serverAddr)) {
             m.setServerAddr(c.serverAddr);
@@ -366,8 +378,8 @@ public class Bootstrap {
             }
         }
 
-        if (serviceList.size() == 0 && refererList.size() == 0 && webServerList.size() == 0)
-            throw new RuntimeException("service or referer or webserver must be specified");
+//        if (serviceList.size() == 0 && refererList.size() == 0 && webServerList.size() == 0)
+//            throw new RuntimeException("service or referer or webserver must be specified");
 
 
         for (RegistryConfig c : registryList) {
@@ -668,10 +680,24 @@ public class Bootstrap {
 
         app.validator = newValidator();
         app.serviceMetas = newServiceMetas(app.validator);
+        RpcFutureUtils.serviceMetas = app.serviceMetas;
         app.codec = newRpcCodec(app.serviceMetas);
         app.proxyGenerator = newProxyGenerator();
         app.registryManager = newRegistryManager(app.serviceMetas, appConfig.dataDir);
-        app.monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig);
+
+        if( monitorConfig.selfCheckPort != 0 ) {
+            app.selfCheckHttpServer = newSelfCheckHttpServer(monitorConfig.selfCheckPort);
+        }
+
+        DefaultMonitorService monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig, app.selfCheckHttpServer);
+        app.monitorService = monitorService;
+        Alarm alarm = monitorService;
+        if( app.traceAdapter instanceof AlarmAware ) {
+            ((AlarmAware)app.traceAdapter).setAlarm(alarm);
+        }
+        if( app.selfCheckHttpServer instanceof AlarmAware ) {
+            ((AlarmAware)app.selfCheckHttpServer).setAlarm(alarm);
+        }
 
         if (!isEmpty(appConfig.errorMsgConverter)) {
             ErrorMsgConverter p = getPlugin(ErrorMsgConverter.class, appConfig.errorMsgConverter);
@@ -693,8 +719,15 @@ public class Bootstrap {
             RegistryConfig c = entry.getValue();
 
             Registry impl = getPlugin(Registry.class, parseType(c.type));
+
+            if( impl instanceof AlarmAware ) {
+                ((AlarmAware)impl).setAlarm(alarm);
+            }
+
             String params = parseParams(c.type);
             params += "instanceId=" + app.instanceId + ";addrs=" + c.addrs + ";enableRegist=" + c.enableRegist + ";enableDiscover=" + c.enableDiscover;
+            if (!isEmpty(c.aclToken))
+                params += ";aclToken=" + c.aclToken;
             if (!isEmpty(c.params))
                 params += ";" + c.params;
             impl.config(params);
@@ -726,6 +759,8 @@ public class Bootstrap {
             client.setValidator(app.validator);
             client.setFallbackPlugin(app.fallbackPlugin);
 
+            client.setAlarm(alarm);
+
             if (!isEmpty(c.plugins)) {
                 List<RpcPlugin> plugins = new ArrayList<>();
                 String[] ss = c.plugins.split(",");
@@ -749,6 +784,9 @@ public class Bootstrap {
             nc.setReconnectSeconds(c.reconnectSeconds);
             nc.setWorkerThreads(c.ioThreads);
             nc.setMonitorService(app.monitorService);
+            nc.setNativeNetty(c.isNativeNetty());
+            nc.setEnableEncrypt(c.enableEncrypt);
+            nc.setAlarm(alarm);
             client.setTransport(nc);
 
             DataManager di = newDataManager(client);
@@ -764,7 +802,11 @@ public class Bootstrap {
             client.setClusterManager(cmi);
 
             RpcRetrier  rpcRetrier = newRpcRetrier(client,app.serviceMetas,appConfig.dataDir);
+            if( rpcRetrier instanceof AlarmAware ) {
+                ((AlarmAware)(rpcRetrier)).setAlarm(alarm);
+            }
             client.setRpcRetrier(rpcRetrier);
+
 
             if (hasReverseService(name)) {
                 ExecutorManager em = newExecutorManager();
@@ -789,6 +831,7 @@ public class Bootstrap {
 
             RpcServer server = newRpcServer();
             server.setServiceMetas(app.serviceMetas);
+            server.setAlarm(alarm);
 
             if (!isEmpty(c.plugins)) {
                 List<RpcPlugin> plugins = new ArrayList<>();
@@ -820,6 +863,8 @@ public class Bootstrap {
             ns.setMaxConns(c.maxConns);
             ns.setWorkerThreads(c.ioThreads);
             ns.setMonitorService(app.monitorService);
+            ns.setNativeNetty(c.isNativeNetty());
+            ns.setEnableEncrypt(c.enableEncrypt);
             server.setTransport(ns);
 
             ExecutorManager em = newExecutorManager();
@@ -852,6 +897,7 @@ public class Bootstrap {
             SessionService ss = (SessionService) getPlugin(WebPlugin.class, c.defaultSessionService);
 
             WebServer server = newWebServer();
+            server.setAlarm(alarm);
             server.setExpireSeconds(c.expireSeconds);
             server.setAutoTrim(c.autoTrim);
             server.setServiceMetas(app.serviceMetas);
@@ -880,6 +926,7 @@ public class Bootstrap {
             ns.setMaxInitialLineLength(c.maxInitialLineLength);
             ns.setMaxHeaderSize(c.maxHeaderSize);
             ns.setMaxChunkSize(c.maxChunkSize);
+            ns.setNativeNetty(c.isNativeNetty());
 
             server.setHttpTransport(ns);
 
@@ -1892,6 +1939,11 @@ public class Bootstrap {
 
     public Bootstrap setMonitorConfig(MonitorConfig monitorConfig) {
         this.monitorConfig = monitorConfig;
+        return this;
+    }
+
+    public Bootstrap setSelfCheckPort(int selfCheckPort) {
+        this.monitorConfig.selfCheckPort = selfCheckPort;
         return this;
     }
 

@@ -6,16 +6,14 @@ import krpc.common.StartStop;
 import krpc.rpc.core.*;
 import krpc.rpc.impl.RpcClient;
 import krpc.rpc.impl.RpcServer;
+import krpc.rpc.monitor.SelfCheckHttpServer;
 import krpc.rpc.web.WebMonitorService;
 import krpc.rpc.web.impl.WebServer;
 import krpc.trace.TraceAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
-public class RpcApp implements InitClose, StartStop {
+public class RpcApp implements InitClose, StartStop, DumpPlugin, HealthPlugin {
 
     String name;
     String instanceId;
@@ -34,6 +32,7 @@ public class RpcApp implements InitClose, StartStop {
     TraceAdapter traceAdapter;
     Validator validator;
     FallbackPlugin fallbackPlugin;
+    SelfCheckHttpServer selfCheckHttpServer;
 
     HashMap<String, RpcServer> servers = new HashMap<>();
     HashMap<String, WebServer> webServers = new HashMap<>();
@@ -51,6 +50,13 @@ public class RpcApp implements InitClose, StartStop {
         this.name = name;
     }
 
+    public WebMonitorService getMonitorService() {
+        return monitorService;
+    }
+
+    public SelfCheckHttpServer getSelfCheckHttpServer() {
+        return selfCheckHttpServer;
+    }
 
     public RpcServer getServer() {
         return servers.get("default");
@@ -111,6 +117,8 @@ public class RpcApp implements InitClose, StartStop {
         for (WebServer webServer : webServers.values()) {
             resources.add(webServer);
         }
+
+        resources.add(selfCheckHttpServer);
     }
 
     public void init() {
@@ -179,4 +187,19 @@ public class RpcApp implements InitClose, StartStop {
         return closed;
     }
 
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        for (Object o : resources) {
+            if (o == null) continue;
+            if (o instanceof DumpPlugin) ((DumpPlugin) o).dump(metrics);
+        }
+    }
+
+    @Override
+    public void healthCheck(List<HealthStatus> list) {
+        for (Object o : resources) {
+            if (o == null) continue;
+            if (o instanceof HealthPlugin) ((HealthPlugin) o).healthCheck(list);
+        }
+    }
 }

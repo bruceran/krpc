@@ -10,6 +10,8 @@ public class RegistryConfig {
     boolean enableRegist = true;
     boolean enableDiscover = true;
 
+    String aclToken;
+
     String params;
 
     public RegistryConfig() {
@@ -73,4 +75,12 @@ public class RegistryConfig {
         return this;
     }
 
+    public String getAclToken() {
+        return aclToken;
+    }
+
+    public RegistryConfig setAclToken(String aclToken) {
+        this.aclToken = aclToken;
+        return this;
+    }
 }

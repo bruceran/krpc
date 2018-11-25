@@ -3,6 +3,7 @@ package krpc.rpc.impl;
 import krpc.common.InitClose;
 import krpc.rpc.core.DataManager;
 import krpc.rpc.core.DataManagerCallback;
+import krpc.rpc.core.DumpPlugin;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.util.QuickTimerCallback;
 import krpc.rpc.util.QuickTimerEngine;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultDataManager implements DataManager, QuickTimerCallback, InitClose {
+public class DefaultDataManager implements DataManager, QuickTimerCallback, InitClose, DumpPlugin {
 
     static Logger log = LoggerFactory.getLogger(DefaultDataManager.class);
 
@@ -76,4 +77,8 @@ public class DefaultDataManager implements DataManager, QuickTimerCallback, Init
         }
     }
 
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        metrics.put("krpc.datamanager.size",data.size());
+    }
 }

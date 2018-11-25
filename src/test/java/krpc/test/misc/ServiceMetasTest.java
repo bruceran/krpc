@@ -82,9 +82,9 @@ public class ServiceMetasTest {
         RpcMeta meta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(100).setMsgId(1).setSequence(1001).build(); // // heartbeat package donot need sequence
         RpcData data = new RpcData(meta, req);
         ByteBuf bb = Unpooled.buffer();
-        codec.encode(data, bb);
+        codec.encode(data, bb,null);
         RpcMeta meta2 = codec.decodeMeta(bb);
-        RpcData data2 = codec.decodeBody(meta2, bb);
+        RpcData data2 = codec.decodeBody(meta2, bb,null);
         LoginReq req2 = (LoginReq) data2.getBody();
         assertEquals("abc", req2.getUserName());
         assertEquals("mmm", req2.getPassword());
@@ -102,9 +102,9 @@ public class ServiceMetasTest {
         RpcMeta meta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(100).setMsgId(1).setSequence(1001).build(); // // heartbeat package donot need sequence
         RpcData data = new RpcData(meta, req);
         ByteBuf bb = Unpooled.buffer();
-        codec.encode(data, bb);
+        codec.encode(data, bb,null);
         RpcMeta meta2 = codec.decodeMeta(bb);
-        RpcData data2 = codec.decodeBody(meta2, bb);
+        RpcData data2 = codec.decodeBody(meta2, bb,null);
     }
 
     @Test

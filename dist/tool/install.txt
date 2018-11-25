@@ -1,9 +1,9 @@
 
 git clone https://github.com/bruceran/protobuf.git
 cd protobuf
-git checkout v3.5.1-krpc  # 必须使用此分支，其它分支不支持krpc
+git checkout v3.5.1-krpc
 
 ./autogen.sh
 ./confgure
 make
-make install   # 得到 protoc 可执行程序， 重命名为protoc-3.5.1并放入path路径中
+make install

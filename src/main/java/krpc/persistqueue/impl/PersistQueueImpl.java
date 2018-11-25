@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2011 Shanda Corporation. All rights reserved.
- *
- * Created on 2011-12-19.
- */
 package krpc.persistqueue.impl;
 
 import java.io.File;

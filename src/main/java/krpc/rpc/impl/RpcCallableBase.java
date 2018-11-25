@@ -11,13 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class RpcCallableBase implements TransportCallback, DataManagerCallback, RpcCallable, Continue<RpcClosure>, InitClose, StartStop {
+public abstract class RpcCallableBase implements TransportCallback, DataManagerCallback, RpcCallable, Continue<RpcClosure>,
+        InitClose, StartStop, AlarmAware, DumpPlugin, HealthPlugin {
 
     static Logger log = LoggerFactory.getLogger(RpcCallableBase.class);
 
@@ -52,6 +51,13 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     HashMap<String, Boolean> retryBrokenMap = new HashMap<String, Boolean>();
 
     ArrayList<Object> resources = new ArrayList<Object>();
+
+    Alarm alarm = new DummyAlarm();
+
+    AtomicInteger errorCount = new AtomicInteger();
+    AtomicInteger lastErrorCount = new AtomicInteger();
+    AtomicInteger queueFullErrorCount = new AtomicInteger();
+    AtomicInteger lastQueueFullErrorCount = new AtomicInteger();
 
     abstract boolean isServerSide();
 
@@ -170,7 +176,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         String connId = NO_CONNECTION_STR;
         span.setRemoteAddr(getAddr(connId));
 
-
         RpcMeta.Trace trace = generateTraceInfo(tctx, span);
 
         RpcMeta meta = builder.setTrace(trace).build();
@@ -211,6 +216,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
                 }
             }
 
+            errorCount.incrementAndGet();
             endCall(closure, RetCodes.NO_CONNECTION);
             return future;
         }
@@ -418,6 +424,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
                 }
             });
         } catch (Exception e) {
+            queueFullErrorCount.incrementAndGet();
             sendErrorResponse(ctx, data.getBody(), RetCodes.QUEUE_FULL);
             log.error("queue is full");
             return;
@@ -439,6 +446,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         long ts = ctx.elapsedMillisByNow();
         int clientTimeout = ctx.getMeta().getTimeout();
         if (clientTimeout > 0 && ts >= clientTimeout) {
+            queueFullErrorCount.incrementAndGet();
             sendErrorResponse(ctx, req, RetCodes.QUEUE_TIMEOUT); // waiting too long, fast response with a TIMEOUT_EXPIRED
             return;
         }
@@ -455,7 +463,6 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         }
 
         ctx.setContinue(this);
-
         try {
 
             if (plugins.size() > 0) {
@@ -480,6 +487,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
                 }
             }
 
+            ctx.setAttribute("pendingReq",req);
+
             Message res = (Message) method.invoke(object, new Object[]{req});
             if (res == null) return; // an async service or exception, do nothing
 
@@ -489,18 +498,21 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             String traceId = "no_trace_id";
             if( Trace.currentContext() != null && Trace.currentContext().getTrace() != null )
                 traceId  = Trace.currentContext().getTrace().getTraceId();
-            sendErrorResponse(ctx, data.getBody(), RetCodes.BUSINESS_ERROR);
             log.error("callService exception, traceId="+traceId, e);
             Trace.logException(e);
-            return;
+            String msg = RetCodes.retCodeText(RetCodes.BUSINESS_ERROR)+" in ("+meta.getServiceId()+")";
+            sendErrorResponse(ctx, data.getBody(), RetCodes.BUSINESS_ERROR,msg);
         }
     }
 
     public void readyToContinue(RpcClosure closure) {
+
         String connId = closure.getCtx().getConnId();
         RpcMeta reqMeta = closure.getCtx().getMeta();
         int retCode = closure.getRetCode();
         if (retCode > 0) throw new RuntimeException("retCode>0 is not allowed");
+
+        if( !closure.asServerCtx().setReplied() ) return;
 
         String retMsg = closure.getRetMsg();
 
@@ -512,7 +524,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             }
         }
 
-        RpcMeta resMeta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE).setServiceId(reqMeta.getServiceId()).setMsgId(reqMeta.getMsgId()).setSequence(reqMeta.getSequence()).setRetCode(retCode).build();
+        RpcMeta resMeta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE).setServiceId(reqMeta.getServiceId()).setMsgId(reqMeta.getMsgId()).setEncrypt(reqMeta.getEncrypt()).setSequence(reqMeta.getSequence()).setRetCode(retCode).build();
         transport.send(connId, new RpcData(resMeta, closure.getRes()));
 
         endReq(closure);
@@ -523,8 +535,12 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     }
 
     void sendErrorResponse(RpcContextData ctx, Message req, int retCode, String retMsg) {
+
+        if( !((ServerContextData)ctx).setReplied() ) return;
+
         RpcMeta reqMeta = ctx.getMeta();
-        RpcMeta resMeta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE).setServiceId(reqMeta.getServiceId()).setMsgId(reqMeta.getMsgId()).setSequence(reqMeta.getSequence()).setRetCode(retCode).build();
+
+        RpcMeta resMeta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE).setServiceId(reqMeta.getServiceId()).setMsgId(reqMeta.getMsgId()).setEncrypt(reqMeta.getEncrypt()).setSequence(reqMeta.getSequence()).setRetCode(retCode).build();
         RpcData data = null;
         if (retMsg != null) {
             Message res = serviceMetas.generateRes(reqMeta.getServiceId(), reqMeta.getMsgId(), retCode, retMsg);
@@ -548,7 +564,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             }
         }
 
-        String status = retCode == 0 ? "SUCCESS" : "ERROR";
+        String status = !RetCodes.isSystemError(retCode) ? "SUCCESS" : "ERROR";
         closure.asServerCtx().getTraceContext().stopForServer(status);
 
         if (monitorService == null) return;
@@ -560,7 +576,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
     void endReq(RpcClosure closure) {
 
-        String status = closure.getRetCode() == 0 ? "SUCCESS" : "ERROR";
+        String status = !RetCodes.isSystemError(closure.getRetCode()) ? "SUCCESS" : "ERROR";
         closure.asServerCtx().getTraceContext().stopForServer(status);
 
         if (monitorService == null) return;
@@ -687,4 +703,61 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     public void setRpcRetrier(RpcRetrier rpcRetrier) {
         this.rpcRetrier = rpcRetrier;
     }
+
+    @Override
+    public void dump(Map<String, Object> metrics) {
+
+        int n = errorCount.getAndSet(0);
+        lastErrorCount.set(n);
+        metrics.put("krpc.client.curErrorCount",n);
+        if( n > 0 ) {
+            alarm.alarm(Alarm.ALARM_TYPE_RPCSERVER,"krpc no connection");
+        }
+
+        int n2 = queueFullErrorCount.getAndSet(0);
+        lastQueueFullErrorCount.set(n2);
+        metrics.put("krpc.server.queueFullErrorCount",n2);
+        if( n2 > 0 ) {
+            alarm.alarm(Alarm.ALARM_TYPE_QUEUEFULL,"krpc queue is full");
+        }
+
+        for (Object o : resources) {
+            if (o == null) continue;
+            if (o instanceof DumpPlugin) ((DumpPlugin) o).dump(metrics);
+        }
+        if( retryPool != null ) {
+            metrics.put("krpc.client.retrypool.poolSize",retryPool.getPoolSize());
+            metrics.put("krpc.client.retrypool.activeCount",retryPool.getActiveCount());
+            metrics.put("krpc.client.retrypool.waitingInQueue",retryPool.getQueue().size());
+        }
+    }
+
+    @Override
+    public void healthCheck(List<HealthStatus> list) {
+
+        int n = lastErrorCount.get();
+        if( n > 0 ) {
+            String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_RPCSERVER);
+            HealthStatus healthStatus = new HealthStatus(alarmId, false, "no krpc connection");
+            list.add(healthStatus);
+        }
+
+        int n2 = lastQueueFullErrorCount.get();
+        if( n2 > 0 ) {
+            String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_QUEUEFULL);
+            HealthStatus healthStatus = new HealthStatus(alarmId, false, "krpc queue is full");
+            list.add(healthStatus);
+        }
+
+        for (Object o : resources) {
+            if (o == null) continue;
+            if (o instanceof HealthPlugin) ((HealthPlugin) o).healthCheck(list);
+        }
+    }
+
+    @Override
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
+    }
+
 }

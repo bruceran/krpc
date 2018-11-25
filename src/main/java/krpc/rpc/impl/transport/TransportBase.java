@@ -14,9 +14,10 @@ import krpc.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class TransportBase extends ChannelDuplexHandler {
+public abstract class TransportBase extends ChannelDuplexHandler{
 
     static Logger log = LoggerFactory.getLogger(TransportBase.class);
 
@@ -24,6 +25,9 @@ public abstract class TransportBase extends ChannelDuplexHandler {
     RpcCodec codec;
     ServiceMetas serviceMetas;
     MonitorService monitorService;
+    boolean enableEncrypt = false;
+
+    ConcurrentHashMap<String,String> keyMap = new ConcurrentHashMap<>();
 
     AtomicBoolean stopFlag = new AtomicBoolean();
 
@@ -45,6 +49,20 @@ public abstract class TransportBase extends ChannelDuplexHandler {
         return meta.getServiceId() == 1 && meta.getMsgId() == 1;
     }
 
+    public String getKey(String connId) {
+        if( enableEncrypt ) {
+            return keyMap.get(connId);
+        } else {
+            return null;
+        }
+    }
+
+    // use this method to put key
+    public void putKey(String connId,String key) {
+        if( enableEncrypt ) {
+            keyMap.put(connId,key);
+        }
+    }
     public boolean send(String connId, RpcData data) {
 
         if (data == null)
@@ -73,10 +91,19 @@ public abstract class TransportBase extends ChannelDuplexHandler {
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         if (msg instanceof RpcData) {
             RpcData data = (RpcData) msg;
-            int size = codec.getSize(data);
+
+            String connId = getConnId(ctx);
+            String key = getKey(connId);
+            boolean enc = false;
+            if( key != null && isRequest(data.getMeta()) ) {
+                ReflectionUtils.updateEncrypt(data.getMeta(),1);
+                enc = true;
+            }
+
+            int size = enc ? codec.getSize(data) + 16 : codec.getSize(data); // TODO
             ByteBuf out = ctx.alloc().buffer(size);
 
-            codec.encode(data, out);
+            codec.encode(data, out, key);
             ctx.writeAndFlush(out, promise);
         } else {
             super.write(ctx, msg, promise);
@@ -115,7 +142,8 @@ public abstract class TransportBase extends ChannelDuplexHandler {
         }
 
         try {
-            RpcData data = codec.decodeBody(meta, bb);
+            String key = getKey(connId);
+            RpcData data = codec.decodeBody(meta, bb, key);
             return data;
         } catch (RpcException ex) {
             if (isRequest(meta)) {
@@ -179,7 +207,7 @@ public abstract class TransportBase extends ChannelDuplexHandler {
                 .setServiceId(meta.getServiceId()).setMsgId(meta.getMsgId()).setSequence(meta.getSequence())
                 .setRetCode(retCode).build();
         ByteBuf encoded = ctx.alloc().buffer();
-        codec.encode(new RpcData(resMeta), encoded); // just header, no body
+        codec.encode(new RpcData(resMeta), encoded,null); // just header, no body
         ctx.writeAndFlush(encoded);
         endReq(connId, meta, null, retCode); // !!! req is null
     }
@@ -252,4 +280,11 @@ public abstract class TransportBase extends ChannelDuplexHandler {
         this.monitorService = monitorService;
     }
 
+    public boolean isEnableEncrypt() {
+        return enableEncrypt;
+    }
+
+    public void setEnableEncrypt(boolean enableEncrypt) {
+        this.enableEncrypt = enableEncrypt;
+    }
 }

@@ -117,6 +117,14 @@ public class DummyTraceAdapter implements TraceAdapter {
 
         public void incQuantitySum(String key, long v1, double v2) {
         }
+
+        public AtomicInteger getCompleted() {
+            return null;
+        }
+
+        public void removeTag(String key) {}
+
+        public void removeTags() {}
     };
 
     TraceContext dummyTraceContext = new TraceContext() {
@@ -159,7 +167,8 @@ public class DummyTraceAdapter implements TraceAdapter {
             return 0;
         }
 
-        public void stopForServer(String result) {
+        public Span stopForServer(String result) {
+            return dummySpan;
         }
 
         public void tagForRpc(String key, String value) {

@@ -33,6 +33,7 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
         printer.printDefault = this.printDefault;
 
         webPrinter = new WebPrinter();
+        webPrinter.maxRepeatedSizeToLog = this.maxRepeatedSizeToLog;
         webPrinter.maskFieldsSet = this.maskFieldsSet;
     }
 
@@ -127,9 +128,21 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
                 throws IOException {
 
             if (field.isRepeated()) {
+
+                if (!level.isFirst()) {
+                    appender.appendSep(level.level);
+                }
+                level.setFirst(false);
+
+                appender.appendKey(field.getName()+"Size");
+                appender.appendSep9();
+                appender.appendString(String.valueOf(((List<?>) value).size()));
+
                 int count = 0;
                 for (Object element : (List<?>) value) {
-                    if (count >= maxRepeatedSizeToLog) continue;
+                    if (count >= maxRepeatedSizeToLog) {
+                        break;
+                    }
                     printSingleField(field, element, appender, level);
                     count++;
                 }
@@ -237,6 +250,7 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
 
     static class WebPrinter {
 
+        int maxRepeatedSizeToLog = 1;
         HashSet<String> maskFieldsSet;
 
         void print(Map<String, Object> message, Appender appender, Level level) {
@@ -258,8 +272,23 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
 
         void printField(String key, Object value, Appender appender, Level level) {
             if (value instanceof List) {
+
+                if (!level.isFirst()) {
+                    appender.appendSep(level.level);
+                }
+                level.setFirst(false);
+
+                appender.appendKey(key+"Size");
+                appender.appendSep9();
+                appender.appendString(String.valueOf(((List<?>) value).size()));
+
+                int count = 0;
                 for (Object element : (List<?>) value) {
+                    if( count >= maxRepeatedSizeToLog ) {
+                        break;
+                    }
                     printSingleField(key, element, appender, level);
+                    count++;
                 }
             } else {
                 printSingleField(key, value, appender, level);

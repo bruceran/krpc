@@ -102,4 +102,8 @@ abstract public class RpcContextData {
         return this.attributes.get(key);
     }
 
+    public void removeAttribute(String key) {
+        if (this.attributes == null) return;
+        this.attributes.remove(key);
+    }
 }

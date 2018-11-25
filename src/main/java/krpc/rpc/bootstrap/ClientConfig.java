@@ -12,6 +12,8 @@ public class ClientConfig {
     int connectTimeout = 15000;
     int reconnectSeconds = 1;
     int ioThreads = 0;  // auto
+    boolean nativeNetty = false;
+    boolean enableEncrypt = false;
 
     int connections = 1;
 
@@ -181,6 +183,24 @@ public class ClientConfig {
 
     public ClientConfig setConnectionPlugin(String connectionPlugin) {
         this.connectionPlugin = connectionPlugin;
+        return this;
+    }
+
+    public boolean isNativeNetty() {
+        return nativeNetty;
+    }
+
+    public ClientConfig setNativeNetty(boolean nativeNetty) {
+        this.nativeNetty = nativeNetty;
+        return this;
+    }
+
+    public boolean isEnableEncrypt() {
+        return enableEncrypt;
+    }
+
+    public ClientConfig setEnableEncrypt(boolean enableEncrypt) {
+        this.enableEncrypt = enableEncrypt;
         return this;
     }
 }

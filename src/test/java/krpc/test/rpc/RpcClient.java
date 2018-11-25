@@ -9,6 +9,8 @@ import krpc.rpc.core.ClientContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CompletableFuture;
+
 public class RpcClient {
 
     static Logger log = LoggerFactory.getLogger(RpcClient.class);
@@ -17,11 +19,11 @@ public class RpcClient {
 
         RpcApp app = new Bootstrap()
                 //.setFallbackPlugin("default")
-                .addClient(new ClientConfig().setConnections(1))
+                //.addClient(new ClientConfig().setConnections(1))
                 .addReferer("us", UserService.class, "127.0.0.1:5600")
-                .setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
+                //.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
                 //.setTraceAdapter("zipkin:server=127.0.0.1:9411")
-                .setTraceAdapter("cat:server=10.135.81.135:8081")
+                //.setTraceAdapter("cat:server=10.135.81.135:8081")
                 //.setTraceAdapter("skywalking:server=127.0.0.1:10800")
                 .setName("usa")
                 .build();
@@ -47,21 +49,27 @@ public class RpcClient {
         log.info("res=" + ures.getRetCode() + "," + ures.getRetMsg());
 
         //Thread.sleep(2000);
-		/*
-		CompletableFuture<LoginRes> f = usa.login(req);  // call async
-		LoginRes resa = f.get();
-		log.info("resa="+resa.getRetCode()+","+resa.getRetMsg());
+//
+//		CompletableFuture<LoginRes> f = usa.login(req);  // call async
+//		LoginRes resa = f.get();
+//		log.info("resa="+resa.getRetCode()+","+resa.getRetMsg());
 
 		//Thread.sleep(2000);
 
-		CompletableFuture<LoginRes> f2 = usa.login(req); 
-		f2.thenAccept( (res0) -> {
-							log.info("in listener, resa="+res0.getRetCode()+","+res0.getRetMsg() );
-						}
-			  ).thenRun( () -> 
-				log.info("f2 received response")
-						);
-
+		CompletableFuture<LoginRes> f2 = usa.login(req);
+        CompletableFuture<Void> f3 = f2.thenAccept( (res0) -> {
+							log.info("in listener, resa="+res0.getRetCode()+","+res0.getRetMsg() +", t="+ Thread.currentThread().getName());
+		           //if( true ) throw new RuntimeException("abc exception");
+		}
+			  );
+        CompletableFuture<Void> f4 = f3.exceptionally((ex) -> {
+            log.info("in exceptionally,   t="+ Thread.currentThread().getName());
+return null;
+        });
+        CompletableFuture<Void> f5 = f4.thenRun( () -> {
+                    log.info("f2 received response , t=" + Thread.currentThread().getName());
+                });
+/*
 		LoginReq.Builder b = LoginReq.newBuilder().setUserName("abc").setPassword("mmm");
 		
 		LoginReq req1 = b.build();

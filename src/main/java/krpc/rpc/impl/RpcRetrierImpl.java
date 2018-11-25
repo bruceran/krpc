@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop {
+public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop, AlarmAware, DumpPlugin, HealthPlugin {
 
     private static final Logger log = LoggerFactory.getLogger(RpcRetrierImpl.class);
 
@@ -45,6 +47,11 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop {
     RpcCallable rpcCallable;
     ServiceMetas serviceMetas;
 
+    AtomicInteger errorCount = new AtomicInteger(0);
+    AtomicInteger lastErrorCount = new AtomicInteger(0);
+
+    Alarm alarm = new DummyAlarm();
+
     public void init() {
         if (isEmpty(dataDir)) throw new RuntimeException("data dir is not valid");
         retryQueueDir = dataDir + "/rpc_retrier";
@@ -57,8 +64,9 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop {
 
         try {
             persistQueueManager.init();
-        } catch (IOException e) {
-            throw new RuntimeException("persistQueueManager cannot be started, reason = " + e.getMessage());
+        } catch (Throwable e) {
+            log.error("persistQueueManager cannot be started, reason = " + e.getMessage());
+            System.exit(-1);
         }
 
         List<String> queueNames = persistQueueManager.getQueueNames();
@@ -113,6 +121,7 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop {
         try {
             ctx.queue = persistQueueManager.getQueue(queueName);
         } catch (Exception e) {
+            errorCount.incrementAndGet();
             log.error("persistQueueManager.getQueue io exception, queueName=" + queueName);
             executor.schedule( () -> {
                 startRetryQueue(queueName);
@@ -178,6 +187,7 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop {
             } catch (InterruptedException e) {
                 return;
             } catch (IOException e) {
+                errorCount.incrementAndGet();
                 log.error("queue read io exception, queueName=" + ctx.queueName + ",e=" + e.getMessage());
                 executor.schedule( () -> {
                             startRetryQueue(ctx.queueName);
@@ -262,6 +272,7 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop {
             queue.put(json);
             return true;
         } catch (IOException e) {
+            errorCount.incrementAndGet();
             log.error("cannot persist retrytask, queueName={}", queueName);
             return false;
         }
@@ -320,4 +331,39 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop {
     public void setServiceMetas(ServiceMetas serviceMetas) {
         this.serviceMetas = serviceMetas;
     }
+
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        List<String> names = persistQueueManager.getQueueNames();
+        for(String name:names) {
+            try {
+                PersistQueue q = persistQueueManager.getQueue(name);
+                metrics.put("krpc.retrier[" + name + "].waiting", q.size());
+            } catch(Exception e) {
+            }
+        }
+        int n = errorCount.getAndSet(0);
+        lastErrorCount.set(n);
+        if( n > 0 ) {
+            alarm.alarm(Alarm.ALARM_TYPE_DISKIO,"krpc retrier io error");
+        }
+        metrics.put("krpc.retrier.curErrorCount",n);
+    }
+
+    @Override
+    public void healthCheck(List<HealthStatus> list) {
+        String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_DISKIO);
+
+        int n = lastErrorCount.get();
+        if( n > 0 ) {
+            list.add(new HealthStatus(alarmId,false,"krpc retrier io error"));
+        }
+
+    }
+
+    @Override
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
+    }
+
 }

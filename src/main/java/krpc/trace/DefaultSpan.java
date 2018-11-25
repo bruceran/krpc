@@ -2,10 +2,7 @@ package krpc.trace;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultSpan implements Span {
@@ -87,7 +84,8 @@ public class DefaultSpan implements Span {
             return;
         }
         this.status = "ASYNC";
-        timeUsedMicros = System.nanoTime() / 1000 - startMicros;
+        // timeUsedMicros = System.nanoTime() / 1000 - startMicros;
+        timeUsedMicros = 0;
     }
 
     public void logEvent(String type, String action, String status, String data) {
@@ -112,8 +110,13 @@ public class DefaultSpan implements Span {
     }
 
     public void tag(String key, String value) {
-        if (tags == null) tags = new HashMap<>();
+        if (tags == null) tags = new LinkedHashMap<>();
         tags.put(key, value);
+    }
+
+    public void removeTag(String key) {
+        if (tags == null) return;
+        tags.remove(key);
     }
 
     public void incCount(String key) {
@@ -222,4 +225,7 @@ public class DefaultSpan implements Span {
         return metrics;
     }
 
+    public void removeTags() {
+        tags = null;
+    }
 }

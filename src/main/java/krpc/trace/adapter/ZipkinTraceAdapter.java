@@ -1,9 +1,6 @@
 package krpc.trace.adapter;
 
-import krpc.common.InitClose;
-import krpc.common.Json;
-import krpc.common.NamedThreadFactory;
-import krpc.common.Plugin;
+import krpc.common.*;
 import krpc.httpclient.DefaultHttpClient;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
@@ -21,7 +18,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
+public class ZipkinTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
     static Logger log = LoggerFactory.getLogger(ZipkinTraceAdapter.class);
 
@@ -37,6 +34,8 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
 
     String[] serverAddrs;
     int serverIndex = 0;
+
+    Alarm alarm = new DummyAlarm();
 
     public void config(String paramsStr) {
         Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
@@ -84,6 +83,10 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
             return;
         }
 
+        if( pool == null || hc == null ) { // may be called before initialized
+            return;
+        }
+
         try {
             pool.execute(new Runnable() {
                 public void run() {
@@ -99,7 +102,15 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
         }
     }
 
-    void report(TraceContext ctx, Span span) {
+    boolean report(TraceContext ctx, Span span) {
+        boolean ok = reportInternal(ctx,span);
+        if(!ok) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"report to zipkin failed");
+        }
+        return ok;
+    }
+
+    boolean reportInternal(TraceContext ctx, Span span) {
         String json = convert(ctx, span);
         String url = String.format(postUrl, currentServerAddr());
         HttpClientReq req = new HttpClientReq("POST", url).setContent(json).setGzip(true);
@@ -107,7 +118,7 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
         String lastContent = null;
         while (true) {
             HttpClientRes res = hc.call(req);
-            if (res.getRetCode() == 0 && res.getHttpCode() == 202) return; // success
+            if (res.getRetCode() == 0 && res.getHttpCode() == 202) return true; // success
             lastContent = res.getContent();
             nextServerAddr();
             i++;
@@ -119,6 +130,8 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
             }
         }
         log.error("report span failed, content=" + lastContent);
+
+        return false;
     }
 
     String convert(TraceContext ctx, Span span) {
@@ -413,4 +426,8 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose {
         }
     }
 
+    @Override
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
+    }
 } 

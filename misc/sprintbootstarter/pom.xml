@@ -5,7 +5,7 @@
 
 	<groupId>krpc</groupId>
 	<artifactId>spring-boot-starter</artifactId>
-	<version>0.1.16</version>
+	<version>0.2.5</version>
 	<packaging>pom</packaging>
 
 	<name>spring-boot-starter</name>
@@ -32,22 +32,22 @@
 		<dependency>
 			<groupId>krpc</groupId>
 			<artifactId>krpc</artifactId>
-			<version>0.1.16</version>
+			<version>0.2.5</version>
 		</dependency>
 	
 	</dependencies>	    
 		
 	<distributionManagement>
-			<repository>
-				<id>saicdt-cxpt-release</id>
-				<name>Repository for saicdt cxpt release builds</name>
-				<url>http://10.135.81.160:8081/repository/cxpt-releases/</url>
-			</repository>
-			<snapshotRepository>
-				<id>saicdt-cxpt-snapshots</id>
-				<name>Repository for saicdt cxpt snapshots builds</name>
-				<url>http://10.135.81.160:8081/repository/cxpt-snapshots/</url>
-			</snapshotRepository>
+		<repository>
+			<id>saicdt-cxpt-release</id>
+			<name>Repository for saicdt cxpt release builds</name>
+			<url>http://10.1.10.182:8081/repository/cxpt-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>saicdt-cxpt-snapshots</id>
+			<name>Repository for saicdt cxpt snapshots builds</name>
+			<url>http://10.1.10.182:8081/repository/cxpt-snapshots/</url>
+		</snapshotRepository>
 	</distributionManagement>
 	
 </project>

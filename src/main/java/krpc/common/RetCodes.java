@@ -51,6 +51,11 @@ public class RetCodes {
     static public final int BIZ_DISCARDED = -701;
     static public final int BIZ_PARAM_ERROR = -702;
 
+    static public boolean isSystemError(int retCode) {
+        int v = -1 * retCode;
+        return v >= 600 && v < 700 && retCode != VALIDATE_ERROR;
+    }
+
     static public boolean isTimeout(int retCode) {
         return retCode == RPC_TIMEOUT || retCode == QUEUE_TIMEOUT;
     }

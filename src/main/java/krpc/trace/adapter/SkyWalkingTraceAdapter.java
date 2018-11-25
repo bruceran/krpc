@@ -1,9 +1,6 @@
 package krpc.trace.adapter;
 
-import krpc.common.InitClose;
-import krpc.common.Json;
-import krpc.common.NamedThreadFactory;
-import krpc.common.Plugin;
+import krpc.common.*;
 import krpc.httpclient.DefaultHttpClient;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
@@ -52,7 +49,7 @@ curl -i -X POST "http://localhost:12800/segments" -H "Content-Type: application/
 HTTP/1.1 200 OK
 
 */
-public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
+public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
     static Logger log = LoggerFactory.getLogger(SkyWalkingTraceAdapter.class);
 
@@ -82,6 +79,17 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
 
     AtomicInteger seq = new AtomicInteger(0);
 
+    Alarm alarm = new DummyAlarm();
+    AtomicInteger errorCount = new AtomicInteger();
+
+    public SkyWalkingTraceAdapter() {
+
+        instanceUuid = uuid();
+        getOsInfo();
+
+        appName = Trace.getAppName();
+    }
+
     public void config(String paramsStr) {
         Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
 
@@ -103,10 +111,6 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
     public void init() {
 
         appName = Trace.getAppName();
-
-        getOsInfo();
-
-        instanceUuid = uuid();
 
         if(!enabled) {
             log.info("cat disabled");
@@ -170,9 +174,15 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
         }
         ok = registerAppId(0);
         if (!ok) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"register appId failed");
             return false;
         }
-        return registerInstanceId(0);
+        ok = registerInstanceId(0);
+        if (!ok) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"register instanceId failed");
+            return false;
+        }
+        return ok;
     }
 
     void heartBeatAndQueryRoutes() {
@@ -186,9 +196,22 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
 		 */
         // heartBeat();
         queryRoutes();
+
+        int cnt = errorCount.getAndSet(0);
+        if( cnt > 0 ) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to skywalking failed " + cnt);
+        }
     }
 
     boolean queryRoutes() {
+        boolean ok = queryRoutesInternal();
+        if(!ok) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"query skywalking routes failed");
+        }
+        return ok;
+    }
+
+    boolean queryRoutesInternal() {
 
         String queryUrl = "http://%s/agent/jetty";
         String url = String.format(queryUrl, currentQueryAddr());
@@ -291,7 +314,6 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
     }
 
     boolean heartBeat() {
-
         String queryUrl = "http://%s/instance/heartbeat";
         String url = String.format(queryUrl, currentServerAddr());
         Map<String, Object> info = new HashMap<>();
@@ -316,6 +338,10 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
             return;
         }
 
+        if( pool == null || hc == null ) { // may be called before initialized
+            return;
+        }
+
         if (instanceId == 0) return;
 
         try {
@@ -333,7 +359,15 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
         }
     }
 
-    void report(TraceContext ctx, Span span) {
+    boolean report(TraceContext ctx, Span span) {
+        boolean ok = reportInternal(ctx,span);
+        if(!ok) {
+            errorCount.incrementAndGet();
+        }
+        return ok;
+    }
+
+    boolean reportInternal(TraceContext ctx, Span span) {
         String json = convert(ctx, span);
 
         // System.out.println("segments json=" + json);
@@ -347,7 +381,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
             HttpClientRes res = hc.call(req);
             if (res.getRetCode() == 0 && res.getHttpCode() == 200) {
                 log.debug("report span ok, content=" + lastContent);
-                return;
+                return true;
             }
             lastContent = res.getContent();
             nextServerAddr();
@@ -360,6 +394,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
             }
         }
         log.error("report span failed, content=" + lastContent);
+        return false;
     }
 
     String convert(TraceContext ctx, Span span) {
@@ -1080,5 +1115,10 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose {
         public void setV(String v) {
             this.v = v;
         }
+    }
+
+    @Override
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
     }
 } 

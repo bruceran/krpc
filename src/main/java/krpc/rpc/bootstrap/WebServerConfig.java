@@ -15,6 +15,7 @@ public class WebServerConfig {
     int idleSeconds = 30;
     int maxConns = 500000;
     int ioThreads = 0;    // auto
+    boolean nativeNetty = false;
 
     int threads = 0; // workthreads, 0=auto -1=no workthreads,use iothreads n=workthreads
     int maxThreads = 0;
@@ -280,4 +281,16 @@ public class WebServerConfig {
         return this;
     }
 
+    public boolean isNativeNetty() {
+        return nativeNetty;
+    }
+
+    public WebServerConfig setNativeNetty(boolean nativeNetty) {
+        this.nativeNetty = nativeNetty;
+        return this;
+    }
+
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
 }

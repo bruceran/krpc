@@ -13,6 +13,7 @@ public class ApplicationConfig {
     String fallbackPlugin = "default";
     String dynamicRoutePlugin;  // consul,etcd,zookeeper,jedis,...
 
+
     public ApplicationConfig() {
     }
 

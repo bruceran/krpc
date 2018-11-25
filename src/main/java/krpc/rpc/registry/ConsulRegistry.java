@@ -1,18 +1,18 @@
 package krpc.rpc.registry;
 
-import krpc.common.Json;
-import krpc.common.Plugin;
+import krpc.common.*;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
-import krpc.rpc.core.DynamicRouteConfig;
-import krpc.rpc.core.DynamicRoutePlugin;
+import krpc.rpc.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoutePlugin {
+public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoutePlugin, DumpPlugin, HealthPlugin, AlarmAware {
 
     static Logger log = LoggerFactory.getLogger(ConsulRegistry.class);
 
@@ -23,18 +23,24 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
     String routesUrlTemplate;
 
+    String aclToken;
+
     int ttl = 90;
     int interval = 15;
 
-    HashSet<Integer> registeredServiceIds = new HashSet<>();
+    AtomicBoolean healthy = new AtomicBoolean(true);
+
+    HashMap<Integer,Long> registeredServiceIds = new HashMap<>();
 
     // curl "http://192.168.31.144:8500/v1/agent/services"
     // curl "http://192.168.31.144:8500/v1/catalog/services"
-    // curl "http://192.168.31.144:8500/v1/health/service/403"
+    // curl "http://192.168.31.144:8500/v1/health/service/423"
     // curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json.version -d 1
     // curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
 
     ConcurrentHashMap<String, String> versionCache = new ConcurrentHashMap<>();
+
+    Alarm alarm = new DummyAlarm();
 
     public void init() {
         registerUrlTemplate = "http://%s/v1/agent/service/register";
@@ -51,6 +57,8 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         if (!isEmpty(s)) ttl = Integer.parseInt(s);
         s = params.get("intervalSeconds");
         if (!isEmpty(s)) interval = Integer.parseInt(s);
+        s = params.get("aclToken");
+        if (!isEmpty(s)) aclToken = s;
 
         super.config(params);
     }
@@ -101,6 +109,9 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         String url = String.format(path, addr());
         url += "?raw"; // return json only
         HttpClientReq req = new HttpClientReq("GET", url);
+        if(!isEmpty(aclToken)) {
+            req.addHeader("X-Consul-Token", aclToken);
+        }
         HttpClientRes res = hc.call(req);
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
             log.error("cannot get config " + path);
@@ -118,17 +129,22 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
         String instanceId = addr;
 
-        if (registeredServiceIds.contains(serviceId)) {
+        if (registeredServiceIds.containsKey(serviceId)) {
             String url = String.format(keepAliveUrlTemplate, addr(), instanceId);
             HttpClientReq req = new HttpClientReq("PUT", url);
-
+            if(!isEmpty(aclToken)) {
+                req.addHeader("X-Consul-Token", aclToken);
+            }
             HttpClientRes res = hc.call(req);
             if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
-                log.error("cannot call keep alive url service " + serviceName);
+                log.error("cannot call keep alive url service " + serviceName + ", retCode="+res.getRetCode()+
+                        ", httpCode="+res.getHttpCode()+", content=" + res.getContent());
+                registeredServiceIds.remove(serviceId);
                 nextAddr();
+                healthy.set(false);
                 return;
             }
-            registeredServiceIds.remove(serviceId);
+            registeredServiceIds.put(serviceId,System.currentTimeMillis());
             return;
         }
 
@@ -159,15 +175,20 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         String json = Json.toJson(m);
         String url = String.format(registerUrlTemplate, addr());
         HttpClientReq req = new HttpClientReq("PUT", url).setContent(json);
-
+        if(!isEmpty(aclToken)) {
+            req.addHeader("X-Consul-Token", aclToken);
+        }
         HttpClientRes res = hc.call(req);
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
-            log.error("cannot register service " + serviceName + ", content=" + res.getContent());
+            log.error("cannot register service " + serviceName + ", retCode="+res.getRetCode()+
+                    ", httpCode="+res.getHttpCode()+", content=" + res.getContent());
             nextAddr();
+            healthy.set(false);
             return;
         }
 
-        registeredServiceIds.add(serviceId);
+        registeredServiceIds.put(serviceId,System.currentTimeMillis());
+        healthy.set(true);
     }
 
     public void deregister(int serviceId, String serviceName, String group, String addr) {
@@ -178,14 +199,20 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
         String url = String.format(degisterUrlTemplate, addr()) + "/" + instanceId;
         HttpClientReq req = new HttpClientReq("PUT", url);
+        if(!isEmpty(aclToken)) {
+            req.addHeader("X-Consul-Token", aclToken);
+        }
         HttpClientRes res = hc.call(req);
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
-            log.error("cannot deregister service " + serviceName + ", content=" + res.getContent());
+            log.error("cannot deregister service " + serviceName + ", retCode="+res.getRetCode()+
+                    ", httpCode="+res.getHttpCode()+", content=" + res.getContent());
             nextAddr();
+            healthy.set(false);
             return;
         }
 
         registeredServiceIds.remove(serviceId);
+        healthy.set(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -195,10 +222,15 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
         String url = String.format(discoverUrlTemplate, addr(), serviceId);
         HttpClientReq req = new HttpClientReq("GET", url);
+        if(!isEmpty(aclToken)) {
+            req.addHeader("X-Consul-Token", aclToken);
+        }
         HttpClientRes res = hc.call(req);
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
-            log.error("cannot discover service " + serviceName);
+            log.error("cannot discover service " + serviceName + ", retCode="+res.getRetCode()+
+                    ", httpCode="+res.getHttpCode()+", content=" + res.getContent());
             nextAddr();
+            healthy.set(false);
             return null;
         }
 
@@ -206,8 +238,11 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         List<Object> list = Json.toList(json);
         if (list == null) {
             nextAddr();
+            healthy.set(false);
             return null;
         }
+
+        healthy.set(true);
 
         TreeSet<String> set = new TreeSet<>();
         for (Object o : list) {
@@ -228,6 +263,28 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         }
         String s = b.toString();
         return s;
+    }
+
+    @Override
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
+    }
+
+    @Override
+    public void healthCheck(List<HealthStatus> list) {
+        boolean b = healthy.get();
+        if( b ) return;
+        String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
+        list.add(new HealthStatus(alarmId,false,"consul_registry connect failed"));
+    }
+
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        boolean b = healthy.get();
+        if( b ) return;
+
+        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"consul_registry has exception");
+        metrics.put("krpc.consul.errorCount",1);
     }
 
 }

@@ -25,8 +25,12 @@ public class ServiceConfigBean extends ServiceConfig implements InitializingBean
         String group = getGroup();
         if (group == null || group.isEmpty()) {
             Environment environment = (Environment) SpringBootstrap.instance.spring.getBean("environment");
-            group = environment.getProperty("spring.profiles.active");
-            setGroup(group);
+            String profileGroup = environment.getProperty("spring.profiles.active");
+            String forceGroup = environment.getProperty("krpc.registry.group");
+            if( forceGroup != null ) {
+                profileGroup = forceGroup;
+            }
+            setGroup(profileGroup);
         }
 
     }

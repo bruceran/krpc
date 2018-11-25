@@ -1,13 +1,7 @@
 package krpc.rpc.registry;
 
-import krpc.common.InitClose;
-import krpc.common.InitCloseUtils;
-import krpc.common.Json;
-import krpc.common.StartStop;
-import krpc.rpc.core.Registry;
-import krpc.rpc.core.RegistryManager;
-import krpc.rpc.core.RegistryManagerCallback;
-import krpc.rpc.core.ServiceMetas;
+import krpc.common.*;
+import krpc.rpc.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class DefaultRegistryManager implements RegistryManager, InitClose, StartStop {
+public class DefaultRegistryManager implements RegistryManager, InitClose, StartStop, DumpPlugin, HealthPlugin {
 
     static Logger log = LoggerFactory.getLogger(DefaultRegistryManager.class);
 
@@ -261,7 +255,6 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
         this.serviceMetas = serviceMetas;
     }
 
-
     static class Bind {
         RegistryManagerCallback callback;
         HashSet<Integer> serviceIds = new HashSet<Integer>();
@@ -306,6 +299,22 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
 
     public void setCheckInterval(int checkInterval) {
         this.checkInterval = checkInterval;
+    }
+
+    @Override
+    public void healthCheck(List<HealthStatus> list) {
+        for (Registry o : registries.values()) {
+            if (o == null) continue;
+            if (o instanceof HealthPlugin) ((HealthPlugin) o).healthCheck(list);
+        }
+    }
+
+    @Override
+    public void dump(Map<String, Object> metrics) {
+        for (Registry o : registries.values()) {
+            if (o == null) continue;
+            if (o instanceof DumpPlugin ) ((DumpPlugin) o).dump(metrics);
+        }
     }
 
 }

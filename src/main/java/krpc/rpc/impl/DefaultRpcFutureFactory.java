@@ -27,7 +27,7 @@ public class DefaultRpcFutureFactory implements RpcFutureFactory, InitClose {
     NamedThreadFactory threadFactory1 = new NamedThreadFactory("krpc_async_notifier");
 
     public void init() {
-        log.info("notifyPool inited");
+
         if (notifyThreads >= 0) {
             if (notifyMaxThreads > notifyThreads)
                 notifyPool = new ThreadPoolExecutor(notifyThreads, notifyMaxThreads, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(notifyQueueSize), threadFactory1);
@@ -35,6 +35,8 @@ public class DefaultRpcFutureFactory implements RpcFutureFactory, InitClose {
                 notifyPool = new ThreadPoolExecutor(notifyThreads, notifyThreads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(notifyQueueSize), threadFactory1);
             notifyPool.prestartAllCoreThreads();
         }
+
+        log.info("notifyPool inited");
     }
 
     public void close() {

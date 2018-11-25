@@ -1,9 +1,6 @@
 package krpc.trace.adapter;
 
-import krpc.common.InitClose;
-import krpc.common.Json;
-import krpc.common.NamedThreadFactory;
-import krpc.common.Plugin;
+import krpc.common.*;
 import krpc.httpclient.DefaultHttpClient;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
@@ -21,7 +18,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CatTraceAdapter implements TraceAdapter, InitClose {
+public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
     static Logger log = LoggerFactory.getLogger(CatTraceAdapter.class);
 
@@ -62,10 +59,19 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
     long indexInHour = 0;
     int indexMultiplier = 100;
 
+    Alarm alarm = new DummyAlarm();
+    AtomicInteger errorCount = new AtomicInteger();
+
+    public CatTraceAdapter() {
+        initHourIndex();
+
+        getHostInfo();
+
+        domain = Trace.getAppName();
+    }
+
     public void config(String paramsStr) {
         Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
-
-        queryAddrs = params.get("server").split(",");
 
         String s = params.get("queueSize");
         if (!isEmpty(s)) queueSize = Integer.parseInt(s);
@@ -75,15 +81,17 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
 
         s = params.get("enabled");
         if (!isEmpty(s)) enabled = Boolean.parseBoolean(s);
+
+        if(enabled) {
+            queryAddrs = params.get("server").split(",");
+        } else {
+            queryAddrs = new String[0];
+        }
     }
 
     public void init() {
 
-        initHourIndex();
-
-        domain = Trace.getAppName();
-
-        getHostInfo();
+        domain = Trace.getAppName(); // reset domain again
 
         if(!enabled) {
             log.info("cat disabled");
@@ -110,6 +118,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
         } else {
             startQueryRoutesTimer();
         }
+
     }
 
     public void close() {
@@ -131,11 +140,9 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
         timer = new Timer("krpc_cat_timer");
         timer.schedule(new TimerTask() {
             public void run() {
-                queryRoutes();
+                heartBeatAndQueryRoutes();
             }
         }, 60000, 60000);
-
-
     }
 
     void queryRoutesForInit() {
@@ -145,14 +152,31 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
             startQueryRoutesTimer();
         }
     }
-	
+
+    void heartBeatAndQueryRoutes() {
+        queryRoutes();
+
+        int cnt = errorCount.getAndSet(0);
+        if( cnt > 0 ) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to cat failed "+cnt);
+        }
+    }
+
 	/*
 	$curl "http://10.241.22.199:8080/cat/s/router?domain=cattest&op=json&ip=127.0.3.3"
 	{"kvs":{"routers":"10.241.22.199:2280;127.0.0.1:2280;","sample":"1.0"}}
 	*/
 
-    @SuppressWarnings("unchecked")
     boolean queryRoutes() {
+        boolean ok = queryRoutesInternal();
+        if(!ok) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"query cat routes failed");
+        }
+        return ok;
+    }
+
+    @SuppressWarnings("unchecked")
+    boolean queryRoutesInternal() {
         String url = String.format(routeQueryUrl, currentQueryAddr());
         HttpClientReq req = new HttpClientReq("GET", url);
         HttpClientRes res = hc.call(req);
@@ -234,6 +258,10 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
             return;
         }
 
+        if( pool == null || client == null ) { // may be called before initialized
+            return;
+        }
+
         if (serverAddrIndex == -1) return;
 
         try {
@@ -255,6 +283,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
 
         String addr = currentServerAddr();
         if (isEmpty(addr)) {
+            errorCount.incrementAndGet();
             log.error("cat routes is null");
             return;
         }
@@ -274,6 +303,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
             }
         }
         if (!ok) {
+            errorCount.incrementAndGet();
             log.error("failed to report cat data");
         }
     }
@@ -333,7 +363,9 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
             }
             if (children != null) {
                 for (Span s : children) {
-                    appendMessage(ctx, s, b);
+                    //if( s.getCompleted().get() == 1) {
+                        appendMessage(ctx, s, b);
+                    //}
                 }
             }
             appendEndMessage(ctx, span, b);
@@ -400,9 +432,9 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
         long ts = ctx.getRequestTimeMicros() + span.getStartMicros() - ctx.getStartMicros();
         b.append(formatTimeStampMicros(ts)).append(TAB);
         b.append(span.getType()).append(TAB);
-        b.append(span.getAction()).append(TAB);
         String status = span.getStatus();
-        if (status.equals("SUCCESS")) status = "0";
+        b.append(span.getAction()+(status.equals("ASYNC")?"(ASYNC)":"")).append(TAB);
+        if (status.equals("SUCCESS")  || status.equals("ASYNC") ) status = "0";
         b.append(status).append(TAB);
         long us = span.getTimeUsedMicros();
         b.append(us).append("us").append(TAB);
@@ -415,7 +447,8 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
         long ts = ctx.getRequestTimeMicros() + span.getStartMicros() - ctx.getStartMicros();
         b.append(formatTimeStampMicros(ts)).append(TAB);
         b.append(span.getType()).append(TAB);
-        b.append(span.getAction()).append(TAB);
+        String status = span.getStatus();
+        b.append(span.getAction()+(status.equals("ASYNC")?"(ASYNC)":"")).append(TAB);
         b.append(LF);
     }
 
@@ -424,9 +457,9 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
         long ts = ctx.getRequestTimeMicros() + span.getStartMicros() + span.getTimeUsedMicros() - ctx.getStartMicros();
         b.append(formatTimeStampMicros(ts)).append(TAB);
         b.append(span.getType()).append(TAB);
-        b.append(span.getAction()).append(TAB);
         String status = span.getStatus();
-        if (status.equals("SUCCESS") || status.equals("ASYNC") ) status = "0";
+        b.append(span.getAction()+(status.equals("ASYNC")?"(ASYNC)":"")).append(TAB);
+        if (status.equals("SUCCESS")  || status.equals("ASYNC")  ) status = "0";
         b.append(status).append(TAB);
         long us = span.getTimeUsedMicros();
         b.append(us).append("us").append(TAB);
@@ -598,4 +631,8 @@ public class CatTraceAdapter implements TraceAdapter, InitClose {
         return s == null || s.isEmpty();
     }
 
-} 
+    @Override
+    public void setAlarm(Alarm alarm) {
+        this.alarm = alarm;
+    }
+}

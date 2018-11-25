@@ -11,8 +11,10 @@ import io.netty.util.ReferenceCountUtil;
 import krpc.common.RetCodes;
 import krpc.rpc.core.*;
 import krpc.rpc.core.proto.RpcMeta;
-import krpc.rpc.util.ZipUnzip;
-import krpc.rpc.util.Zlib;
+import krpc.rpc.util.compress.ZipUnzip;
+import krpc.rpc.util.compress.Zlib;
+import krpc.rpc.util.encrypt.Aes;
+import krpc.rpc.util.encrypt.Crypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,7 @@ public class DefaultRpcCodec implements RpcCodec {
 
     static final int GZIP = 1;
     static final int SNAPPY = 2;
+    static final int AES = 1;
 
     ServiceMetas serviceMetas;
 
@@ -34,6 +37,7 @@ public class DefaultRpcCodec implements RpcCodec {
 
     private ZipUnzip zlib;
     private ZipUnzip snappy;
+    private Crypt aes;
 
     private HashMap<Integer, Integer> zipMap = new HashMap<>(); // only for encode
     private HashMap<Integer, Integer> minSizeToZipMap = new HashMap<>(); // only for encode
@@ -42,18 +46,19 @@ public class DefaultRpcCodec implements RpcCodec {
 
         zlib = new Zlib();
         snappy = loadSnappy();  // continue if missing org.xerial.snappy dependence
+        aes = new Aes();
 
         this.serviceMetas = serviceMetas;
         RpcData reqHeartBeatData = new RpcData(
                 RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(1).setMsgId(1).build());
         ByteBuf bb = Unpooled.buffer(32);
-        encode(reqHeartBeatData, bb);
+        encode(reqHeartBeatData, bb,null);
         reqHeartBeatBytes = new byte[bb.readableBytes()];
         bb.readBytes(reqHeartBeatBytes);
         bb.clear();
         RpcData resHeartBeatData = new RpcData(
                 RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE).setServiceId(1).setMsgId(1).build());
-        encode(resHeartBeatData, bb);
+        encode(resHeartBeatData, bb,null);
         resHeartBeatBytes = new byte[bb.readableBytes()];
         bb.readBytes(resHeartBeatBytes);
         ReferenceCountUtil.release(bb);
@@ -104,10 +109,38 @@ public class DefaultRpcCodec implements RpcCodec {
         return meta;
     }
 
-    public RpcData decodeBody(RpcMeta meta, ByteBuf leftBuff) {
+    public RpcData decodeBody(RpcMeta meta, ByteBuf leftBuff,String key) {
         int left = leftBuff.readableBytes();
         ByteBuf bodyBb = null;
-        if (meta.getCompress() > 0) {
+        if (left > 0 && meta.getEncrypt() > 0) {
+
+            if( isEmpty(key) ) {
+                if (isRequest(meta))
+                    throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt key not found to encode package");
+                else
+                    throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt key not found to encode package");
+            }
+
+            byte[] bytes = new byte[left];
+            leftBuff.readBytes(bytes);
+            try {
+                byte[] decryptBytes = decrypt(meta.getEncrypt(), bytes, key);
+
+                if( decryptBytes == null ) {
+                    if (isRequest(meta))
+                        throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt type not supported, type="+meta.getEncrypt());
+                    else
+                        throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt type not supported, type="+meta.getEncrypt());
+                }
+
+                bodyBb = Unpooled.wrappedBuffer(decryptBytes);
+            } catch (Exception e) {
+                if (isRequest(meta))
+                    throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt request exception, e="+e.getMessage());
+                else
+                    throw new RpcException(RetCodes.DECODE_RES_ERROR, "decrypt response exception, e="+e.getMessage());
+            }
+        } else if (left > 0 && meta.getCompress() > 0) {
             byte[] bytes = new byte[left];
             leftBuff.readBytes(bytes);
             try {
@@ -183,14 +216,54 @@ public class DefaultRpcCodec implements RpcCodec {
         return len;
     }
 
-    public void encode(RpcData data, ByteBuf bb) {
+    public void encode(RpcData data, ByteBuf bb,String key) {
 
         int bodyBytesLen = data.getBody() == null ? 0 : data.getBody().getSerializedSize();
 
         Integer zip = zipMap.get(data.getMeta().getServiceId());
         Integer minSizeToZip = minSizeToZipMap.get(data.getMeta().getServiceId());
 
-        if (zip != null && zip.intValue() > 0 && minSizeToZip != null && bodyBytesLen > minSizeToZip.intValue()) {
+        if(data.getBody() != null && data.getMeta().getEncrypt() > 0 ) {
+
+            if( isEmpty(key) ) {
+                if (isRequest(data.getMeta()))
+                    throw new RpcException(RetCodes.ENCODE_REQ_ERROR, "crypt key not found to encode package");
+                else
+                    throw new RpcException(RetCodes.ENCODE_RES_ERROR, "crypt key not found to encode package");
+            }
+
+            try {
+                byte[] body = data.getBody().toByteArray();
+                byte[] encBody = encrypt(data.getMeta().getEncrypt(), body, key);
+                if( encBody == null ) {
+                    if (isRequest(data.getMeta()))
+                        throw new RpcException(RetCodes.ENCODE_REQ_ERROR, "crypt type not supported, type="+data.getMeta().getEncrypt());
+                    else
+                        throw new RpcException(RetCodes.ENCODE_RES_ERROR, "crypt type not supported, type="+data.getMeta().getEncrypt());
+                }
+
+                int metaBytesLen = data.getMeta().getSerializedSize();
+                int len = 8 + metaBytesLen + encBody.length;
+                bb.capacity(len);
+
+                ByteBufOutputStream os = new ByteBufOutputStream(bb);
+                os.writeByte('K');
+                os.writeByte('R');
+                os.writeShort(metaBytesLen);
+                os.writeInt(len - 8);
+                data.getMeta().writeTo(os);
+                os.write(encBody);
+            } catch (Exception e) {
+                if (isRequest(data.getMeta()))
+                    throw new RpcException(RetCodes.ENCODE_REQ_ERROR, "encrypt request exception, e="+e.getMessage());
+                else
+                    throw new RpcException(RetCodes.ENCODE_RES_ERROR, "encrypt response exception, e="+e.getMessage());
+            }
+
+            return;
+        }
+
+        if (data.getBody() != null && zip != null && zip.intValue() > 0 && minSizeToZip != null && bodyBytesLen > minSizeToZip.intValue()) {
 
             try {
                 byte[] body = data.getBody().toByteArray();
@@ -240,6 +313,25 @@ public class DefaultRpcCodec implements RpcCodec {
         }
     }
 
+
+    public byte[] encrypt(int type, byte[] data, String key) {
+        switch (type) {
+            case AES:
+                return aes.encrypt(data,key);
+            default:
+                return null;
+        }
+    }
+
+    public byte[] decrypt(int type, byte[] data, String key)  {
+        switch (type) {
+            case AES:
+                return aes.decrypt(data,key);
+            default:
+                return null;
+        }
+    }
+
     public byte[] zip(int zipType, byte[] data) throws IOException {
         switch (zipType) {
             case GZIP:
@@ -282,7 +374,7 @@ public class DefaultRpcCodec implements RpcCodec {
 
     ZipUnzip loadSnappy() {
         try {
-            Class<?> cls = Class.forName("krpc.rpc.util.Snappy");
+            Class<?> cls = Class.forName("krpc.rpc.util.compress.Snappy");
             return (ZipUnzip) cls.newInstance();
         } catch (Throwable e) {
             log.error("snappy not loaded");
@@ -292,6 +384,10 @@ public class DefaultRpcCodec implements RpcCodec {
 
     public boolean isRequest(RpcMeta meta) {
         return meta.getDirection() == RpcMeta.Direction.REQUEST;
+    }
+
+    public boolean isEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 
     public ServiceMetas getServiceMetas() {

@@ -1,7 +1,7 @@
 package krpc.test.misc;
 
-import krpc.rpc.util.Snappy;
-import krpc.rpc.util.Zlib;
+import krpc.rpc.util.compress.Snappy;
+import krpc.rpc.util.compress.Zlib;
 import org.junit.Assert;
 import org.junit.Test;
 

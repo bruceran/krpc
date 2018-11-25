@@ -28,6 +28,8 @@ public class DefaultTraceContext implements TraceContext {
     String threadName = "";
     String threadGroupName = "";
 
+    String timeUsedStr = "";
+
     public DefaultTraceContext(RpcMeta.Trace trace, boolean restoreFlag) {
         initThreadNames();
         this.trace = trace;
@@ -86,17 +88,19 @@ public class DefaultTraceContext implements TraceContext {
         stack.addLast(child);
     }
 
-    public void stopForServer(String result) {
+    public Span stopForServer(String result) {
 
         Span span = stack.peekFirst();
         if (span != null) {
             span.stop(result);
             if (!stack.isEmpty()) {
                 stack.clear();
-                sendToTrace(span);
+                // sendToTrace(span);
             }
+            statsTimeUsed(span);
         }
 
+        return span;
     }
 
     public void stopped(Span span) {
@@ -104,7 +108,7 @@ public class DefaultTraceContext implements TraceContext {
         if (span == stack.peekLast()) {
             stack.removeLast();
             if (stack.isEmpty()) {
-                doSend(span);
+                sendToTrace(span);
                 Trace.clearCurrentContext();
                 return;
             }
@@ -125,6 +129,22 @@ public class DefaultTraceContext implements TraceContext {
     private void sendToTrace(Span span) {
         stopAsync(span);
         doSend(span);
+    }
+
+    private void statsTimeUsed(Span span) {
+        if( span == null ) return;
+        timeUsedStr = "";
+        if (span.getChildren() != null) {
+            StringBuilder b = new StringBuilder();
+            for (Span child : span.getChildren()) {
+                DefaultSpan ds = (DefaultSpan) child;
+                String type = ds.getType();
+                long t = ds.getTimeUsedMicros();
+                if( b.length() > 0 ) b.append("^");
+                b.append(type).append(":").append(t);
+            }
+            timeUsedStr = b.toString();
+        }
     }
 
     private void doSend(Span span) {
@@ -243,4 +263,8 @@ public class DefaultTraceContext implements TraceContext {
     public RpcMeta.Trace getTrace() {
         return trace;
     }
-} 
+
+    public String getTimeUsedStr() {
+        return timeUsedStr;
+    }
+}
