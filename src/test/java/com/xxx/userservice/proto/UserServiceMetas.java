@@ -4,397 +4,473 @@
 package com.xxx.userservice.proto;
 
 public final class UserServiceMetas {
-    private UserServiceMetas() {
-    }
+  private UserServiceMetas() {}
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistryLite registry) {
+  }
 
-    public static void registerAllExtensions(
-            com.google.protobuf.ExtensionRegistryLite registry) {
-    }
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions(
+        (com.google.protobuf.ExtensionRegistryLite) registry);
+  }
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_LoginReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_LoginReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_LoginRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_LoginRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_UpdateProfileReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_UpdateProfileReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_UpdateProfileRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_UpdateProfileRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Login2Req_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Login2Req_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Login2Res_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Login2Res_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ValidateSub_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ValidateSub_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ValidateTestReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ValidateTestReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ValidateTestRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ValidateTestRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PushReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_PushReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PushRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_PushRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OrderItemAttr_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OrderItemAttr_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OrderItem_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OrderItem_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Session_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Session_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Order_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Order_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OrderItemAttr2_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OrderItemAttr2_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OrderItem2_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OrderItem2_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Session2_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Session2_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Order2_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Order2_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OrderDetail_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OrderDetail_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpTestReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpTestReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpTestRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpTestRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpPluginTestReq_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpPluginTestReq_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpPluginTestRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpPluginTestRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpDownloadStaticRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpDownloadStaticRes_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_UploadFile_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_UploadFile_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpUploadTestReq1_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpUploadTestReq1_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpUploadTestReq2_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpUploadTestReq2_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_HttpUploadTestRes_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_HttpUploadTestRes_fieldAccessorTable;
 
-    public static void registerAllExtensions(
-            com.google.protobuf.ExtensionRegistry registry) {
-        registerAllExtensions(
-                (com.google.protobuf.ExtensionRegistryLite) registry);
-    }
-
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_LoginReq_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_LoginReq_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_LoginRes_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_LoginRes_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_UpdateProfileReq_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_UpdateProfileReq_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_UpdateProfileRes_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_UpdateProfileRes_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_ValidateSub_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_ValidateSub_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_ValidateTestReq_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_ValidateTestReq_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_ValidateTestRes_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_ValidateTestRes_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_PushReq_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_PushReq_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_PushRes_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_PushRes_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_OrderItemAttr_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_OrderItemAttr_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_OrderItem_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_OrderItem_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_Order_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_Order_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_Session_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_Session_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_OrderDetail_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_OrderDetail_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_HttpTestReq_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_HttpTestReq_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_HttpTestRes_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_HttpTestRes_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_HttpPluginTestReq_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_HttpPluginTestReq_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_HttpPluginTestRes_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_HttpPluginTestRes_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_HttpDownloadStaticRes_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_HttpDownloadStaticRes_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_UploadFile_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_UploadFile_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_HttpUploadTestReq1_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_HttpUploadTestReq1_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_HttpUploadTestReq2_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_HttpUploadTestReq2_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor
-            internal_static_HttpUploadTestRes_descriptor;
-    static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_HttpUploadTestRes_fieldAccessorTable;
-
-    public static com.google.protobuf.Descriptors.FileDescriptor
-    getDescriptor() {
-        return descriptor;
-    }
-
-    private static com.google.protobuf.Descriptors.FileDescriptor
-            descriptor;
-
-    static {
-        java.lang.String[] descriptorData = {
-                "\n\021userservice.proto\032\rkrpcext.proto\".\n\010Lo" +
-                        "ginReq\022\020\n\010userName\030\001 \001(\t\022\020\n\010password\030\002 \001" +
-                        "(\t\";\n\010LoginRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMs" +
-                        "g\030\002 \001(\t\022\016\n\006userId\030\003 \001(\t\"2\n\020UpdateProfile" +
-                        "Req\022\016\n\006userId\030\001 \001(\t\022\016\n\006mobile\030\002 \001(\t\"3\n\020U" +
-                        "pdateProfileRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retM" +
-                        "sg\030\002 \001(\t\"\236\001\n\013ValidateSub\022\031\n\002s1\030\013 \001(\tB\r\232\265" +
-                        "\030\t2\007bbb,ccc\022\025\n\002s2\030\016 \001(\tB\t\232\265\030\0052\003mmm\022\027\n\002i1" +
-                        "\030\017 \001(\005B\013\232\265\030\007*\00520,50\022\026\n\002i2\030\020 \001(\tB\n\232\265\030\006*\0042" +
-                        "0,-\022\026\n\002i3\030\021 \001(\005B\n\232\265\030\006*\004-,50\022\024\n\002i4\030\022 \001(\tB" +
-                        "\010\232\265\030\004*\00221\"\353\004\n\017ValidateTestReq\022\026\n\006userId\030" +
-                        "\001 \001(\tB\006\232\265\030\002\010\001\022\031\n\002s1\030\013 \001(\tB\r\232\265\030\t2\007bbb,ccc" +
-                        "\022\025\n\002s2\030\016 \001(\tB\t\232\265\030\0052\003mmm\022\027\n\002i1\030\017 \001(\005B\013\232\265\030" +
-                        "\007*\00520,50\022\026\n\002i2\030\020 \001(\tB\n\232\265\030\006*\00420,-\022\026\n\002i3\030\021" +
-                        " \001(\005B\n\232\265\030\006*\004-,50\022\024\n\002i4\030\022 \001(\tB\010\232\265\030\004*\00221\022\027" +
-                        "\n\001m\030\010 \001(\0132\014.ValidateSub\022\035\n\002s5\030\025 \001(\tB\021\232\265\030" +
-                        "\r\032\013aaa,bbb,ccc\022\025\n\002s6\030\026 \001(\tB\t\232\265\030\005\"\0034,8\022\025\n" +
-                        "\002i5\030\027 \001(\005B\t\232\265\030\005\"\0034,8\022\025\n\002s7\030\030 \003(\tB\t\232\265\030\005:\003" +
-                        "2,8\022\026\n\003s31\030\037 \001(\tB\t\232\265\030\005\022\003int\022\031\n\003s32\030  \001(\t" +
-                        "B\014\232\265\030\010\022\006double\022\027\n\003s33\030! \001(\tB\n\232\265\030\006\022\004long\022" +
-                        "\030\n\003s34\030\" \001(\tB\013\232\265\030\007\022\005email\022\027\n\003s35\030# \001(\tB\n" +
-                        "\232\265\030\006\022\004date\022\034\n\003s36\030$ \001(\tB\017\232\265\030\013\022\ttimestamp" +
-                        "\022\034\n\003s37\030% \001(\tB\017\232\265\030\013\022\t19[0-9]+m\022\027\n\003s38\030& " +
-                        "\001(\tB\n\232\265\030\006\022\004a.*c\022\031\n\003s39\030\' \001(\tB\014\232\265\030\010\022\006^a.*" +
-                        "c$\022\"\n\001k\030( \003(\0132\014.ValidateSubB\t\232\265\030\005:\0032,8\022\037" +
-                        "\n\003s41\030) \003(\tB\022\232\265\030\016\032\007111,222:\0031,-\"\"\n\017Valid" +
-                        "ateTestRes\022\017\n\007retCode\030\001 \001(\005\",\n\007PushReq\022\020" +
-                        "\n\010clientId\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\"*\n\007Pus" +
-                        "hRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\",\n" +
-                        "\rOrderItemAttr\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 " +
-                        "\001(\t\"W\n\tOrderItem\022\016\n\006itemId\030\001 \001(\t\022\014\n\004name" +
-                        "\030\002 \001(\t\022\r\n\005price\030\003 \001(\005\022\035\n\005attrs\030\004 \003(\0132\016.O" +
-                        "rderItemAttr\"3\n\005Order\022\017\n\007orderId\030\001 \001(\t\022\031" +
-                        "\n\005items\030\002 \003(\0132\n.OrderItem\"N\n\007Session\022\021\n\t" +
-                        "loginFlag\030\001 \001(\t\022\016\n\006userId\030\002 \001(\t\022\020\n\010userN" +
-                        "ame\030\003 \001(\t\022\016\n\006mobile\030\004 \001(\t\"J\n\013OrderDetail" +
-                        "\022\014\n\004name\030\001 \001(\t\022\020\n\010quantity\030\002 \001(\005\022\r\n\005pric" +
-                        "e\030\003 \001(\001\022\014\n\004note\030\004 \001(\t\"\330\003\n\013HttpTestReq\022\022\n" +
-                        "\nhttpMethod\030\001 \001(\t\022\022\n\nhttpSchema\030\002 \001(\t\022\020\n" +
-                        "\010httpPath\030\003 \001(\t\022\027\n\017httpQueryString\030\004 \001(\t" +
-                        "\022\027\n\017httpContentType\030\005 \001(\t\022\023\n\013httpContent" +
-                        "\030\006 \001(\t\022\031\n\007session\030\007 \001(\0132\010.Session\022\017\n\007ord" +
-                        "erId\030\010 \001(\t\022\021\n\tquantity1\030\t \001(\005\022\021\n\tquantit" +
-                        "y2\030\n \001(\r\022\021\n\tquantity3\030\013 \001(\003\022\021\n\tquantity4" +
-                        "\030\014 \001(\004\022\016\n\006price1\030\r \001(\002\022\016\n\006price2\030\016 \001(\001\022\027" +
-                        "\n\006status\030\017 \001(\0162\007.Status\022\033\n\005items\030\020 \003(\0132\014" +
-                        ".OrderDetail\022\016\n\006userId\030\021 \001(\t\022\020\n\010userName" +
-                        "\030\022 \001(\t\022\016\n\006mobile\030\023 \001(\t\022\021\n\tsessionId\030\024 \001(" +
-                        "\t\022\022\n\nheaderHost\030\025 \001(\t\022\021\n\tcookieTnk\030\026 \001(\t" +
-                        "\022\016\n\006colors\030\027 \003(\t\"\334\001\n\013HttpTestRes\022\017\n\007retC" +
-                        "ode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\022\016\n\006userId\030\003 \001(" +
-                        "\t\022\031\n\007session\030\004 \001(\0132\010.Session\022\020\n\010httpCode" +
-                        "\030\005 \001(\005\022\027\n\017httpContentType\030\006 \001(\t\022\026\n\016heade" +
-                        "rLocation\030\007 \001(\t\022\027\n\017headerXmmDddCcc\030\010 \001(\t" +
-                        "\022\021\n\tcookieTnk\030\t \001(\t\022\022\n\ntotalPrice\030\n \001(\005\"" +
-                        "%\n\021HttpPluginTestReq\022\020\n\010username\030\001 \001(\t\"\213" +
-                        "\001\n\021HttpPluginTestRes\022\017\n\007retCode\030\001 \001(\005\022\016\n" +
-                        "\006retMsg\030\002 \001(\t\022\021\n\tplainText\030\003 \001(\t\022\023\n\013redi" +
-                        "rectUrl\030\004 \001(\t\022\016\n\006gender\030\005 \001(\t\022\016\n\006mobile\030" +
-                        "\006 \001(\t\022\r\n\005email\030\007 \001(\t\"\260\001\n\025HttpDownloadSta" +
-                        "ticRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\022" +
-                        "\024\n\014downloadFile\030\003 \001(\t\022\022\n\nautoDelete\030\004 \001(" +
-                        "\t\022\022\n\nattachment\030\005 \001(\005\022\016\n\006expire\030\006 \001(\005\022\026\n" +
-                        "\016downloadStream\030\007 \001(\014\022\020\n\010filename\030\010 \001(\t\"" +
-                        "\\\n\nUploadFile\022\014\n\004file\030\001 \001(\t\022\020\n\010filename\030" +
-                        "\002 \001(\t\022\014\n\004size\030\003 \001(\003\022\013\n\003ext\030\004 \001(\t\022\023\n\013cont" +
-                        "entType\030\005 \001(\t\"t\n\022HttpUploadTestReq1\022\027\n\017h" +
-                        "ttpContentType\030\001 \001(\t\022\023\n\013httpContent\030\002 \001(" +
-                        "\t\022\t\n\001a\030\003 \001(\t\022\t\n\001b\030\004 \001(\t\022\032\n\005files\030\005 \003(\0132\013" +
-                        ".UploadFile\"t\n\022HttpUploadTestReq2\022\027\n\017htt" +
-                        "pContentType\030\001 \001(\t\022\023\n\013httpContent\030\002 \001(\t\022" +
-                        "\t\n\001a\030\003 \003(\t\022\t\n\001b\030\004 \001(\t\022\032\n\005files\030\005 \001(\0132\013.U" +
-                        "ploadFile\"4\n\021HttpUploadTestRes\022\017\n\007retCod" +
-                        "e\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t*,\n\006Status\022\r\n\tNOT" +
-                        "_READY\020\000\022\t\n\005READY\020\001\022\010\n\004PAID\020\0022u\n\013UserSer" +
-                        "vice\022#\n\005login\022\t.LoginReq\032\t.LoginRes\"\004\220\265\030" +
-                        "\001\022;\n\rupdateProfile\022\021.UpdateProfileReq\032\021." +
-                        "UpdateProfileRes\"\004\220\265\030\002\032\004\210\265\030d2F\n\013TestServ" +
-                        "ice\0221\n\005test1\022\020.ValidateTestReq\032\020.Validat" +
-                        "eTestRes\"\004\220\265\030\001\032\004\210\265\030e25\n\013PushService\022 \n\004p" +
-                        "ush\022\010.PushReq\032\010.PushRes\"\004\220\265\030\001\032\004\210\265\030f29\n\rP" +
-                        "ushServicev2\022\"\n\006pushv2\022\010.PushReq\032\010.PushR" +
-                        "es\"\004\220\265\030\001\032\004\210\265\030g2\203\002\n\025HttpPluginTestService" +
-                        "\0225\n\005test1\022\022.HttpPluginTestReq\032\022.HttpPlug" +
-                        "inTestRes\"\004\220\265\030\001\0229\n\005test2\022\022.HttpPluginTes" +
-                        "tReq\032\026.HttpDownloadStaticRes\"\004\220\265\030\002\0228\n\007up" +
-                        "load1\022\023.HttpUploadTestReq1\032\022.HttpUploadT" +
-                        "estRes\"\004\220\265\030\003\0228\n\007upload2\022\023.HttpUploadTest" +
-                        "Req2\032\022.HttpUploadTestRes\"\004\220\265\030\004\032\004\210\265\030hB2\n\031" +
-                        "com.xxx.userservice.protoB\020UserServiceMe" +
-                        "tasP\001\210\001\001b\006proto3"
+  public static com.google.protobuf.Descriptors.FileDescriptor
+      getDescriptor() {
+    return descriptor;
+  }
+  private static  com.google.protobuf.Descriptors.FileDescriptor
+      descriptor;
+  static {
+    String[] descriptorData = {
+      "\n\021userservice.proto\032\rkrpcext.proto\">\n\010Lo" +
+      "ginReq\022\020\n\010userName\030\001 \001(\t\022\020\n\010password\030\002 \001" +
+      "(\t\022\016\n\006gender\030\003 \001(\t\"K\n\010LoginRes\022\017\n\007retCod" +
+      "e\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\022\016\n\006userId\030\003 \001(\t\022" +
+      "\016\n\006mobile\030\004 \001(\t\"2\n\020UpdateProfileReq\022\016\n\006u" +
+      "serId\030\001 \001(\t\022\016\n\006mobile\030\002 \001(\t\"3\n\020UpdatePro" +
+      "fileRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t" +
+      "\"?\n\tLogin2Req\022\020\n\010userName\030\001 \001(\t\022\020\n\010passw" +
+      "ord\030\002 \001(\t\022\016\n\006gender\030\003 \001(\t\"L\n\tLogin2Res\022\017" +
+      "\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\022\016\n\006userI" +
+      "d\030\003 \001(\t\022\016\n\006mobile\030\004 \001(\t\"\236\001\n\013ValidateSub\022" +
+      "\031\n\002s1\030\013 \001(\tB\r\232\265\030\t2\007bbb,ccc\022\025\n\002s2\030\016 \001(\tB\t" +
+      "\232\265\030\0052\003mmm\022\027\n\002i1\030\017 \001(\005B\013\232\265\030\007*\00520,50\022\026\n\002i2" +
+      "\030\020 \001(\tB\n\232\265\030\006*\00420,-\022\026\n\002i3\030\021 \001(\005B\n\232\265\030\006*\004-," +
+      "50\022\024\n\002i4\030\022 \001(\tB\010\232\265\030\004*\00221\"\353\004\n\017ValidateTes" +
+      "tReq\022\026\n\006userId\030\001 \001(\tB\006\232\265\030\002\010\001\022\031\n\002s1\030\013 \001(\t" +
+      "B\r\232\265\030\t2\007bbb,ccc\022\025\n\002s2\030\016 \001(\tB\t\232\265\030\0052\003mmm\022\027" +
+      "\n\002i1\030\017 \001(\005B\013\232\265\030\007*\00520,50\022\026\n\002i2\030\020 \001(\tB\n\232\265\030" +
+      "\006*\00420,-\022\026\n\002i3\030\021 \001(\005B\n\232\265\030\006*\004-,50\022\024\n\002i4\030\022 " +
+      "\001(\tB\010\232\265\030\004*\00221\022\027\n\001m\030\010 \001(\0132\014.ValidateSub\022\035" +
+      "\n\002s5\030\025 \001(\tB\021\232\265\030\r\032\013aaa,bbb,ccc\022\025\n\002s6\030\026 \001(" +
+      "\tB\t\232\265\030\005\"\0034,8\022\025\n\002i5\030\027 \001(\005B\t\232\265\030\005\"\0034,8\022\025\n\002s" +
+      "7\030\030 \003(\tB\t\232\265\030\005:\0032,8\022\026\n\003s31\030\037 \001(\tB\t\232\265\030\005\022\003i" +
+      "nt\022\031\n\003s32\030  \001(\tB\014\232\265\030\010\022\006double\022\027\n\003s33\030! \001" +
+      "(\tB\n\232\265\030\006\022\004long\022\030\n\003s34\030\" \001(\tB\013\232\265\030\007\022\005email" +
+      "\022\027\n\003s35\030# \001(\tB\n\232\265\030\006\022\004date\022\034\n\003s36\030$ \001(\tB\017" +
+      "\232\265\030\013\022\ttimestamp\022\034\n\003s37\030% \001(\tB\017\232\265\030\013\022\t19[0" +
+      "-9]+m\022\027\n\003s38\030& \001(\tB\n\232\265\030\006\022\004a.*c\022\031\n\003s39\030\' " +
+      "\001(\tB\014\232\265\030\010\022\006^a.*c$\022\"\n\001k\030( \003(\0132\014.ValidateS" +
+      "ubB\t\232\265\030\005:\0032,8\022\037\n\003s41\030) \003(\tB\022\232\265\030\016\032\007111,22" +
+      "2:\0031,-\"2\n\017ValidateTestRes\022\017\n\007retCode\030\001 \001" +
+      "(\005\022\016\n\006retMsg\030\002 \001(\t\",\n\007PushReq\022\020\n\010clientI" +
+      "d\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\"*\n\007PushRes\022\017\n\007r" +
+      "etCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\",\n\rOrderIte" +
+      "mAttr\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"W\n\tOr" +
+      "derItem\022\016\n\006itemId\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\r\n" +
+      "\005price\030\003 \001(\005\022\035\n\005attrs\030\004 \003(\0132\016.OrderItemA" +
+      "ttr\"N\n\007Session\022\021\n\tloginFlag\030\001 \001(\t\022\016\n\006use" +
+      "rId\030\002 \001(\t\022\020\n\010userName\030\003 \001(\t\022\016\n\006mobile\030\004 " +
+      "\001(\t\"^\n\005Order\022\017\n\007orderId\030\001 \001(\t\022\016\n\006amount\030" +
+      "\002 \001(\005\022\031\n\007session\030\003 \001(\0132\010.Session\022\031\n\005item" +
+      "s\030\004 \003(\0132\n.OrderItem\"-\n\016OrderItemAttr2\022\014\n" +
+      "\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"Y\n\nOrderItem2" +
+      "\022\016\n\006itemId\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\r\n\005price\030" +
+      "\003 \001(\005\022\036\n\005attrs\030\004 \003(\0132\017.OrderItemAttr2\"O\n" +
+      "\010Session2\022\021\n\tloginFlag\030\001 \001(\t\022\016\n\006userId\030\002" +
+      " \001(\t\022\020\n\010userName\030\003 \001(\t\022\016\n\006mobile\030\004 \001(\t\"a" +
+      "\n\006Order2\022\017\n\007orderId\030\001 \001(\t\022\016\n\006amount\030\002 \001(" +
+      "\005\022\032\n\007session\030\003 \001(\0132\t.Session2\022\032\n\005items\030\004" +
+      " \003(\0132\013.OrderItem2\"J\n\013OrderDetail\022\014\n\004name" +
+      "\030\001 \001(\t\022\020\n\010quantity\030\002 \001(\005\022\r\n\005price\030\003 \001(\001\022" +
+      "\014\n\004note\030\004 \001(\t\"\330\003\n\013HttpTestReq\022\022\n\nhttpMet" +
+      "hod\030\001 \001(\t\022\022\n\nhttpSchema\030\002 \001(\t\022\020\n\010httpPat" +
+      "h\030\003 \001(\t\022\027\n\017httpQueryString\030\004 \001(\t\022\027\n\017http" +
+      "ContentType\030\005 \001(\t\022\023\n\013httpContent\030\006 \001(\t\022\031" +
+      "\n\007session\030\007 \001(\0132\010.Session\022\017\n\007orderId\030\010 \001" +
+      "(\t\022\021\n\tquantity1\030\t \001(\005\022\021\n\tquantity2\030\n \001(\r" +
+      "\022\021\n\tquantity3\030\013 \001(\003\022\021\n\tquantity4\030\014 \001(\004\022\016" +
+      "\n\006price1\030\r \001(\002\022\016\n\006price2\030\016 \001(\001\022\027\n\006status" +
+      "\030\017 \001(\0162\007.Status\022\033\n\005items\030\020 \003(\0132\014.OrderDe" +
+      "tail\022\016\n\006userId\030\021 \001(\t\022\020\n\010userName\030\022 \001(\t\022\016" +
+      "\n\006mobile\030\023 \001(\t\022\021\n\tsessionId\030\024 \001(\t\022\022\n\nhea" +
+      "derHost\030\025 \001(\t\022\021\n\tcookieTnk\030\026 \001(\t\022\016\n\006colo" +
+      "rs\030\027 \003(\t\"\334\001\n\013HttpTestRes\022\017\n\007retCode\030\001 \001(" +
+      "\005\022\016\n\006retMsg\030\002 \001(\t\022\016\n\006userId\030\003 \001(\t\022\031\n\007ses" +
+      "sion\030\004 \001(\0132\010.Session\022\020\n\010httpCode\030\005 \001(\005\022\027" +
+      "\n\017httpContentType\030\006 \001(\t\022\026\n\016headerLocatio" +
+      "n\030\007 \001(\t\022\027\n\017headerXmmDddCcc\030\010 \001(\t\022\021\n\tcook" +
+      "ieTnk\030\t \001(\t\022\022\n\ntotalPrice\030\n \001(\005\"%\n\021HttpP" +
+      "luginTestReq\022\020\n\010username\030\001 \001(\t\"\213\001\n\021HttpP" +
+      "luginTestRes\022\017\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030" +
+      "\002 \001(\t\022\021\n\tplainText\030\003 \001(\t\022\023\n\013redirectUrl\030" +
+      "\004 \001(\t\022\016\n\006gender\030\005 \001(\t\022\016\n\006mobile\030\006 \001(\t\022\r\n" +
+      "\005email\030\007 \001(\t\"\260\001\n\025HttpDownloadStaticRes\022\017" +
+      "\n\007retCode\030\001 \001(\005\022\016\n\006retMsg\030\002 \001(\t\022\024\n\014downl" +
+      "oadFile\030\003 \001(\t\022\022\n\nautoDelete\030\004 \001(\t\022\022\n\natt" +
+      "achment\030\005 \001(\005\022\016\n\006expire\030\006 \001(\005\022\026\n\016downloa" +
+      "dStream\030\007 \001(\014\022\020\n\010filename\030\010 \001(\t\"\\\n\nUploa" +
+      "dFile\022\014\n\004file\030\001 \001(\t\022\020\n\010filename\030\002 \001(\t\022\014\n" +
+      "\004size\030\003 \001(\003\022\013\n\003ext\030\004 \001(\t\022\023\n\013contentType\030" +
+      "\005 \001(\t\"t\n\022HttpUploadTestReq1\022\027\n\017httpConte" +
+      "ntType\030\001 \001(\t\022\023\n\013httpContent\030\002 \001(\t\022\t\n\001a\030\003" +
+      " \001(\t\022\t\n\001b\030\004 \001(\t\022\032\n\005files\030\005 \003(\0132\013.UploadF" +
+      "ile\"t\n\022HttpUploadTestReq2\022\027\n\017httpContent" +
+      "Type\030\001 \001(\t\022\023\n\013httpContent\030\002 \001(\t\022\t\n\001a\030\003 \003" +
+      "(\t\022\t\n\001b\030\004 \001(\t\022\032\n\005files\030\005 \001(\0132\013.UploadFil" +
+      "e\"4\n\021HttpUploadTestRes\022\017\n\007retCode\030\001 \001(\005\022" +
+      "\016\n\006retMsg\030\002 \001(\t*,\n\006Status\022\r\n\tNOT_READY\020\000" +
+      "\022\t\n\005READY\020\001\022\010\n\004PAID\020\0022\235\001\n\013UserService\022#\n" +
+      "\005login\022\t.LoginReq\032\t.LoginRes\"\004\220\265\030\001\022;\n\rup" +
+      "dateProfile\022\021.UpdateProfileReq\032\021.UpdateP" +
+      "rofileRes\"\004\220\265\030\002\022&\n\006login2\022\n.Login2Req\032\n." +
+      "Login2Res\"\004\220\265\030\003\032\004\210\265\030d2F\n\013TestService\0221\n\005" +
+      "test1\022\020.ValidateTestReq\032\020.ValidateTestRe" +
+      "s\"\004\220\265\030\001\032\004\210\265\030e25\n\013PushService\022 \n\004push\022\010.P" +
+      "ushReq\032\010.PushRes\"\004\220\265\030\001\032\004\210\265\030f29\n\rPushServ" +
+      "icev2\022\"\n\006pushv2\022\010.PushReq\032\010.PushRes\"\004\220\265\030" +
+      "\001\032\004\210\265\030g2\203\002\n\025HttpPluginTestService\0225\n\005tes" +
+      "t1\022\022.HttpPluginTestReq\032\022.HttpPluginTestR" +
+      "es\"\004\220\265\030\001\0229\n\005test2\022\022.HttpPluginTestReq\032\026." +
+      "HttpDownloadStaticRes\"\004\220\265\030\002\0228\n\007upload1\022\023" +
+      ".HttpUploadTestReq1\032\022.HttpUploadTestRes\"" +
+      "\004\220\265\030\003\0228\n\007upload2\022\023.HttpUploadTestReq2\032\022." +
+      "HttpUploadTestRes\"\004\220\265\030\004\032\004\210\265\030hB2\n\031com.xxx" +
+      ".userservice.protoB\020UserServiceMetasP\001\210\001" +
+      "\001b\006proto3"
+    };
+    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
+        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
+          public com.google.protobuf.ExtensionRegistry assignDescriptors(
+              com.google.protobuf.Descriptors.FileDescriptor root) {
+            descriptor = root;
+            return null;
+          }
         };
-        com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-                new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-                    public com.google.protobuf.ExtensionRegistry assignDescriptors(
-                            com.google.protobuf.Descriptors.FileDescriptor root) {
-                        descriptor = root;
-                        return null;
-                    }
-                };
-        com.google.protobuf.Descriptors.FileDescriptor
-                .internalBuildGeneratedFileFrom(descriptorData,
-                        new com.google.protobuf.Descriptors.FileDescriptor[]{
-                                krpc.KrpcExt.getDescriptor(),
-                        }, assigner);
-        internal_static_LoginReq_descriptor =
-                getDescriptor().getMessageTypes().get(0);
-        internal_static_LoginReq_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_LoginReq_descriptor,
-                new java.lang.String[]{"UserName", "Password",});
-        internal_static_LoginRes_descriptor =
-                getDescriptor().getMessageTypes().get(1);
-        internal_static_LoginRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_LoginRes_descriptor,
-                new java.lang.String[]{"RetCode", "RetMsg", "UserId",});
-        internal_static_UpdateProfileReq_descriptor =
-                getDescriptor().getMessageTypes().get(2);
-        internal_static_UpdateProfileReq_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_UpdateProfileReq_descriptor,
-                new java.lang.String[]{"UserId", "Mobile",});
-        internal_static_UpdateProfileRes_descriptor =
-                getDescriptor().getMessageTypes().get(3);
-        internal_static_UpdateProfileRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_UpdateProfileRes_descriptor,
-                new java.lang.String[]{"RetCode", "RetMsg",});
-        internal_static_ValidateSub_descriptor =
-                getDescriptor().getMessageTypes().get(4);
-        internal_static_ValidateSub_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_ValidateSub_descriptor,
-                new java.lang.String[]{"S1", "S2", "I1", "I2", "I3", "I4",});
-        internal_static_ValidateTestReq_descriptor =
-                getDescriptor().getMessageTypes().get(5);
-        internal_static_ValidateTestReq_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_ValidateTestReq_descriptor,
-                new java.lang.String[]{"UserId", "S1", "S2", "I1", "I2", "I3", "I4", "M", "S5", "S6", "I5", "S7", "S31", "S32", "S33", "S34", "S35", "S36", "S37", "S38", "S39", "K", "S41",});
-        internal_static_ValidateTestRes_descriptor =
-                getDescriptor().getMessageTypes().get(6);
-        internal_static_ValidateTestRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_ValidateTestRes_descriptor,
-                new java.lang.String[]{"RetCode",});
-        internal_static_PushReq_descriptor =
-                getDescriptor().getMessageTypes().get(7);
-        internal_static_PushReq_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_PushReq_descriptor,
-                new java.lang.String[]{"ClientId", "Message",});
-        internal_static_PushRes_descriptor =
-                getDescriptor().getMessageTypes().get(8);
-        internal_static_PushRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_PushRes_descriptor,
-                new java.lang.String[]{"RetCode", "RetMsg",});
-        internal_static_OrderItemAttr_descriptor =
-                getDescriptor().getMessageTypes().get(9);
-        internal_static_OrderItemAttr_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_OrderItemAttr_descriptor,
-                new java.lang.String[]{"Name", "Value",});
-        internal_static_OrderItem_descriptor =
-                getDescriptor().getMessageTypes().get(10);
-        internal_static_OrderItem_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_OrderItem_descriptor,
-                new java.lang.String[]{"ItemId", "Name", "Price", "Attrs",});
-        internal_static_Order_descriptor =
-                getDescriptor().getMessageTypes().get(11);
-        internal_static_Order_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_Order_descriptor,
-                new java.lang.String[]{"OrderId", "Items",});
-        internal_static_Session_descriptor =
-                getDescriptor().getMessageTypes().get(12);
-        internal_static_Session_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_Session_descriptor,
-                new java.lang.String[]{"LoginFlag", "UserId", "UserName", "Mobile",});
-        internal_static_OrderDetail_descriptor =
-                getDescriptor().getMessageTypes().get(13);
-        internal_static_OrderDetail_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_OrderDetail_descriptor,
-                new java.lang.String[]{"Name", "Quantity", "Price", "Note",});
-        internal_static_HttpTestReq_descriptor =
-                getDescriptor().getMessageTypes().get(14);
-        internal_static_HttpTestReq_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_HttpTestReq_descriptor,
-                new java.lang.String[]{"HttpMethod", "HttpSchema", "HttpPath", "HttpQueryString", "HttpContentType", "HttpContent", "Session", "OrderId", "Quantity1", "Quantity2", "Quantity3", "Quantity4", "Price1", "Price2", "Status", "Items", "UserId", "UserName", "Mobile", "SessionId", "HeaderHost", "CookieTnk", "Colors",});
-        internal_static_HttpTestRes_descriptor =
-                getDescriptor().getMessageTypes().get(15);
-        internal_static_HttpTestRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_HttpTestRes_descriptor,
-                new java.lang.String[]{"RetCode", "RetMsg", "UserId", "Session", "HttpCode", "HttpContentType", "HeaderLocation", "HeaderXmmDddCcc", "CookieTnk", "TotalPrice",});
-        internal_static_HttpPluginTestReq_descriptor =
-                getDescriptor().getMessageTypes().get(16);
-        internal_static_HttpPluginTestReq_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_HttpPluginTestReq_descriptor,
-                new java.lang.String[]{"Username",});
-        internal_static_HttpPluginTestRes_descriptor =
-                getDescriptor().getMessageTypes().get(17);
-        internal_static_HttpPluginTestRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_HttpPluginTestRes_descriptor,
-                new java.lang.String[]{"RetCode", "RetMsg", "PlainText", "RedirectUrl", "Gender", "Mobile", "Email",});
-        internal_static_HttpDownloadStaticRes_descriptor =
-                getDescriptor().getMessageTypes().get(18);
-        internal_static_HttpDownloadStaticRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_HttpDownloadStaticRes_descriptor,
-                new java.lang.String[]{"RetCode", "RetMsg", "DownloadFile", "AutoDelete", "Attachment", "Expire", "DownloadStream", "Filename",});
-        internal_static_UploadFile_descriptor =
-                getDescriptor().getMessageTypes().get(19);
-        internal_static_UploadFile_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_UploadFile_descriptor,
-                new java.lang.String[]{"File", "Filename", "Size", "Ext", "ContentType",});
-        internal_static_HttpUploadTestReq1_descriptor =
-                getDescriptor().getMessageTypes().get(20);
-        internal_static_HttpUploadTestReq1_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_HttpUploadTestReq1_descriptor,
-                new java.lang.String[]{"HttpContentType", "HttpContent", "A", "B", "Files",});
-        internal_static_HttpUploadTestReq2_descriptor =
-                getDescriptor().getMessageTypes().get(21);
-        internal_static_HttpUploadTestReq2_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_HttpUploadTestReq2_descriptor,
-                new java.lang.String[]{"HttpContentType", "HttpContent", "A", "B", "Files",});
-        internal_static_HttpUploadTestRes_descriptor =
-                getDescriptor().getMessageTypes().get(22);
-        internal_static_HttpUploadTestRes_fieldAccessorTable = new
-                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_HttpUploadTestRes_descriptor,
-                new java.lang.String[]{"RetCode", "RetMsg",});
-        com.google.protobuf.ExtensionRegistry registry =
-                com.google.protobuf.ExtensionRegistry.newInstance();
-        registry.add(krpc.KrpcExt.msgId);
-        registry.add(krpc.KrpcExt.serviceId);
-        registry.add(krpc.KrpcExt.vld);
-        com.google.protobuf.Descriptors.FileDescriptor
-                .internalUpdateFileDescriptor(descriptor, registry);
-        krpc.KrpcExt.getDescriptor();
-    }
+    com.google.protobuf.Descriptors.FileDescriptor
+      .internalBuildGeneratedFileFrom(descriptorData,
+        new com.google.protobuf.Descriptors.FileDescriptor[] {
+          krpc.KrpcExt.getDescriptor(),
+        }, assigner);
+    internal_static_LoginReq_descriptor =
+      getDescriptor().getMessageTypes().get(0);
+    internal_static_LoginReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_LoginReq_descriptor,
+        new String[] { "UserName", "Password", "Gender", });
+    internal_static_LoginRes_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_LoginRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_LoginRes_descriptor,
+        new String[] { "RetCode", "RetMsg", "UserId", "Mobile", });
+    internal_static_UpdateProfileReq_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_UpdateProfileReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_UpdateProfileReq_descriptor,
+        new String[] { "UserId", "Mobile", });
+    internal_static_UpdateProfileRes_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_UpdateProfileRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_UpdateProfileRes_descriptor,
+        new String[] { "RetCode", "RetMsg", });
+    internal_static_Login2Req_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_Login2Req_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Login2Req_descriptor,
+        new String[] { "UserName", "Password", "Gender", });
+    internal_static_Login2Res_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_Login2Res_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Login2Res_descriptor,
+        new String[] { "RetCode", "RetMsg", "UserId", "Mobile", });
+    internal_static_ValidateSub_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_ValidateSub_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ValidateSub_descriptor,
+        new String[] { "S1", "S2", "I1", "I2", "I3", "I4", });
+    internal_static_ValidateTestReq_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_ValidateTestReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ValidateTestReq_descriptor,
+        new String[] { "UserId", "S1", "S2", "I1", "I2", "I3", "I4", "M", "S5", "S6", "I5", "S7", "S31", "S32", "S33", "S34", "S35", "S36", "S37", "S38", "S39", "K", "S41", });
+    internal_static_ValidateTestRes_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_ValidateTestRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ValidateTestRes_descriptor,
+        new String[] { "RetCode", "RetMsg", });
+    internal_static_PushReq_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_PushReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_PushReq_descriptor,
+        new String[] { "ClientId", "Message", });
+    internal_static_PushRes_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_PushRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_PushRes_descriptor,
+        new String[] { "RetCode", "RetMsg", });
+    internal_static_OrderItemAttr_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_OrderItemAttr_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OrderItemAttr_descriptor,
+        new String[] { "Name", "Value", });
+    internal_static_OrderItem_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_OrderItem_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OrderItem_descriptor,
+        new String[] { "ItemId", "Name", "Price", "Attrs", });
+    internal_static_Session_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_Session_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Session_descriptor,
+        new String[] { "LoginFlag", "UserId", "UserName", "Mobile", });
+    internal_static_Order_descriptor =
+      getDescriptor().getMessageTypes().get(14);
+    internal_static_Order_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Order_descriptor,
+        new String[] { "OrderId", "Amount", "Session", "Items", });
+    internal_static_OrderItemAttr2_descriptor =
+      getDescriptor().getMessageTypes().get(15);
+    internal_static_OrderItemAttr2_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OrderItemAttr2_descriptor,
+        new String[] { "Name", "Value", });
+    internal_static_OrderItem2_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_OrderItem2_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OrderItem2_descriptor,
+        new String[] { "ItemId", "Name", "Price", "Attrs", });
+    internal_static_Session2_descriptor =
+      getDescriptor().getMessageTypes().get(17);
+    internal_static_Session2_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Session2_descriptor,
+        new String[] { "LoginFlag", "UserId", "UserName", "Mobile", });
+    internal_static_Order2_descriptor =
+      getDescriptor().getMessageTypes().get(18);
+    internal_static_Order2_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Order2_descriptor,
+        new String[] { "OrderId", "Amount", "Session", "Items", });
+    internal_static_OrderDetail_descriptor =
+      getDescriptor().getMessageTypes().get(19);
+    internal_static_OrderDetail_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OrderDetail_descriptor,
+        new String[] { "Name", "Quantity", "Price", "Note", });
+    internal_static_HttpTestReq_descriptor =
+      getDescriptor().getMessageTypes().get(20);
+    internal_static_HttpTestReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpTestReq_descriptor,
+        new String[] { "HttpMethod", "HttpSchema", "HttpPath", "HttpQueryString", "HttpContentType", "HttpContent", "Session", "OrderId", "Quantity1", "Quantity2", "Quantity3", "Quantity4", "Price1", "Price2", "Status", "Items", "UserId", "UserName", "Mobile", "SessionId", "HeaderHost", "CookieTnk", "Colors", });
+    internal_static_HttpTestRes_descriptor =
+      getDescriptor().getMessageTypes().get(21);
+    internal_static_HttpTestRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpTestRes_descriptor,
+        new String[] { "RetCode", "RetMsg", "UserId", "Session", "HttpCode", "HttpContentType", "HeaderLocation", "HeaderXmmDddCcc", "CookieTnk", "TotalPrice", });
+    internal_static_HttpPluginTestReq_descriptor =
+      getDescriptor().getMessageTypes().get(22);
+    internal_static_HttpPluginTestReq_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpPluginTestReq_descriptor,
+        new String[] { "Username", });
+    internal_static_HttpPluginTestRes_descriptor =
+      getDescriptor().getMessageTypes().get(23);
+    internal_static_HttpPluginTestRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpPluginTestRes_descriptor,
+        new String[] { "RetCode", "RetMsg", "PlainText", "RedirectUrl", "Gender", "Mobile", "Email", });
+    internal_static_HttpDownloadStaticRes_descriptor =
+      getDescriptor().getMessageTypes().get(24);
+    internal_static_HttpDownloadStaticRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpDownloadStaticRes_descriptor,
+        new String[] { "RetCode", "RetMsg", "DownloadFile", "AutoDelete", "Attachment", "Expire", "DownloadStream", "Filename", });
+    internal_static_UploadFile_descriptor =
+      getDescriptor().getMessageTypes().get(25);
+    internal_static_UploadFile_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_UploadFile_descriptor,
+        new String[] { "File", "Filename", "Size", "Ext", "ContentType", });
+    internal_static_HttpUploadTestReq1_descriptor =
+      getDescriptor().getMessageTypes().get(26);
+    internal_static_HttpUploadTestReq1_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpUploadTestReq1_descriptor,
+        new String[] { "HttpContentType", "HttpContent", "A", "B", "Files", });
+    internal_static_HttpUploadTestReq2_descriptor =
+      getDescriptor().getMessageTypes().get(27);
+    internal_static_HttpUploadTestReq2_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpUploadTestReq2_descriptor,
+        new String[] { "HttpContentType", "HttpContent", "A", "B", "Files", });
+    internal_static_HttpUploadTestRes_descriptor =
+      getDescriptor().getMessageTypes().get(28);
+    internal_static_HttpUploadTestRes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_HttpUploadTestRes_descriptor,
+        new String[] { "RetCode", "RetMsg", });
+    com.google.protobuf.ExtensionRegistry registry =
+        com.google.protobuf.ExtensionRegistry.newInstance();
+    registry.add(krpc.KrpcExt.msgId);
+    registry.add(krpc.KrpcExt.serviceId);
+    registry.add(krpc.KrpcExt.vld);
+    com.google.protobuf.Descriptors.FileDescriptor
+        .internalUpdateFileDescriptor(descriptor, registry);
+    krpc.KrpcExt.getDescriptor();
+  }
 
-    // @@protoc_insertion_point(outer_class_scope)
+  // @@protoc_insertion_point(outer_class_scope)
 }

@@ -27,7 +27,7 @@ public class RpcFutureUtils  {
         if( ctx != null ) {
             Message req = (Message)ctx.getAttribute("pendingReq");
             if( req != null ) {
-                return new RpcClosure(ctx,req);
+                return new RpcClosure(ctx,req,false);
             }
         }
         return null;

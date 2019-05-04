@@ -207,6 +207,10 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
         return nettyClient.send(ai.connId, data);
     }
 
+    public boolean isExchange(String connId, RpcMeta meta) {
+        return false;
+    }
+
     public void receive(String connId, RpcData data) {
         if (data.getMeta().getDirection() == RpcMeta.Direction.REQUEST) return;
         Message req = dataManager.remove(data.getMeta().getSequence());

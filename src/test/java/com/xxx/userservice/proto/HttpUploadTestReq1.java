@@ -6,1343 +6,1257 @@ package com.xxx.userservice.proto;
 /**
  * Protobuf type {@code HttpUploadTestReq1}
  */
-public final class HttpUploadTestReq1 extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:HttpUploadTestReq1)
-        HttpUploadTestReq1OrBuilder {
-    private static final long serialVersionUID = 0L;
+public  final class HttpUploadTestReq1 extends
+    com.google.protobuf.GeneratedMessageV3 implements
+    // @@protoc_insertion_point(message_implements:HttpUploadTestReq1)
+    HttpUploadTestReq1OrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use HttpUploadTestReq1.newBuilder() to construct.
+  private HttpUploadTestReq1(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
+  private HttpUploadTestReq1() {
+    httpContentType_ = "";
+    httpContent_ = "";
+    a_ = "";
+    b_ = "";
+    files_ = java.util.Collections.emptyList();
+  }
 
-    // Use HttpUploadTestReq1.newBuilder() to construct.
-    private HttpUploadTestReq1(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
+  @Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private HttpUploadTestReq1(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new NullPointerException();
     }
+    int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 10: {
+            String s = input.readStringRequireUtf8();
 
-    private HttpUploadTestReq1() {
-        httpContentType_ = "";
-        httpContent_ = "";
-        a_ = "";
-        b_ = "";
-        files_ = java.util.Collections.emptyList();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
-    private HttpUploadTestReq1(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-        }
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-                com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-            boolean done = false;
-            while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                    case 0:
-                        done = true;
-                        break;
-                    case 10: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        httpContentType_ = s;
-                        break;
-                    }
-                    case 18: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        httpContent_ = s;
-                        break;
-                    }
-                    case 26: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        a_ = s;
-                        break;
-                    }
-                    case 34: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        b_ = s;
-                        break;
-                    }
-                    case 42: {
-                        if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                            files_ = new java.util.ArrayList<com.xxx.userservice.proto.UploadFile>();
-                            mutable_bitField0_ |= 0x00000010;
-                        }
-                        files_.add(
-                                input.readMessage(com.xxx.userservice.proto.UploadFile.parser(), extensionRegistry));
-                        break;
-                    }
-                    default: {
-                        if (!parseUnknownFieldProto3(
-                                input, unknownFields, extensionRegistry, tag)) {
-                            done = true;
-                        }
-                        break;
-                    }
-                }
-            }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-            throw new com.google.protobuf.InvalidProtocolBufferException(
-                    e).setUnfinishedMessage(this);
-        } finally {
-            if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                files_ = java.util.Collections.unmodifiableList(files_);
-            }
-            this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
-        }
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
-        return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
-        return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        com.xxx.userservice.proto.HttpUploadTestReq1.class, com.xxx.userservice.proto.HttpUploadTestReq1.Builder.class);
-    }
-
-    private int bitField0_;
-    public static final int HTTPCONTENTTYPE_FIELD_NUMBER = 1;
-    private volatile java.lang.Object httpContentType_;
-
-    /**
-     * <code>string httpContentType = 1;</code>
-     */
-    public java.lang.String getHttpContentType() {
-        java.lang.Object ref = httpContentType_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
             httpContentType_ = s;
-            return s;
+            break;
+          }
+          case 18: {
+            String s = input.readStringRequireUtf8();
+
+            httpContent_ = s;
+            break;
+          }
+          case 26: {
+            String s = input.readStringRequireUtf8();
+
+            a_ = s;
+            break;
+          }
+          case 34: {
+            String s = input.readStringRequireUtf8();
+
+            b_ = s;
+            break;
+          }
+          case 42: {
+            if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+              files_ = new java.util.ArrayList<UploadFile>();
+              mutable_bitField0_ |= 0x00000010;
+            }
+            files_.add(
+                input.readMessage(UploadFile.parser(), extensionRegistry));
+            break;
+          }
+          default: {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
         }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+        files_ = java.util.Collections.unmodifiableList(files_);
+      }
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
+  }
+
+  @Override
+  protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return UserServiceMetas.internal_static_HttpUploadTestReq1_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            HttpUploadTestReq1.class, Builder.class);
+  }
+
+  private int bitField0_;
+  public static final int HTTPCONTENTTYPE_FIELD_NUMBER = 1;
+  private volatile Object httpContentType_;
+  /**
+   * <code>string httpContentType = 1;</code>
+   */
+  public String getHttpContentType() {
+    Object ref = httpContentType_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      httpContentType_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string httpContentType = 1;</code>
+   */
+  public com.google.protobuf.ByteString
+      getHttpContentTypeBytes() {
+    Object ref = httpContentType_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      httpContentType_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int HTTPCONTENT_FIELD_NUMBER = 2;
+  private volatile Object httpContent_;
+  /**
+   * <code>string httpContent = 2;</code>
+   */
+  public String getHttpContent() {
+    Object ref = httpContent_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      httpContent_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string httpContent = 2;</code>
+   */
+  public com.google.protobuf.ByteString
+      getHttpContentBytes() {
+    Object ref = httpContent_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      httpContent_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int A_FIELD_NUMBER = 3;
+  private volatile Object a_;
+  /**
+   * <code>string a = 3;</code>
+   */
+  public String getA() {
+    Object ref = a_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      a_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string a = 3;</code>
+   */
+  public com.google.protobuf.ByteString
+      getABytes() {
+    Object ref = a_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      a_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int B_FIELD_NUMBER = 4;
+  private volatile Object b_;
+  /**
+   * <code>string b = 4;</code>
+   */
+  public String getB() {
+    Object ref = b_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      b_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string b = 4;</code>
+   */
+  public com.google.protobuf.ByteString
+      getBBytes() {
+    Object ref = b_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      b_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int FILES_FIELD_NUMBER = 5;
+  private java.util.List<UploadFile> files_;
+  /**
+   * <code>repeated .UploadFile files = 5;</code>
+   */
+  public java.util.List<UploadFile> getFilesList() {
+    return files_;
+  }
+  /**
+   * <code>repeated .UploadFile files = 5;</code>
+   */
+  public java.util.List<? extends UploadFileOrBuilder>
+      getFilesOrBuilderList() {
+    return files_;
+  }
+  /**
+   * <code>repeated .UploadFile files = 5;</code>
+   */
+  public int getFilesCount() {
+    return files_.size();
+  }
+  /**
+   * <code>repeated .UploadFile files = 5;</code>
+   */
+  public UploadFile getFiles(int index) {
+    return files_.get(index);
+  }
+  /**
+   * <code>repeated .UploadFile files = 5;</code>
+   */
+  public UploadFileOrBuilder getFilesOrBuilder(
+      int index) {
+    return files_.get(index);
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    if (!getHttpContentTypeBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, httpContentType_);
+    }
+    if (!getHttpContentBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, httpContent_);
+    }
+    if (!getABytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, a_);
+    }
+    if (!getBBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, b_);
+    }
+    for (int i = 0; i < files_.size(); i++) {
+      output.writeMessage(5, files_.get(i));
+    }
+    unknownFields.writeTo(output);
+  }
+
+  @Override
+  public int getSerializedSize() {
+    int size = memoizedSize;
+    if (size != -1) return size;
+
+    size = 0;
+    if (!getHttpContentTypeBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, httpContentType_);
+    }
+    if (!getHttpContentBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, httpContent_);
+    }
+    if (!getABytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, a_);
+    }
+    if (!getBBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, b_);
+    }
+    for (int i = 0; i < files_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(5, files_.get(i));
+    }
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
+    return size;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof HttpUploadTestReq1)) {
+      return super.equals(obj);
+    }
+    HttpUploadTestReq1 other = (HttpUploadTestReq1) obj;
+
+    boolean result = true;
+    result = result && getHttpContentType()
+        .equals(other.getHttpContentType());
+    result = result && getHttpContent()
+        .equals(other.getHttpContent());
+    result = result && getA()
+        .equals(other.getA());
+    result = result && getB()
+        .equals(other.getB());
+    result = result && getFilesList()
+        .equals(other.getFilesList());
+    result = result && unknownFields.equals(other.unknownFields);
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + HTTPCONTENTTYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getHttpContentType().hashCode();
+    hash = (37 * hash) + HTTPCONTENT_FIELD_NUMBER;
+    hash = (53 * hash) + getHttpContent().hashCode();
+    hash = (37 * hash) + A_FIELD_NUMBER;
+    hash = (53 * hash) + getA().hashCode();
+    hash = (37 * hash) + B_FIELD_NUMBER;
+    hash = (53 * hash) + getB().hashCode();
+    if (getFilesCount() > 0) {
+      hash = (37 * hash) + FILES_FIELD_NUMBER;
+      hash = (53 * hash) + getFilesList().hashCode();
+    }
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static HttpUploadTestReq1 parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static HttpUploadTestReq1 parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static HttpUploadTestReq1 parseFrom(
+      com.google.protobuf.ByteString data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static HttpUploadTestReq1 parseFrom(
+      com.google.protobuf.ByteString data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static HttpUploadTestReq1 parseFrom(byte[] data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static HttpUploadTestReq1 parseFrom(
+      byte[] data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static HttpUploadTestReq1 parseFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static HttpUploadTestReq1 parseFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static HttpUploadTestReq1 parseDelimitedFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
+  }
+  public static HttpUploadTestReq1 parseDelimitedFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static HttpUploadTestReq1 parseFrom(
+      com.google.protobuf.CodedInputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static HttpUploadTestReq1 parseFrom(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+
+  @Override
+  public Builder newBuilderForType() { return newBuilder(); }
+  public static Builder newBuilder() {
+    return DEFAULT_INSTANCE.toBuilder();
+  }
+  public static Builder newBuilder(HttpUploadTestReq1 prototype) {
+    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+  }
+  @Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @Override
+  protected Builder newBuilderForType(
+      BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
+  /**
+   * Protobuf type {@code HttpUploadTestReq1}
+   */
+  public static final class Builder extends
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+      // @@protoc_insertion_point(builder_implements:HttpUploadTestReq1)
+      HttpUploadTestReq1OrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
     }
 
+    @Override
+    protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return UserServiceMetas.internal_static_HttpUploadTestReq1_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              HttpUploadTestReq1.class, Builder.class);
+    }
+
+    // Construct using com.xxx.userservice.proto.HttpUploadTestReq1.newBuilder()
+    private Builder() {
+      maybeForceBuilderInitialization();
+    }
+
+    private Builder(
+        BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+        getFilesFieldBuilder();
+      }
+    }
+    @Override
+    public Builder clear() {
+      super.clear();
+      httpContentType_ = "";
+
+      httpContent_ = "";
+
+      a_ = "";
+
+      b_ = "";
+
+      if (filesBuilder_ == null) {
+        files_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+      } else {
+        filesBuilder_.clear();
+      }
+      return this;
+    }
+
+    @Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
+    }
+
+    @Override
+    public HttpUploadTestReq1 getDefaultInstanceForType() {
+      return HttpUploadTestReq1.getDefaultInstance();
+    }
+
+    @Override
+    public HttpUploadTestReq1 build() {
+      HttpUploadTestReq1 result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @Override
+    public HttpUploadTestReq1 buildPartial() {
+      HttpUploadTestReq1 result = new HttpUploadTestReq1(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
+      result.httpContentType_ = httpContentType_;
+      result.httpContent_ = httpContent_;
+      result.a_ = a_;
+      result.b_ = b_;
+      if (filesBuilder_ == null) {
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          files_ = java.util.Collections.unmodifiableList(files_);
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.files_ = files_;
+      } else {
+        result.files_ = filesBuilder_.build();
+      }
+      result.bitField0_ = to_bitField0_;
+      onBuilt();
+      return result;
+    }
+
+    @Override
+    public Builder clone() {
+      return (Builder) super.clone();
+    }
+    @Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        Object value) {
+      return (Builder) super.setField(field, value);
+    }
+    @Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return (Builder) super.clearField(field);
+    }
+    @Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return (Builder) super.clearOneof(oneof);
+    }
+    @Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, Object value) {
+      return (Builder) super.setRepeatedField(field, index, value);
+    }
+    @Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        Object value) {
+      return (Builder) super.addRepeatedField(field, value);
+    }
+    @Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof HttpUploadTestReq1) {
+        return mergeFrom((HttpUploadTestReq1)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(HttpUploadTestReq1 other) {
+      if (other == HttpUploadTestReq1.getDefaultInstance()) return this;
+      if (!other.getHttpContentType().isEmpty()) {
+        httpContentType_ = other.httpContentType_;
+        onChanged();
+      }
+      if (!other.getHttpContent().isEmpty()) {
+        httpContent_ = other.httpContent_;
+        onChanged();
+      }
+      if (!other.getA().isEmpty()) {
+        a_ = other.a_;
+        onChanged();
+      }
+      if (!other.getB().isEmpty()) {
+        b_ = other.b_;
+        onChanged();
+      }
+      if (filesBuilder_ == null) {
+        if (!other.files_.isEmpty()) {
+          if (files_.isEmpty()) {
+            files_ = other.files_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureFilesIsMutable();
+            files_.addAll(other.files_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.files_.isEmpty()) {
+          if (filesBuilder_.isEmpty()) {
+            filesBuilder_.dispose();
+            filesBuilder_ = null;
+            files_ = other.files_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+            filesBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getFilesFieldBuilder() : null;
+          } else {
+            filesBuilder_.addAllMessages(other.files_);
+          }
+        }
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      HttpUploadTestReq1 parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (HttpUploadTestReq1) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+    private int bitField0_;
+
+    private Object httpContentType_ = "";
+    /**
+     * <code>string httpContentType = 1;</code>
+     */
+    public String getHttpContentType() {
+      Object ref = httpContentType_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        httpContentType_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
     /**
      * <code>string httpContentType = 1;</code>
      */
     public com.google.protobuf.ByteString
-    getHttpContentTypeBytes() {
-        java.lang.Object ref = httpContentType_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            httpContentType_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getHttpContentTypeBytes() {
+      Object ref = httpContentType_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        httpContentType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string httpContentType = 1;</code>
+     */
+    public Builder setHttpContentType(
+        String value) {
+      if (value == null) value = "";
+  
+      httpContentType_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string httpContentType = 1;</code>
+     */
+    public Builder clearHttpContentType() {
+      
+      httpContentType_ = getDefaultInstance().getHttpContentType();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string httpContentType = 1;</code>
+     */
+    public Builder setHttpContentTypeBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      httpContentType_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int HTTPCONTENT_FIELD_NUMBER = 2;
-    private volatile java.lang.Object httpContent_;
-
+    private Object httpContent_ = "";
     /**
      * <code>string httpContent = 2;</code>
      */
-    public java.lang.String getHttpContent() {
-        java.lang.Object ref = httpContent_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            httpContent_ = s;
-            return s;
-        }
+    public String getHttpContent() {
+      Object ref = httpContent_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        httpContent_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string httpContent = 2;</code>
      */
     public com.google.protobuf.ByteString
-    getHttpContentBytes() {
-        java.lang.Object ref = httpContent_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            httpContent_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getHttpContentBytes() {
+      Object ref = httpContent_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        httpContent_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string httpContent = 2;</code>
+     */
+    public Builder setHttpContent(
+        String value) {
+      if (value == null) value = "";
+  
+      httpContent_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string httpContent = 2;</code>
+     */
+    public Builder clearHttpContent() {
+      
+      httpContent_ = getDefaultInstance().getHttpContent();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string httpContent = 2;</code>
+     */
+    public Builder setHttpContentBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      httpContent_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int A_FIELD_NUMBER = 3;
-    private volatile java.lang.Object a_;
-
+    private Object a_ = "";
     /**
      * <code>string a = 3;</code>
      */
-    public java.lang.String getA() {
-        java.lang.Object ref = a_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            a_ = s;
-            return s;
-        }
+    public String getA() {
+      Object ref = a_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        a_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string a = 3;</code>
      */
     public com.google.protobuf.ByteString
-    getABytes() {
-        java.lang.Object ref = a_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            a_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getABytes() {
+      Object ref = a_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        a_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string a = 3;</code>
+     */
+    public Builder setA(
+        String value) {
+      if (value == null) value = "";
+  
+      a_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string a = 3;</code>
+     */
+    public Builder clearA() {
+      
+      a_ = getDefaultInstance().getA();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string a = 3;</code>
+     */
+    public Builder setABytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      a_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int B_FIELD_NUMBER = 4;
-    private volatile java.lang.Object b_;
-
+    private Object b_ = "";
     /**
      * <code>string b = 4;</code>
      */
-    public java.lang.String getB() {
-        java.lang.Object ref = b_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            b_ = s;
-            return s;
-        }
+    public String getB() {
+      Object ref = b_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        b_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string b = 4;</code>
      */
     public com.google.protobuf.ByteString
-    getBBytes() {
-        java.lang.Object ref = b_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            b_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getBBytes() {
+      Object ref = b_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        b_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string b = 4;</code>
+     */
+    public Builder setB(
+        String value) {
+      if (value == null) value = "";
+  
+      b_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string b = 4;</code>
+     */
+    public Builder clearB() {
+      
+      b_ = getDefaultInstance().getB();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string b = 4;</code>
+     */
+    public Builder setBBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      b_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int FILES_FIELD_NUMBER = 5;
-    private java.util.List<com.xxx.userservice.proto.UploadFile> files_;
+    private java.util.List<UploadFile> files_ =
+      java.util.Collections.emptyList();
+    private void ensureFilesIsMutable() {
+      if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+        files_ = new java.util.ArrayList<UploadFile>(files_);
+        bitField0_ |= 0x00000010;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        UploadFile, UploadFile.Builder, UploadFileOrBuilder> filesBuilder_;
 
     /**
      * <code>repeated .UploadFile files = 5;</code>
      */
-    public java.util.List<com.xxx.userservice.proto.UploadFile> getFilesList() {
-        return files_;
+    public java.util.List<UploadFile> getFilesList() {
+      if (filesBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(files_);
+      } else {
+        return filesBuilder_.getMessageList();
+      }
     }
-
-    /**
-     * <code>repeated .UploadFile files = 5;</code>
-     */
-    public java.util.List<? extends com.xxx.userservice.proto.UploadFileOrBuilder>
-    getFilesOrBuilderList() {
-        return files_;
-    }
-
     /**
      * <code>repeated .UploadFile files = 5;</code>
      */
     public int getFilesCount() {
+      if (filesBuilder_ == null) {
         return files_.size();
+      } else {
+        return filesBuilder_.getCount();
+      }
     }
-
     /**
      * <code>repeated .UploadFile files = 5;</code>
      */
-    public com.xxx.userservice.proto.UploadFile getFiles(int index) {
+    public UploadFile getFiles(int index) {
+      if (filesBuilder_ == null) {
         return files_.get(index);
+      } else {
+        return filesBuilder_.getMessage(index);
+      }
     }
-
     /**
      * <code>repeated .UploadFile files = 5;</code>
      */
-    public com.xxx.userservice.proto.UploadFileOrBuilder getFilesOrBuilder(
-            int index) {
-        return files_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
-        if (!getHttpContentTypeBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 1, httpContentType_);
+    public Builder setFiles(
+        int index, UploadFile value) {
+      if (filesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
-        if (!getHttpContentBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 2, httpContent_);
-        }
-        if (!getABytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, a_);
-        }
-        if (!getBBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 4, b_);
-        }
-        for (int i = 0; i < files_.size(); i++) {
-            output.writeMessage(5, files_.get(i));
-        }
-        unknownFields.writeTo(output);
+        ensureFilesIsMutable();
+        files_.set(index, value);
+        onChanged();
+      } else {
+        filesBuilder_.setMessage(index, value);
+      }
+      return this;
     }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (!getHttpContentTypeBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, httpContentType_);
-        }
-        if (!getHttpContentBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, httpContent_);
-        }
-        if (!getABytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, a_);
-        }
-        if (!getBBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, b_);
-        }
-        for (int i = 0; i < files_.size(); i++) {
-            size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(5, files_.get(i));
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof com.xxx.userservice.proto.HttpUploadTestReq1)) {
-            return super.equals(obj);
-        }
-        com.xxx.userservice.proto.HttpUploadTestReq1 other = (com.xxx.userservice.proto.HttpUploadTestReq1) obj;
-
-        boolean result = true;
-        result = result && getHttpContentType()
-                .equals(other.getHttpContentType());
-        result = result && getHttpContent()
-                .equals(other.getHttpContent());
-        result = result && getA()
-                .equals(other.getA());
-        result = result && getB()
-                .equals(other.getB());
-        result = result && getFilesList()
-                .equals(other.getFilesList());
-        result = result && unknownFields.equals(other.unknownFields);
-        return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-        if (memoizedHashCode != 0) {
-            return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + HTTPCONTENTTYPE_FIELD_NUMBER;
-        hash = (53 * hash) + getHttpContentType().hashCode();
-        hash = (37 * hash) + HTTPCONTENT_FIELD_NUMBER;
-        hash = (53 * hash) + getHttpContent().hashCode();
-        hash = (37 * hash) + A_FIELD_NUMBER;
-        hash = (53 * hash) + getA().hashCode();
-        hash = (37 * hash) + B_FIELD_NUMBER;
-        hash = (53 * hash) + getB().hashCode();
-        if (getFilesCount() > 0) {
-            hash = (37 * hash) + FILES_FIELD_NUMBER;
-            hash = (53 * hash) + getFilesList().hashCode();
-        }
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseDelimitedWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-        return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(com.xxx.userservice.proto.HttpUploadTestReq1 prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-                ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-    }
-
     /**
-     * Protobuf type {@code HttpUploadTestReq1}
+     * <code>repeated .UploadFile files = 5;</code>
      */
-    public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:HttpUploadTestReq1)
-            com.xxx.userservice.proto.HttpUploadTestReq1OrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
+    public Builder setFiles(
+        int index, UploadFile.Builder builderForValue) {
+      if (filesBuilder_ == null) {
+        ensureFilesIsMutable();
+        files_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        filesBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public Builder addFiles(UploadFile value) {
+      if (filesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(
-                            com.xxx.userservice.proto.HttpUploadTestReq1.class, com.xxx.userservice.proto.HttpUploadTestReq1.Builder.class);
+        ensureFilesIsMutable();
+        files_.add(value);
+        onChanged();
+      } else {
+        filesBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public Builder addFiles(
+        int index, UploadFile value) {
+      if (filesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
-
-        // Construct using com.xxx.userservice.proto.HttpUploadTestReq1.newBuilder()
-        private Builder() {
-            maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-            super(parent);
-            maybeForceBuilderInitialization();
-        }
-
-        private void maybeForceBuilderInitialization() {
-            if (com.google.protobuf.GeneratedMessageV3
-                    .alwaysUseFieldBuilders) {
-                getFilesFieldBuilder();
-            }
-        }
-
-        @java.lang.Override
-        public Builder clear() {
-            super.clear();
-            httpContentType_ = "";
-
-            httpContent_ = "";
-
-            a_ = "";
-
-            b_ = "";
-
-            if (filesBuilder_ == null) {
-                files_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000010);
-            } else {
-                filesBuilder_.clear();
-            }
-            return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestReq1_descriptor;
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.HttpUploadTestReq1 getDefaultInstanceForType() {
-            return com.xxx.userservice.proto.HttpUploadTestReq1.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.HttpUploadTestReq1 build() {
-            com.xxx.userservice.proto.HttpUploadTestReq1 result = buildPartial();
-            if (!result.isInitialized()) {
-                throw newUninitializedMessageException(result);
-            }
-            return result;
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.HttpUploadTestReq1 buildPartial() {
-            com.xxx.userservice.proto.HttpUploadTestReq1 result = new com.xxx.userservice.proto.HttpUploadTestReq1(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.httpContentType_ = httpContentType_;
-            result.httpContent_ = httpContent_;
-            result.a_ = a_;
-            result.b_ = b_;
-            if (filesBuilder_ == null) {
-                if (((bitField0_ & 0x00000010) == 0x00000010)) {
-                    files_ = java.util.Collections.unmodifiableList(files_);
-                    bitField0_ = (bitField0_ & ~0x00000010);
-                }
-                result.files_ = files_;
-            } else {
-                result.files_ = filesBuilder_.build();
-            }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return (Builder) super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return (Builder) super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return (Builder) super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return (Builder) super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return (Builder) super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return (Builder) super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof com.xxx.userservice.proto.HttpUploadTestReq1) {
-                return mergeFrom((com.xxx.userservice.proto.HttpUploadTestReq1) other);
-            } else {
-                super.mergeFrom(other);
-                return this;
-            }
-        }
-
-        public Builder mergeFrom(com.xxx.userservice.proto.HttpUploadTestReq1 other) {
-            if (other == com.xxx.userservice.proto.HttpUploadTestReq1.getDefaultInstance()) return this;
-            if (!other.getHttpContentType().isEmpty()) {
-                httpContentType_ = other.httpContentType_;
-                onChanged();
-            }
-            if (!other.getHttpContent().isEmpty()) {
-                httpContent_ = other.httpContent_;
-                onChanged();
-            }
-            if (!other.getA().isEmpty()) {
-                a_ = other.a_;
-                onChanged();
-            }
-            if (!other.getB().isEmpty()) {
-                b_ = other.b_;
-                onChanged();
-            }
-            if (filesBuilder_ == null) {
-                if (!other.files_.isEmpty()) {
-                    if (files_.isEmpty()) {
-                        files_ = other.files_;
-                        bitField0_ = (bitField0_ & ~0x00000010);
-                    } else {
-                        ensureFilesIsMutable();
-                        files_.addAll(other.files_);
-                    }
-                    onChanged();
-                }
-            } else {
-                if (!other.files_.isEmpty()) {
-                    if (filesBuilder_.isEmpty()) {
-                        filesBuilder_.dispose();
-                        filesBuilder_ = null;
-                        files_ = other.files_;
-                        bitField0_ = (bitField0_ & ~0x00000010);
-                        filesBuilder_ =
-                                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                                        getFilesFieldBuilder() : null;
-                    } else {
-                        filesBuilder_.addAllMessages(other.files_);
-                    }
-                }
-            }
-            this.mergeUnknownFields(other.unknownFields);
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws java.io.IOException {
-            com.xxx.userservice.proto.HttpUploadTestReq1 parsedMessage = null;
-            try {
-                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage = (com.xxx.userservice.proto.HttpUploadTestReq1) e.getUnfinishedMessage();
-                throw e.unwrapIOException();
-            } finally {
-                if (parsedMessage != null) {
-                    mergeFrom(parsedMessage);
-                }
-            }
-            return this;
-        }
-
-        private int bitField0_;
-
-        private java.lang.Object httpContentType_ = "";
-
-        /**
-         * <code>string httpContentType = 1;</code>
-         */
-        public java.lang.String getHttpContentType() {
-            java.lang.Object ref = httpContentType_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                httpContentType_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string httpContentType = 1;</code>
-         */
-        public com.google.protobuf.ByteString
-        getHttpContentTypeBytes() {
-            java.lang.Object ref = httpContentType_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                httpContentType_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string httpContentType = 1;</code>
-         */
-        public Builder setHttpContentType(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            httpContentType_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string httpContentType = 1;</code>
-         */
-        public Builder clearHttpContentType() {
-
-            httpContentType_ = getDefaultInstance().getHttpContentType();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string httpContentType = 1;</code>
-         */
-        public Builder setHttpContentTypeBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            httpContentType_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object httpContent_ = "";
-
-        /**
-         * <code>string httpContent = 2;</code>
-         */
-        public java.lang.String getHttpContent() {
-            java.lang.Object ref = httpContent_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                httpContent_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string httpContent = 2;</code>
-         */
-        public com.google.protobuf.ByteString
-        getHttpContentBytes() {
-            java.lang.Object ref = httpContent_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                httpContent_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string httpContent = 2;</code>
-         */
-        public Builder setHttpContent(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            httpContent_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string httpContent = 2;</code>
-         */
-        public Builder clearHttpContent() {
-
-            httpContent_ = getDefaultInstance().getHttpContent();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string httpContent = 2;</code>
-         */
-        public Builder setHttpContentBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            httpContent_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object a_ = "";
-
-        /**
-         * <code>string a = 3;</code>
-         */
-        public java.lang.String getA() {
-            java.lang.Object ref = a_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                a_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string a = 3;</code>
-         */
-        public com.google.protobuf.ByteString
-        getABytes() {
-            java.lang.Object ref = a_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                a_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string a = 3;</code>
-         */
-        public Builder setA(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            a_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string a = 3;</code>
-         */
-        public Builder clearA() {
-
-            a_ = getDefaultInstance().getA();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string a = 3;</code>
-         */
-        public Builder setABytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            a_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object b_ = "";
-
-        /**
-         * <code>string b = 4;</code>
-         */
-        public java.lang.String getB() {
-            java.lang.Object ref = b_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                b_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string b = 4;</code>
-         */
-        public com.google.protobuf.ByteString
-        getBBytes() {
-            java.lang.Object ref = b_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                b_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string b = 4;</code>
-         */
-        public Builder setB(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            b_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string b = 4;</code>
-         */
-        public Builder clearB() {
-
-            b_ = getDefaultInstance().getB();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string b = 4;</code>
-         */
-        public Builder setBBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            b_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.util.List<com.xxx.userservice.proto.UploadFile> files_ =
-                java.util.Collections.emptyList();
-
-        private void ensureFilesIsMutable() {
-            if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-                files_ = new java.util.ArrayList<com.xxx.userservice.proto.UploadFile>(files_);
-                bitField0_ |= 0x00000010;
-            }
-        }
-
-        private com.google.protobuf.RepeatedFieldBuilderV3<
-                com.xxx.userservice.proto.UploadFile, com.xxx.userservice.proto.UploadFile.Builder, com.xxx.userservice.proto.UploadFileOrBuilder> filesBuilder_;
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public java.util.List<com.xxx.userservice.proto.UploadFile> getFilesList() {
-            if (filesBuilder_ == null) {
-                return java.util.Collections.unmodifiableList(files_);
-            } else {
-                return filesBuilder_.getMessageList();
-            }
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public int getFilesCount() {
-            if (filesBuilder_ == null) {
-                return files_.size();
-            } else {
-                return filesBuilder_.getCount();
-            }
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public com.xxx.userservice.proto.UploadFile getFiles(int index) {
-            if (filesBuilder_ == null) {
-                return files_.get(index);
-            } else {
-                return filesBuilder_.getMessage(index);
-            }
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder setFiles(
-                int index, com.xxx.userservice.proto.UploadFile value) {
-            if (filesBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureFilesIsMutable();
-                files_.set(index, value);
-                onChanged();
-            } else {
-                filesBuilder_.setMessage(index, value);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder setFiles(
-                int index, com.xxx.userservice.proto.UploadFile.Builder builderForValue) {
-            if (filesBuilder_ == null) {
-                ensureFilesIsMutable();
-                files_.set(index, builderForValue.build());
-                onChanged();
-            } else {
-                filesBuilder_.setMessage(index, builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder addFiles(com.xxx.userservice.proto.UploadFile value) {
-            if (filesBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureFilesIsMutable();
-                files_.add(value);
-                onChanged();
-            } else {
-                filesBuilder_.addMessage(value);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder addFiles(
-                int index, com.xxx.userservice.proto.UploadFile value) {
-            if (filesBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureFilesIsMutable();
-                files_.add(index, value);
-                onChanged();
-            } else {
-                filesBuilder_.addMessage(index, value);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder addFiles(
-                com.xxx.userservice.proto.UploadFile.Builder builderForValue) {
-            if (filesBuilder_ == null) {
-                ensureFilesIsMutable();
-                files_.add(builderForValue.build());
-                onChanged();
-            } else {
-                filesBuilder_.addMessage(builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder addFiles(
-                int index, com.xxx.userservice.proto.UploadFile.Builder builderForValue) {
-            if (filesBuilder_ == null) {
-                ensureFilesIsMutable();
-                files_.add(index, builderForValue.build());
-                onChanged();
-            } else {
-                filesBuilder_.addMessage(index, builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder addAllFiles(
-                java.lang.Iterable<? extends com.xxx.userservice.proto.UploadFile> values) {
-            if (filesBuilder_ == null) {
-                ensureFilesIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                        values, files_);
-                onChanged();
-            } else {
-                filesBuilder_.addAllMessages(values);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder clearFiles() {
-            if (filesBuilder_ == null) {
-                files_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000010);
-                onChanged();
-            } else {
-                filesBuilder_.clear();
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public Builder removeFiles(int index) {
-            if (filesBuilder_ == null) {
-                ensureFilesIsMutable();
-                files_.remove(index);
-                onChanged();
-            } else {
-                filesBuilder_.remove(index);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public com.xxx.userservice.proto.UploadFile.Builder getFilesBuilder(
-                int index) {
-            return getFilesFieldBuilder().getBuilder(index);
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public com.xxx.userservice.proto.UploadFileOrBuilder getFilesOrBuilder(
-                int index) {
-            if (filesBuilder_ == null) {
-                return files_.get(index);
-            } else {
-                return filesBuilder_.getMessageOrBuilder(index);
-            }
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public java.util.List<? extends com.xxx.userservice.proto.UploadFileOrBuilder>
-        getFilesOrBuilderList() {
-            if (filesBuilder_ != null) {
-                return filesBuilder_.getMessageOrBuilderList();
-            } else {
-                return java.util.Collections.unmodifiableList(files_);
-            }
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public com.xxx.userservice.proto.UploadFile.Builder addFilesBuilder() {
-            return getFilesFieldBuilder().addBuilder(
-                    com.xxx.userservice.proto.UploadFile.getDefaultInstance());
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public com.xxx.userservice.proto.UploadFile.Builder addFilesBuilder(
-                int index) {
-            return getFilesFieldBuilder().addBuilder(
-                    index, com.xxx.userservice.proto.UploadFile.getDefaultInstance());
-        }
-
-        /**
-         * <code>repeated .UploadFile files = 5;</code>
-         */
-        public java.util.List<com.xxx.userservice.proto.UploadFile.Builder>
-        getFilesBuilderList() {
-            return getFilesFieldBuilder().getBuilderList();
-        }
-
-        private com.google.protobuf.RepeatedFieldBuilderV3<
-                com.xxx.userservice.proto.UploadFile, com.xxx.userservice.proto.UploadFile.Builder, com.xxx.userservice.proto.UploadFileOrBuilder>
+        ensureFilesIsMutable();
+        files_.add(index, value);
+        onChanged();
+      } else {
+        filesBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public Builder addFiles(
+        UploadFile.Builder builderForValue) {
+      if (filesBuilder_ == null) {
+        ensureFilesIsMutable();
+        files_.add(builderForValue.build());
+        onChanged();
+      } else {
+        filesBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public Builder addFiles(
+        int index, UploadFile.Builder builderForValue) {
+      if (filesBuilder_ == null) {
+        ensureFilesIsMutable();
+        files_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        filesBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public Builder addAllFiles(
+        Iterable<? extends UploadFile> values) {
+      if (filesBuilder_ == null) {
+        ensureFilesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, files_);
+        onChanged();
+      } else {
+        filesBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public Builder clearFiles() {
+      if (filesBuilder_ == null) {
+        files_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
+      } else {
+        filesBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public Builder removeFiles(int index) {
+      if (filesBuilder_ == null) {
+        ensureFilesIsMutable();
+        files_.remove(index);
+        onChanged();
+      } else {
+        filesBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public UploadFile.Builder getFilesBuilder(
+        int index) {
+      return getFilesFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public UploadFileOrBuilder getFilesOrBuilder(
+        int index) {
+      if (filesBuilder_ == null) {
+        return files_.get(index);  } else {
+        return filesBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public java.util.List<? extends UploadFileOrBuilder>
+         getFilesOrBuilderList() {
+      if (filesBuilder_ != null) {
+        return filesBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(files_);
+      }
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public UploadFile.Builder addFilesBuilder() {
+      return getFilesFieldBuilder().addBuilder(
+          UploadFile.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public UploadFile.Builder addFilesBuilder(
+        int index) {
+      return getFilesFieldBuilder().addBuilder(
+          index, UploadFile.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .UploadFile files = 5;</code>
+     */
+    public java.util.List<UploadFile.Builder>
+         getFilesBuilderList() {
+      return getFilesFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        UploadFile, UploadFile.Builder, UploadFileOrBuilder>
         getFilesFieldBuilder() {
-            if (filesBuilder_ == null) {
-                filesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        com.xxx.userservice.proto.UploadFile, com.xxx.userservice.proto.UploadFile.Builder, com.xxx.userservice.proto.UploadFileOrBuilder>(
-                        files_,
-                        ((bitField0_ & 0x00000010) == 0x00000010),
-                        getParentForChildren(),
-                        isClean());
-                files_ = null;
-            }
-            return filesBuilder_;
-        }
-
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFieldsProto3(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
-
-        // @@protoc_insertion_point(builder_scope:HttpUploadTestReq1)
+      if (filesBuilder_ == null) {
+        filesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            UploadFile, UploadFile.Builder, UploadFileOrBuilder>(
+                files_,
+                ((bitField0_ & 0x00000010) == 0x00000010),
+                getParentForChildren(),
+                isClean());
+        files_ = null;
+      }
+      return filesBuilder_;
+    }
+    @Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    // @@protoc_insertion_point(class_scope:HttpUploadTestReq1)
-    private static final com.xxx.userservice.proto.HttpUploadTestReq1 DEFAULT_INSTANCE;
-
-    static {
-        DEFAULT_INSTANCE = new com.xxx.userservice.proto.HttpUploadTestReq1();
+    @Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
-    public static com.xxx.userservice.proto.HttpUploadTestReq1 getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-    }
 
-    private static final com.google.protobuf.Parser<HttpUploadTestReq1>
-            PARSER = new com.google.protobuf.AbstractParser<HttpUploadTestReq1>() {
-        @java.lang.Override
-        public HttpUploadTestReq1 parsePartialFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return new HttpUploadTestReq1(input, extensionRegistry);
-        }
-    };
+    // @@protoc_insertion_point(builder_scope:HttpUploadTestReq1)
+  }
 
-    public static com.google.protobuf.Parser<HttpUploadTestReq1> parser() {
-        return PARSER;
-    }
+  // @@protoc_insertion_point(class_scope:HttpUploadTestReq1)
+  private static final HttpUploadTestReq1 DEFAULT_INSTANCE;
+  static {
+    DEFAULT_INSTANCE = new HttpUploadTestReq1();
+  }
 
-    @java.lang.Override
-    public com.google.protobuf.Parser<HttpUploadTestReq1> getParserForType() {
-        return PARSER;
-    }
+  public static HttpUploadTestReq1 getDefaultInstance() {
+    return DEFAULT_INSTANCE;
+  }
 
-    @java.lang.Override
-    public com.xxx.userservice.proto.HttpUploadTestReq1 getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
+  private static final com.google.protobuf.Parser<HttpUploadTestReq1>
+      PARSER = new com.google.protobuf.AbstractParser<HttpUploadTestReq1>() {
+    @Override
+    public HttpUploadTestReq1 parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new HttpUploadTestReq1(input, extensionRegistry);
     }
+  };
+
+  public static com.google.protobuf.Parser<HttpUploadTestReq1> parser() {
+    return PARSER;
+  }
+
+  @Override
+  public com.google.protobuf.Parser<HttpUploadTestReq1> getParserForType() {
+    return PARSER;
+  }
+
+  @Override
+  public HttpUploadTestReq1 getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
 
 }
 

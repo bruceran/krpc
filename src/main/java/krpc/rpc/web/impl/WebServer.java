@@ -591,7 +591,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         if( !ctx.setReplied() ) return;
 
         DefaultWebRes res = new DefaultWebRes(req, 200);
-        rpcDataConverter.parseData(ctx, closure.getRes(), res);
+        rpcDataConverter.parseData(ctx, closure.asResMessage(), res);
 
         startRender(ctx, req, res);
     }

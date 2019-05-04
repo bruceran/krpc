@@ -17,6 +17,7 @@ abstract class AbstractLogFormatter implements LogFormatter {
     String maskFields;
     int maxRepeatedSizeToLog = 1;
     boolean printDefault = true;
+    int maxFieldSizeToLog = 500;
 
     HashSet<String> maskFieldsSet = new HashSet<String>();
 
@@ -36,6 +37,10 @@ abstract class AbstractLogFormatter implements LogFormatter {
         String s = params.get("maxRepeatedSizeToLog");
         if (!isEmpty(s))
             maxRepeatedSizeToLog = Integer.parseInt(s);
+
+        s = params.get("maxFieldSizeToLog");
+        if (!isEmpty(s))
+            maxFieldSizeToLog = Integer.parseInt(s);
 
         s = params.get("printDefault");
         if (!isEmpty(s))

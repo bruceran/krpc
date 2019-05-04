@@ -12,6 +12,7 @@ public class MonitorConfig {
     String logFormatter = "simple";
     String maskFields;
     int maxRepeatedSizeToLog = 1;
+    int maxFieldSizeToLog = 500;
     boolean printDefault = false;
 
     boolean printOriginalMsgName = true;
@@ -146,5 +147,13 @@ public class MonitorConfig {
         return this;
     }
 
+    public int getMaxFieldSizeToLog() {
+        return maxFieldSizeToLog;
+    }
+
+    public MonitorConfig setMaxFieldSizeToLog(int maxFieldSizeToLog) {
+        this.maxFieldSizeToLog = maxFieldSizeToLog;
+        return this;
+    }
 }
 

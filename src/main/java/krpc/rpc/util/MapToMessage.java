@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +20,31 @@ public class MapToMessage {
 
     static Logger log = LoggerFactory.getLogger(MapToMessage.class);
 
-    static public Message toMessage(Message.Builder b, Map<String, Object> results) {
-        return toMessage(b, results, null);
+    static Class<?>[] dummyTypes = new Class<?>[0];
+    static Object[] dummyParameters = new Object[0];
+
+    public static Builder generateBuilder(Class<?> messageCls) {
+        try {
+            Method method = messageCls.getDeclaredMethod("newBuilder", dummyTypes);
+            Builder builder = (Builder) method.invoke(null, dummyParameters);
+            return builder;
+        } catch (Exception e) {
+            log.error("generateBuilder exception, e="+e.getMessage()+",messageCls="+messageCls);
+            return null;
+        }
     }
 
-    static public Message toMessage(Message.Builder b, Map<String, Object> params, Map<String, Object> ctx) {
+    static public <T> T toMessage(Class<T> messageCls, Map<String, Object> map) {
+        Builder b = generateBuilder(messageCls);
+        if( b == null ) return null;
+        return (T)toMessage(b,map);
+    }
+
+    static public Message toMessage(Builder b, Map<String, Object> map) {
+        return toMessage(b, map, null);
+    }
+
+    static public Message toMessage(Builder b, Map<String, Object> params, Map<String, Object> ctx) {
         for (FieldDescriptor field : b.getDescriptorForType().getFields()) {
             String name = field.getName();
             Object value = getValue(params, ctx, name);
@@ -32,6 +54,7 @@ public class MapToMessage {
             } else {
                 if (value instanceof List) {
                     value = ((List) value).get(0);
+                    if (value == null) continue;
                 }
                 objToMessageObj(b, value, field);
             }
@@ -68,6 +91,8 @@ public class MapToMessage {
             case INT64:
             case SINT64:
             case SFIXED64:
+                if( value instanceof Date)
+                    return ((Date)value).getTime();
                 return TypeSafe.anyToLong(value);
 
             case BOOL:
@@ -89,37 +114,47 @@ public class MapToMessage {
                 return bi.longValue();
 
             case STRING:
+                if( value instanceof Date)
+                    return formatDate((Date)value);
                 return TypeSafe.anyToString(value);
 
             case BYTES: {
-                if (value instanceof ByteString) {
-                    return (ByteString) value;
-                }
-                if (value instanceof String) {
-                    byte[] bb = getBytes((String) value);
-                    if (bb == null) return null;
-                    return ByteString.copyFrom(bb);
-                }
-                if (value instanceof byte[]) {
-                    ByteString.copyFrom((byte[]) value);
-                }
-            }
+                    if (value instanceof ByteString) {
+                        return value;
+                    }
+                    if (value instanceof String) {
+                        byte[] bb = getBytes((String) value);
+                        if (bb == null) return null;
+                        return ByteString.copyFrom(bb);
+                    }
+                    if (value instanceof byte[]) {
+                        return ByteString.copyFrom((byte[]) value);
+                    }
 
-            return null;
-
-            case ENUM:
-                EnumDescriptor ed = (EnumDescriptor) field.getEnumType();
-                EnumValueDescriptor evd = ed.findValueByName(value.toString());
-                if (evd == null) {
-                    evd = ed.findValueByNumber(TypeSafe.anyToInt(value));
+                    return null;
                 }
-                if (evd == null) return null;
-                return evd;
+
+            case ENUM: {
+                    EnumDescriptor ed = field.getEnumType();
+                    EnumValueDescriptor evd = ed.findValueByName(value.toString());
+                    if (evd == null) {
+                        evd = ed.findValueByNumber(TypeSafe.anyToInt(value));
+                    }
+                    if (evd == null) return null;
+                    return evd;
+                }
 
             case MESSAGE:
 
                 Map<String, Object> map = TypeSafe.anyToMap(value);
-                if (map == null) return null;
+                if (map == null) {
+                    if( value instanceof MapConvertable) {
+                        map = ((MapConvertable)value).toMap();
+                    }
+                    if( map == null ) {
+                        return null;
+                    }
+                }
 
                 Builder b2 = isRepeated ?
                         getRepeatedFieldBuilder(b, field.getName()) :
@@ -160,10 +195,6 @@ public class MapToMessage {
         }
     }
 
-    static Class<?>[] dummyTypes = new Class<?>[0];
-    static Object[] dummyParameters = new Object[0];
-
-    @SuppressWarnings("all")
     static Builder getFieldBuilder(Builder b, String fieldName) {
         try {
             String methodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1) + "Builder";
@@ -175,17 +206,20 @@ public class MapToMessage {
         }
     }
 
-    @SuppressWarnings("all")
     static Builder getRepeatedFieldBuilder(Builder b, String fieldName) {
         try {
             String methodName = "add" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1) + "Builder";
             Method method = b.getClass().getDeclaredMethod(methodName, dummyTypes);
-            Object builder = (Object) method.invoke(b, dummyParameters);
+            Object builder = method.invoke(b, dummyParameters);
             return (Builder) builder;
         } catch (Exception e) {
             throw new RuntimeException("getFieldBuilder exception", e);
         }
     }
 
+    static SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static String formatDate(Date d) {
+        return f.format(d);
+    }
 }
 

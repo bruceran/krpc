@@ -55,6 +55,7 @@ public class DefaultRpcDataConverter implements RpcDataConverter {
             if (value != null) {
                 if (m == null) m = new HashMap<>();
                 m.put(name, value);
+                req.getParameters().putIfAbsent(name,value);
             }
         }
 

@@ -54,7 +54,9 @@ class UserServiceImpl implements UserService {
         log.info("login received, peers=" + ctx.getMeta().getTrace().getPeers());
         return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req ").build();
     }
-
+    public Login2Res login2(Login2Req req) {
+        return Login2Res.ok();
+    }
     public UpdateProfileRes updateProfile(UpdateProfileReq req) {
         UpdateProfileRes res = UpdateProfileRes.newBuilder().setRetCode(-100002).build();
         return res;

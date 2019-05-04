@@ -7,6 +7,7 @@ import krpc.rpc.cluster.Weights;
 import krpc.rpc.core.ClientContextData;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +15,7 @@ public class RoundRobinWeightLoadBalance implements LoadBalance {
 
     ConcurrentHashMap<Integer, AtomicInteger> map = new ConcurrentHashMap<>();
 
-    public int select(List<Addr> addrs, Weights wts, ClientContextData ctx, Message req) {
+    public int select(List<Addr> addrs, Weights wts, ClientContextData ctx, Map<String,Object> req) {
 
         int serviceId = ctx.getMeta().getServiceId();
 

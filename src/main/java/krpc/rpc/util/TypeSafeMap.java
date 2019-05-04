@@ -55,9 +55,19 @@ public class TypeSafeMap {
         return TypeSafe.anyToInt(v);
     }
 
+    public int intValue(String name,int defaultValue) {
+        Object v = body.get(name);
+        return TypeSafe.anyToInt(v,defaultValue);
+    }
+
     public long longValue(String name) {
         Object v = body.get(name);
         return TypeSafe.anyToLong(v);
+    }
+
+    public long longValue(String name,long defaultValue) {
+        Object v = body.get(name);
+        return TypeSafe.anyToLong(v,defaultValue);
     }
 
     public double doubleValue(String name) {
@@ -65,6 +75,20 @@ public class TypeSafeMap {
         return TypeSafe.anyToDouble(v);
     }
 
+    public double doubleValue(String name,double defaultValue) {
+        Object v = body.get(name);
+        return TypeSafe.anyToDouble(v,defaultValue);
+    }
+
+    public boolean boolValue(String name) {
+        Object v = body.get(name);
+        return TypeSafe.anyToBool(v);
+    }
+
+    public boolean boolValue(String name,boolean defaultValue) {
+        Object v = body.get(name);
+        return TypeSafe.anyToBool(v,defaultValue);
+    }
 
     public Map<String, Object> mapValue(String name) {
         Object v = body.get(name);

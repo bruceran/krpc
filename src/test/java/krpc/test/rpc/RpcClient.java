@@ -49,10 +49,10 @@ public class RpcClient {
         log.info("res=" + ures.getRetCode() + "," + ures.getRetMsg());
 
         //Thread.sleep(2000);
-//
-//		CompletableFuture<LoginRes> f = usa.login(req);  // call async
-//		LoginRes resa = f.get();
-//		log.info("resa="+resa.getRetCode()+","+resa.getRetMsg());
+
+		CompletableFuture<LoginRes> f = usa.login(req);  // call async
+		LoginRes resa = f.get();
+		log.info("resa="+resa.getRetCode()+","+resa.getRetMsg());
 
 		//Thread.sleep(2000);
 

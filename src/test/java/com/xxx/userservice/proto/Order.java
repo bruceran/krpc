@@ -6,947 +6,1121 @@ package com.xxx.userservice.proto;
 /**
  * Protobuf type {@code Order}
  */
-public final class Order extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:Order)
-        OrderOrBuilder {
-    private static final long serialVersionUID = 0L;
+public  final class Order extends
+    com.google.protobuf.GeneratedMessageV3 implements
+    // @@protoc_insertion_point(message_implements:Order)
+    OrderOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use Order.newBuilder() to construct.
+  private Order(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
+  private Order() {
+    orderId_ = "";
+    amount_ = 0;
+    items_ = java.util.Collections.emptyList();
+  }
 
-    // Use Order.newBuilder() to construct.
-    private Order(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
+  @Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private Order(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new NullPointerException();
     }
+    int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 10: {
+            String s = input.readStringRequireUtf8();
 
-    private Order() {
-        orderId_ = "";
-        items_ = java.util.Collections.emptyList();
-    }
+            orderId_ = s;
+            break;
+          }
+          case 16: {
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
-    private Order(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-        }
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-                com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-            boolean done = false;
-            while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                    case 0:
-                        done = true;
-                        break;
-                    case 10: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        orderId_ = s;
-                        break;
-                    }
-                    case 18: {
-                        if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                            items_ = new java.util.ArrayList<com.xxx.userservice.proto.OrderItem>();
-                            mutable_bitField0_ |= 0x00000002;
-                        }
-                        items_.add(
-                                input.readMessage(com.xxx.userservice.proto.OrderItem.parser(), extensionRegistry));
-                        break;
-                    }
-                    default: {
-                        if (!parseUnknownFieldProto3(
-                                input, unknownFields, extensionRegistry, tag)) {
-                            done = true;
-                        }
-                        break;
-                    }
-                }
+            amount_ = input.readInt32();
+            break;
+          }
+          case 26: {
+            Session.Builder subBuilder = null;
+            if (session_ != null) {
+              subBuilder = session_.toBuilder();
             }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-            throw new com.google.protobuf.InvalidProtocolBufferException(
-                    e).setUnfinishedMessage(this);
-        } finally {
-            if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                items_ = java.util.Collections.unmodifiableList(items_);
+            session_ = input.readMessage(Session.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(session_);
+              session_ = subBuilder.buildPartial();
             }
-            this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
-        }
-    }
 
+            break;
+          }
+          case 34: {
+            if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+              items_ = new java.util.ArrayList<OrderItem>();
+              mutable_bitField0_ |= 0x00000008;
+            }
+            items_.add(
+                input.readMessage(OrderItem.parser(), extensionRegistry));
+            break;
+          }
+          default: {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
+        }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+        items_ = java.util.Collections.unmodifiableList(items_);
+      }
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return UserServiceMetas.internal_static_Order_descriptor;
+  }
+
+  @Override
+  protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return UserServiceMetas.internal_static_Order_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            Order.class, Builder.class);
+  }
+
+  private int bitField0_;
+  public static final int ORDERID_FIELD_NUMBER = 1;
+  private volatile Object orderId_;
+  /**
+   * <code>string orderId = 1;</code>
+   */
+  public String getOrderId() {
+    Object ref = orderId_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      orderId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string orderId = 1;</code>
+   */
+  public com.google.protobuf.ByteString
+      getOrderIdBytes() {
+    Object ref = orderId_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      orderId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int AMOUNT_FIELD_NUMBER = 2;
+  private int amount_;
+  /**
+   * <code>int32 amount = 2;</code>
+   */
+  public int getAmount() {
+    return amount_;
+  }
+
+  public static final int SESSION_FIELD_NUMBER = 3;
+  private Session session_;
+  /**
+   * <code>.Session session = 3;</code>
+   */
+  public boolean hasSession() {
+    return session_ != null;
+  }
+  /**
+   * <code>.Session session = 3;</code>
+   */
+  public Session getSession() {
+    return session_ == null ? Session.getDefaultInstance() : session_;
+  }
+  /**
+   * <code>.Session session = 3;</code>
+   */
+  public SessionOrBuilder getSessionOrBuilder() {
+    return getSession();
+  }
+
+  public static final int ITEMS_FIELD_NUMBER = 4;
+  private java.util.List<OrderItem> items_;
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  public java.util.List<OrderItem> getItemsList() {
+    return items_;
+  }
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  public java.util.List<? extends OrderItemOrBuilder>
+      getItemsOrBuilderList() {
+    return items_;
+  }
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  public int getItemsCount() {
+    return items_.size();
+  }
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  public OrderItem getItems(int index) {
+    return items_.get(index);
+  }
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  public OrderItemOrBuilder getItemsOrBuilder(
+      int index) {
+    return items_.get(index);
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    if (!getOrderIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, orderId_);
+    }
+    if (amount_ != 0) {
+      output.writeInt32(2, amount_);
+    }
+    if (session_ != null) {
+      output.writeMessage(3, getSession());
+    }
+    for (int i = 0; i < items_.size(); i++) {
+      output.writeMessage(4, items_.get(i));
+    }
+    unknownFields.writeTo(output);
+  }
+
+  @Override
+  public int getSerializedSize() {
+    int size = memoizedSize;
+    if (size != -1) return size;
+
+    size = 0;
+    if (!getOrderIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, orderId_);
+    }
+    if (amount_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(2, amount_);
+    }
+    if (session_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, getSession());
+    }
+    for (int i = 0; i < items_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(4, items_.get(i));
+    }
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
+    return size;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof Order)) {
+      return super.equals(obj);
+    }
+    Order other = (Order) obj;
+
+    boolean result = true;
+    result = result && getOrderId()
+        .equals(other.getOrderId());
+    result = result && (getAmount()
+        == other.getAmount());
+    result = result && (hasSession() == other.hasSession());
+    if (hasSession()) {
+      result = result && getSession()
+          .equals(other.getSession());
+    }
+    result = result && getItemsList()
+        .equals(other.getItemsList());
+    result = result && unknownFields.equals(other.unknownFields);
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + ORDERID_FIELD_NUMBER;
+    hash = (53 * hash) + getOrderId().hashCode();
+    hash = (37 * hash) + AMOUNT_FIELD_NUMBER;
+    hash = (53 * hash) + getAmount();
+    if (hasSession()) {
+      hash = (37 * hash) + SESSION_FIELD_NUMBER;
+      hash = (53 * hash) + getSession().hashCode();
+    }
+    if (getItemsCount() > 0) {
+      hash = (37 * hash) + ITEMS_FIELD_NUMBER;
+      hash = (53 * hash) + getItemsList().hashCode();
+    }
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static Order parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static Order parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static Order parseFrom(
+      com.google.protobuf.ByteString data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static Order parseFrom(
+      com.google.protobuf.ByteString data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static Order parseFrom(byte[] data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static Order parseFrom(
+      byte[] data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static Order parseFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static Order parseFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static Order parseDelimitedFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
+  }
+  public static Order parseDelimitedFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static Order parseFrom(
+      com.google.protobuf.CodedInputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static Order parseFrom(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+
+  @Override
+  public Builder newBuilderForType() { return newBuilder(); }
+  public static Builder newBuilder() {
+    return DEFAULT_INSTANCE.toBuilder();
+  }
+  public static Builder newBuilder(Order prototype) {
+    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+  }
+  @Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @Override
+  protected Builder newBuilderForType(
+      BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
+  /**
+   * Protobuf type {@code Order}
+   */
+  public static final class Builder extends
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+      // @@protoc_insertion_point(builder_implements:Order)
+      OrderOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
-        return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order_descriptor;
+        getDescriptor() {
+      return UserServiceMetas.internal_static_Order_descriptor;
     }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
-        return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        com.xxx.userservice.proto.Order.class, com.xxx.userservice.proto.Order.Builder.class);
+    @Override
+    protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return UserServiceMetas.internal_static_Order_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              Order.class, Builder.class);
     }
 
+    // Construct using com.xxx.userservice.proto.Order.newBuilder()
+    private Builder() {
+      maybeForceBuilderInitialization();
+    }
+
+    private Builder(
+        BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+        getItemsFieldBuilder();
+      }
+    }
+    @Override
+    public Builder clear() {
+      super.clear();
+      orderId_ = "";
+
+      amount_ = 0;
+
+      if (sessionBuilder_ == null) {
+        session_ = null;
+      } else {
+        session_ = null;
+        sessionBuilder_ = null;
+      }
+      if (itemsBuilder_ == null) {
+        items_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+      } else {
+        itemsBuilder_.clear();
+      }
+      return this;
+    }
+
+    @Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return UserServiceMetas.internal_static_Order_descriptor;
+    }
+
+    @Override
+    public Order getDefaultInstanceForType() {
+      return Order.getDefaultInstance();
+    }
+
+    @Override
+    public Order build() {
+      Order result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @Override
+    public Order buildPartial() {
+      Order result = new Order(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
+      result.orderId_ = orderId_;
+      result.amount_ = amount_;
+      if (sessionBuilder_ == null) {
+        result.session_ = session_;
+      } else {
+        result.session_ = sessionBuilder_.build();
+      }
+      if (itemsBuilder_ == null) {
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          items_ = java.util.Collections.unmodifiableList(items_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.items_ = items_;
+      } else {
+        result.items_ = itemsBuilder_.build();
+      }
+      result.bitField0_ = to_bitField0_;
+      onBuilt();
+      return result;
+    }
+
+    @Override
+    public Builder clone() {
+      return (Builder) super.clone();
+    }
+    @Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        Object value) {
+      return (Builder) super.setField(field, value);
+    }
+    @Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return (Builder) super.clearField(field);
+    }
+    @Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return (Builder) super.clearOneof(oneof);
+    }
+    @Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, Object value) {
+      return (Builder) super.setRepeatedField(field, index, value);
+    }
+    @Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        Object value) {
+      return (Builder) super.addRepeatedField(field, value);
+    }
+    @Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof Order) {
+        return mergeFrom((Order)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(Order other) {
+      if (other == Order.getDefaultInstance()) return this;
+      if (!other.getOrderId().isEmpty()) {
+        orderId_ = other.orderId_;
+        onChanged();
+      }
+      if (other.getAmount() != 0) {
+        setAmount(other.getAmount());
+      }
+      if (other.hasSession()) {
+        mergeSession(other.getSession());
+      }
+      if (itemsBuilder_ == null) {
+        if (!other.items_.isEmpty()) {
+          if (items_.isEmpty()) {
+            items_ = other.items_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureItemsIsMutable();
+            items_.addAll(other.items_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.items_.isEmpty()) {
+          if (itemsBuilder_.isEmpty()) {
+            itemsBuilder_.dispose();
+            itemsBuilder_ = null;
+            items_ = other.items_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+            itemsBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getItemsFieldBuilder() : null;
+          } else {
+            itemsBuilder_.addAllMessages(other.items_);
+          }
+        }
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Order parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (Order) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
     private int bitField0_;
-    public static final int ORDERID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object orderId_;
 
+    private Object orderId_ = "";
     /**
      * <code>string orderId = 1;</code>
      */
-    public java.lang.String getOrderId() {
-        java.lang.Object ref = orderId_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            orderId_ = s;
-            return s;
-        }
+    public String getOrderId() {
+      Object ref = orderId_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        orderId_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string orderId = 1;</code>
      */
     public com.google.protobuf.ByteString
-    getOrderIdBytes() {
-        java.lang.Object ref = orderId_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            orderId_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
+        getOrderIdBytes() {
+      Object ref = orderId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        orderId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string orderId = 1;</code>
+     */
+    public Builder setOrderId(
+        String value) {
+      if (value == null) value = "";
+  
+      orderId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string orderId = 1;</code>
+     */
+    public Builder clearOrderId() {
+      
+      orderId_ = getDefaultInstance().getOrderId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string orderId = 1;</code>
+     */
+    public Builder setOrderIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      orderId_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int amount_ ;
+    /**
+     * <code>int32 amount = 2;</code>
+     */
+    public int getAmount() {
+      return amount_;
+    }
+    /**
+     * <code>int32 amount = 2;</code>
+     */
+    public Builder setAmount(int value) {
+      
+      amount_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 amount = 2;</code>
+     */
+    public Builder clearAmount() {
+      
+      amount_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private Session session_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        Session, Session.Builder, SessionOrBuilder> sessionBuilder_;
+    /**
+     * <code>.Session session = 3;</code>
+     */
+    public boolean hasSession() {
+      return sessionBuilder_ != null || session_ != null;
+    }
+    /**
+     * <code>.Session session = 3;</code>
+     */
+    public Session getSession() {
+      if (sessionBuilder_ == null) {
+        return session_ == null ? Session.getDefaultInstance() : session_;
+      } else {
+        return sessionBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.Session session = 3;</code>
+     */
+    public Builder setSession(Session value) {
+      if (sessionBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
+        session_ = value;
+        onChanged();
+      } else {
+        sessionBuilder_.setMessage(value);
+      }
+
+      return this;
     }
-
-    public static final int ITEMS_FIELD_NUMBER = 2;
-    private java.util.List<com.xxx.userservice.proto.OrderItem> items_;
-
     /**
-     * <code>repeated .OrderItem items = 2;</code>
+     * <code>.Session session = 3;</code>
      */
-    public java.util.List<com.xxx.userservice.proto.OrderItem> getItemsList() {
-        return items_;
-    }
+    public Builder setSession(
+        Session.Builder builderForValue) {
+      if (sessionBuilder_ == null) {
+        session_ = builderForValue.build();
+        onChanged();
+      } else {
+        sessionBuilder_.setMessage(builderForValue.build());
+      }
 
+      return this;
+    }
     /**
-     * <code>repeated .OrderItem items = 2;</code>
+     * <code>.Session session = 3;</code>
      */
-    public java.util.List<? extends com.xxx.userservice.proto.OrderItemOrBuilder>
-    getItemsOrBuilderList() {
-        return items_;
+    public Builder mergeSession(Session value) {
+      if (sessionBuilder_ == null) {
+        if (session_ != null) {
+          session_ =
+            Session.newBuilder(session_).mergeFrom(value).buildPartial();
+        } else {
+          session_ = value;
+        }
+        onChanged();
+      } else {
+        sessionBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.Session session = 3;</code>
+     */
+    public Builder clearSession() {
+      if (sessionBuilder_ == null) {
+        session_ = null;
+        onChanged();
+      } else {
+        session_ = null;
+        sessionBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.Session session = 3;</code>
+     */
+    public Session.Builder getSessionBuilder() {
+      
+      onChanged();
+      return getSessionFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.Session session = 3;</code>
+     */
+    public SessionOrBuilder getSessionOrBuilder() {
+      if (sessionBuilder_ != null) {
+        return sessionBuilder_.getMessageOrBuilder();
+      } else {
+        return session_ == null ?
+            Session.getDefaultInstance() : session_;
+      }
+    }
+    /**
+     * <code>.Session session = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        Session, Session.Builder, SessionOrBuilder>
+        getSessionFieldBuilder() {
+      if (sessionBuilder_ == null) {
+        sessionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            Session, Session.Builder, SessionOrBuilder>(
+                getSession(),
+                getParentForChildren(),
+                isClean());
+        session_ = null;
+      }
+      return sessionBuilder_;
     }
 
+    private java.util.List<OrderItem> items_ =
+      java.util.Collections.emptyList();
+    private void ensureItemsIsMutable() {
+      if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+        items_ = new java.util.ArrayList<OrderItem>(items_);
+        bitField0_ |= 0x00000008;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        OrderItem, OrderItem.Builder, OrderItemOrBuilder> itemsBuilder_;
+
     /**
-     * <code>repeated .OrderItem items = 2;</code>
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public java.util.List<OrderItem> getItemsList() {
+      if (itemsBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(items_);
+      } else {
+        return itemsBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
      */
     public int getItemsCount() {
+      if (itemsBuilder_ == null) {
         return items_.size();
+      } else {
+        return itemsBuilder_.getCount();
+      }
     }
-
     /**
-     * <code>repeated .OrderItem items = 2;</code>
+     * <code>repeated .OrderItem items = 4;</code>
      */
-    public com.xxx.userservice.proto.OrderItem getItems(int index) {
+    public OrderItem getItems(int index) {
+      if (itemsBuilder_ == null) {
         return items_.get(index);
+      } else {
+        return itemsBuilder_.getMessage(index);
+      }
     }
-
     /**
-     * <code>repeated .OrderItem items = 2;</code>
+     * <code>repeated .OrderItem items = 4;</code>
      */
-    public com.xxx.userservice.proto.OrderItemOrBuilder getItemsOrBuilder(
-            int index) {
-        return items_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
-        if (!getOrderIdBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 1, orderId_);
+    public Builder setItems(
+        int index, OrderItem value) {
+      if (itemsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
-        for (int i = 0; i < items_.size(); i++) {
-            output.writeMessage(2, items_.get(i));
-        }
-        unknownFields.writeTo(output);
+        ensureItemsIsMutable();
+        items_.set(index, value);
+        onChanged();
+      } else {
+        itemsBuilder_.setMessage(index, value);
+      }
+      return this;
     }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (!getOrderIdBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, orderId_);
-        }
-        for (int i = 0; i < items_.size(); i++) {
-            size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(2, items_.get(i));
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof com.xxx.userservice.proto.Order)) {
-            return super.equals(obj);
-        }
-        com.xxx.userservice.proto.Order other = (com.xxx.userservice.proto.Order) obj;
-
-        boolean result = true;
-        result = result && getOrderId()
-                .equals(other.getOrderId());
-        result = result && getItemsList()
-                .equals(other.getItemsList());
-        result = result && unknownFields.equals(other.unknownFields);
-        return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-        if (memoizedHashCode != 0) {
-            return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + ORDERID_FIELD_NUMBER;
-        hash = (53 * hash) + getOrderId().hashCode();
-        if (getItemsCount() > 0) {
-            hash = (37 * hash) + ITEMS_FIELD_NUMBER;
-            hash = (53 * hash) + getItemsList().hashCode();
-        }
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Order parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseDelimitedWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.Order parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.Order parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-        return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(com.xxx.userservice.proto.Order prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-                ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-    }
-
     /**
-     * Protobuf type {@code Order}
+     * <code>repeated .OrderItem items = 4;</code>
      */
-    public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:Order)
-            com.xxx.userservice.proto.OrderOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order_descriptor;
+    public Builder setItems(
+        int index, OrderItem.Builder builderForValue) {
+      if (itemsBuilder_ == null) {
+        ensureItemsIsMutable();
+        items_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        itemsBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public Builder addItems(OrderItem value) {
+      if (itemsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(
-                            com.xxx.userservice.proto.Order.class, com.xxx.userservice.proto.Order.Builder.class);
+        ensureItemsIsMutable();
+        items_.add(value);
+        onChanged();
+      } else {
+        itemsBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public Builder addItems(
+        int index, OrderItem value) {
+      if (itemsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
-
-        // Construct using com.xxx.userservice.proto.Order.newBuilder()
-        private Builder() {
-            maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-            super(parent);
-            maybeForceBuilderInitialization();
-        }
-
-        private void maybeForceBuilderInitialization() {
-            if (com.google.protobuf.GeneratedMessageV3
-                    .alwaysUseFieldBuilders) {
-                getItemsFieldBuilder();
-            }
-        }
-
-        @java.lang.Override
-        public Builder clear() {
-            super.clear();
-            orderId_ = "";
-
-            if (itemsBuilder_ == null) {
-                items_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-                itemsBuilder_.clear();
-            }
-            return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order_descriptor;
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.Order getDefaultInstanceForType() {
-            return com.xxx.userservice.proto.Order.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.Order build() {
-            com.xxx.userservice.proto.Order result = buildPartial();
-            if (!result.isInitialized()) {
-                throw newUninitializedMessageException(result);
-            }
-            return result;
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.Order buildPartial() {
-            com.xxx.userservice.proto.Order result = new com.xxx.userservice.proto.Order(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.orderId_ = orderId_;
-            if (itemsBuilder_ == null) {
-                if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                    items_ = java.util.Collections.unmodifiableList(items_);
-                    bitField0_ = (bitField0_ & ~0x00000002);
-                }
-                result.items_ = items_;
-            } else {
-                result.items_ = itemsBuilder_.build();
-            }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return (Builder) super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return (Builder) super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return (Builder) super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return (Builder) super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return (Builder) super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return (Builder) super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof com.xxx.userservice.proto.Order) {
-                return mergeFrom((com.xxx.userservice.proto.Order) other);
-            } else {
-                super.mergeFrom(other);
-                return this;
-            }
-        }
-
-        public Builder mergeFrom(com.xxx.userservice.proto.Order other) {
-            if (other == com.xxx.userservice.proto.Order.getDefaultInstance()) return this;
-            if (!other.getOrderId().isEmpty()) {
-                orderId_ = other.orderId_;
-                onChanged();
-            }
-            if (itemsBuilder_ == null) {
-                if (!other.items_.isEmpty()) {
-                    if (items_.isEmpty()) {
-                        items_ = other.items_;
-                        bitField0_ = (bitField0_ & ~0x00000002);
-                    } else {
-                        ensureItemsIsMutable();
-                        items_.addAll(other.items_);
-                    }
-                    onChanged();
-                }
-            } else {
-                if (!other.items_.isEmpty()) {
-                    if (itemsBuilder_.isEmpty()) {
-                        itemsBuilder_.dispose();
-                        itemsBuilder_ = null;
-                        items_ = other.items_;
-                        bitField0_ = (bitField0_ & ~0x00000002);
-                        itemsBuilder_ =
-                                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                                        getItemsFieldBuilder() : null;
-                    } else {
-                        itemsBuilder_.addAllMessages(other.items_);
-                    }
-                }
-            }
-            this.mergeUnknownFields(other.unknownFields);
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws java.io.IOException {
-            com.xxx.userservice.proto.Order parsedMessage = null;
-            try {
-                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage = (com.xxx.userservice.proto.Order) e.getUnfinishedMessage();
-                throw e.unwrapIOException();
-            } finally {
-                if (parsedMessage != null) {
-                    mergeFrom(parsedMessage);
-                }
-            }
-            return this;
-        }
-
-        private int bitField0_;
-
-        private java.lang.Object orderId_ = "";
-
-        /**
-         * <code>string orderId = 1;</code>
-         */
-        public java.lang.String getOrderId() {
-            java.lang.Object ref = orderId_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                orderId_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string orderId = 1;</code>
-         */
-        public com.google.protobuf.ByteString
-        getOrderIdBytes() {
-            java.lang.Object ref = orderId_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                orderId_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string orderId = 1;</code>
-         */
-        public Builder setOrderId(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            orderId_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string orderId = 1;</code>
-         */
-        public Builder clearOrderId() {
-
-            orderId_ = getDefaultInstance().getOrderId();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string orderId = 1;</code>
-         */
-        public Builder setOrderIdBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            orderId_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.util.List<com.xxx.userservice.proto.OrderItem> items_ =
-                java.util.Collections.emptyList();
-
-        private void ensureItemsIsMutable() {
-            if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-                items_ = new java.util.ArrayList<com.xxx.userservice.proto.OrderItem>(items_);
-                bitField0_ |= 0x00000002;
-            }
-        }
-
-        private com.google.protobuf.RepeatedFieldBuilderV3<
-                com.xxx.userservice.proto.OrderItem, com.xxx.userservice.proto.OrderItem.Builder, com.xxx.userservice.proto.OrderItemOrBuilder> itemsBuilder_;
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public java.util.List<com.xxx.userservice.proto.OrderItem> getItemsList() {
-            if (itemsBuilder_ == null) {
-                return java.util.Collections.unmodifiableList(items_);
-            } else {
-                return itemsBuilder_.getMessageList();
-            }
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public int getItemsCount() {
-            if (itemsBuilder_ == null) {
-                return items_.size();
-            } else {
-                return itemsBuilder_.getCount();
-            }
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public com.xxx.userservice.proto.OrderItem getItems(int index) {
-            if (itemsBuilder_ == null) {
-                return items_.get(index);
-            } else {
-                return itemsBuilder_.getMessage(index);
-            }
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder setItems(
-                int index, com.xxx.userservice.proto.OrderItem value) {
-            if (itemsBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureItemsIsMutable();
-                items_.set(index, value);
-                onChanged();
-            } else {
-                itemsBuilder_.setMessage(index, value);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder setItems(
-                int index, com.xxx.userservice.proto.OrderItem.Builder builderForValue) {
-            if (itemsBuilder_ == null) {
-                ensureItemsIsMutable();
-                items_.set(index, builderForValue.build());
-                onChanged();
-            } else {
-                itemsBuilder_.setMessage(index, builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder addItems(com.xxx.userservice.proto.OrderItem value) {
-            if (itemsBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureItemsIsMutable();
-                items_.add(value);
-                onChanged();
-            } else {
-                itemsBuilder_.addMessage(value);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder addItems(
-                int index, com.xxx.userservice.proto.OrderItem value) {
-            if (itemsBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureItemsIsMutable();
-                items_.add(index, value);
-                onChanged();
-            } else {
-                itemsBuilder_.addMessage(index, value);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder addItems(
-                com.xxx.userservice.proto.OrderItem.Builder builderForValue) {
-            if (itemsBuilder_ == null) {
-                ensureItemsIsMutable();
-                items_.add(builderForValue.build());
-                onChanged();
-            } else {
-                itemsBuilder_.addMessage(builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder addItems(
-                int index, com.xxx.userservice.proto.OrderItem.Builder builderForValue) {
-            if (itemsBuilder_ == null) {
-                ensureItemsIsMutable();
-                items_.add(index, builderForValue.build());
-                onChanged();
-            } else {
-                itemsBuilder_.addMessage(index, builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder addAllItems(
-                java.lang.Iterable<? extends com.xxx.userservice.proto.OrderItem> values) {
-            if (itemsBuilder_ == null) {
-                ensureItemsIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                        values, items_);
-                onChanged();
-            } else {
-                itemsBuilder_.addAllMessages(values);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder clearItems() {
-            if (itemsBuilder_ == null) {
-                items_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000002);
-                onChanged();
-            } else {
-                itemsBuilder_.clear();
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public Builder removeItems(int index) {
-            if (itemsBuilder_ == null) {
-                ensureItemsIsMutable();
-                items_.remove(index);
-                onChanged();
-            } else {
-                itemsBuilder_.remove(index);
-            }
-            return this;
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public com.xxx.userservice.proto.OrderItem.Builder getItemsBuilder(
-                int index) {
-            return getItemsFieldBuilder().getBuilder(index);
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public com.xxx.userservice.proto.OrderItemOrBuilder getItemsOrBuilder(
-                int index) {
-            if (itemsBuilder_ == null) {
-                return items_.get(index);
-            } else {
-                return itemsBuilder_.getMessageOrBuilder(index);
-            }
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public java.util.List<? extends com.xxx.userservice.proto.OrderItemOrBuilder>
-        getItemsOrBuilderList() {
-            if (itemsBuilder_ != null) {
-                return itemsBuilder_.getMessageOrBuilderList();
-            } else {
-                return java.util.Collections.unmodifiableList(items_);
-            }
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public com.xxx.userservice.proto.OrderItem.Builder addItemsBuilder() {
-            return getItemsFieldBuilder().addBuilder(
-                    com.xxx.userservice.proto.OrderItem.getDefaultInstance());
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public com.xxx.userservice.proto.OrderItem.Builder addItemsBuilder(
-                int index) {
-            return getItemsFieldBuilder().addBuilder(
-                    index, com.xxx.userservice.proto.OrderItem.getDefaultInstance());
-        }
-
-        /**
-         * <code>repeated .OrderItem items = 2;</code>
-         */
-        public java.util.List<com.xxx.userservice.proto.OrderItem.Builder>
-        getItemsBuilderList() {
-            return getItemsFieldBuilder().getBuilderList();
-        }
-
-        private com.google.protobuf.RepeatedFieldBuilderV3<
-                com.xxx.userservice.proto.OrderItem, com.xxx.userservice.proto.OrderItem.Builder, com.xxx.userservice.proto.OrderItemOrBuilder>
+        ensureItemsIsMutable();
+        items_.add(index, value);
+        onChanged();
+      } else {
+        itemsBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public Builder addItems(
+        OrderItem.Builder builderForValue) {
+      if (itemsBuilder_ == null) {
+        ensureItemsIsMutable();
+        items_.add(builderForValue.build());
+        onChanged();
+      } else {
+        itemsBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public Builder addItems(
+        int index, OrderItem.Builder builderForValue) {
+      if (itemsBuilder_ == null) {
+        ensureItemsIsMutable();
+        items_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        itemsBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public Builder addAllItems(
+        Iterable<? extends OrderItem> values) {
+      if (itemsBuilder_ == null) {
+        ensureItemsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, items_);
+        onChanged();
+      } else {
+        itemsBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public Builder clearItems() {
+      if (itemsBuilder_ == null) {
+        items_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+      } else {
+        itemsBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public Builder removeItems(int index) {
+      if (itemsBuilder_ == null) {
+        ensureItemsIsMutable();
+        items_.remove(index);
+        onChanged();
+      } else {
+        itemsBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public OrderItem.Builder getItemsBuilder(
+        int index) {
+      return getItemsFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public OrderItemOrBuilder getItemsOrBuilder(
+        int index) {
+      if (itemsBuilder_ == null) {
+        return items_.get(index);  } else {
+        return itemsBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public java.util.List<? extends OrderItemOrBuilder>
+         getItemsOrBuilderList() {
+      if (itemsBuilder_ != null) {
+        return itemsBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(items_);
+      }
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public OrderItem.Builder addItemsBuilder() {
+      return getItemsFieldBuilder().addBuilder(
+          OrderItem.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public OrderItem.Builder addItemsBuilder(
+        int index) {
+      return getItemsFieldBuilder().addBuilder(
+          index, OrderItem.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .OrderItem items = 4;</code>
+     */
+    public java.util.List<OrderItem.Builder>
+         getItemsBuilderList() {
+      return getItemsFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        OrderItem, OrderItem.Builder, OrderItemOrBuilder>
         getItemsFieldBuilder() {
-            if (itemsBuilder_ == null) {
-                itemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        com.xxx.userservice.proto.OrderItem, com.xxx.userservice.proto.OrderItem.Builder, com.xxx.userservice.proto.OrderItemOrBuilder>(
-                        items_,
-                        ((bitField0_ & 0x00000002) == 0x00000002),
-                        getParentForChildren(),
-                        isClean());
-                items_ = null;
-            }
-            return itemsBuilder_;
-        }
-
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFieldsProto3(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
-
-        // @@protoc_insertion_point(builder_scope:Order)
+      if (itemsBuilder_ == null) {
+        itemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            OrderItem, OrderItem.Builder, OrderItemOrBuilder>(
+                items_,
+                ((bitField0_ & 0x00000008) == 0x00000008),
+                getParentForChildren(),
+                isClean());
+        items_ = null;
+      }
+      return itemsBuilder_;
+    }
+    @Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    // @@protoc_insertion_point(class_scope:Order)
-    private static final com.xxx.userservice.proto.Order DEFAULT_INSTANCE;
-
-    static {
-        DEFAULT_INSTANCE = new com.xxx.userservice.proto.Order();
+    @Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
-    public static com.xxx.userservice.proto.Order getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-    }
 
-    private static final com.google.protobuf.Parser<Order>
-            PARSER = new com.google.protobuf.AbstractParser<Order>() {
-        @java.lang.Override
-        public Order parsePartialFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return new Order(input, extensionRegistry);
-        }
-    };
+    // @@protoc_insertion_point(builder_scope:Order)
+  }
 
-    public static com.google.protobuf.Parser<Order> parser() {
-        return PARSER;
-    }
+  // @@protoc_insertion_point(class_scope:Order)
+  private static final Order DEFAULT_INSTANCE;
+  static {
+    DEFAULT_INSTANCE = new Order();
+  }
 
-    @java.lang.Override
-    public com.google.protobuf.Parser<Order> getParserForType() {
-        return PARSER;
-    }
+  public static Order getDefaultInstance() {
+    return DEFAULT_INSTANCE;
+  }
 
-    @java.lang.Override
-    public com.xxx.userservice.proto.Order getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
+  private static final com.google.protobuf.Parser<Order>
+      PARSER = new com.google.protobuf.AbstractParser<Order>() {
+    @Override
+    public Order parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new Order(input, extensionRegistry);
     }
+  };
+
+  public static com.google.protobuf.Parser<Order> parser() {
+    return PARSER;
+  }
+
+  @Override
+  public com.google.protobuf.Parser<Order> getParserForType() {
+    return PARSER;
+  }
+
+  @Override
+  public Order getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
 
 }
 

@@ -5,15 +5,17 @@ import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.*;
 
 public class MessageToMap {
 
-    static Logger log = LoggerFactory.getLogger(MessageToMap.class);
+    static public Map<String, Object> toMap(Message message) {
+        Map<String, Object> results = new LinkedHashMap<>();
+        parseMessage(message, results, true, Integer.MAX_VALUE);
+        return results;
+    }
 
     static public void parseMessage(Message message, Map<String, Object> results) {
         parseMessage(message, results, true, Integer.MAX_VALUE);
@@ -41,14 +43,13 @@ public class MessageToMap {
         }
     }
 
-    @SuppressWarnings("unchecked")
     static void addToResults(String name, Object value, Map<String, Object> results, boolean isArray) {
         if (!isArray) {
             results.put(name, value);
         } else {
             ArrayList<Object> list = (ArrayList<Object>) results.get(name);
             if (list == null) {
-                list = new ArrayList<Object>();
+                list = new ArrayList<>();
                 results.put(name, list);
             }
             list.add(value);
@@ -63,25 +64,25 @@ public class MessageToMap {
             case INT32:
             case SINT32:
             case SFIXED32:
-                addToResults(name, (Integer) value, results, isArray);
+                addToResults(name,value, results, isArray);
                 break;
 
             case INT64:
             case SINT64:
             case SFIXED64:
-                addToResults(name, (Long) value, results, isArray);
+                addToResults(name,value, results, isArray);
                 break;
 
             case BOOL:
-                addToResults(name, (Boolean) value, results, isArray);
+                addToResults(name,value, results, isArray);
                 break;
 
             case FLOAT:
-                addToResults(name, (Float) value, results, isArray);
+                addToResults(name,value, results, isArray);
                 break;
 
             case DOUBLE:
-                addToResults(name, (Double) value, results, isArray);
+                addToResults(name,value, results, isArray);
                 break;
 
             case UINT32:
@@ -95,12 +96,12 @@ public class MessageToMap {
                 break;
 
             case STRING:
-                addToResults(name, (String) value, results, isArray);
+                addToResults(name,value, results, isArray);
                 break;
 
             case BYTES: {
                 if (value instanceof ByteString) {
-                    addToResults(name, (ByteString) value, results, isArray);
+                    addToResults(name, value, results, isArray);
                 }
                 if (value instanceof String) {
                     byte[] bb = getBytes((String) value);
@@ -119,7 +120,7 @@ public class MessageToMap {
                 break;
 
             case MESSAGE:
-                HashMap<String, Object> sub = new HashMap<>();
+                HashMap<String, Object> sub = new LinkedHashMap<>();
                 parseMessage((Message) value, sub, withDefault, maxRepeatedSizeToGet);
                 addToResults(name, sub, results, isArray);
                 break;
@@ -130,24 +131,20 @@ public class MessageToMap {
     }
 
     static public Map<FieldDescriptor, Object> getFields(MessageOrBuilder message, boolean withDefaultValue) {
-        Map<FieldDescriptor, Object> fieldsToPrint = null;
-        if (withDefaultValue) {
-            fieldsToPrint = new TreeMap<FieldDescriptor, Object>(message.getAllFields());
-            for (FieldDescriptor field : message.getDescriptorForType().getFields()) {
-                if (field.isOptional()) {
-                    if (field.getJavaType() == FieldDescriptor.JavaType.MESSAGE && !message.hasField(field)) {
-                        continue;
-                    }
-                    if (field.getJavaType() == FieldDescriptor.JavaType.STRING && !message.hasField(field)) {
-                        continue;
-                    }
+        if (!withDefaultValue) {
+            return message.getAllFields();
+        }
+        Map<FieldDescriptor, Object> fieldsToPrint = new LinkedHashMap<>();
+        for (FieldDescriptor field : message.getDescriptorForType().getFields()) {
+            if (field.isOptional()) {
+                if (field.getJavaType() == FieldDescriptor.JavaType.MESSAGE && !message.hasField(field)) {
+                    continue;
                 }
-                if (!fieldsToPrint.containsKey(field)) {
-                    fieldsToPrint.put(field, message.getField(field));
+                if (field.getJavaType() == FieldDescriptor.JavaType.STRING && !message.hasField(field)) {
+                    continue;
                 }
             }
-        } else {
-            fieldsToPrint = message.getAllFields();
+            fieldsToPrint.put(field, message.getField(field));
         }
         return fieldsToPrint;
     }

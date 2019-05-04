@@ -5,7 +5,7 @@
 
 	<groupId>krpc</groupId>
 	<artifactId>spring-boot-starter</artifactId>
-	<version>0.2.5</version>
+	<version>0.2.15</version>
 	<packaging>pom</packaging>
 
 	<name>spring-boot-starter</name>
@@ -32,10 +32,9 @@
 		<dependency>
 			<groupId>krpc</groupId>
 			<artifactId>krpc</artifactId>
-			<version>0.2.5</version>
+			<version>0.2.15</version>
 		</dependency>
 	
 	</dependencies>	    
-		
-	
+
 </project>

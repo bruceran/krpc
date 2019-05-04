@@ -30,6 +30,8 @@ public class ServerConfig {
 
     String connectionPlugin = "";
 
+    String exchangeServiceIds = "";
+
     public ServerConfig() {
     }
 
@@ -210,6 +212,15 @@ public class ServerConfig {
 
     public ServerConfig setEnableEncrypt(boolean enableEncrypt) {
         this.enableEncrypt = enableEncrypt;
+        return this;
+    }
+
+    public String getExchangeServiceIds() {
+        return exchangeServiceIds;
+    }
+
+    public ServerConfig setExchangeServiceIds(String exchangeServiceIds) {
+        this.exchangeServiceIds = exchangeServiceIds;
         return this;
     }
 }

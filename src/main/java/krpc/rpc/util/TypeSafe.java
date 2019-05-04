@@ -1,6 +1,8 @@
 package krpc.rpc.util;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class TypeSafe {
     }
 
     public static int anyToInt(Object v, int defaultValue) {
-        if (v == null) return 0;
+        if (v == null) return defaultValue;
         if (v instanceof Integer) {
             return (Integer) v;
         }
@@ -47,7 +49,7 @@ public class TypeSafe {
     }
 
     public static long anyToLong(Object v, long defaultValue) {
-        if (v == null) return 0;
+        if (v == null) return defaultValue;
         if (v instanceof Integer) {
             return (Integer) v;
         }
@@ -65,7 +67,11 @@ public class TypeSafe {
     }
 
     public static float anyToFloat(Object v) {
-        if (v == null) return 0;
+        return anyToFloat(v,0);
+    }
+
+    public static float anyToFloat(Object v,float defaultValue) {
+        if (v == null) return defaultValue;
         if (v instanceof Float) {
             return (Float) v;
         }
@@ -75,12 +81,16 @@ public class TypeSafe {
         try {
             return Float.parseFloat(v.toString());
         } catch (Exception e) {
-            return 0;
+            return defaultValue;
         }
     }
 
     public static boolean anyToBool(Object v) {
-        if (v == null) return false;
+        return anyToBool(v,false);
+    }
+
+    public static boolean anyToBool(Object v,boolean defaultValue) {
+        if (v == null || v.equals("") ) return defaultValue;
         if (v instanceof Boolean) {
             return (Boolean) v;
         }
@@ -89,9 +99,13 @@ public class TypeSafe {
         }
         try {
             String s = v.toString().toLowerCase();
-            return s.equals("true") || s.equals("yes") || s.equals("t") || s.equals("y") || s.equals("1");
+            if( s.equals("true") || s.equals("yes") || s.equals("t") || s.equals("y") || s.equals("1") )
+                return true;
+            if( s.equals("false") || s.equals("no") || s.equals("f") || s.equals("n") || s.equals("0") )
+                return false;
+            return defaultValue;
         } catch (Exception e) {
-            return false;
+            return defaultValue;
         }
     }
 
@@ -126,7 +140,7 @@ public class TypeSafe {
 
     public static Map<String, Object> anyToMap(Object v) {
         if (v == null) return null;
-        if (v instanceof HashMap) {
+        if (v instanceof Map) {
             return (Map<String, Object>) v;
         }
         return null;
@@ -138,6 +152,45 @@ public class TypeSafe {
             return (List<Object>) v;
         }
         return null;
+    }
+
+
+    public static Date anyToDate(Object v) {
+        if (v == null) return null;
+        if (v instanceof Date) {
+            return (Date)v;
+        }
+        if (v instanceof Long) {
+            return new Date((Long)v);
+        }
+        if (v instanceof String) {
+            String s = (String)v;
+            if( s.isEmpty() ) return null;
+            if( s.contains("-")) {
+                return parseDate(s);
+            } else {
+                long l = anyToLong(s);
+                if( l == 0 ) return null;
+                return new Date(l);
+            }
+        }
+        return null;
+    }
+
+    static Date parseDate(String s) {
+        try {
+            SimpleDateFormat f ;
+            if (s.length() == 19) {
+                f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            } else if (s.length() == 10) {
+                f = new SimpleDateFormat("yyyy-MM-dd");
+            } else {
+                return null;
+            }
+            return f.parse(s);
+        } catch(Exception e) {
+            return null;
+        }
     }
 }
 

@@ -122,7 +122,9 @@ class UserServiceImpl2 implements UserService {
         i++;
         return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#" + i).build();
     }
-
+    public Login2Res login2(Login2Req req) {
+        return Login2Res.ok();
+    }
     public UpdateProfileRes updateProfile(UpdateProfileReq req) {
         i++;
         RpcClosure u = ServerContext.closure(req); // !!! you can pass this object anywhere

@@ -1,10 +1,15 @@
 package krpc.rpc.impl;
 
 import com.google.protobuf.Message;
+import io.netty.buffer.ByteBuf;
 import krpc.common.InitCloseUtils;
 import krpc.rpc.core.*;
+import krpc.rpc.util.MessageToMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RpcClient extends RpcCallableBase {
 
@@ -12,6 +17,7 @@ public class RpcClient extends RpcCallableBase {
 
     ClusterManager clusterManager;
     ConnectionPlugin connectionPlugin;
+    RpcCodec rpcCodec;
 
     public void init() {
         super.init();
@@ -27,10 +33,27 @@ public class RpcClient extends RpcCallableBase {
         return false;
     }
 
-    String nextConnId(ClientContextData ctx, Message req) {
+    String nextConnId(ClientContextData ctx, Object req) {
         String connId = ClientContext.removeConnId();
         if( connId != null ) return connId;
-        return clusterManager.nextConnId(ctx, req);
+
+        Map<String,Object> params = null;
+        if( req != null && clusterManager.needReqInfoForNextConnId(ctx) ) {
+            if( req instanceof Message ) {
+                params = new HashMap<>();
+                MessageToMap.parseMessage((Message)req, params, true, 0);
+            } else if( rpcCodec != null ){
+                ByteBuf bb = (ByteBuf)req;
+                //int bak = bb.readerIndex();
+                Message m = rpcCodec.decodeRawBody(ctx.getMeta(),bb);
+                //bb.readerIndex(bak);
+                if( m != null ) {
+                    params = new HashMap<>();
+                    MessageToMap.parseMessage((Message)req, params, true, 0);
+                }
+            }
+        }
+        return clusterManager.nextConnId(ctx, params);
     }
 
     int nextSequence(String connId) {
@@ -76,5 +99,13 @@ public class RpcClient extends RpcCallableBase {
 
     public void setConnectionPlugin(ConnectionPlugin connectionPlugin) {
         this.connectionPlugin = connectionPlugin;
+    }
+
+    public RpcCodec getRpcCodec() {
+        return rpcCodec;
+    }
+
+    public void setRpcCodec(RpcCodec rpcCodec) {
+        this.rpcCodec = rpcCodec;
     }
 }

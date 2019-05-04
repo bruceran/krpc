@@ -19,7 +19,9 @@ class UserServiceImpl implements UserService {
     public LoginRes login(LoginReq req) {
         return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend.").build();
     }
-
+    public Login2Res login2(Login2Req req) {
+        return Login2Res.ok();
+    }
     public UpdateProfileRes updateProfile(UpdateProfileReq req) {
         return UpdateProfileRes.newBuilder().setRetCode(0).setRetMsg("hello, friend.").build();
     }
@@ -84,7 +86,7 @@ public class ServiceMetasTest {
         ByteBuf bb = Unpooled.buffer();
         codec.encode(data, bb,null);
         RpcMeta meta2 = codec.decodeMeta(bb);
-        RpcData data2 = codec.decodeBody(meta2, bb,null);
+        RpcData data2 = codec.decodeBodyAsMessage(meta2, bb,null);
         LoginReq req2 = (LoginReq) data2.getBody();
         assertEquals("abc", req2.getUserName());
         assertEquals("mmm", req2.getPassword());
@@ -104,7 +106,7 @@ public class ServiceMetasTest {
         ByteBuf bb = Unpooled.buffer();
         codec.encode(data, bb,null);
         RpcMeta meta2 = codec.decodeMeta(bb);
-        RpcData data2 = codec.decodeBody(meta2, bb,null);
+        RpcData data2 = codec.decodeBodyAsMessage(meta2, bb,null);
     }
 
     @Test

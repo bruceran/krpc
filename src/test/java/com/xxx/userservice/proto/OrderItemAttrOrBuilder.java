@@ -4,28 +4,26 @@
 package com.xxx.userservice.proto;
 
 public interface OrderItemAttrOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:OrderItemAttr)
-        com.google.protobuf.MessageOrBuilder {
+    // @@protoc_insertion_point(interface_extends:OrderItemAttr)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <code>string name = 1;</code>
-     */
-    java.lang.String getName();
+  /**
+   * <code>string name = 1;</code>
+   */
+  String getName();
+  /**
+   * <code>string name = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getNameBytes();
 
-    /**
-     * <code>string name = 1;</code>
-     */
-    com.google.protobuf.ByteString
-    getNameBytes();
-
-    /**
-     * <code>string value = 2;</code>
-     */
-    java.lang.String getValue();
-
-    /**
-     * <code>string value = 2;</code>
-     */
-    com.google.protobuf.ByteString
-    getValueBytes();
+  /**
+   * <code>string value = 2;</code>
+   */
+  String getValue();
+  /**
+   * <code>string value = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getValueBytes();
 }

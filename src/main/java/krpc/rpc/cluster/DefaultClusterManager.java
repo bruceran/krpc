@@ -1,6 +1,5 @@
 package krpc.rpc.cluster;
 
-import com.google.protobuf.Message;
 import krpc.common.InitClose;
 import krpc.rpc.core.*;
 import krpc.rpc.core.DynamicRouteConfig.AddrWeight;
@@ -144,7 +143,22 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
         lastAddrs = newAddrs;
     }
 
-    public String nextConnId(ClientContextData ctx, Message req) {
+    public boolean needReqInfoForNextConnId(ClientContextData ctx) {
+        int serviceId = ctx.getMeta().getServiceId();
+        int msgId = ctx.getMeta().getMsgId();
+        ServiceInfo si = serviceMap.get(serviceId);
+        if (si == null) return false;
+        if (si.isDisabled()) return false;
+        boolean need = si.getLoadBalance().needReqInfo(serviceId,msgId);
+        if( need ) return true;
+        Router r = si.getRouter();
+        if( r != null && r.needReqInfo(serviceId,msgId)) {
+            return true;
+        }
+        return false;
+    }
+
+    public String nextConnId(ClientContextData ctx, Map<String,Object> req) {
         int serviceId = ctx.getMeta().getServiceId();
         ServiceInfo si = serviceMap.get(serviceId);
         if (si == null) return null;
@@ -226,7 +240,7 @@ public class DefaultClusterManager implements ClusterManager, RegistryManagerCal
         BreakerInfo bi = getBreakerInfo(serviceId);
         if (!bi.isEnabled()) return;
 
-        int retCode = ReflectionUtils.getRetCode(closure.getRes());
+        int retCode = closure.getRetCode();
         long ts = closure.getCtx().getTimeUsedMicros();
         ai.updateResult(si, retCode, ts);
     }

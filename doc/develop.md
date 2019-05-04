@@ -1365,6 +1365,9 @@
 	    html 插件，取结果中的html值作为输出内容, 需通过代码生成html内容
 	    	<url ...    plugins="html"/>
 
+	    xml 插件，取结果中的xml值作为输出内容, 需通过代码生成xml内容
+	    	<url ...    plugins="xml"/>
+
 	    jsredirect插件，取结果中的redirectUrl值作为重定向的目标，通过js形式跳转
 	    	<url ...    plugins="jsRedirect"/>
 

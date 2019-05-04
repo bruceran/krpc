@@ -4,45 +4,58 @@
 package com.xxx.userservice.proto;
 
 public interface OrderOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:Order)
-        com.google.protobuf.MessageOrBuilder {
+    // @@protoc_insertion_point(interface_extends:Order)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <code>string orderId = 1;</code>
-     */
-    java.lang.String getOrderId();
+  /**
+   * <code>string orderId = 1;</code>
+   */
+  String getOrderId();
+  /**
+   * <code>string orderId = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getOrderIdBytes();
 
-    /**
-     * <code>string orderId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-    getOrderIdBytes();
+  /**
+   * <code>int32 amount = 2;</code>
+   */
+  int getAmount();
 
-    /**
-     * <code>repeated .OrderItem items = 2;</code>
-     */
-    java.util.List<com.xxx.userservice.proto.OrderItem>
-    getItemsList();
+  /**
+   * <code>.Session session = 3;</code>
+   */
+  boolean hasSession();
+  /**
+   * <code>.Session session = 3;</code>
+   */
+  Session getSession();
+  /**
+   * <code>.Session session = 3;</code>
+   */
+  SessionOrBuilder getSessionOrBuilder();
 
-    /**
-     * <code>repeated .OrderItem items = 2;</code>
-     */
-    com.xxx.userservice.proto.OrderItem getItems(int index);
-
-    /**
-     * <code>repeated .OrderItem items = 2;</code>
-     */
-    int getItemsCount();
-
-    /**
-     * <code>repeated .OrderItem items = 2;</code>
-     */
-    java.util.List<? extends com.xxx.userservice.proto.OrderItemOrBuilder>
-    getItemsOrBuilderList();
-
-    /**
-     * <code>repeated .OrderItem items = 2;</code>
-     */
-    com.xxx.userservice.proto.OrderItemOrBuilder getItemsOrBuilder(
-            int index);
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  java.util.List<OrderItem>
+      getItemsList();
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  OrderItem getItems(int index);
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  int getItemsCount();
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  java.util.List<? extends OrderItemOrBuilder>
+      getItemsOrBuilderList();
+  /**
+   * <code>repeated .OrderItem items = 4;</code>
+   */
+  OrderItemOrBuilder getItemsOrBuilder(
+          int index);
 }

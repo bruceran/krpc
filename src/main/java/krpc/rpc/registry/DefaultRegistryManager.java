@@ -55,8 +55,8 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
         registerItems.add(new RegisterItem(serviceId, registryName, group, addr));
     }
 
-    public void addDiscover(int serviceId, String registryName, String group, RegistryManagerCallback callback) {
-        discoverItems.add(new DiscoverItem(serviceId, registryName, group));
+    public void addDiscover(int serviceId, int exchangeServiceId, String registryName, String group, RegistryManagerCallback callback) {
+        discoverItems.add(new DiscoverItem(serviceId, exchangeServiceId, registryName, group));
         serviceAddrs.put(serviceId, "");
         serviceCallback.put(serviceId, callback);
         addBind(callback, serviceId);
@@ -177,6 +177,8 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
 
         long now = System.currentTimeMillis();
 
+        Map<String,String> discoverCache = new HashMap<>();
+
         boolean changed = false;
         for (DiscoverItem item : discoverItems) {
 
@@ -186,8 +188,17 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
 
             item.lastDiscover = now;
 
-            String serviceName = serviceMetas.getServiceName(item.serviceId);
-            String addr = r.discover(item.serviceId, serviceName, item.group);
+            int discoverServiceId = item.serviceId;
+            if( item.exchangeServiceId != 0 ) discoverServiceId = item.exchangeServiceId;
+            String discoverServiceName = serviceMetas.getServiceName(discoverServiceId);
+            String addr = discoverCache.get(localKey(discoverServiceId, item.group));
+            if( addr == null ) {
+                addr = r.discover(discoverServiceId, discoverServiceName, item.group);
+                if( addr != null ) {
+                    discoverCache.put(localKey(discoverServiceId, item.group), addr);
+                }
+            }
+
             if (addr != null) { // null is failed, not null is success
                 String oldAddr = serviceAddrs.get(item.serviceId);
                 if (!addr.equals(oldAddr)) {
@@ -282,12 +293,14 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
 
     static class DiscoverItem {
         int serviceId;
+        int exchangeServiceId;
         String registryName;
         String group;
         long lastDiscover = 0;
 
-        DiscoverItem(int serviceId, String registryName, String group) {
+        DiscoverItem(int serviceId, int exchangeServiceId, String registryName, String group) {
             this.serviceId = serviceId;
+            this.exchangeServiceId = exchangeServiceId;
             this.registryName = registryName;
             this.group = group;
         }

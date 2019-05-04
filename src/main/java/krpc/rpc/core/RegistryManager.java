@@ -8,7 +8,7 @@ public interface RegistryManager {
     void register(int serviceId, String registryName, String group, String addr);
 
     // for referer
-    void addDiscover(int serviceId, String registryName, String group, RegistryManagerCallback callback);
+    void addDiscover(int serviceId, int exchangeServiceId, String registryName, String group, RegistryManagerCallback callback);
 
     void addDirect(int serviceId, String direct, RegistryManagerCallback callback);
 }

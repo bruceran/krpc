@@ -6,969 +6,909 @@ package com.xxx.userservice.proto;
 /**
  * Protobuf type {@code Session}
  */
-public final class Session extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:Session)
-        SessionOrBuilder {
-    private static final long serialVersionUID = 0L;
+public  final class Session extends
+    com.google.protobuf.GeneratedMessageV3 implements
+    // @@protoc_insertion_point(message_implements:Session)
+    SessionOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use Session.newBuilder() to construct.
+  private Session(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
+  private Session() {
+    loginFlag_ = "";
+    userId_ = "";
+    userName_ = "";
+    mobile_ = "";
+  }
 
-    // Use Session.newBuilder() to construct.
-    private Session(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
+  @Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private Session(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new NullPointerException();
     }
+    int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 10: {
+            String s = input.readStringRequireUtf8();
 
-    private Session() {
-        loginFlag_ = "";
-        userId_ = "";
-        userName_ = "";
-        mobile_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
-    private Session(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-        }
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-                com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-            boolean done = false;
-            while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                    case 0:
-                        done = true;
-                        break;
-                    case 10: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        loginFlag_ = s;
-                        break;
-                    }
-                    case 18: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        userId_ = s;
-                        break;
-                    }
-                    case 26: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        userName_ = s;
-                        break;
-                    }
-                    case 34: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        mobile_ = s;
-                        break;
-                    }
-                    default: {
-                        if (!parseUnknownFieldProto3(
-                                input, unknownFields, extensionRegistry, tag)) {
-                            done = true;
-                        }
-                        break;
-                    }
-                }
-            }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-            throw new com.google.protobuf.InvalidProtocolBufferException(
-                    e).setUnfinishedMessage(this);
-        } finally {
-            this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
-        }
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
-        return com.xxx.userservice.proto.UserServiceMetas.internal_static_Session_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
-        return com.xxx.userservice.proto.UserServiceMetas.internal_static_Session_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        com.xxx.userservice.proto.Session.class, com.xxx.userservice.proto.Session.Builder.class);
-    }
-
-    public static final int LOGINFLAG_FIELD_NUMBER = 1;
-    private volatile java.lang.Object loginFlag_;
-
-    /**
-     * <code>string loginFlag = 1;</code>
-     */
-    public java.lang.String getLoginFlag() {
-        java.lang.Object ref = loginFlag_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
             loginFlag_ = s;
-            return s;
+            break;
+          }
+          case 18: {
+            String s = input.readStringRequireUtf8();
+
+            userId_ = s;
+            break;
+          }
+          case 26: {
+            String s = input.readStringRequireUtf8();
+
+            userName_ = s;
+            break;
+          }
+          case 34: {
+            String s = input.readStringRequireUtf8();
+
+            mobile_ = s;
+            break;
+          }
+          default: {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
         }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return UserServiceMetas.internal_static_Session_descriptor;
+  }
+
+  @Override
+  protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return UserServiceMetas.internal_static_Session_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            Session.class, Builder.class);
+  }
+
+  public static final int LOGINFLAG_FIELD_NUMBER = 1;
+  private volatile Object loginFlag_;
+  /**
+   * <code>string loginFlag = 1;</code>
+   */
+  public String getLoginFlag() {
+    Object ref = loginFlag_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      loginFlag_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string loginFlag = 1;</code>
+   */
+  public com.google.protobuf.ByteString
+      getLoginFlagBytes() {
+    Object ref = loginFlag_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      loginFlag_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int USERID_FIELD_NUMBER = 2;
+  private volatile Object userId_;
+  /**
+   * <code>string userId = 2;</code>
+   */
+  public String getUserId() {
+    Object ref = userId_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      userId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string userId = 2;</code>
+   */
+  public com.google.protobuf.ByteString
+      getUserIdBytes() {
+    Object ref = userId_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      userId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int USERNAME_FIELD_NUMBER = 3;
+  private volatile Object userName_;
+  /**
+   * <code>string userName = 3;</code>
+   */
+  public String getUserName() {
+    Object ref = userName_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      userName_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string userName = 3;</code>
+   */
+  public com.google.protobuf.ByteString
+      getUserNameBytes() {
+    Object ref = userName_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      userName_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int MOBILE_FIELD_NUMBER = 4;
+  private volatile Object mobile_;
+  /**
+   * <code>string mobile = 4;</code>
+   */
+  public String getMobile() {
+    Object ref = mobile_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      mobile_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string mobile = 4;</code>
+   */
+  public com.google.protobuf.ByteString
+      getMobileBytes() {
+    Object ref = mobile_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      mobile_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    if (!getLoginFlagBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, loginFlag_);
+    }
+    if (!getUserIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, userId_);
+    }
+    if (!getUserNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, userName_);
+    }
+    if (!getMobileBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, mobile_);
+    }
+    unknownFields.writeTo(output);
+  }
+
+  @Override
+  public int getSerializedSize() {
+    int size = memoizedSize;
+    if (size != -1) return size;
+
+    size = 0;
+    if (!getLoginFlagBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, loginFlag_);
+    }
+    if (!getUserIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, userId_);
+    }
+    if (!getUserNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, userName_);
+    }
+    if (!getMobileBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, mobile_);
+    }
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
+    return size;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof Session)) {
+      return super.equals(obj);
+    }
+    Session other = (Session) obj;
+
+    boolean result = true;
+    result = result && getLoginFlag()
+        .equals(other.getLoginFlag());
+    result = result && getUserId()
+        .equals(other.getUserId());
+    result = result && getUserName()
+        .equals(other.getUserName());
+    result = result && getMobile()
+        .equals(other.getMobile());
+    result = result && unknownFields.equals(other.unknownFields);
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + LOGINFLAG_FIELD_NUMBER;
+    hash = (53 * hash) + getLoginFlag().hashCode();
+    hash = (37 * hash) + USERID_FIELD_NUMBER;
+    hash = (53 * hash) + getUserId().hashCode();
+    hash = (37 * hash) + USERNAME_FIELD_NUMBER;
+    hash = (53 * hash) + getUserName().hashCode();
+    hash = (37 * hash) + MOBILE_FIELD_NUMBER;
+    hash = (53 * hash) + getMobile().hashCode();
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static Session parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static Session parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static Session parseFrom(
+      com.google.protobuf.ByteString data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static Session parseFrom(
+      com.google.protobuf.ByteString data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static Session parseFrom(byte[] data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static Session parseFrom(
+      byte[] data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static Session parseFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static Session parseFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static Session parseDelimitedFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
+  }
+  public static Session parseDelimitedFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static Session parseFrom(
+      com.google.protobuf.CodedInputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static Session parseFrom(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+
+  @Override
+  public Builder newBuilderForType() { return newBuilder(); }
+  public static Builder newBuilder() {
+    return DEFAULT_INSTANCE.toBuilder();
+  }
+  public static Builder newBuilder(Session prototype) {
+    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+  }
+  @Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @Override
+  protected Builder newBuilderForType(
+      BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
+  /**
+   * Protobuf type {@code Session}
+   */
+  public static final class Builder extends
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+      // @@protoc_insertion_point(builder_implements:Session)
+      SessionOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return UserServiceMetas.internal_static_Session_descriptor;
     }
 
+    @Override
+    protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return UserServiceMetas.internal_static_Session_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              Session.class, Builder.class);
+    }
+
+    // Construct using com.xxx.userservice.proto.Session.newBuilder()
+    private Builder() {
+      maybeForceBuilderInitialization();
+    }
+
+    private Builder(
+        BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @Override
+    public Builder clear() {
+      super.clear();
+      loginFlag_ = "";
+
+      userId_ = "";
+
+      userName_ = "";
+
+      mobile_ = "";
+
+      return this;
+    }
+
+    @Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return UserServiceMetas.internal_static_Session_descriptor;
+    }
+
+    @Override
+    public Session getDefaultInstanceForType() {
+      return Session.getDefaultInstance();
+    }
+
+    @Override
+    public Session build() {
+      Session result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @Override
+    public Session buildPartial() {
+      Session result = new Session(this);
+      result.loginFlag_ = loginFlag_;
+      result.userId_ = userId_;
+      result.userName_ = userName_;
+      result.mobile_ = mobile_;
+      onBuilt();
+      return result;
+    }
+
+    @Override
+    public Builder clone() {
+      return (Builder) super.clone();
+    }
+    @Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        Object value) {
+      return (Builder) super.setField(field, value);
+    }
+    @Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return (Builder) super.clearField(field);
+    }
+    @Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return (Builder) super.clearOneof(oneof);
+    }
+    @Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, Object value) {
+      return (Builder) super.setRepeatedField(field, index, value);
+    }
+    @Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        Object value) {
+      return (Builder) super.addRepeatedField(field, value);
+    }
+    @Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof Session) {
+        return mergeFrom((Session)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(Session other) {
+      if (other == Session.getDefaultInstance()) return this;
+      if (!other.getLoginFlag().isEmpty()) {
+        loginFlag_ = other.loginFlag_;
+        onChanged();
+      }
+      if (!other.getUserId().isEmpty()) {
+        userId_ = other.userId_;
+        onChanged();
+      }
+      if (!other.getUserName().isEmpty()) {
+        userName_ = other.userName_;
+        onChanged();
+      }
+      if (!other.getMobile().isEmpty()) {
+        mobile_ = other.mobile_;
+        onChanged();
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Session parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (Session) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+
+    private Object loginFlag_ = "";
+    /**
+     * <code>string loginFlag = 1;</code>
+     */
+    public String getLoginFlag() {
+      Object ref = loginFlag_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        loginFlag_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
     /**
      * <code>string loginFlag = 1;</code>
      */
     public com.google.protobuf.ByteString
-    getLoginFlagBytes() {
-        java.lang.Object ref = loginFlag_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            loginFlag_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
-    }
-
-    public static final int USERID_FIELD_NUMBER = 2;
-    private volatile java.lang.Object userId_;
-
-    /**
-     * <code>string userId = 2;</code>
-     */
-    public java.lang.String getUserId() {
-        java.lang.Object ref = userId_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            userId_ = s;
-            return s;
-        }
-    }
-
-    /**
-     * <code>string userId = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-    getUserIdBytes() {
-        java.lang.Object ref = userId_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            userId_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
-    }
-
-    public static final int USERNAME_FIELD_NUMBER = 3;
-    private volatile java.lang.Object userName_;
-
-    /**
-     * <code>string userName = 3;</code>
-     */
-    public java.lang.String getUserName() {
-        java.lang.Object ref = userName_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            userName_ = s;
-            return s;
-        }
-    }
-
-    /**
-     * <code>string userName = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-    getUserNameBytes() {
-        java.lang.Object ref = userName_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            userName_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
-    }
-
-    public static final int MOBILE_FIELD_NUMBER = 4;
-    private volatile java.lang.Object mobile_;
-
-    /**
-     * <code>string mobile = 4;</code>
-     */
-    public java.lang.String getMobile() {
-        java.lang.Object ref = mobile_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            mobile_ = s;
-            return s;
-        }
-    }
-
-    /**
-     * <code>string mobile = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-    getMobileBytes() {
-        java.lang.Object ref = mobile_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            mobile_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
-    }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
-        if (!getLoginFlagBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 1, loginFlag_);
-        }
-        if (!getUserIdBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 2, userId_);
-        }
-        if (!getUserNameBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, userName_);
-        }
-        if (!getMobileBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 4, mobile_);
-        }
-        unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (!getLoginFlagBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, loginFlag_);
-        }
-        if (!getUserIdBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, userId_);
-        }
-        if (!getUserNameBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, userName_);
-        }
-        if (!getMobileBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, mobile_);
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof com.xxx.userservice.proto.Session)) {
-            return super.equals(obj);
-        }
-        com.xxx.userservice.proto.Session other = (com.xxx.userservice.proto.Session) obj;
-
-        boolean result = true;
-        result = result && getLoginFlag()
-                .equals(other.getLoginFlag());
-        result = result && getUserId()
-                .equals(other.getUserId());
-        result = result && getUserName()
-                .equals(other.getUserName());
-        result = result && getMobile()
-                .equals(other.getMobile());
-        result = result && unknownFields.equals(other.unknownFields);
-        return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-        if (memoizedHashCode != 0) {
-            return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + LOGINFLAG_FIELD_NUMBER;
-        hash = (53 * hash) + getLoginFlag().hashCode();
-        hash = (37 * hash) + USERID_FIELD_NUMBER;
-        hash = (53 * hash) + getUserId().hashCode();
-        hash = (37 * hash) + USERNAME_FIELD_NUMBER;
-        hash = (53 * hash) + getUserName().hashCode();
-        hash = (37 * hash) + MOBILE_FIELD_NUMBER;
-        hash = (53 * hash) + getMobile().hashCode();
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Session parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseDelimitedWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.Session parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.Session parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-        return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(com.xxx.userservice.proto.Session prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-                ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-    }
-
-    /**
-     * Protobuf type {@code Session}
-     */
-    public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:Session)
-            com.xxx.userservice.proto.SessionOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_Session_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_Session_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(
-                            com.xxx.userservice.proto.Session.class, com.xxx.userservice.proto.Session.Builder.class);
-        }
-
-        // Construct using com.xxx.userservice.proto.Session.newBuilder()
-        private Builder() {
-            maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-            super(parent);
-            maybeForceBuilderInitialization();
-        }
-
-        private void maybeForceBuilderInitialization() {
-            if (com.google.protobuf.GeneratedMessageV3
-                    .alwaysUseFieldBuilders) {
-            }
-        }
-
-        @java.lang.Override
-        public Builder clear() {
-            super.clear();
-            loginFlag_ = "";
-
-            userId_ = "";
-
-            userName_ = "";
-
-            mobile_ = "";
-
-            return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_Session_descriptor;
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.Session getDefaultInstanceForType() {
-            return com.xxx.userservice.proto.Session.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.Session build() {
-            com.xxx.userservice.proto.Session result = buildPartial();
-            if (!result.isInitialized()) {
-                throw newUninitializedMessageException(result);
-            }
-            return result;
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.Session buildPartial() {
-            com.xxx.userservice.proto.Session result = new com.xxx.userservice.proto.Session(this);
-            result.loginFlag_ = loginFlag_;
-            result.userId_ = userId_;
-            result.userName_ = userName_;
-            result.mobile_ = mobile_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return (Builder) super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return (Builder) super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return (Builder) super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return (Builder) super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return (Builder) super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return (Builder) super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof com.xxx.userservice.proto.Session) {
-                return mergeFrom((com.xxx.userservice.proto.Session) other);
-            } else {
-                super.mergeFrom(other);
-                return this;
-            }
-        }
-
-        public Builder mergeFrom(com.xxx.userservice.proto.Session other) {
-            if (other == com.xxx.userservice.proto.Session.getDefaultInstance()) return this;
-            if (!other.getLoginFlag().isEmpty()) {
-                loginFlag_ = other.loginFlag_;
-                onChanged();
-            }
-            if (!other.getUserId().isEmpty()) {
-                userId_ = other.userId_;
-                onChanged();
-            }
-            if (!other.getUserName().isEmpty()) {
-                userName_ = other.userName_;
-                onChanged();
-            }
-            if (!other.getMobile().isEmpty()) {
-                mobile_ = other.mobile_;
-                onChanged();
-            }
-            this.mergeUnknownFields(other.unknownFields);
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws java.io.IOException {
-            com.xxx.userservice.proto.Session parsedMessage = null;
-            try {
-                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage = (com.xxx.userservice.proto.Session) e.getUnfinishedMessage();
-                throw e.unwrapIOException();
-            } finally {
-                if (parsedMessage != null) {
-                    mergeFrom(parsedMessage);
-                }
-            }
-            return this;
-        }
-
-        private java.lang.Object loginFlag_ = "";
-
-        /**
-         * <code>string loginFlag = 1;</code>
-         */
-        public java.lang.String getLoginFlag() {
-            java.lang.Object ref = loginFlag_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                loginFlag_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string loginFlag = 1;</code>
-         */
-        public com.google.protobuf.ByteString
         getLoginFlagBytes() {
-            java.lang.Object ref = loginFlag_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                loginFlag_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
+      Object ref = loginFlag_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        loginFlag_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string loginFlag = 1;</code>
+     */
+    public Builder setLoginFlag(
+        String value) {
+      if (value == null) value = "";
+  
+      loginFlag_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string loginFlag = 1;</code>
+     */
+    public Builder clearLoginFlag() {
+      
+      loginFlag_ = getDefaultInstance().getLoginFlag();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string loginFlag = 1;</code>
+     */
+    public Builder setLoginFlagBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      loginFlag_ = value;
+      onChanged();
+      return this;
+    }
 
-        /**
-         * <code>string loginFlag = 1;</code>
-         */
-        public Builder setLoginFlag(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            loginFlag_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string loginFlag = 1;</code>
-         */
-        public Builder clearLoginFlag() {
-
-            loginFlag_ = getDefaultInstance().getLoginFlag();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string loginFlag = 1;</code>
-         */
-        public Builder setLoginFlagBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            loginFlag_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object userId_ = "";
-
-        /**
-         * <code>string userId = 2;</code>
-         */
-        public java.lang.String getUserId() {
-            java.lang.Object ref = userId_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                userId_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string userId = 2;</code>
-         */
-        public com.google.protobuf.ByteString
+    private Object userId_ = "";
+    /**
+     * <code>string userId = 2;</code>
+     */
+    public String getUserId() {
+      Object ref = userId_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
+    /**
+     * <code>string userId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
         getUserIdBytes() {
-            java.lang.Object ref = userId_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                userId_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
+      Object ref = userId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string userId = 2;</code>
+     */
+    public Builder setUserId(
+        String value) {
+      if (value == null) value = "";
+  
+      userId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string userId = 2;</code>
+     */
+    public Builder clearUserId() {
+      
+      userId_ = getDefaultInstance().getUserId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string userId = 2;</code>
+     */
+    public Builder setUserIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      userId_ = value;
+      onChanged();
+      return this;
+    }
 
-        /**
-         * <code>string userId = 2;</code>
-         */
-        public Builder setUserId(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            userId_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string userId = 2;</code>
-         */
-        public Builder clearUserId() {
-
-            userId_ = getDefaultInstance().getUserId();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string userId = 2;</code>
-         */
-        public Builder setUserIdBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            userId_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object userName_ = "";
-
-        /**
-         * <code>string userName = 3;</code>
-         */
-        public java.lang.String getUserName() {
-            java.lang.Object ref = userName_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                userName_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string userName = 3;</code>
-         */
-        public com.google.protobuf.ByteString
+    private Object userName_ = "";
+    /**
+     * <code>string userName = 3;</code>
+     */
+    public String getUserName() {
+      Object ref = userName_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        userName_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
+    /**
+     * <code>string userName = 3;</code>
+     */
+    public com.google.protobuf.ByteString
         getUserNameBytes() {
-            java.lang.Object ref = userName_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                userName_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
+      Object ref = userName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        userName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string userName = 3;</code>
+     */
+    public Builder setUserName(
+        String value) {
+      if (value == null) value = "";
+  
+      userName_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string userName = 3;</code>
+     */
+    public Builder clearUserName() {
+      
+      userName_ = getDefaultInstance().getUserName();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string userName = 3;</code>
+     */
+    public Builder setUserNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      userName_ = value;
+      onChanged();
+      return this;
+    }
 
-        /**
-         * <code>string userName = 3;</code>
-         */
-        public Builder setUserName(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            userName_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string userName = 3;</code>
-         */
-        public Builder clearUserName() {
-
-            userName_ = getDefaultInstance().getUserName();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string userName = 3;</code>
-         */
-        public Builder setUserNameBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            userName_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object mobile_ = "";
-
-        /**
-         * <code>string mobile = 4;</code>
-         */
-        public java.lang.String getMobile() {
-            java.lang.Object ref = mobile_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                mobile_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string mobile = 4;</code>
-         */
-        public com.google.protobuf.ByteString
+    private Object mobile_ = "";
+    /**
+     * <code>string mobile = 4;</code>
+     */
+    public String getMobile() {
+      Object ref = mobile_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        mobile_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
+    /**
+     * <code>string mobile = 4;</code>
+     */
+    public com.google.protobuf.ByteString
         getMobileBytes() {
-            java.lang.Object ref = mobile_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                mobile_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string mobile = 4;</code>
-         */
-        public Builder setMobile(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            mobile_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string mobile = 4;</code>
-         */
-        public Builder clearMobile() {
-
-            mobile_ = getDefaultInstance().getMobile();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string mobile = 4;</code>
-         */
-        public Builder setMobileBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            mobile_ = value;
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFieldsProto3(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
-
-        // @@protoc_insertion_point(builder_scope:Session)
+      Object ref = mobile_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        mobile_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string mobile = 4;</code>
+     */
+    public Builder setMobile(
+        String value) {
+      if (value == null) value = "";
+  
+      mobile_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string mobile = 4;</code>
+     */
+    public Builder clearMobile() {
+      
+      mobile_ = getDefaultInstance().getMobile();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string mobile = 4;</code>
+     */
+    public Builder setMobileBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      mobile_ = value;
+      onChanged();
+      return this;
+    }
+    @Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    // @@protoc_insertion_point(class_scope:Session)
-    private static final com.xxx.userservice.proto.Session DEFAULT_INSTANCE;
-
-    static {
-        DEFAULT_INSTANCE = new com.xxx.userservice.proto.Session();
+    @Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
-    public static com.xxx.userservice.proto.Session getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-    }
 
-    private static final com.google.protobuf.Parser<Session>
-            PARSER = new com.google.protobuf.AbstractParser<Session>() {
-        @java.lang.Override
-        public Session parsePartialFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return new Session(input, extensionRegistry);
-        }
-    };
+    // @@protoc_insertion_point(builder_scope:Session)
+  }
 
-    public static com.google.protobuf.Parser<Session> parser() {
-        return PARSER;
-    }
+  // @@protoc_insertion_point(class_scope:Session)
+  private static final Session DEFAULT_INSTANCE;
+  static {
+    DEFAULT_INSTANCE = new Session();
+  }
 
-    @java.lang.Override
-    public com.google.protobuf.Parser<Session> getParserForType() {
-        return PARSER;
-    }
+  public static Session getDefaultInstance() {
+    return DEFAULT_INSTANCE;
+  }
 
-    @java.lang.Override
-    public com.xxx.userservice.proto.Session getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
+  private static final com.google.protobuf.Parser<Session>
+      PARSER = new com.google.protobuf.AbstractParser<Session>() {
+    @Override
+    public Session parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new Session(input, extensionRegistry);
     }
+  };
+
+  public static com.google.protobuf.Parser<Session> parser() {
+    return PARSER;
+  }
+
+  @Override
+  public com.google.protobuf.Parser<Session> getParserForType() {
+    return PARSER;
+  }
+
+  @Override
+  public Session getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
 
 }
 

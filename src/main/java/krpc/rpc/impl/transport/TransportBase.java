@@ -2,6 +2,7 @@ package krpc.rpc.impl.transport;
 
 import com.google.protobuf.Message;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -100,7 +101,7 @@ public abstract class TransportBase extends ChannelDuplexHandler{
                 enc = true;
             }
 
-            int size = enc ? codec.getSize(data) + 16 : codec.getSize(data); // TODO
+            int size = enc ? codec.getSize(data) + 16 : codec.getSize(data);
             ByteBuf out = ctx.alloc().buffer(size);
 
             codec.encode(data, out, key);
@@ -141,9 +142,14 @@ public abstract class TransportBase extends ChannelDuplexHandler{
             return null;
         }
 
+        boolean isExchange = callback.isExchange(connId,meta);
         try {
             String key = getKey(connId);
-            RpcData data = codec.decodeBody(meta, bb, key);
+            RpcData data;
+            if( isExchange )
+                data = codec.decodeBodyAsByteBuf(meta, bb, key);
+            else
+                data = codec.decodeBodyAsMessage(meta, bb, key);
             return data;
         } catch (RpcException ex) {
             if (isRequest(meta)) {
@@ -152,7 +158,7 @@ public abstract class TransportBase extends ChannelDuplexHandler{
                 return null;
             } else {
                 log.error("decode response error, retCode=" + ex.getRetCode() + ", connId=" + connId);
-                return genErrorResponse(ctx, meta, ex.getRetCode());
+                return genErrorResponse(ctx, meta, isExchange, ex.getRetCode());
             }
         }
 
@@ -194,12 +200,16 @@ public abstract class TransportBase extends ChannelDuplexHandler{
         ctx.close();
     }
 
-    RpcData genErrorResponse(ChannelHandlerContext ctx, RpcMeta meta, int retCode) {
+    RpcData genErrorResponse(ChannelHandlerContext ctx, RpcMeta meta, boolean isExchange, int retCode) {
         RpcMeta resMeta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE)
                 .setServiceId(meta.getServiceId()).setMsgId(meta.getMsgId()).setSequence(meta.getSequence())
                 .setRetCode(retCode).build();
-        Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), retCode);
-        return new RpcData(resMeta, res);
+        if( isExchange ) {
+            return new RpcData(resMeta, Unpooled.EMPTY_BUFFER);
+        } else {
+            Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), retCode);
+            return new RpcData(resMeta, res);
+        }
     }
 
     void responseError(ChannelHandlerContext ctx, String connId, RpcMeta meta, int retCode) {
@@ -209,10 +219,10 @@ public abstract class TransportBase extends ChannelDuplexHandler{
         ByteBuf encoded = ctx.alloc().buffer();
         codec.encode(new RpcData(resMeta), encoded,null); // just header, no body
         ctx.writeAndFlush(encoded);
-        endReq(connId, meta, null, retCode); // !!! req is null
+        endReq(connId, meta, retCode);
     }
 
-    void endReq(String connId, RpcMeta meta, Message req, int retCode) {
+    void endReq(String connId, RpcMeta meta, int retCode) {
         if (monitorService == null) return;
 
         String action = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
@@ -220,7 +230,8 @@ public abstract class TransportBase extends ChannelDuplexHandler{
         RpcContextData rpcCtx = new ServerContextData(connId, meta, Trace.currentContext());
 
         Message res = serviceMetas.generateRes(meta.getServiceId(), meta.getMsgId(), retCode);
-        RpcClosure closure = new RpcClosure(rpcCtx, req);
+        boolean isRaw = serviceMetas.isExchangeServiceId(meta.getServiceId());
+        RpcClosure closure = new RpcClosure(rpcCtx, null, isRaw);
         closure.done(res);
 
         String status = retCode == 0 ? "SUCCESS" : "ERROR";

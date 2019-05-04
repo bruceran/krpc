@@ -75,6 +75,7 @@ message ValidateTestReq {
 
  message ValidateTestRes {
 	int32 retCode = 1;
+	string retMsg = 2;
 }
 
 service TestService {
@@ -118,12 +119,19 @@ message Order {
 	repeated OrderItem items = 2;
 }
 
-
 message Session {
 	string loginFlag = 1;
 	string userId = 2;
 	string userName = 3;
 	string mobile = 4;
+}
+
+
+message Order2 {
+	string orderId = 1;
+	int32 amount = 2;
+    Session session = 3;
+	repeated OrderItem items = 4;
 }
 
 enum Status {

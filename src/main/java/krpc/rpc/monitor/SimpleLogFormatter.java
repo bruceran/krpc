@@ -31,10 +31,12 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
         printer.maxRepeatedSizeToLog = this.maxRepeatedSizeToLog;
         printer.maskFieldsSet = this.maskFieldsSet;
         printer.printDefault = this.printDefault;
+        printer.maxFieldSizeToLog = this.maxFieldSizeToLog;
 
         webPrinter = new WebPrinter();
         webPrinter.maxRepeatedSizeToLog = this.maxRepeatedSizeToLog;
         webPrinter.maskFieldsSet = this.maskFieldsSet;
+        webPrinter.maxFieldSizeToLog = this.maxFieldSizeToLog;
     }
 
     public String toLogStr(Message body) {
@@ -104,6 +106,7 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
     static class Printer {
 
         int maxRepeatedSizeToLog = 1;
+        int maxFieldSizeToLog = 500;
         HashSet<String> maskFieldsSet;
         boolean printDefault = false;
 
@@ -231,7 +234,7 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
                     break;
 
                 case STRING:
-                    appender.appendString(escapeText((String) value));
+                    appender.appendString(escapeText((String) value,maxFieldSizeToLog));
                     break;
 
                 case BYTES:
@@ -251,6 +254,7 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
     static class WebPrinter {
 
         int maxRepeatedSizeToLog = 1;
+        int maxFieldSizeToLog = 500;
         HashSet<String> maskFieldsSet;
 
         void print(Map<String, Object> message, Appender appender, Level level) {
@@ -338,13 +342,13 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
             } else if (value instanceof Number) {
                 appender.appendNumber(value.toString());
             } else {
-                appender.appendString(escapeText(value.toString()));
+                appender.appendString(escapeText(value.toString(),maxFieldSizeToLog));
             }
         }
 
     }
 
-    public static String escapeText(String input) {
+    public static String escapeText(String input,int maxChars) {
         StringBuilder builder = new StringBuilder();
         char[] ca = input.toCharArray();
         for (int i = 0; i < ca.length; i++) {
@@ -355,7 +359,9 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
                 builder.append(b);
             }
         }
-        return builder.toString();
+        String s = builder.toString();
+        if( s.length() >= maxChars ) s = s.substring(0,maxChars)+"...";
+        return s;
     }
 
     public static class Appender {

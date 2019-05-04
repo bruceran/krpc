@@ -1,6 +1,5 @@
 package krpc.rpc.core;
 
-import com.google.protobuf.Message;
 import krpc.rpc.core.proto.RpcMeta;
 import krpc.trace.Span;
 import krpc.trace.TraceContext;
@@ -11,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ClientContextData extends RpcContextData {
 
-    CompletableFuture<Message> future;  // used in client side sync/async call
+    CompletableFuture future;  // used in client side sync/async call
     int retryTimes = 0;
     Set<String> excludeAddrs;
     TraceContext traceContext;
@@ -45,11 +44,11 @@ public class ClientContextData extends RpcContextData {
         return connId.substring(0, p);
     }
 
-    public CompletableFuture<Message> getFuture() {
+    public CompletableFuture getFuture() {
         return future;
     }
 
-    public void setFuture(CompletableFuture<Message> future) {
+    public void setFuture(CompletableFuture future) {
         this.future = future;
     }
 

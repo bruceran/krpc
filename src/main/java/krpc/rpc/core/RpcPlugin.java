@@ -6,6 +6,5 @@ import krpc.common.Plugin;
 public interface RpcPlugin extends Plugin {
     int preCall(RpcContextData ctx, Message req);
 
-    default void postCall(RpcContextData ctx, Message req, Message res) {
-    }
+    default void postCall(RpcContextData ctx, Message req, Message res) {}
 }

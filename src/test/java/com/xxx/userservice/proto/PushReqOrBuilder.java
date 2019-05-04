@@ -4,28 +4,26 @@
 package com.xxx.userservice.proto;
 
 public interface PushReqOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:PushReq)
-        com.google.protobuf.MessageOrBuilder {
+    // @@protoc_insertion_point(interface_extends:PushReq)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <code>string clientId = 1;</code>
-     */
-    java.lang.String getClientId();
+  /**
+   * <code>string clientId = 1;</code>
+   */
+  String getClientId();
+  /**
+   * <code>string clientId = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getClientIdBytes();
 
-    /**
-     * <code>string clientId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-    getClientIdBytes();
-
-    /**
-     * <code>string message = 2;</code>
-     */
-    java.lang.String getMessage();
-
-    /**
-     * <code>string message = 2;</code>
-     */
-    com.google.protobuf.ByteString
-    getMessageBytes();
+  /**
+   * <code>string message = 2;</code>
+   */
+  String getMessage();
+  /**
+   * <code>string message = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getMessageBytes();
 }

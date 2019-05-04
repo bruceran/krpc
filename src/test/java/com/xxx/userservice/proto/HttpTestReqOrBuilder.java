@@ -4,254 +4,231 @@
 package com.xxx.userservice.proto;
 
 public interface HttpTestReqOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:HttpTestReq)
-        com.google.protobuf.MessageOrBuilder {
+    // @@protoc_insertion_point(interface_extends:HttpTestReq)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <code>string httpMethod = 1;</code>
-     */
-    java.lang.String getHttpMethod();
+  /**
+   * <code>string httpMethod = 1;</code>
+   */
+  String getHttpMethod();
+  /**
+   * <code>string httpMethod = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getHttpMethodBytes();
 
-    /**
-     * <code>string httpMethod = 1;</code>
-     */
-    com.google.protobuf.ByteString
-    getHttpMethodBytes();
+  /**
+   * <code>string httpSchema = 2;</code>
+   */
+  String getHttpSchema();
+  /**
+   * <code>string httpSchema = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getHttpSchemaBytes();
 
-    /**
-     * <code>string httpSchema = 2;</code>
-     */
-    java.lang.String getHttpSchema();
+  /**
+   * <code>string httpPath = 3;</code>
+   */
+  String getHttpPath();
+  /**
+   * <code>string httpPath = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getHttpPathBytes();
 
-    /**
-     * <code>string httpSchema = 2;</code>
-     */
-    com.google.protobuf.ByteString
-    getHttpSchemaBytes();
+  /**
+   * <code>string httpQueryString = 4;</code>
+   */
+  String getHttpQueryString();
+  /**
+   * <code>string httpQueryString = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getHttpQueryStringBytes();
 
-    /**
-     * <code>string httpPath = 3;</code>
-     */
-    java.lang.String getHttpPath();
+  /**
+   * <code>string httpContentType = 5;</code>
+   */
+  String getHttpContentType();
+  /**
+   * <code>string httpContentType = 5;</code>
+   */
+  com.google.protobuf.ByteString
+      getHttpContentTypeBytes();
 
-    /**
-     * <code>string httpPath = 3;</code>
-     */
-    com.google.protobuf.ByteString
-    getHttpPathBytes();
+  /**
+   * <code>string httpContent = 6;</code>
+   */
+  String getHttpContent();
+  /**
+   * <code>string httpContent = 6;</code>
+   */
+  com.google.protobuf.ByteString
+      getHttpContentBytes();
 
-    /**
-     * <code>string httpQueryString = 4;</code>
-     */
-    java.lang.String getHttpQueryString();
+  /**
+   * <code>.Session session = 7;</code>
+   */
+  boolean hasSession();
+  /**
+   * <code>.Session session = 7;</code>
+   */
+  Session getSession();
+  /**
+   * <code>.Session session = 7;</code>
+   */
+  SessionOrBuilder getSessionOrBuilder();
 
-    /**
-     * <code>string httpQueryString = 4;</code>
-     */
-    com.google.protobuf.ByteString
-    getHttpQueryStringBytes();
+  /**
+   * <code>string orderId = 8;</code>
+   */
+  String getOrderId();
+  /**
+   * <code>string orderId = 8;</code>
+   */
+  com.google.protobuf.ByteString
+      getOrderIdBytes();
 
-    /**
-     * <code>string httpContentType = 5;</code>
-     */
-    java.lang.String getHttpContentType();
+  /**
+   * <code>int32 quantity1 = 9;</code>
+   */
+  int getQuantity1();
 
-    /**
-     * <code>string httpContentType = 5;</code>
-     */
-    com.google.protobuf.ByteString
-    getHttpContentTypeBytes();
+  /**
+   * <code>uint32 quantity2 = 10;</code>
+   */
+  int getQuantity2();
 
-    /**
-     * <code>string httpContent = 6;</code>
-     */
-    java.lang.String getHttpContent();
+  /**
+   * <code>int64 quantity3 = 11;</code>
+   */
+  long getQuantity3();
 
-    /**
-     * <code>string httpContent = 6;</code>
-     */
-    com.google.protobuf.ByteString
-    getHttpContentBytes();
+  /**
+   * <code>uint64 quantity4 = 12;</code>
+   */
+  long getQuantity4();
 
-    /**
-     * <code>.Session session = 7;</code>
-     */
-    boolean hasSession();
+  /**
+   * <code>float price1 = 13;</code>
+   */
+  float getPrice1();
 
-    /**
-     * <code>.Session session = 7;</code>
-     */
-    com.xxx.userservice.proto.Session getSession();
+  /**
+   * <code>double price2 = 14;</code>
+   */
+  double getPrice2();
 
-    /**
-     * <code>.Session session = 7;</code>
-     */
-    com.xxx.userservice.proto.SessionOrBuilder getSessionOrBuilder();
+  /**
+   * <code>.Status status = 15;</code>
+   */
+  int getStatusValue();
+  /**
+   * <code>.Status status = 15;</code>
+   */
+  Status getStatus();
 
-    /**
-     * <code>string orderId = 8;</code>
-     */
-    java.lang.String getOrderId();
+  /**
+   * <code>repeated .OrderDetail items = 16;</code>
+   */
+  java.util.List<OrderDetail>
+      getItemsList();
+  /**
+   * <code>repeated .OrderDetail items = 16;</code>
+   */
+  OrderDetail getItems(int index);
+  /**
+   * <code>repeated .OrderDetail items = 16;</code>
+   */
+  int getItemsCount();
+  /**
+   * <code>repeated .OrderDetail items = 16;</code>
+   */
+  java.util.List<? extends OrderDetailOrBuilder>
+      getItemsOrBuilderList();
+  /**
+   * <code>repeated .OrderDetail items = 16;</code>
+   */
+  OrderDetailOrBuilder getItemsOrBuilder(
+          int index);
 
-    /**
-     * <code>string orderId = 8;</code>
-     */
-    com.google.protobuf.ByteString
-    getOrderIdBytes();
+  /**
+   * <code>string userId = 17;</code>
+   */
+  String getUserId();
+  /**
+   * <code>string userId = 17;</code>
+   */
+  com.google.protobuf.ByteString
+      getUserIdBytes();
 
-    /**
-     * <code>int32 quantity1 = 9;</code>
-     */
-    int getQuantity1();
+  /**
+   * <code>string userName = 18;</code>
+   */
+  String getUserName();
+  /**
+   * <code>string userName = 18;</code>
+   */
+  com.google.protobuf.ByteString
+      getUserNameBytes();
 
-    /**
-     * <code>uint32 quantity2 = 10;</code>
-     */
-    int getQuantity2();
+  /**
+   * <code>string mobile = 19;</code>
+   */
+  String getMobile();
+  /**
+   * <code>string mobile = 19;</code>
+   */
+  com.google.protobuf.ByteString
+      getMobileBytes();
 
-    /**
-     * <code>int64 quantity3 = 11;</code>
-     */
-    long getQuantity3();
+  /**
+   * <code>string sessionId = 20;</code>
+   */
+  String getSessionId();
+  /**
+   * <code>string sessionId = 20;</code>
+   */
+  com.google.protobuf.ByteString
+      getSessionIdBytes();
 
-    /**
-     * <code>uint64 quantity4 = 12;</code>
-     */
-    long getQuantity4();
+  /**
+   * <code>string headerHost = 21;</code>
+   */
+  String getHeaderHost();
+  /**
+   * <code>string headerHost = 21;</code>
+   */
+  com.google.protobuf.ByteString
+      getHeaderHostBytes();
 
-    /**
-     * <code>float price1 = 13;</code>
-     */
-    float getPrice1();
+  /**
+   * <code>string cookieTnk = 22;</code>
+   */
+  String getCookieTnk();
+  /**
+   * <code>string cookieTnk = 22;</code>
+   */
+  com.google.protobuf.ByteString
+      getCookieTnkBytes();
 
-    /**
-     * <code>double price2 = 14;</code>
-     */
-    double getPrice2();
-
-    /**
-     * <code>.Status status = 15;</code>
-     */
-    int getStatusValue();
-
-    /**
-     * <code>.Status status = 15;</code>
-     */
-    com.xxx.userservice.proto.Status getStatus();
-
-    /**
-     * <code>repeated .OrderDetail items = 16;</code>
-     */
-    java.util.List<com.xxx.userservice.proto.OrderDetail>
-    getItemsList();
-
-    /**
-     * <code>repeated .OrderDetail items = 16;</code>
-     */
-    com.xxx.userservice.proto.OrderDetail getItems(int index);
-
-    /**
-     * <code>repeated .OrderDetail items = 16;</code>
-     */
-    int getItemsCount();
-
-    /**
-     * <code>repeated .OrderDetail items = 16;</code>
-     */
-    java.util.List<? extends com.xxx.userservice.proto.OrderDetailOrBuilder>
-    getItemsOrBuilderList();
-
-    /**
-     * <code>repeated .OrderDetail items = 16;</code>
-     */
-    com.xxx.userservice.proto.OrderDetailOrBuilder getItemsOrBuilder(
-            int index);
-
-    /**
-     * <code>string userId = 17;</code>
-     */
-    java.lang.String getUserId();
-
-    /**
-     * <code>string userId = 17;</code>
-     */
-    com.google.protobuf.ByteString
-    getUserIdBytes();
-
-    /**
-     * <code>string userName = 18;</code>
-     */
-    java.lang.String getUserName();
-
-    /**
-     * <code>string userName = 18;</code>
-     */
-    com.google.protobuf.ByteString
-    getUserNameBytes();
-
-    /**
-     * <code>string mobile = 19;</code>
-     */
-    java.lang.String getMobile();
-
-    /**
-     * <code>string mobile = 19;</code>
-     */
-    com.google.protobuf.ByteString
-    getMobileBytes();
-
-    /**
-     * <code>string sessionId = 20;</code>
-     */
-    java.lang.String getSessionId();
-
-    /**
-     * <code>string sessionId = 20;</code>
-     */
-    com.google.protobuf.ByteString
-    getSessionIdBytes();
-
-    /**
-     * <code>string headerHost = 21;</code>
-     */
-    java.lang.String getHeaderHost();
-
-    /**
-     * <code>string headerHost = 21;</code>
-     */
-    com.google.protobuf.ByteString
-    getHeaderHostBytes();
-
-    /**
-     * <code>string cookieTnk = 22;</code>
-     */
-    java.lang.String getCookieTnk();
-
-    /**
-     * <code>string cookieTnk = 22;</code>
-     */
-    com.google.protobuf.ByteString
-    getCookieTnkBytes();
-
-    /**
-     * <code>repeated string colors = 23;</code>
-     */
-    java.util.List<java.lang.String>
-    getColorsList();
-
-    /**
-     * <code>repeated string colors = 23;</code>
-     */
-    int getColorsCount();
-
-    /**
-     * <code>repeated string colors = 23;</code>
-     */
-    java.lang.String getColors(int index);
-
-    /**
-     * <code>repeated string colors = 23;</code>
-     */
-    com.google.protobuf.ByteString
-    getColorsBytes(int index);
+  /**
+   * <code>repeated string colors = 23;</code>
+   */
+  java.util.List<String>
+      getColorsList();
+  /**
+   * <code>repeated string colors = 23;</code>
+   */
+  int getColorsCount();
+  /**
+   * <code>repeated string colors = 23;</code>
+   */
+  String getColors(int index);
+  /**
+   * <code>repeated string colors = 23;</code>
+   */
+  com.google.protobuf.ByteString
+      getColorsBytes(int index);
 }

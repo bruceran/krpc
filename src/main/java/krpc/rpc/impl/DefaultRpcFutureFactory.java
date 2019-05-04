@@ -4,6 +4,7 @@ import com.google.protobuf.Message;
 import krpc.common.InitClose;
 import krpc.common.NamedThreadFactory;
 import krpc.rpc.core.RpcFutureFactory;
+import krpc.rpc.core.RpcRawMessage;
 import krpc.rpc.core.ServiceMetas;
 import krpc.trace.TraceContext;
 import org.slf4j.Logger;
@@ -46,6 +47,10 @@ public class DefaultRpcFutureFactory implements RpcFutureFactory, InitClose {
 
     public CompletableFuture<Message> newFuture(int serviceId, int msgId, boolean isAsync, TraceContext traceContext) {
         return new DefaultRpcFuture(this, serviceId, msgId, isAsync, traceContext);
+    }
+
+    public CompletableFuture<RpcRawMessage> newRawFuture(int serviceId, int msgId, boolean isAsync, TraceContext traceContext) {
+        return new DefaultRawRpcFuture(this, serviceId, msgId, isAsync, traceContext);
     }
 
     public int getNotifyThreads() {

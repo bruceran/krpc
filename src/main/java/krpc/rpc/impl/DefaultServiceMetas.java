@@ -10,27 +10,30 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class DefaultServiceMetas implements ServiceMetas {
 
-    HashMap<Integer, Object> services = new HashMap<Integer, Object>();
-    HashMap<Integer, Object> referers = new HashMap<Integer, Object>();
-    HashMap<String, Method> methods = new HashMap<String, Method>();
-    HashMap<Integer, Object> asyncReferers = new HashMap<Integer, Object>();
-    HashMap<String, Method> asyncMethods = new HashMap<String, Method>();
-    HashMap<String, Class<?>> reqClsMap = new HashMap<String, Class<?>>();
-    HashMap<String, Class<?>> resClsMap = new HashMap<String, Class<?>>();
-    HashMap<String, Method> reqParserMap = new HashMap<String, Method>();
-    HashMap<String, Method> resParserMap = new HashMap<String, Method>();
-    HashMap<Integer, String> serviceNames = new HashMap<Integer, String>();
-    HashMap<String, String> msgNames = new HashMap<String, String>();
-    HashMap<String, String> originalMsgNames = new HashMap<String, String>();
-    HashMap<String, RpcCallable> callableMap = new HashMap<String, RpcCallable>();
-    HashMap<String, Descriptor> reqDescMap = new HashMap<String, Descriptor>();
-    HashMap<String, Descriptor> resDescMap = new HashMap<String, Descriptor>();
-    HashMap<Integer, RpcCallable> dynamicCallableMap = new HashMap<Integer, RpcCallable>();
+    HashMap<Integer, Object> services = new HashMap<>();
+    HashMap<Integer, Object> referers = new HashMap<>();
+    HashMap<String, Method> methods = new HashMap<>();
+    HashMap<Integer, Object> asyncReferers = new HashMap<>();
+    HashMap<String, Method> asyncMethods = new HashMap<>();
+    HashMap<String, Class<?>> reqClsMap = new HashMap<>();
+    HashMap<String, Class<?>> resClsMap = new HashMap<>();
+    HashMap<String, Method> reqParserMap = new HashMap<>();
+    HashMap<String, Method> resParserMap = new HashMap<>();
+    HashMap<Integer, String> serviceNames = new HashMap<>();
+    HashMap<String, String> msgNames = new HashMap<>();
+    HashMap<String, String> originalMsgNames = new HashMap<>();
+    HashMap<String, Descriptor> reqDescMap = new HashMap<>();
+    HashMap<String, Descriptor> resDescMap = new HashMap<>();
+    HashMap<String, RpcCallable> callableMap = new HashMap<>();
+    HashMap<Integer, RpcCallable> callableMapForServiceId = new HashMap<>();
+    HashMap<Integer, RpcCallable> dynamicCallableMap = new HashMap<>();
 
     Validator validator;
+    Set<Integer> exchangeServiceIds = new HashSet<>();
 
     public Object findService(int serviceId) {
         return services.get(serviceId);
@@ -79,8 +82,12 @@ public class DefaultServiceMetas implements ServiceMetas {
     public String getOriginalName(int serviceId, int msgId) {
         return originalMsgNames.get(serviceId + "." + msgId);
     }
+
     public RpcCallable findCallable(String implClsName) {
         return callableMap.get(implClsName);
+    }
+    public RpcCallable findCallable(int serviceId) {
+        return callableMapForServiceId.get(serviceId);
     }
 
     public Map<Integer, String> getMsgNames(int serviceId) {
@@ -200,18 +207,25 @@ public class DefaultServiceMetas implements ServiceMetas {
 
     public void addService(Class<?> intf, Object impl, RpcCallable callable) {
         addImpl(intf, impl, true);
-        if (callable != null)
+        if (callable != null) {
             callableMap.put(impl.getClass().getName(), callable);
+            int serviceId = ReflectionUtils.getServiceId(intf);
+            callableMapForServiceId.put(serviceId,callable);
+        }
     }
 
     public void addReferer(Class<?> intf, Object impl, RpcCallable callable) {
         addImpl(intf, impl, false);
         callableMap.put(impl.getClass().getName(), callable);
+        int serviceId = ReflectionUtils.getServiceId(intf);
+        callableMapForServiceId.put(serviceId,callable);
     }
 
     public void addAsyncReferer(Class<?> intf, Object impl, RpcCallable callable) {
         addAsyncImpl(intf, impl);
         callableMap.put(impl.getClass().getName(), callable);
+        int serviceId = ReflectionUtils.getServiceId(intf);
+        callableMapForServiceId.put(serviceId,callable);
     }
 
     public void addDirect(int serviceId, int msgId, Class<?> reqCls, Class<?> resCls) {
@@ -294,6 +308,13 @@ public class DefaultServiceMetas implements ServiceMetas {
 
     public void setValidator(Validator validator) {
         this.validator = validator;
+    }
+
+    public void addExchangeServiceId(int serviceId) {
+        exchangeServiceIds.add(serviceId);
+    }
+    public boolean isExchangeServiceId(int serviceId) {
+        return exchangeServiceIds.contains(serviceId);
     }
 
 }

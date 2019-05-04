@@ -7,8 +7,7 @@ public interface PushServicev2 {
 
     static final public int serviceId = 103;
 
-    com.xxx.userservice.proto.PushRes pushv2(com.xxx.userservice.proto.PushReq req);
-
+    PushRes pushv2(PushReq req);
     static final public int pushv2MsgId = 1;
 
 }

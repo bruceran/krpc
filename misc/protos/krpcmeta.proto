@@ -31,6 +31,7 @@ message RpcMeta {
     Trace trace = 7;
     string attachment = 8; // oob data
     int32 compress = 9; // compress type, 0=no compress, 1=gzip 2=snappy
+	int32 encrypt = 10;
 
 /*
     signature fields

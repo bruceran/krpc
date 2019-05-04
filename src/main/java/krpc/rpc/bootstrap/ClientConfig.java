@@ -1,7 +1,9 @@
 package krpc.rpc.bootstrap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClientConfig {
 
@@ -30,6 +32,10 @@ public class ClientConfig {
 
     String connectionPlugin = "";
 
+    String exchangeServiceIds = "";
+
+    Map<Integer,Integer> exchangeServiceIdMap = new HashMap<>();
+
     public ClientConfig() {
     }
 
@@ -40,6 +46,15 @@ public class ClientConfig {
     public ClientConfig addPluginParams(String params) {
         pluginParams.add(params);
         return this;
+    }
+
+    public void addExchangeServiceId(int src,int dest) {
+        exchangeServiceIdMap.put(src,dest);
+    }
+
+    public int getExchangeServiceId(int src) {
+        Integer dest = exchangeServiceIdMap.get(src);
+        return dest == null ? 0 : dest.intValue();
     }
 
     public String getId() {
@@ -201,6 +216,15 @@ public class ClientConfig {
 
     public ClientConfig setEnableEncrypt(boolean enableEncrypt) {
         this.enableEncrypt = enableEncrypt;
+        return this;
+    }
+
+    public String getExchangeServiceIds() {
+        return exchangeServiceIds;
+    }
+
+    public ClientConfig setExchangeServiceIds(String exchangeServiceIds) {
+        this.exchangeServiceIds = exchangeServiceIds;
         return this;
     }
 }

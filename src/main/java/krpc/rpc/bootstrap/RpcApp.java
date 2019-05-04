@@ -50,12 +50,20 @@ public class RpcApp implements InitClose, StartStop, DumpPlugin, HealthPlugin {
         this.name = name;
     }
 
+    public HashMap<String, RpcClient> getClients() {
+        return clients;
+    }
+
     public WebMonitorService getMonitorService() {
         return monitorService;
     }
 
     public SelfCheckHttpServer getSelfCheckHttpServer() {
         return selfCheckHttpServer;
+    }
+
+    public ServiceMetas getServiceMetas() {
+        return serviceMetas;
     }
 
     public RpcServer getServer() {

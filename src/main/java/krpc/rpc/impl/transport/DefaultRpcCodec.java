@@ -109,7 +109,62 @@ public class DefaultRpcCodec implements RpcCodec {
         return meta;
     }
 
-    public RpcData decodeBody(RpcMeta meta, ByteBuf leftBuff,String key) {
+    public RpcData decodeBodyAsByteBuf(RpcMeta meta, ByteBuf leftBuff,String key) {
+        int left = leftBuff.readableBytes();
+        ByteBuf bodyBb = null;
+        if (left > 0 && meta.getEncrypt() > 0) {
+
+            if( isEmpty(key) ) {
+                if (isRequest(meta))
+                    throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt key not found to encode package");
+                else
+                    throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt key not found to encode package");
+            }
+
+            byte[] bytes = new byte[left];
+            leftBuff.readBytes(bytes);
+            try {
+                byte[] decryptBytes = decrypt(meta.getEncrypt(), bytes, key);
+
+                if( decryptBytes == null ) {
+                    if (isRequest(meta))
+                        throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt type not supported, type="+meta.getEncrypt());
+                    else
+                        throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt type not supported, type="+meta.getEncrypt());
+                }
+
+                bodyBb = Unpooled.wrappedBuffer(decryptBytes);
+            } catch (Exception e) {
+                if (isRequest(meta))
+                    throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decrypt request exception, e="+e.getMessage());
+                else
+                    throw new RpcException(RetCodes.DECODE_RES_ERROR, "decrypt response exception, e="+e.getMessage());
+            }
+        } else if (left > 0 && meta.getCompress() > 0) {
+            byte[] bytes = new byte[left];
+            leftBuff.readBytes(bytes);
+            try {
+                byte[] unzipBytes = unzip(meta.getCompress(), bytes);
+                bodyBb = Unpooled.wrappedBuffer(unzipBytes);
+            } catch (Exception e) {
+                if (isRequest(meta))
+                    throw new RpcException(RetCodes.DECODE_REQ_ERROR, "decode request exception");
+                else
+                    throw new RpcException(RetCodes.DECODE_RES_ERROR, "decode response exception");
+            }
+        } else {
+            if (left > 0) {
+                byte[] bytes = new byte[left];
+                leftBuff.readBytes(bytes);
+                bodyBb = Unpooled.wrappedBuffer(bytes);
+            }
+        }
+
+        if( bodyBb == null ) bodyBb = Unpooled.EMPTY_BUFFER;
+        return new RpcData(meta, bodyBb);
+    }
+
+    public RpcData decodeBodyAsMessage(RpcMeta meta, ByteBuf leftBuff, String key) {
         int left = leftBuff.readableBytes();
         ByteBuf bodyBb = null;
         if (left > 0 && meta.getEncrypt() > 0) {
@@ -209,16 +264,42 @@ public class DefaultRpcCodec implements RpcCodec {
         }
     }
 
+    // 对raw body，只有打日志,lb,router才需要反序列化获取里面的值，这里是复制原来的ByteBuf, 不会影响原来的指针位置
+    public Message decodeRawBody(RpcMeta meta, ByteBuf bodyBb) {
+        if( bodyBb == null ) return null;
+        if( bodyBb.writerIndex() == 0 ) return null; // 对 raw body 这里总是一个固定的数组，因为raw body也是这个类生成的
+
+        Method m = null;
+        if (isRequest(meta)) {
+            m = serviceMetas.findReqParser(meta.getServiceId(), meta.getMsgId());
+        } else {
+            m = serviceMetas.findResParser(meta.getServiceId(), meta.getMsgId());
+        }
+
+        if (m == null) return null;
+
+        try {
+            byte[] data = bodyBb.array();
+            ByteBuf bb = Unpooled.wrappedBuffer(data,0,bodyBb.writerIndex());
+            ByteBufInputStream is = new ByteBufInputStream(bb);
+            Message res = (Message) m.invoke(null, is);
+            return res;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public int getSize(RpcData data) {
-        int bodyBytesLen = data.getBody() == null ? 0 : data.getBody().getSerializedSize();
+        int bodyBytesLen = data.getBody() == null ? 0 : ( data.getBody() instanceof Message ? data.asMessage().getSerializedSize() : data.asByteBuf().readableBytes() );
         int metaBytesLen = data.getMeta().getSerializedSize();
         int len = 8 + metaBytesLen + bodyBytesLen;
         return len;
     }
 
+    // 这里的 ByteBuf 读指针会保留，ByteBuf可以重复读
     public void encode(RpcData data, ByteBuf bb,String key) {
 
-        int bodyBytesLen = data.getBody() == null ? 0 : data.getBody().getSerializedSize();
+        int bodyBytesLen = data.getBody() == null ? 0 : (data.getBody() instanceof Message ? data.asMessage().getSerializedSize() : data.asByteBuf().readableBytes());
 
         Integer zip = zipMap.get(data.getMeta().getServiceId());
         Integer minSizeToZip = minSizeToZipMap.get(data.getMeta().getServiceId());
@@ -233,7 +314,16 @@ public class DefaultRpcCodec implements RpcCodec {
             }
 
             try {
-                byte[] body = data.getBody().toByteArray();
+                byte[] body;
+                if( data.getBody() instanceof Message ) {
+                    body = data.asMessage().toByteArray();
+                } else {
+                    ByteBuf srcbb = data.asByteBuf();
+                    int n = srcbb.readerIndex();
+                    body = new byte[srcbb.readableBytes()];
+                    srcbb.readBytes(body);
+                    srcbb.readerIndex(n);
+                }
                 byte[] encBody = encrypt(data.getMeta().getEncrypt(), body, key);
                 if( encBody == null ) {
                     if (isRequest(data.getMeta()))
@@ -266,7 +356,18 @@ public class DefaultRpcCodec implements RpcCodec {
         if (data.getBody() != null && zip != null && zip.intValue() > 0 && minSizeToZip != null && bodyBytesLen > minSizeToZip.intValue()) {
 
             try {
-                byte[] body = data.getBody().toByteArray();
+
+                byte[] body;
+                if( data.getBody() instanceof Message ) {
+                    body = data.asMessage().toByteArray();
+                } else {
+                    ByteBuf srcbb = data.asByteBuf();
+                    int n = srcbb.readerIndex();
+                    body = new byte[srcbb.readableBytes()];
+                    srcbb.readBytes(body);
+                    srcbb.readerIndex(n);
+                }
+
                 byte[] encBody = zip(zip, body);
                 ReflectionUtils.updateCompress(data.getMeta(), zip);
 
@@ -303,7 +404,19 @@ public class DefaultRpcCodec implements RpcCodec {
             os.writeInt(len - 8);
             data.getMeta().writeTo(os);
             if (data.getBody() != null) {
-                data.getBody().writeTo(os);
+                if( data.getBody() instanceof Message ) {
+                    data.asMessage().writeTo(os);
+                } else {
+                    ByteBuf srcbb = data.asByteBuf();
+                    int n = srcbb.readerIndex();
+                    byte[] bodyBytes = srcbb.array();
+                    if( bodyBytes.length != srcbb.readableBytes() ) {
+                        bodyBytes = new byte[srcbb.readableBytes()];
+                        srcbb.readBytes(bodyBytes);
+                    }
+                    srcbb.readerIndex(n);
+                    os.write(bodyBytes);
+                }
             }
         } catch (Exception e) {
             if (isRequest(data.getMeta()))

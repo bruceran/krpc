@@ -8,6 +8,7 @@ import krpc.rpc.core.ClientContextData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class LeastActiveWeightLoadBalance implements LoadBalance {
@@ -18,7 +19,7 @@ public class LeastActiveWeightLoadBalance implements LoadBalance {
         return true;
     }
 
-    public int select(List<Addr> addrs, Weights weights, ClientContextData ctx, Message req) {
+    public int select(List<Addr> addrs, Weights weights, ClientContextData ctx, Map<String,Object> req) {
 
         int serviceId = ctx.getMeta().getServiceId();
 

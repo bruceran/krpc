@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Json {
 
@@ -40,9 +39,64 @@ public class Json {
     }
 
 
+    static public HashMap<String, Object> toHashMap(String s) {
+        try {
+            HashMap<String, Object> results = mapper.readValue(s, new TypeReference<HashMap<String, Object>>() {
+            });
+            return results;
+        } catch (Exception e) {
+            log.error("json convert exception", e);
+            return null;
+        }
+    }
+
+
+    static public LinkedHashMap<String, Object> toLinkedHashMap(String s) {
+        try {
+            LinkedHashMap<String, Object> results = mapper.readValue(s, new TypeReference<LinkedHashMap<String, Object>>() {
+            });
+            return results;
+        } catch (Exception e) {
+            log.error("json convert exception", e);
+            return null;
+        }
+    }
+
+    static public TreeMap<String, Object> toTreeMap(String s) {
+        try {
+            TreeMap<String, Object> results = mapper.readValue(s, new TypeReference<TreeMap<String, Object>>() {
+            });
+            return results;
+        } catch (Exception e) {
+            log.error("json convert exception", e);
+            return null;
+        }
+    }
+
+
     static public List<Object> toList(String s) {
         try {
             List<Object> results = mapper.readValue(s, new TypeReference<List<Object>>() {
+            });
+            return results;
+        } catch (Exception e) {
+            log.error("json convert exception", e);
+            return null;
+        }
+    }
+    static public ArrayList<Object> toArrayList(String s) {
+        try {
+            ArrayList<Object> results = mapper.readValue(s, new TypeReference<ArrayList<Object>>() {
+            });
+            return results;
+        } catch (Exception e) {
+            log.error("json convert exception", e);
+            return null;
+        }
+    }
+    static public LinkedList<Object> toLinkedList(String s) {
+        try {
+            LinkedList<Object> results = mapper.readValue(s, new TypeReference<LinkedList<Object>>() {
             });
             return results;
         } catch (Exception e) {

@@ -8,6 +8,9 @@ public class RpcAppInitBean {
     private RpcApp rpcApp;
     private Bootstrap bootstrap;
 
+    public RpcAppInitBean() { // for kmock
+    }
+
     public RpcAppInitBean(Bootstrap bootstrap,RpcApp rpcApp) {
         this.bootstrap = bootstrap;
         this.rpcApp = rpcApp;

@@ -50,7 +50,7 @@ public class DefaultRouter implements Router {
         rulesList.set(rules);
     }
 
-    public List<Addr> select(List<Addr> addrs, ClientContextData ctx, Message req) {
+    public List<Addr> select(List<Addr> addrs, ClientContextData ctx, Map<String,Object> req) {
         int msgId = ctx.getMeta().getMsgId();
         return select(addrs, msgId);
     }

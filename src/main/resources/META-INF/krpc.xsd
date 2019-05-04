@@ -61,6 +61,7 @@
               <attribute name="connectionPlugin" type="string" use="optional"/>
               <attribute name="nativeNetty" type="string" use="optional"/>
               <attribute name="enableEncrypt" type="string" use="optional"/>
+              <attribute name="exchangeServiceIds" type="string" use="optional"/>
 	    </complexType>    
     </element>
 	
@@ -87,6 +88,7 @@
               <attribute name="connectionPlugin" type="string" use="optional"/>
               <attribute name="nativeNetty" type="string" use="optional"/>
               <attribute name="enableEncrypt" type="string" use="optional"/>
+              <attribute name="exchangeServiceIds" type="string" use="optional"/>
 	    </complexType>    
     </element>
 
@@ -196,6 +198,7 @@
               <attribute name="printOriginalMsgName" type="string" use="optional"/>
               <attribute name="selfCheckPort" type="string" use="optional"/>
               <attribute name="tags" type="string" use="optional"/>
+              <attribute name="maxFieldSizeToLog" type="string" use="optional"/>
 	    </complexType>    
     </element>
     

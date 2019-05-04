@@ -1,0 +1,28 @@
+syntax="proto3";
+
+import "krpcext.proto";
+option java_multiple_files=true;
+option java_generic_services=true;
+
+option java_package="krpc.rpc.httpproxy.proto";
+option java_outer_classname="HttpProxyMetas";
+
+message TransferReq {
+    string action = 1; 
+    string json = 2;  
+};
+
+message TransferRes {
+    int32 retCode = 1;
+	string retMsg = 2;
+	string json = 3;
+};
+
+service HttpProxy {
+
+	option (krpc.serviceId) = 3;
+	
+	rpc httpTransfer(TransferReq) returns (TransferRes)  { option (krpc.msgId) = 1; }; 
+
+}
+

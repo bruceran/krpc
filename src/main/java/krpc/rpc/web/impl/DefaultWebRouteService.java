@@ -475,6 +475,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
 
             String jarPath = path.substring(path.indexOf("/"), path.indexOf("!"));
             String dir = path.substring(path.indexOf("!") + 2); // remove the first /
+            if( dir.contains("!") ) dir = dir.replace("!",""); // in spring boot
 
             try {
                 File jarFile = new File(jarPath);

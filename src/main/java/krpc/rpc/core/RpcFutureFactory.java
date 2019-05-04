@@ -7,4 +7,5 @@ import java.util.concurrent.CompletableFuture;
 
 public interface RpcFutureFactory {
     CompletableFuture<Message> newFuture(int serviceId, int msgId, boolean isAsync, TraceContext traceContext);
+    CompletableFuture<RpcRawMessage> newRawFuture(int serviceId, int msgId, boolean isAsync, TraceContext traceContext);
 }

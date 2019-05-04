@@ -37,7 +37,9 @@ class UserServiceImpl implements UserService {
 
         return LoginRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#" + i).build();
     }
-
+    public Login2Res login2(Login2Req req) {
+        return Login2Res.ok();
+    }
     public UpdateProfileRes updateProfile(UpdateProfileReq req) {
         i++;
         return UpdateProfileRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#" + i).build();

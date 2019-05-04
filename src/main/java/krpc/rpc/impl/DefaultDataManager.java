@@ -52,8 +52,12 @@ public class DefaultDataManager implements DataManager, QuickTimerCallback, Init
 
     public RpcClosure remove(String connId, int sequence) {
         String key = connId + ":" + sequence;
-        RpcClosure closure = data.remove(key);
-        return closure;
+        return data.remove(key);
+    }
+
+    public RpcClosure get(String connId, int sequence) {
+        String key = connId + ":" + sequence;
+        return data.get(key);
     }
 
     public void timeout(Object o) {

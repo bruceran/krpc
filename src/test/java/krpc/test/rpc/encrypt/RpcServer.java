@@ -50,7 +50,9 @@ class UserServiceImpl implements UserService {
         System.out.println("login received");
         return LoginRes.newBuilder().setRetCode(0).setRetMsg(key).build();
     }
-
+    public Login2Res login2(Login2Req req) {
+        return Login2Res.ok();
+    }
     public UpdateProfileRes updateProfile(UpdateProfileReq req) {
         System.out.println("updateProfile received" );
         return UpdateProfileRes.newBuilder().setRetMsg("abc").build();

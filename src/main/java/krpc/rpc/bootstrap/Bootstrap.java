@@ -53,7 +53,7 @@ public class Bootstrap {
 
     static Logger log = LoggerFactory.getLogger(Bootstrap.class);
 
-    static private final String versionString = "krpc version 0.2.5 build 1 @ 20181123";
+    static private final String versionString = "krpc version 0.2.15 build 1 @ 20190426";
 
     private ApplicationConfig appConfig = new ApplicationConfig();
     private MonitorConfig monitorConfig = new MonitorConfig();
@@ -64,14 +64,14 @@ public class Bootstrap {
     private List<RefererConfig> refererList = new ArrayList<RefererConfig>();
     private List<WebServerConfig> webServerList = new ArrayList<WebServerConfig>();
 
-    private HashMap<String, RegistryConfig> registries = new HashMap<>();
-    private HashMap<String, ServerConfig> servers = new HashMap<>();
-    private HashMap<String, ClientConfig> clients = new HashMap<>();
-    private HashMap<String, ServiceConfig> services = new HashMap<>();
-    private HashSet<String> serviceInterfaces = new HashSet<>();
-    private HashMap<String, RefererConfig> referers = new HashMap<>();
-    private HashSet<String> refererInterfaces = new HashSet<>();
-    private HashMap<String, WebServerConfig> webServers = new HashMap<>();
+    private HashMap<String, RegistryConfig> registries = new LinkedHashMap<>();
+    private HashMap<String, ServerConfig> servers = new LinkedHashMap<>();
+    private HashMap<String, ClientConfig> clients = new LinkedHashMap<>();
+    private HashMap<String, ServiceConfig> services = new LinkedHashMap<>();
+    private HashSet<String> serviceInterfaces = new LinkedHashSet<>();
+    private HashMap<String, RefererConfig> referers = new LinkedHashMap<>();
+    private HashSet<String> refererInterfaces = new LinkedHashSet<>();
+    private HashMap<String, WebServerConfig> webServers = new LinkedHashMap<>();
 
     @SuppressWarnings("rawtypes")
     static public class PluginInfo {
@@ -88,7 +88,6 @@ public class Bootstrap {
             this.cls = cls;
             this.impCls = impCls;
             this.bean = bean;
-
 
             String suffix = cls.getSimpleName().toLowerCase();
 
@@ -227,7 +226,7 @@ public class Bootstrap {
 
         LogFormatter lf = getPlugin(LogFormatter.class, parseType(monitorConfig.logFormatter));
         String params = parseParams(monitorConfig.logFormatter);
-        params += "maskFields=" + (c.maskFields == null ? "" : c.maskFields) + ";maxRepeatedSizeToLog=" + c.maxRepeatedSizeToLog + ";printDefault=" + c.printDefault;
+        params += "maskFields=" + (c.maskFields == null ? "" : c.maskFields) + ";maxRepeatedSizeToLog=" + c.maxRepeatedSizeToLog + ";printDefault=" + c.printDefault+";maxFieldSizeToLog="+c.maxFieldSizeToLog;
         lf.config(params);
         m.setLogFormatter(lf);
 
@@ -313,8 +312,6 @@ public class Bootstrap {
         };
     }
 
-
-
     public RpcApp build() {
         initSniffer();
         prepare();
@@ -333,6 +330,19 @@ public class Bootstrap {
     //WebServerConfig lastWebServer = null;
     ClientConfig lastClient = null;
     String defaultRegistry = null;
+
+    boolean splitExchangeServiceid(ClientConfig c,String s) {
+        int p = s.indexOf("->");
+        if( p <= 0 ) return false;
+        try {
+            int src = Integer.parseInt(s.substring(0,p));
+            int dest = Integer.parseInt(s.substring(p+2));
+            c.addExchangeServiceId(src,dest);
+            return true;
+        } catch(Exception e) {
+            return false;
+        }
+    }
 
     private void prepare() {
 
@@ -381,7 +391,6 @@ public class Bootstrap {
 //        if (serviceList.size() == 0 && refererList.size() == 0 && webServerList.size() == 0)
 //            throw new RuntimeException("service or referer or webserver must be specified");
 
-
         for (RegistryConfig c : registryList) {
             if (getPlugin(Registry.class, c.type) == null)
                 throw new RuntimeException(String.format("unknown registry type %s", c.type));
@@ -421,6 +430,18 @@ public class Bootstrap {
             if (!isEmpty(c.connectionPlugin)) {
                 if (getPlugin(ConnectionPlugin.class, c.connectionPlugin) == null) {
                     throw new RuntimeException("connection plugin not registered");
+                }
+            }
+
+            if (!isEmpty(c.exchangeServiceIds)) { // 131->100,132->100
+                c.exchangeServiceIds = c.exchangeServiceIds.replace(';',',');
+                String[] ss = c.exchangeServiceIds.split(",");
+                for(String s: ss ) {
+                    if(isEmpty(s)) continue;
+                    boolean ok = splitExchangeServiceid(c,s);
+                    if(!ok) {
+                        throw new RuntimeException("exchangeServiceId format is wrong, exchangeServiceIds="+c.exchangeServiceIds);
+                    }
                 }
             }
 
@@ -696,7 +717,7 @@ public class Bootstrap {
             ((AlarmAware)app.traceAdapter).setAlarm(alarm);
         }
         if( app.selfCheckHttpServer instanceof AlarmAware ) {
-            ((AlarmAware)app.selfCheckHttpServer).setAlarm(alarm);
+            app.selfCheckHttpServer.setAlarm(alarm);
         }
 
         if (!isEmpty(appConfig.errorMsgConverter)) {
@@ -758,6 +779,7 @@ public class Bootstrap {
             client.setServiceMetas(app.serviceMetas);
             client.setValidator(app.validator);
             client.setFallbackPlugin(app.fallbackPlugin);
+            client.setRpcCodec(app.codec);
 
             client.setAlarm(alarm);
 
@@ -992,7 +1014,18 @@ public class Bootstrap {
                 cmi.addServiceInfo(serviceId, lb, r, bi);
 
                 if (!isEmpty(c.registryName)) {
-                    app.registryManager.addDiscover(serviceId, c.registryName, c.group, cmi);
+                    int exchangeServiceId = 0;
+                    ClientConfig cc = clients.get(c.transport);
+                    if( cc != null ) {
+                        exchangeServiceId = cc.getExchangeServiceId(serviceId);
+                        if( exchangeServiceId != 0 ) {
+                            String serviceName = app.serviceMetas.getServiceName(exchangeServiceId);
+                            if(isEmpty(serviceName)) {
+                                throw new RuntimeException("exchangeServiceId not found, exchangeServiceId=" + exchangeServiceId);
+                            }
+                        }
+                    }
+                    app.registryManager.addDiscover(serviceId, exchangeServiceId, c.registryName, c.group, cmi);
                 } else {
                     app.registryManager.addDirect(serviceId, c.direct, cmi);
                 }
@@ -1078,6 +1111,16 @@ public class Bootstrap {
             }
 
             app.services.put(name, c.impl);
+        }
+
+        for (Map.Entry<String, ServerConfig> entry : servers.entrySet()) {
+            ServerConfig c = entry.getValue();
+            if( !isEmpty(c.exchangeServiceIds)) {
+                String[] ss = c.exchangeServiceIds.split(",");
+                for(String s: ss ) {
+                    app.serviceMetas.addExchangeServiceId(Integer.parseInt(s));
+                }
+            }
         }
 
     }

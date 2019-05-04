@@ -1,10 +1,12 @@
 package krpc.rpc.core;
 
-import com.google.protobuf.Message;
+import java.util.Map;
 
 public interface ClusterManager extends RegistryManagerCallback {
 
-    String nextConnId(ClientContextData ctx, Message req);
+    boolean needReqInfoForNextConnId(ClientContextData ctx);
+
+    String nextConnId(ClientContextData ctx, Map<String,Object> req);
 
     int nextSequence(String connId);
 

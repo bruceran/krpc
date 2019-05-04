@@ -1,14 +1,10 @@
 package krpc.rpc.cluster;
 
-import com.google.protobuf.Message;
 import krpc.rpc.core.ClientContextData;
 import krpc.rpc.core.DynamicRouteConfig.AddrWeight;
 import krpc.rpc.core.DynamicRouteConfig.RouteRule;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,8 +16,8 @@ public class ServiceInfo {
     private Router router;
     private BreakerInfo bi;
 
-    private HashSet<String> all = new HashSet<String>();
-    private List<AddrInfo> alive = new ArrayList<AddrInfo>();
+    private HashSet<String> all = new HashSet<>();
+    private List<AddrInfo> alive = new ArrayList<>();
 
     private AtomicBoolean disabled = new AtomicBoolean(false);
     private AtomicReference<Weights> weights = new AtomicReference<>();
@@ -46,6 +42,10 @@ public class ServiceInfo {
         return lb;
     }
 
+    public Router getRouter() {
+        return router;
+    }
+
     public boolean isDisabled() {
         return disabled.get();
     }
@@ -68,7 +68,7 @@ public class ServiceInfo {
         weights.set(w);
     }
 
-    synchronized AddrInfo nextAddr(ClientContextData ctx, Message req) {
+    synchronized AddrInfo nextAddr(ClientContextData ctx, Map<String,Object> req) {
 
         if (alive.size() == 0)
             return null;

@@ -6,1612 +6,1517 @@ package com.xxx.userservice.proto;
 /**
  * Protobuf type {@code HttpTestRes}
  */
-public final class HttpTestRes extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:HttpTestRes)
-        HttpTestResOrBuilder {
-    private static final long serialVersionUID = 0L;
+public  final class HttpTestRes extends
+    com.google.protobuf.GeneratedMessageV3 implements
+    // @@protoc_insertion_point(message_implements:HttpTestRes)
+    HttpTestResOrBuilder {
+private static final long serialVersionUID = 0L;
+public static final HttpTestRes ok() { return HttpTestRes.newBuilder().build(); } ;
+public static final HttpTestRes failed(int retCode) { return HttpTestRes.newBuilder().setRetCode(retCode).build(); } ;
+public static final HttpTestRes failed(int retCode,String retMsg) { return HttpTestRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+  // Use HttpTestRes.newBuilder() to construct.
+  private HttpTestRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
+  private HttpTestRes() {
+    retCode_ = 0;
+    retMsg_ = "";
+    userId_ = "";
+    httpCode_ = 0;
+    httpContentType_ = "";
+    headerLocation_ = "";
+    headerXmmDddCcc_ = "";
+    cookieTnk_ = "";
+    totalPrice_ = 0;
+  }
 
-    // Use HttpTestRes.newBuilder() to construct.
-    private HttpTestRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
+  @Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private HttpTestRes(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new NullPointerException();
     }
+    int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 8: {
 
-    private HttpTestRes() {
-        retCode_ = 0;
-        retMsg_ = "";
-        userId_ = "";
-        httpCode_ = 0;
-        httpContentType_ = "";
-        headerLocation_ = "";
-        headerXmmDddCcc_ = "";
-        cookieTnk_ = "";
-        totalPrice_ = 0;
-    }
+            retCode_ = input.readInt32();
+            break;
+          }
+          case 18: {
+            String s = input.readStringRequireUtf8();
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
+            retMsg_ = s;
+            break;
+          }
+          case 26: {
+            String s = input.readStringRequireUtf8();
 
-    private HttpTestRes(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-        }
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-                com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-            boolean done = false;
-            while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                    case 0:
-                        done = true;
-                        break;
-                    case 8: {
-
-                        retCode_ = input.readInt32();
-                        break;
-                    }
-                    case 18: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        retMsg_ = s;
-                        break;
-                    }
-                    case 26: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        userId_ = s;
-                        break;
-                    }
-                    case 34: {
-                        com.xxx.userservice.proto.Session.Builder subBuilder = null;
-                        if (session_ != null) {
-                            subBuilder = session_.toBuilder();
-                        }
-                        session_ = input.readMessage(com.xxx.userservice.proto.Session.parser(), extensionRegistry);
-                        if (subBuilder != null) {
-                            subBuilder.mergeFrom(session_);
-                            session_ = subBuilder.buildPartial();
-                        }
-
-                        break;
-                    }
-                    case 40: {
-
-                        httpCode_ = input.readInt32();
-                        break;
-                    }
-                    case 50: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        httpContentType_ = s;
-                        break;
-                    }
-                    case 58: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        headerLocation_ = s;
-                        break;
-                    }
-                    case 66: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        headerXmmDddCcc_ = s;
-                        break;
-                    }
-                    case 74: {
-                        java.lang.String s = input.readStringRequireUtf8();
-
-                        cookieTnk_ = s;
-                        break;
-                    }
-                    case 80: {
-
-                        totalPrice_ = input.readInt32();
-                        break;
-                    }
-                    default: {
-                        if (!parseUnknownFieldProto3(
-                                input, unknownFields, extensionRegistry, tag)) {
-                            done = true;
-                        }
-                        break;
-                    }
-                }
+            userId_ = s;
+            break;
+          }
+          case 34: {
+            Session.Builder subBuilder = null;
+            if (session_ != null) {
+              subBuilder = session_.toBuilder();
             }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-            throw new com.google.protobuf.InvalidProtocolBufferException(
-                    e).setUnfinishedMessage(this);
-        } finally {
-            this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
+            session_ = input.readMessage(Session.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(session_);
+              session_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 40: {
+
+            httpCode_ = input.readInt32();
+            break;
+          }
+          case 50: {
+            String s = input.readStringRequireUtf8();
+
+            httpContentType_ = s;
+            break;
+          }
+          case 58: {
+            String s = input.readStringRequireUtf8();
+
+            headerLocation_ = s;
+            break;
+          }
+          case 66: {
+            String s = input.readStringRequireUtf8();
+
+            headerXmmDddCcc_ = s;
+            break;
+          }
+          case 74: {
+            String s = input.readStringRequireUtf8();
+
+            cookieTnk_ = s;
+            break;
+          }
+          case 80: {
+
+            totalPrice_ = input.readInt32();
+            break;
+          }
+          default: {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
         }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
     }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return UserServiceMetas.internal_static_HttpTestRes_descriptor;
+  }
 
+  @Override
+  protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return UserServiceMetas.internal_static_HttpTestRes_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            HttpTestRes.class, Builder.class);
+  }
+
+  public static final int RETCODE_FIELD_NUMBER = 1;
+  private int retCode_;
+  /**
+   * <code>int32 retCode = 1;</code>
+   */
+  public int getRetCode() {
+    return retCode_;
+  }
+
+  public static final int RETMSG_FIELD_NUMBER = 2;
+  private volatile Object retMsg_;
+  /**
+   * <code>string retMsg = 2;</code>
+   */
+  public String getRetMsg() {
+    Object ref = retMsg_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      retMsg_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string retMsg = 2;</code>
+   */
+  public com.google.protobuf.ByteString
+      getRetMsgBytes() {
+    Object ref = retMsg_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      retMsg_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int USERID_FIELD_NUMBER = 3;
+  private volatile Object userId_;
+  /**
+   * <code>string userId = 3;</code>
+   */
+  public String getUserId() {
+    Object ref = userId_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      userId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string userId = 3;</code>
+   */
+  public com.google.protobuf.ByteString
+      getUserIdBytes() {
+    Object ref = userId_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      userId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int SESSION_FIELD_NUMBER = 4;
+  private Session session_;
+  /**
+   * <code>.Session session = 4;</code>
+   */
+  public boolean hasSession() {
+    return session_ != null;
+  }
+  /**
+   * <code>.Session session = 4;</code>
+   */
+  public Session getSession() {
+    return session_ == null ? Session.getDefaultInstance() : session_;
+  }
+  /**
+   * <code>.Session session = 4;</code>
+   */
+  public SessionOrBuilder getSessionOrBuilder() {
+    return getSession();
+  }
+
+  public static final int HTTPCODE_FIELD_NUMBER = 5;
+  private int httpCode_;
+  /**
+   * <code>int32 httpCode = 5;</code>
+   */
+  public int getHttpCode() {
+    return httpCode_;
+  }
+
+  public static final int HTTPCONTENTTYPE_FIELD_NUMBER = 6;
+  private volatile Object httpContentType_;
+  /**
+   * <code>string httpContentType = 6;</code>
+   */
+  public String getHttpContentType() {
+    Object ref = httpContentType_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      httpContentType_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string httpContentType = 6;</code>
+   */
+  public com.google.protobuf.ByteString
+      getHttpContentTypeBytes() {
+    Object ref = httpContentType_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      httpContentType_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int HEADERLOCATION_FIELD_NUMBER = 7;
+  private volatile Object headerLocation_;
+  /**
+   * <code>string headerLocation = 7;</code>
+   */
+  public String getHeaderLocation() {
+    Object ref = headerLocation_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      headerLocation_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string headerLocation = 7;</code>
+   */
+  public com.google.protobuf.ByteString
+      getHeaderLocationBytes() {
+    Object ref = headerLocation_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      headerLocation_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int HEADERXMMDDDCCC_FIELD_NUMBER = 8;
+  private volatile Object headerXmmDddCcc_;
+  /**
+   * <code>string headerXmmDddCcc = 8;</code>
+   */
+  public String getHeaderXmmDddCcc() {
+    Object ref = headerXmmDddCcc_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      headerXmmDddCcc_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string headerXmmDddCcc = 8;</code>
+   */
+  public com.google.protobuf.ByteString
+      getHeaderXmmDddCccBytes() {
+    Object ref = headerXmmDddCcc_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      headerXmmDddCcc_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int COOKIETNK_FIELD_NUMBER = 9;
+  private volatile Object cookieTnk_;
+  /**
+   * <code>string cookieTnk = 9;</code>
+   */
+  public String getCookieTnk() {
+    Object ref = cookieTnk_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      cookieTnk_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string cookieTnk = 9;</code>
+   */
+  public com.google.protobuf.ByteString
+      getCookieTnkBytes() {
+    Object ref = cookieTnk_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      cookieTnk_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int TOTALPRICE_FIELD_NUMBER = 10;
+  private int totalPrice_;
+  /**
+   * <code>int32 totalPrice = 10;</code>
+   */
+  public int getTotalPrice() {
+    return totalPrice_;
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    if (retCode_ != 0) {
+      output.writeInt32(1, retCode_);
+    }
+    if (!getRetMsgBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, retMsg_);
+    }
+    if (!getUserIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, userId_);
+    }
+    if (session_ != null) {
+      output.writeMessage(4, getSession());
+    }
+    if (httpCode_ != 0) {
+      output.writeInt32(5, httpCode_);
+    }
+    if (!getHttpContentTypeBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, httpContentType_);
+    }
+    if (!getHeaderLocationBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, headerLocation_);
+    }
+    if (!getHeaderXmmDddCccBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, headerXmmDddCcc_);
+    }
+    if (!getCookieTnkBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 9, cookieTnk_);
+    }
+    if (totalPrice_ != 0) {
+      output.writeInt32(10, totalPrice_);
+    }
+    unknownFields.writeTo(output);
+  }
+
+  @Override
+  public int getSerializedSize() {
+    int size = memoizedSize;
+    if (size != -1) return size;
+
+    size = 0;
+    if (retCode_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(1, retCode_);
+    }
+    if (!getRetMsgBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, retMsg_);
+    }
+    if (!getUserIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, userId_);
+    }
+    if (session_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(4, getSession());
+    }
+    if (httpCode_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(5, httpCode_);
+    }
+    if (!getHttpContentTypeBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, httpContentType_);
+    }
+    if (!getHeaderLocationBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, headerLocation_);
+    }
+    if (!getHeaderXmmDddCccBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, headerXmmDddCcc_);
+    }
+    if (!getCookieTnkBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, cookieTnk_);
+    }
+    if (totalPrice_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(10, totalPrice_);
+    }
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
+    return size;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof HttpTestRes)) {
+      return super.equals(obj);
+    }
+    HttpTestRes other = (HttpTestRes) obj;
+
+    boolean result = true;
+    result = result && (getRetCode()
+        == other.getRetCode());
+    result = result && getRetMsg()
+        .equals(other.getRetMsg());
+    result = result && getUserId()
+        .equals(other.getUserId());
+    result = result && (hasSession() == other.hasSession());
+    if (hasSession()) {
+      result = result && getSession()
+          .equals(other.getSession());
+    }
+    result = result && (getHttpCode()
+        == other.getHttpCode());
+    result = result && getHttpContentType()
+        .equals(other.getHttpContentType());
+    result = result && getHeaderLocation()
+        .equals(other.getHeaderLocation());
+    result = result && getHeaderXmmDddCcc()
+        .equals(other.getHeaderXmmDddCcc());
+    result = result && getCookieTnk()
+        .equals(other.getCookieTnk());
+    result = result && (getTotalPrice()
+        == other.getTotalPrice());
+    result = result && unknownFields.equals(other.unknownFields);
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + RETCODE_FIELD_NUMBER;
+    hash = (53 * hash) + getRetCode();
+    hash = (37 * hash) + RETMSG_FIELD_NUMBER;
+    hash = (53 * hash) + getRetMsg().hashCode();
+    hash = (37 * hash) + USERID_FIELD_NUMBER;
+    hash = (53 * hash) + getUserId().hashCode();
+    if (hasSession()) {
+      hash = (37 * hash) + SESSION_FIELD_NUMBER;
+      hash = (53 * hash) + getSession().hashCode();
+    }
+    hash = (37 * hash) + HTTPCODE_FIELD_NUMBER;
+    hash = (53 * hash) + getHttpCode();
+    hash = (37 * hash) + HTTPCONTENTTYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getHttpContentType().hashCode();
+    hash = (37 * hash) + HEADERLOCATION_FIELD_NUMBER;
+    hash = (53 * hash) + getHeaderLocation().hashCode();
+    hash = (37 * hash) + HEADERXMMDDDCCC_FIELD_NUMBER;
+    hash = (53 * hash) + getHeaderXmmDddCcc().hashCode();
+    hash = (37 * hash) + COOKIETNK_FIELD_NUMBER;
+    hash = (53 * hash) + getCookieTnk().hashCode();
+    hash = (37 * hash) + TOTALPRICE_FIELD_NUMBER;
+    hash = (53 * hash) + getTotalPrice();
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static HttpTestRes parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static HttpTestRes parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static HttpTestRes parseFrom(
+      com.google.protobuf.ByteString data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static HttpTestRes parseFrom(
+      com.google.protobuf.ByteString data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static HttpTestRes parseFrom(byte[] data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static HttpTestRes parseFrom(
+      byte[] data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static HttpTestRes parseFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static HttpTestRes parseFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static HttpTestRes parseDelimitedFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
+  }
+  public static HttpTestRes parseDelimitedFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static HttpTestRes parseFrom(
+      com.google.protobuf.CodedInputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static HttpTestRes parseFrom(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+
+  @Override
+  public Builder newBuilderForType() { return newBuilder(); }
+  public static Builder newBuilder() {
+    return DEFAULT_INSTANCE.toBuilder();
+  }
+  public static Builder newBuilder(HttpTestRes prototype) {
+    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+  }
+  @Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @Override
+  protected Builder newBuilderForType(
+      BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
+  /**
+   * Protobuf type {@code HttpTestRes}
+   */
+  public static final class Builder extends
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+      // @@protoc_insertion_point(builder_implements:HttpTestRes)
+      HttpTestResOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
-        return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_descriptor;
+        getDescriptor() {
+      return UserServiceMetas.internal_static_HttpTestRes_descriptor;
     }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
-        return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        com.xxx.userservice.proto.HttpTestRes.class, com.xxx.userservice.proto.HttpTestRes.Builder.class);
+    @Override
+    protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return UserServiceMetas.internal_static_HttpTestRes_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              HttpTestRes.class, Builder.class);
     }
 
-    public static final int RETCODE_FIELD_NUMBER = 1;
-    private int retCode_;
+    // Construct using com.xxx.userservice.proto.HttpTestRes.newBuilder()
+    private Builder() {
+      maybeForceBuilderInitialization();
+    }
 
+    private Builder(
+        BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @Override
+    public Builder clear() {
+      super.clear();
+      retCode_ = 0;
+
+      retMsg_ = "";
+
+      userId_ = "";
+
+      if (sessionBuilder_ == null) {
+        session_ = null;
+      } else {
+        session_ = null;
+        sessionBuilder_ = null;
+      }
+      httpCode_ = 0;
+
+      httpContentType_ = "";
+
+      headerLocation_ = "";
+
+      headerXmmDddCcc_ = "";
+
+      cookieTnk_ = "";
+
+      totalPrice_ = 0;
+
+      return this;
+    }
+
+    @Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return UserServiceMetas.internal_static_HttpTestRes_descriptor;
+    }
+
+    @Override
+    public HttpTestRes getDefaultInstanceForType() {
+      return HttpTestRes.getDefaultInstance();
+    }
+
+    @Override
+    public HttpTestRes build() {
+      HttpTestRes result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @Override
+    public HttpTestRes buildPartial() {
+      HttpTestRes result = new HttpTestRes(this);
+      result.retCode_ = retCode_;
+      result.retMsg_ = retMsg_;
+      result.userId_ = userId_;
+      if (sessionBuilder_ == null) {
+        result.session_ = session_;
+      } else {
+        result.session_ = sessionBuilder_.build();
+      }
+      result.httpCode_ = httpCode_;
+      result.httpContentType_ = httpContentType_;
+      result.headerLocation_ = headerLocation_;
+      result.headerXmmDddCcc_ = headerXmmDddCcc_;
+      result.cookieTnk_ = cookieTnk_;
+      result.totalPrice_ = totalPrice_;
+      onBuilt();
+      return result;
+    }
+
+    @Override
+    public Builder clone() {
+      return (Builder) super.clone();
+    }
+    @Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        Object value) {
+      return (Builder) super.setField(field, value);
+    }
+    @Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return (Builder) super.clearField(field);
+    }
+    @Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return (Builder) super.clearOneof(oneof);
+    }
+    @Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, Object value) {
+      return (Builder) super.setRepeatedField(field, index, value);
+    }
+    @Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        Object value) {
+      return (Builder) super.addRepeatedField(field, value);
+    }
+    @Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof HttpTestRes) {
+        return mergeFrom((HttpTestRes)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(HttpTestRes other) {
+      if (other == HttpTestRes.getDefaultInstance()) return this;
+      if (other.getRetCode() != 0) {
+        setRetCode(other.getRetCode());
+      }
+      if (!other.getRetMsg().isEmpty()) {
+        retMsg_ = other.retMsg_;
+        onChanged();
+      }
+      if (!other.getUserId().isEmpty()) {
+        userId_ = other.userId_;
+        onChanged();
+      }
+      if (other.hasSession()) {
+        mergeSession(other.getSession());
+      }
+      if (other.getHttpCode() != 0) {
+        setHttpCode(other.getHttpCode());
+      }
+      if (!other.getHttpContentType().isEmpty()) {
+        httpContentType_ = other.httpContentType_;
+        onChanged();
+      }
+      if (!other.getHeaderLocation().isEmpty()) {
+        headerLocation_ = other.headerLocation_;
+        onChanged();
+      }
+      if (!other.getHeaderXmmDddCcc().isEmpty()) {
+        headerXmmDddCcc_ = other.headerXmmDddCcc_;
+        onChanged();
+      }
+      if (!other.getCookieTnk().isEmpty()) {
+        cookieTnk_ = other.cookieTnk_;
+        onChanged();
+      }
+      if (other.getTotalPrice() != 0) {
+        setTotalPrice(other.getTotalPrice());
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      HttpTestRes parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (HttpTestRes) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+
+    private int retCode_ ;
     /**
      * <code>int32 retCode = 1;</code>
      */
     public int getRetCode() {
-        return retCode_;
+      return retCode_;
+    }
+    /**
+     * <code>int32 retCode = 1;</code>
+     */
+    public Builder setRetCode(int value) {
+      
+      retCode_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 retCode = 1;</code>
+     */
+    public Builder clearRetCode() {
+      
+      retCode_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int RETMSG_FIELD_NUMBER = 2;
-    private volatile java.lang.Object retMsg_;
-
+    private Object retMsg_ = "";
     /**
      * <code>string retMsg = 2;</code>
      */
-    public java.lang.String getRetMsg() {
-        java.lang.Object ref = retMsg_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            retMsg_ = s;
-            return s;
-        }
+    public String getRetMsg() {
+      Object ref = retMsg_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        retMsg_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string retMsg = 2;</code>
      */
     public com.google.protobuf.ByteString
-    getRetMsgBytes() {
-        java.lang.Object ref = retMsg_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            retMsg_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getRetMsgBytes() {
+      Object ref = retMsg_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        retMsg_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string retMsg = 2;</code>
+     */
+    public Builder setRetMsg(
+        String value) {
+      if (value == null) value = "";
+  
+      retMsg_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string retMsg = 2;</code>
+     */
+    public Builder clearRetMsg() {
+      
+      retMsg_ = getDefaultInstance().getRetMsg();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string retMsg = 2;</code>
+     */
+    public Builder setRetMsgBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      retMsg_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int USERID_FIELD_NUMBER = 3;
-    private volatile java.lang.Object userId_;
-
+    private Object userId_ = "";
     /**
      * <code>string userId = 3;</code>
      */
-    public java.lang.String getUserId() {
-        java.lang.Object ref = userId_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            userId_ = s;
-            return s;
-        }
+    public String getUserId() {
+      Object ref = userId_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string userId = 3;</code>
      */
     public com.google.protobuf.ByteString
-    getUserIdBytes() {
-        java.lang.Object ref = userId_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            userId_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getUserIdBytes() {
+      Object ref = userId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string userId = 3;</code>
+     */
+    public Builder setUserId(
+        String value) {
+      if (value == null) value = "";
+  
+      userId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string userId = 3;</code>
+     */
+    public Builder clearUserId() {
+      
+      userId_ = getDefaultInstance().getUserId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string userId = 3;</code>
+     */
+    public Builder setUserIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      userId_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int SESSION_FIELD_NUMBER = 4;
-    private com.xxx.userservice.proto.Session session_;
-
+    private Session session_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        Session, Session.Builder, SessionOrBuilder> sessionBuilder_;
     /**
      * <code>.Session session = 4;</code>
      */
     public boolean hasSession() {
-        return session_ != null;
+      return sessionBuilder_ != null || session_ != null;
     }
-
     /**
      * <code>.Session session = 4;</code>
      */
-    public com.xxx.userservice.proto.Session getSession() {
-        return session_ == null ? com.xxx.userservice.proto.Session.getDefaultInstance() : session_;
+    public Session getSession() {
+      if (sessionBuilder_ == null) {
+        return session_ == null ? Session.getDefaultInstance() : session_;
+      } else {
+        return sessionBuilder_.getMessage();
+      }
     }
-
     /**
      * <code>.Session session = 4;</code>
      */
-    public com.xxx.userservice.proto.SessionOrBuilder getSessionOrBuilder() {
-        return getSession();
+    public Builder setSession(Session value) {
+      if (sessionBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        session_ = value;
+        onChanged();
+      } else {
+        sessionBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.Session session = 4;</code>
+     */
+    public Builder setSession(
+        Session.Builder builderForValue) {
+      if (sessionBuilder_ == null) {
+        session_ = builderForValue.build();
+        onChanged();
+      } else {
+        sessionBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.Session session = 4;</code>
+     */
+    public Builder mergeSession(Session value) {
+      if (sessionBuilder_ == null) {
+        if (session_ != null) {
+          session_ =
+            Session.newBuilder(session_).mergeFrom(value).buildPartial();
+        } else {
+          session_ = value;
+        }
+        onChanged();
+      } else {
+        sessionBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.Session session = 4;</code>
+     */
+    public Builder clearSession() {
+      if (sessionBuilder_ == null) {
+        session_ = null;
+        onChanged();
+      } else {
+        session_ = null;
+        sessionBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.Session session = 4;</code>
+     */
+    public Session.Builder getSessionBuilder() {
+      
+      onChanged();
+      return getSessionFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.Session session = 4;</code>
+     */
+    public SessionOrBuilder getSessionOrBuilder() {
+      if (sessionBuilder_ != null) {
+        return sessionBuilder_.getMessageOrBuilder();
+      } else {
+        return session_ == null ?
+            Session.getDefaultInstance() : session_;
+      }
+    }
+    /**
+     * <code>.Session session = 4;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        Session, Session.Builder, SessionOrBuilder>
+        getSessionFieldBuilder() {
+      if (sessionBuilder_ == null) {
+        sessionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            Session, Session.Builder, SessionOrBuilder>(
+                getSession(),
+                getParentForChildren(),
+                isClean());
+        session_ = null;
+      }
+      return sessionBuilder_;
     }
 
-    public static final int HTTPCODE_FIELD_NUMBER = 5;
-    private int httpCode_;
-
+    private int httpCode_ ;
     /**
      * <code>int32 httpCode = 5;</code>
      */
     public int getHttpCode() {
-        return httpCode_;
+      return httpCode_;
+    }
+    /**
+     * <code>int32 httpCode = 5;</code>
+     */
+    public Builder setHttpCode(int value) {
+      
+      httpCode_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 httpCode = 5;</code>
+     */
+    public Builder clearHttpCode() {
+      
+      httpCode_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int HTTPCONTENTTYPE_FIELD_NUMBER = 6;
-    private volatile java.lang.Object httpContentType_;
-
+    private Object httpContentType_ = "";
     /**
      * <code>string httpContentType = 6;</code>
      */
-    public java.lang.String getHttpContentType() {
-        java.lang.Object ref = httpContentType_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            httpContentType_ = s;
-            return s;
-        }
+    public String getHttpContentType() {
+      Object ref = httpContentType_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        httpContentType_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string httpContentType = 6;</code>
      */
     public com.google.protobuf.ByteString
-    getHttpContentTypeBytes() {
-        java.lang.Object ref = httpContentType_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            httpContentType_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getHttpContentTypeBytes() {
+      Object ref = httpContentType_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        httpContentType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string httpContentType = 6;</code>
+     */
+    public Builder setHttpContentType(
+        String value) {
+      if (value == null) value = "";
+  
+      httpContentType_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string httpContentType = 6;</code>
+     */
+    public Builder clearHttpContentType() {
+      
+      httpContentType_ = getDefaultInstance().getHttpContentType();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string httpContentType = 6;</code>
+     */
+    public Builder setHttpContentTypeBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      httpContentType_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int HEADERLOCATION_FIELD_NUMBER = 7;
-    private volatile java.lang.Object headerLocation_;
-
+    private Object headerLocation_ = "";
     /**
      * <code>string headerLocation = 7;</code>
      */
-    public java.lang.String getHeaderLocation() {
-        java.lang.Object ref = headerLocation_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            headerLocation_ = s;
-            return s;
-        }
+    public String getHeaderLocation() {
+      Object ref = headerLocation_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        headerLocation_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string headerLocation = 7;</code>
      */
     public com.google.protobuf.ByteString
-    getHeaderLocationBytes() {
-        java.lang.Object ref = headerLocation_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            headerLocation_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getHeaderLocationBytes() {
+      Object ref = headerLocation_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        headerLocation_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string headerLocation = 7;</code>
+     */
+    public Builder setHeaderLocation(
+        String value) {
+      if (value == null) value = "";
+  
+      headerLocation_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string headerLocation = 7;</code>
+     */
+    public Builder clearHeaderLocation() {
+      
+      headerLocation_ = getDefaultInstance().getHeaderLocation();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string headerLocation = 7;</code>
+     */
+    public Builder setHeaderLocationBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      headerLocation_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int HEADERXMMDDDCCC_FIELD_NUMBER = 8;
-    private volatile java.lang.Object headerXmmDddCcc_;
-
+    private Object headerXmmDddCcc_ = "";
     /**
      * <code>string headerXmmDddCcc = 8;</code>
      */
-    public java.lang.String getHeaderXmmDddCcc() {
-        java.lang.Object ref = headerXmmDddCcc_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            headerXmmDddCcc_ = s;
-            return s;
-        }
+    public String getHeaderXmmDddCcc() {
+      Object ref = headerXmmDddCcc_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        headerXmmDddCcc_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string headerXmmDddCcc = 8;</code>
      */
     public com.google.protobuf.ByteString
-    getHeaderXmmDddCccBytes() {
-        java.lang.Object ref = headerXmmDddCcc_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            headerXmmDddCcc_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getHeaderXmmDddCccBytes() {
+      Object ref = headerXmmDddCcc_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        headerXmmDddCcc_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string headerXmmDddCcc = 8;</code>
+     */
+    public Builder setHeaderXmmDddCcc(
+        String value) {
+      if (value == null) value = "";
+  
+      headerXmmDddCcc_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string headerXmmDddCcc = 8;</code>
+     */
+    public Builder clearHeaderXmmDddCcc() {
+      
+      headerXmmDddCcc_ = getDefaultInstance().getHeaderXmmDddCcc();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string headerXmmDddCcc = 8;</code>
+     */
+    public Builder setHeaderXmmDddCccBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      headerXmmDddCcc_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int COOKIETNK_FIELD_NUMBER = 9;
-    private volatile java.lang.Object cookieTnk_;
-
+    private Object cookieTnk_ = "";
     /**
      * <code>string cookieTnk = 9;</code>
      */
-    public java.lang.String getCookieTnk() {
-        java.lang.Object ref = cookieTnk_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            cookieTnk_ = s;
-            return s;
-        }
+    public String getCookieTnk() {
+      Object ref = cookieTnk_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        cookieTnk_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
-
     /**
      * <code>string cookieTnk = 9;</code>
      */
     public com.google.protobuf.ByteString
-    getCookieTnkBytes() {
-        java.lang.Object ref = cookieTnk_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
-            cookieTnk_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        getCookieTnkBytes() {
+      Object ref = cookieTnk_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        cookieTnk_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string cookieTnk = 9;</code>
+     */
+    public Builder setCookieTnk(
+        String value) {
+      if (value == null) value = "";
+  
+      cookieTnk_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string cookieTnk = 9;</code>
+     */
+    public Builder clearCookieTnk() {
+      
+      cookieTnk_ = getDefaultInstance().getCookieTnk();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string cookieTnk = 9;</code>
+     */
+    public Builder setCookieTnkBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      cookieTnk_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int TOTALPRICE_FIELD_NUMBER = 10;
-    private int totalPrice_;
-
+    private int totalPrice_ ;
     /**
      * <code>int32 totalPrice = 10;</code>
      */
     public int getTotalPrice() {
-        return totalPrice_;
+      return totalPrice_;
     }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
-        if (retCode_ != 0) {
-            output.writeInt32(1, retCode_);
-        }
-        if (!getRetMsgBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 2, retMsg_);
-        }
-        if (!getUserIdBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, userId_);
-        }
-        if (session_ != null) {
-            output.writeMessage(4, getSession());
-        }
-        if (httpCode_ != 0) {
-            output.writeInt32(5, httpCode_);
-        }
-        if (!getHttpContentTypeBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 6, httpContentType_);
-        }
-        if (!getHeaderLocationBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 7, headerLocation_);
-        }
-        if (!getHeaderXmmDddCccBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 8, headerXmmDddCcc_);
-        }
-        if (!getCookieTnkBytes().isEmpty()) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 9, cookieTnk_);
-        }
-        if (totalPrice_ != 0) {
-            output.writeInt32(10, totalPrice_);
-        }
-        unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (retCode_ != 0) {
-            size += com.google.protobuf.CodedOutputStream
-                    .computeInt32Size(1, retCode_);
-        }
-        if (!getRetMsgBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, retMsg_);
-        }
-        if (!getUserIdBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, userId_);
-        }
-        if (session_ != null) {
-            size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(4, getSession());
-        }
-        if (httpCode_ != 0) {
-            size += com.google.protobuf.CodedOutputStream
-                    .computeInt32Size(5, httpCode_);
-        }
-        if (!getHttpContentTypeBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, httpContentType_);
-        }
-        if (!getHeaderLocationBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, headerLocation_);
-        }
-        if (!getHeaderXmmDddCccBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, headerXmmDddCcc_);
-        }
-        if (!getCookieTnkBytes().isEmpty()) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, cookieTnk_);
-        }
-        if (totalPrice_ != 0) {
-            size += com.google.protobuf.CodedOutputStream
-                    .computeInt32Size(10, totalPrice_);
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof com.xxx.userservice.proto.HttpTestRes)) {
-            return super.equals(obj);
-        }
-        com.xxx.userservice.proto.HttpTestRes other = (com.xxx.userservice.proto.HttpTestRes) obj;
-
-        boolean result = true;
-        result = result && (getRetCode()
-                == other.getRetCode());
-        result = result && getRetMsg()
-                .equals(other.getRetMsg());
-        result = result && getUserId()
-                .equals(other.getUserId());
-        result = result && (hasSession() == other.hasSession());
-        if (hasSession()) {
-            result = result && getSession()
-                    .equals(other.getSession());
-        }
-        result = result && (getHttpCode()
-                == other.getHttpCode());
-        result = result && getHttpContentType()
-                .equals(other.getHttpContentType());
-        result = result && getHeaderLocation()
-                .equals(other.getHeaderLocation());
-        result = result && getHeaderXmmDddCcc()
-                .equals(other.getHeaderXmmDddCcc());
-        result = result && getCookieTnk()
-                .equals(other.getCookieTnk());
-        result = result && (getTotalPrice()
-                == other.getTotalPrice());
-        result = result && unknownFields.equals(other.unknownFields);
-        return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-        if (memoizedHashCode != 0) {
-            return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + RETCODE_FIELD_NUMBER;
-        hash = (53 * hash) + getRetCode();
-        hash = (37 * hash) + RETMSG_FIELD_NUMBER;
-        hash = (53 * hash) + getRetMsg().hashCode();
-        hash = (37 * hash) + USERID_FIELD_NUMBER;
-        hash = (53 * hash) + getUserId().hashCode();
-        if (hasSession()) {
-            hash = (37 * hash) + SESSION_FIELD_NUMBER;
-            hash = (53 * hash) + getSession().hashCode();
-        }
-        hash = (37 * hash) + HTTPCODE_FIELD_NUMBER;
-        hash = (53 * hash) + getHttpCode();
-        hash = (37 * hash) + HTTPCONTENTTYPE_FIELD_NUMBER;
-        hash = (53 * hash) + getHttpContentType().hashCode();
-        hash = (37 * hash) + HEADERLOCATION_FIELD_NUMBER;
-        hash = (53 * hash) + getHeaderLocation().hashCode();
-        hash = (37 * hash) + HEADERXMMDDDCCC_FIELD_NUMBER;
-        hash = (53 * hash) + getHeaderXmmDddCcc().hashCode();
-        hash = (37 * hash) + COOKIETNK_FIELD_NUMBER;
-        hash = (53 * hash) + getCookieTnk().hashCode();
-        hash = (37 * hash) + TOTALPRICE_FIELD_NUMBER;
-        hash = (53 * hash) + getTotalPrice();
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseDelimitedWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input);
-    }
-
-    public static com.xxx.userservice.proto.HttpTestRes parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-                .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-        return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(com.xxx.userservice.proto.HttpTestRes prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-                ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-    }
-
     /**
-     * Protobuf type {@code HttpTestRes}
+     * <code>int32 totalPrice = 10;</code>
      */
-    public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:HttpTestRes)
-            com.xxx.userservice.proto.HttpTestResOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(
-                            com.xxx.userservice.proto.HttpTestRes.class, com.xxx.userservice.proto.HttpTestRes.Builder.class);
-        }
-
-        // Construct using com.xxx.userservice.proto.HttpTestRes.newBuilder()
-        private Builder() {
-            maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-            super(parent);
-            maybeForceBuilderInitialization();
-        }
-
-        private void maybeForceBuilderInitialization() {
-            if (com.google.protobuf.GeneratedMessageV3
-                    .alwaysUseFieldBuilders) {
-            }
-        }
-
-        @java.lang.Override
-        public Builder clear() {
-            super.clear();
-            retCode_ = 0;
-
-            retMsg_ = "";
-
-            userId_ = "";
-
-            if (sessionBuilder_ == null) {
-                session_ = null;
-            } else {
-                session_ = null;
-                sessionBuilder_ = null;
-            }
-            httpCode_ = 0;
-
-            httpContentType_ = "";
-
-            headerLocation_ = "";
-
-            headerXmmDddCcc_ = "";
-
-            cookieTnk_ = "";
-
-            totalPrice_ = 0;
-
-            return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-            return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_descriptor;
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.HttpTestRes getDefaultInstanceForType() {
-            return com.xxx.userservice.proto.HttpTestRes.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.HttpTestRes build() {
-            com.xxx.userservice.proto.HttpTestRes result = buildPartial();
-            if (!result.isInitialized()) {
-                throw newUninitializedMessageException(result);
-            }
-            return result;
-        }
-
-        @java.lang.Override
-        public com.xxx.userservice.proto.HttpTestRes buildPartial() {
-            com.xxx.userservice.proto.HttpTestRes result = new com.xxx.userservice.proto.HttpTestRes(this);
-            result.retCode_ = retCode_;
-            result.retMsg_ = retMsg_;
-            result.userId_ = userId_;
-            if (sessionBuilder_ == null) {
-                result.session_ = session_;
-            } else {
-                result.session_ = sessionBuilder_.build();
-            }
-            result.httpCode_ = httpCode_;
-            result.httpContentType_ = httpContentType_;
-            result.headerLocation_ = headerLocation_;
-            result.headerXmmDddCcc_ = headerXmmDddCcc_;
-            result.cookieTnk_ = cookieTnk_;
-            result.totalPrice_ = totalPrice_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return (Builder) super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return (Builder) super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return (Builder) super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return (Builder) super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return (Builder) super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return (Builder) super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof com.xxx.userservice.proto.HttpTestRes) {
-                return mergeFrom((com.xxx.userservice.proto.HttpTestRes) other);
-            } else {
-                super.mergeFrom(other);
-                return this;
-            }
-        }
-
-        public Builder mergeFrom(com.xxx.userservice.proto.HttpTestRes other) {
-            if (other == com.xxx.userservice.proto.HttpTestRes.getDefaultInstance()) return this;
-            if (other.getRetCode() != 0) {
-                setRetCode(other.getRetCode());
-            }
-            if (!other.getRetMsg().isEmpty()) {
-                retMsg_ = other.retMsg_;
-                onChanged();
-            }
-            if (!other.getUserId().isEmpty()) {
-                userId_ = other.userId_;
-                onChanged();
-            }
-            if (other.hasSession()) {
-                mergeSession(other.getSession());
-            }
-            if (other.getHttpCode() != 0) {
-                setHttpCode(other.getHttpCode());
-            }
-            if (!other.getHttpContentType().isEmpty()) {
-                httpContentType_ = other.httpContentType_;
-                onChanged();
-            }
-            if (!other.getHeaderLocation().isEmpty()) {
-                headerLocation_ = other.headerLocation_;
-                onChanged();
-            }
-            if (!other.getHeaderXmmDddCcc().isEmpty()) {
-                headerXmmDddCcc_ = other.headerXmmDddCcc_;
-                onChanged();
-            }
-            if (!other.getCookieTnk().isEmpty()) {
-                cookieTnk_ = other.cookieTnk_;
-                onChanged();
-            }
-            if (other.getTotalPrice() != 0) {
-                setTotalPrice(other.getTotalPrice());
-            }
-            this.mergeUnknownFields(other.unknownFields);
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws java.io.IOException {
-            com.xxx.userservice.proto.HttpTestRes parsedMessage = null;
-            try {
-                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage = (com.xxx.userservice.proto.HttpTestRes) e.getUnfinishedMessage();
-                throw e.unwrapIOException();
-            } finally {
-                if (parsedMessage != null) {
-                    mergeFrom(parsedMessage);
-                }
-            }
-            return this;
-        }
-
-        private int retCode_;
-
-        /**
-         * <code>int32 retCode = 1;</code>
-         */
-        public int getRetCode() {
-            return retCode_;
-        }
-
-        /**
-         * <code>int32 retCode = 1;</code>
-         */
-        public Builder setRetCode(int value) {
-
-            retCode_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>int32 retCode = 1;</code>
-         */
-        public Builder clearRetCode() {
-
-            retCode_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object retMsg_ = "";
-
-        /**
-         * <code>string retMsg = 2;</code>
-         */
-        public java.lang.String getRetMsg() {
-            java.lang.Object ref = retMsg_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                retMsg_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string retMsg = 2;</code>
-         */
-        public com.google.protobuf.ByteString
-        getRetMsgBytes() {
-            java.lang.Object ref = retMsg_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                retMsg_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string retMsg = 2;</code>
-         */
-        public Builder setRetMsg(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            retMsg_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string retMsg = 2;</code>
-         */
-        public Builder clearRetMsg() {
-
-            retMsg_ = getDefaultInstance().getRetMsg();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string retMsg = 2;</code>
-         */
-        public Builder setRetMsgBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            retMsg_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object userId_ = "";
-
-        /**
-         * <code>string userId = 3;</code>
-         */
-        public java.lang.String getUserId() {
-            java.lang.Object ref = userId_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                userId_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string userId = 3;</code>
-         */
-        public com.google.protobuf.ByteString
-        getUserIdBytes() {
-            java.lang.Object ref = userId_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                userId_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string userId = 3;</code>
-         */
-        public Builder setUserId(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            userId_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string userId = 3;</code>
-         */
-        public Builder clearUserId() {
-
-            userId_ = getDefaultInstance().getUserId();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string userId = 3;</code>
-         */
-        public Builder setUserIdBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            userId_ = value;
-            onChanged();
-            return this;
-        }
-
-        private com.xxx.userservice.proto.Session session_ = null;
-        private com.google.protobuf.SingleFieldBuilderV3<
-                com.xxx.userservice.proto.Session, com.xxx.userservice.proto.Session.Builder, com.xxx.userservice.proto.SessionOrBuilder> sessionBuilder_;
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        public boolean hasSession() {
-            return sessionBuilder_ != null || session_ != null;
-        }
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        public com.xxx.userservice.proto.Session getSession() {
-            if (sessionBuilder_ == null) {
-                return session_ == null ? com.xxx.userservice.proto.Session.getDefaultInstance() : session_;
-            } else {
-                return sessionBuilder_.getMessage();
-            }
-        }
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        public Builder setSession(com.xxx.userservice.proto.Session value) {
-            if (sessionBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                session_ = value;
-                onChanged();
-            } else {
-                sessionBuilder_.setMessage(value);
-            }
-
-            return this;
-        }
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        public Builder setSession(
-                com.xxx.userservice.proto.Session.Builder builderForValue) {
-            if (sessionBuilder_ == null) {
-                session_ = builderForValue.build();
-                onChanged();
-            } else {
-                sessionBuilder_.setMessage(builderForValue.build());
-            }
-
-            return this;
-        }
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        public Builder mergeSession(com.xxx.userservice.proto.Session value) {
-            if (sessionBuilder_ == null) {
-                if (session_ != null) {
-                    session_ =
-                            com.xxx.userservice.proto.Session.newBuilder(session_).mergeFrom(value).buildPartial();
-                } else {
-                    session_ = value;
-                }
-                onChanged();
-            } else {
-                sessionBuilder_.mergeFrom(value);
-            }
-
-            return this;
-        }
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        public Builder clearSession() {
-            if (sessionBuilder_ == null) {
-                session_ = null;
-                onChanged();
-            } else {
-                session_ = null;
-                sessionBuilder_ = null;
-            }
-
-            return this;
-        }
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        public com.xxx.userservice.proto.Session.Builder getSessionBuilder() {
-
-            onChanged();
-            return getSessionFieldBuilder().getBuilder();
-        }
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        public com.xxx.userservice.proto.SessionOrBuilder getSessionOrBuilder() {
-            if (sessionBuilder_ != null) {
-                return sessionBuilder_.getMessageOrBuilder();
-            } else {
-                return session_ == null ?
-                        com.xxx.userservice.proto.Session.getDefaultInstance() : session_;
-            }
-        }
-
-        /**
-         * <code>.Session session = 4;</code>
-         */
-        private com.google.protobuf.SingleFieldBuilderV3<
-                com.xxx.userservice.proto.Session, com.xxx.userservice.proto.Session.Builder, com.xxx.userservice.proto.SessionOrBuilder>
-        getSessionFieldBuilder() {
-            if (sessionBuilder_ == null) {
-                sessionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                        com.xxx.userservice.proto.Session, com.xxx.userservice.proto.Session.Builder, com.xxx.userservice.proto.SessionOrBuilder>(
-                        getSession(),
-                        getParentForChildren(),
-                        isClean());
-                session_ = null;
-            }
-            return sessionBuilder_;
-        }
-
-        private int httpCode_;
-
-        /**
-         * <code>int32 httpCode = 5;</code>
-         */
-        public int getHttpCode() {
-            return httpCode_;
-        }
-
-        /**
-         * <code>int32 httpCode = 5;</code>
-         */
-        public Builder setHttpCode(int value) {
-
-            httpCode_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>int32 httpCode = 5;</code>
-         */
-        public Builder clearHttpCode() {
-
-            httpCode_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object httpContentType_ = "";
-
-        /**
-         * <code>string httpContentType = 6;</code>
-         */
-        public java.lang.String getHttpContentType() {
-            java.lang.Object ref = httpContentType_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                httpContentType_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string httpContentType = 6;</code>
-         */
-        public com.google.protobuf.ByteString
-        getHttpContentTypeBytes() {
-            java.lang.Object ref = httpContentType_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                httpContentType_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string httpContentType = 6;</code>
-         */
-        public Builder setHttpContentType(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            httpContentType_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string httpContentType = 6;</code>
-         */
-        public Builder clearHttpContentType() {
-
-            httpContentType_ = getDefaultInstance().getHttpContentType();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string httpContentType = 6;</code>
-         */
-        public Builder setHttpContentTypeBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            httpContentType_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object headerLocation_ = "";
-
-        /**
-         * <code>string headerLocation = 7;</code>
-         */
-        public java.lang.String getHeaderLocation() {
-            java.lang.Object ref = headerLocation_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                headerLocation_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string headerLocation = 7;</code>
-         */
-        public com.google.protobuf.ByteString
-        getHeaderLocationBytes() {
-            java.lang.Object ref = headerLocation_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                headerLocation_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string headerLocation = 7;</code>
-         */
-        public Builder setHeaderLocation(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            headerLocation_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string headerLocation = 7;</code>
-         */
-        public Builder clearHeaderLocation() {
-
-            headerLocation_ = getDefaultInstance().getHeaderLocation();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string headerLocation = 7;</code>
-         */
-        public Builder setHeaderLocationBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            headerLocation_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object headerXmmDddCcc_ = "";
-
-        /**
-         * <code>string headerXmmDddCcc = 8;</code>
-         */
-        public java.lang.String getHeaderXmmDddCcc() {
-            java.lang.Object ref = headerXmmDddCcc_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                headerXmmDddCcc_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string headerXmmDddCcc = 8;</code>
-         */
-        public com.google.protobuf.ByteString
-        getHeaderXmmDddCccBytes() {
-            java.lang.Object ref = headerXmmDddCcc_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                headerXmmDddCcc_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string headerXmmDddCcc = 8;</code>
-         */
-        public Builder setHeaderXmmDddCcc(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            headerXmmDddCcc_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string headerXmmDddCcc = 8;</code>
-         */
-        public Builder clearHeaderXmmDddCcc() {
-
-            headerXmmDddCcc_ = getDefaultInstance().getHeaderXmmDddCcc();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string headerXmmDddCcc = 8;</code>
-         */
-        public Builder setHeaderXmmDddCccBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            headerXmmDddCcc_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object cookieTnk_ = "";
-
-        /**
-         * <code>string cookieTnk = 9;</code>
-         */
-        public java.lang.String getCookieTnk() {
-            java.lang.Object ref = cookieTnk_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs =
-                        (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                cookieTnk_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>string cookieTnk = 9;</code>
-         */
-        public com.google.protobuf.ByteString
-        getCookieTnkBytes() {
-            java.lang.Object ref = cookieTnk_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8(
-                                (java.lang.String) ref);
-                cookieTnk_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>string cookieTnk = 9;</code>
-         */
-        public Builder setCookieTnk(
-                java.lang.String value) {
-            if (value == null) value = "";
-
-            cookieTnk_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string cookieTnk = 9;</code>
-         */
-        public Builder clearCookieTnk() {
-
-            cookieTnk_ = getDefaultInstance().getCookieTnk();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>string cookieTnk = 9;</code>
-         */
-        public Builder setCookieTnkBytes(
-                com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            cookieTnk_ = value;
-            onChanged();
-            return this;
-        }
-
-        private int totalPrice_;
-
-        /**
-         * <code>int32 totalPrice = 10;</code>
-         */
-        public int getTotalPrice() {
-            return totalPrice_;
-        }
-
-        /**
-         * <code>int32 totalPrice = 10;</code>
-         */
-        public Builder setTotalPrice(int value) {
-
-            totalPrice_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>int32 totalPrice = 10;</code>
-         */
-        public Builder clearTotalPrice() {
-
-            totalPrice_ = 0;
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFieldsProto3(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
-
-        // @@protoc_insertion_point(builder_scope:HttpTestRes)
+    public Builder setTotalPrice(int value) {
+      
+      totalPrice_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 totalPrice = 10;</code>
+     */
+    public Builder clearTotalPrice() {
+      
+      totalPrice_ = 0;
+      onChanged();
+      return this;
+    }
+    @Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    // @@protoc_insertion_point(class_scope:HttpTestRes)
-    private static final com.xxx.userservice.proto.HttpTestRes DEFAULT_INSTANCE;
-
-    static {
-        DEFAULT_INSTANCE = new com.xxx.userservice.proto.HttpTestRes();
+    @Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
-    public static com.xxx.userservice.proto.HttpTestRes getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-    }
 
-    private static final com.google.protobuf.Parser<HttpTestRes>
-            PARSER = new com.google.protobuf.AbstractParser<HttpTestRes>() {
-        @java.lang.Override
-        public HttpTestRes parsePartialFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return new HttpTestRes(input, extensionRegistry);
-        }
-    };
+    // @@protoc_insertion_point(builder_scope:HttpTestRes)
+  }
 
-    public static com.google.protobuf.Parser<HttpTestRes> parser() {
-        return PARSER;
-    }
+  // @@protoc_insertion_point(class_scope:HttpTestRes)
+  private static final HttpTestRes DEFAULT_INSTANCE;
+  static {
+    DEFAULT_INSTANCE = new HttpTestRes();
+  }
 
-    @java.lang.Override
-    public com.google.protobuf.Parser<HttpTestRes> getParserForType() {
-        return PARSER;
-    }
+  public static HttpTestRes getDefaultInstance() {
+    return DEFAULT_INSTANCE;
+  }
 
-    @java.lang.Override
-    public com.xxx.userservice.proto.HttpTestRes getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
+  private static final com.google.protobuf.Parser<HttpTestRes>
+      PARSER = new com.google.protobuf.AbstractParser<HttpTestRes>() {
+    @Override
+    public HttpTestRes parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new HttpTestRes(input, extensionRegistry);
     }
+  };
+
+  public static com.google.protobuf.Parser<HttpTestRes> parser() {
+    return PARSER;
+  }
+
+  @Override
+  public com.google.protobuf.Parser<HttpTestRes> getParserForType() {
+    return PARSER;
+  }
+
+  @Override
+  public HttpTestRes getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
 
 }
 

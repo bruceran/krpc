@@ -3,15 +3,14 @@
 
     可通过logback.xml配置调整生成的日志
     
-    日志文件共4种：
-      作为rpcserver收到的请求处理日志，输出在server.log日志文件中
-      作为webserver收到的请求处理日志，输出在webserver.log日志文件中
+    日志文件共3种：
+      作为rpcserver/webserver收到的请求处理日志，输出在server.log日志文件中
       作为rpcclient发出的调用日志，输出在client.log日志文件中
       每分钟输出一次3类日志的统计，输出在stats.log日志文件中
 
 # 日志文件格式
 
-## server.log/webserver.log/client.log 日志格式目前是统一的:
+## server.log/client.log 日志格式目前是统一的:
 
     文件分割符为: 一个逗号3个空格
 
@@ -37,12 +36,12 @@
         SPAN_INFO 全链路跟踪RPCID, 不同的全链路跟踪系统格式不一样
         SERVICE_ID  服务号
         MSG_ID   消息号
-        SERVICENAME 服务名+消息名
+        SERVICE_NAME 服务名+消息名
         RET_CODE, 错误码
         DURATION  耗时，到微秒
         REQ_BODY  请求参数, 以^作为分隔符,以:作为参数名和参数值之间的分隔符
         RES_BODY  响应参数, 格式同上
-		EXTRA_INFO  附加信息  q:xxx   q为在队列中等待的微秒数
+        EXTRA_INFO  附加信息  包括：队列中等待耗时, 每个span的耗时，实验ID，流程变量等
 
     请求参数和响应参数格式可配置
         默认采用simple格式: 对多级嵌套的消息有输出限制, 输出快

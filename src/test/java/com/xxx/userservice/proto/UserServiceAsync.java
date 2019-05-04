@@ -7,13 +7,14 @@ public interface UserServiceAsync {
 
     static final public int serviceId = 100;
 
-    java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.LoginRes> login(com.xxx.userservice.proto.LoginReq req);
-
+    java.util.concurrent.CompletableFuture<LoginRes> login(LoginReq req);
     static final public int loginMsgId = 1;
 
-    java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.UpdateProfileRes> updateProfile(com.xxx.userservice.proto.UpdateProfileReq req);
-
+    java.util.concurrent.CompletableFuture<UpdateProfileRes> updateProfile(UpdateProfileReq req);
     static final public int updateProfileMsgId = 2;
+
+    java.util.concurrent.CompletableFuture<Login2Res> login2(Login2Req req);
+    static final public int login2MsgId = 3;
 
 }
 

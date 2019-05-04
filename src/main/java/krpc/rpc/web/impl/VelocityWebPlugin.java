@@ -1,5 +1,7 @@
 package krpc.rpc.web.impl;
 
+import com.google.protobuf.ByteString;
+import krpc.common.Json;
 import krpc.common.Plugin;
 import krpc.rpc.web.*;
 import org.apache.velocity.Template;
@@ -13,6 +15,8 @@ import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static krpc.rpc.web.WebConstants.MIMETYPE_JSON;
 
 public class VelocityWebPlugin implements WebPlugin, RenderPlugin {
 
@@ -92,6 +96,20 @@ public class VelocityWebPlugin implements WebPlugin, RenderPlugin {
     }
 
     public void render(WebContextData ctx, WebReq req, WebRes res) {
+
+        int retCode = 0;
+        if( res instanceof  DefaultWebRes ) {
+            DefaultWebRes res0 = (DefaultWebRes) res;
+            retCode = res0.getRetCode();
+        }
+
+        if(res.getHttpCode() != 200 && res.getHttpCode() != 201 || retCode != 0) {
+            res.setContentType(MIMETYPE_JSON);
+            Map<String, Object> m = res.getResults();
+            res.setContent(Json.toJson(m));
+            return;
+        }
+
         String templateName = res.getStringResult(templateField);
         if (isEmpty(templateName)) {
             templateName = ctx.getRoute().getAttribute("template");

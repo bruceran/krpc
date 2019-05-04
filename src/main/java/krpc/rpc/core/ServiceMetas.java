@@ -38,6 +38,8 @@ public interface ServiceMetas {
 
     RpcCallable findCallable(String implClsName);
 
+    RpcCallable findCallable(int serviceId);
+
     Message generateRes(int serviceId, int msgId, int retCode);
 
     Message generateRes(int serviceId, int msgId, int retCode, String retMsg);
@@ -59,4 +61,8 @@ public interface ServiceMetas {
     void addDynamic(int serviceId, int msgId, Descriptor reqDesc, Descriptor resDesc, String serviceName, String msgName);
 
     void addDynamic(int serviceId, RpcCallable callable);
+
+    void addExchangeServiceId(int serviceId);
+
+    boolean isExchangeServiceId(int serviceId);
 }

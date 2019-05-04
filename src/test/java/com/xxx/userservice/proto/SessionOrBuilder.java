@@ -4,50 +4,46 @@
 package com.xxx.userservice.proto;
 
 public interface SessionOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:Session)
-        com.google.protobuf.MessageOrBuilder {
+    // @@protoc_insertion_point(interface_extends:Session)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <code>string loginFlag = 1;</code>
-     */
-    java.lang.String getLoginFlag();
+  /**
+   * <code>string loginFlag = 1;</code>
+   */
+  String getLoginFlag();
+  /**
+   * <code>string loginFlag = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getLoginFlagBytes();
 
-    /**
-     * <code>string loginFlag = 1;</code>
-     */
-    com.google.protobuf.ByteString
-    getLoginFlagBytes();
+  /**
+   * <code>string userId = 2;</code>
+   */
+  String getUserId();
+  /**
+   * <code>string userId = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getUserIdBytes();
 
-    /**
-     * <code>string userId = 2;</code>
-     */
-    java.lang.String getUserId();
+  /**
+   * <code>string userName = 3;</code>
+   */
+  String getUserName();
+  /**
+   * <code>string userName = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getUserNameBytes();
 
-    /**
-     * <code>string userId = 2;</code>
-     */
-    com.google.protobuf.ByteString
-    getUserIdBytes();
-
-    /**
-     * <code>string userName = 3;</code>
-     */
-    java.lang.String getUserName();
-
-    /**
-     * <code>string userName = 3;</code>
-     */
-    com.google.protobuf.ByteString
-    getUserNameBytes();
-
-    /**
-     * <code>string mobile = 4;</code>
-     */
-    java.lang.String getMobile();
-
-    /**
-     * <code>string mobile = 4;</code>
-     */
-    com.google.protobuf.ByteString
-    getMobileBytes();
+  /**
+   * <code>string mobile = 4;</code>
+   */
+  String getMobile();
+  /**
+   * <code>string mobile = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getMobileBytes();
 }

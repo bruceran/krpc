@@ -7,6 +7,7 @@ import krpc.rpc.core.ConnectionPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,7 +39,7 @@ public class RpcServer extends RpcCallableBase {
     }
 
     // user code must specify a connId in RpcContextClient to identify which client to call
-    String nextConnId(ClientContextData ctx, Message req) {
+    String nextConnId(ClientContextData ctx, Object dummy) {
         String connId = ClientContext.removeConnId();
         return connId;
     }

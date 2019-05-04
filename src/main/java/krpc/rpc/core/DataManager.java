@@ -7,5 +7,7 @@ public interface DataManager {
 
     RpcClosure remove(String connId, int sequence);
 
+    RpcClosure get(String connId, int sequence);
+
     void disconnected(String connId);
 }

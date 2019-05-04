@@ -4,61 +4,55 @@
 package com.xxx.userservice.proto;
 
 public interface OrderItemOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:OrderItem)
-        com.google.protobuf.MessageOrBuilder {
+    // @@protoc_insertion_point(interface_extends:OrderItem)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <code>string itemId = 1;</code>
-     */
-    java.lang.String getItemId();
+  /**
+   * <code>string itemId = 1;</code>
+   */
+  String getItemId();
+  /**
+   * <code>string itemId = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getItemIdBytes();
 
-    /**
-     * <code>string itemId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-    getItemIdBytes();
+  /**
+   * <code>string name = 2;</code>
+   */
+  String getName();
+  /**
+   * <code>string name = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getNameBytes();
 
-    /**
-     * <code>string name = 2;</code>
-     */
-    java.lang.String getName();
+  /**
+   * <code>int32 price = 3;</code>
+   */
+  int getPrice();
 
-    /**
-     * <code>string name = 2;</code>
-     */
-    com.google.protobuf.ByteString
-    getNameBytes();
-
-    /**
-     * <code>int32 price = 3;</code>
-     */
-    int getPrice();
-
-    /**
-     * <code>repeated .OrderItemAttr attrs = 4;</code>
-     */
-    java.util.List<com.xxx.userservice.proto.OrderItemAttr>
-    getAttrsList();
-
-    /**
-     * <code>repeated .OrderItemAttr attrs = 4;</code>
-     */
-    com.xxx.userservice.proto.OrderItemAttr getAttrs(int index);
-
-    /**
-     * <code>repeated .OrderItemAttr attrs = 4;</code>
-     */
-    int getAttrsCount();
-
-    /**
-     * <code>repeated .OrderItemAttr attrs = 4;</code>
-     */
-    java.util.List<? extends com.xxx.userservice.proto.OrderItemAttrOrBuilder>
-    getAttrsOrBuilderList();
-
-    /**
-     * <code>repeated .OrderItemAttr attrs = 4;</code>
-     */
-    com.xxx.userservice.proto.OrderItemAttrOrBuilder getAttrsOrBuilder(
-            int index);
+  /**
+   * <code>repeated .OrderItemAttr attrs = 4;</code>
+   */
+  java.util.List<OrderItemAttr>
+      getAttrsList();
+  /**
+   * <code>repeated .OrderItemAttr attrs = 4;</code>
+   */
+  OrderItemAttr getAttrs(int index);
+  /**
+   * <code>repeated .OrderItemAttr attrs = 4;</code>
+   */
+  int getAttrsCount();
+  /**
+   * <code>repeated .OrderItemAttr attrs = 4;</code>
+   */
+  java.util.List<? extends OrderItemAttrOrBuilder>
+      getAttrsOrBuilderList();
+  /**
+   * <code>repeated .OrderItemAttr attrs = 4;</code>
+   */
+  OrderItemAttrOrBuilder getAttrsOrBuilder(
+          int index);
 }

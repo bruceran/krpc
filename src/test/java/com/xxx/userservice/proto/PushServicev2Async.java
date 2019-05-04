@@ -7,8 +7,7 @@ public interface PushServicev2Async {
 
     static final public int serviceId = 103;
 
-    java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.PushRes> pushv2(com.xxx.userservice.proto.PushReq req);
-
+    java.util.concurrent.CompletableFuture<PushRes> pushv2(PushReq req);
     static final public int pushv2MsgId = 1;
 
 }

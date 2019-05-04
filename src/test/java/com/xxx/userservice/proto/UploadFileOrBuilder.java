@@ -4,55 +4,51 @@
 package com.xxx.userservice.proto;
 
 public interface UploadFileOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:UploadFile)
-        com.google.protobuf.MessageOrBuilder {
+    // @@protoc_insertion_point(interface_extends:UploadFile)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <code>string file = 1;</code>
-     */
-    java.lang.String getFile();
+  /**
+   * <code>string file = 1;</code>
+   */
+  String getFile();
+  /**
+   * <code>string file = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getFileBytes();
 
-    /**
-     * <code>string file = 1;</code>
-     */
-    com.google.protobuf.ByteString
-    getFileBytes();
+  /**
+   * <code>string filename = 2;</code>
+   */
+  String getFilename();
+  /**
+   * <code>string filename = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getFilenameBytes();
 
-    /**
-     * <code>string filename = 2;</code>
-     */
-    java.lang.String getFilename();
+  /**
+   * <code>int64 size = 3;</code>
+   */
+  long getSize();
 
-    /**
-     * <code>string filename = 2;</code>
-     */
-    com.google.protobuf.ByteString
-    getFilenameBytes();
+  /**
+   * <code>string ext = 4;</code>
+   */
+  String getExt();
+  /**
+   * <code>string ext = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getExtBytes();
 
-    /**
-     * <code>int64 size = 3;</code>
-     */
-    long getSize();
-
-    /**
-     * <code>string ext = 4;</code>
-     */
-    java.lang.String getExt();
-
-    /**
-     * <code>string ext = 4;</code>
-     */
-    com.google.protobuf.ByteString
-    getExtBytes();
-
-    /**
-     * <code>string contentType = 5;</code>
-     */
-    java.lang.String getContentType();
-
-    /**
-     * <code>string contentType = 5;</code>
-     */
-    com.google.protobuf.ByteString
-    getContentTypeBytes();
+  /**
+   * <code>string contentType = 5;</code>
+   */
+  String getContentType();
+  /**
+   * <code>string contentType = 5;</code>
+   */
+  com.google.protobuf.ByteString
+      getContentTypeBytes();
 }

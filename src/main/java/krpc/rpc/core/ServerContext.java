@@ -21,7 +21,7 @@ public class ServerContext {
     }
 
     public static RpcClosure closure(Message req) {
-        return new RpcClosure(tlData.get(), req);
+        return new RpcClosure(tlData.get(), req, false);
     }
 
     public static void logVar(String key,Object value) {

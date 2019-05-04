@@ -1,5 +1,6 @@
 package krpc.rpc.monitor;
 
+import com.google.protobuf.Message;
 import krpc.common.*;
 import krpc.rpc.core.*;
 import krpc.rpc.core.proto.RpcMeta;
@@ -219,7 +220,16 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         }
     }
 
-    public void reqDone(final RpcClosure closure) {
+    private RpcClosure convertClosure(RpcClosure closure0) {
+        if( !closure0.isRaw() ) return closure0;
+        Message req = codec.decodeRawBody(closure0.getCtx().getMeta(),closure0.asReqByteBuf());
+        Message res = codec.decodeRawBody(closure0.getCtx().getMeta(),closure0.asResByteBuf());
+        return new RpcClosure(closure0,req,res);
+    }
+
+    public void reqDone(final RpcClosure closure0) {
+
+        RpcClosure closure = convertClosure(closure0);
 
         if (accessLog) {
             try {
@@ -258,7 +268,9 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         }
     }
 
-    public void callDone(RpcClosure closure) {
+    public void callDone(RpcClosure closure0) {
+
+        RpcClosure closure = convertClosure(closure0);
 
         if (accessLog) {
             try {
@@ -433,18 +445,19 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
             serviceName = serviceMetas.getOriginalName(meta.getServiceId(), meta.getMsgId());
         else
             serviceName = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
+        if(serviceName == null ) serviceName = meta.getServiceId() + "." + meta.getMsgId();
         b.append(serviceName);
         b.append(sep);
         b.append(closure.getRetCode());
         b.append(sep);
         b.append(ctx.getTimeUsedMicros());
         b.append(sep);
-        String reqStr = closure.getReq() == null ? "" : logFormatter.toLogStr(closure.getReq());
-        if (reqStr.indexOf(sep) >= 0) reqStr = reqStr.replace(sep, ",");
+        String reqStr = closure.reqData() == null ? "" : logFormatter.toLogStr(closure.asReqMessage());
+        if (reqStr.contains(sep) ) reqStr = reqStr.replace(sep, ",");
         b.append(reqStr);
         b.append(sep);
-        String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(closure.getRes());
-        if (resStr.indexOf(sep) >= 0) resStr = resStr.replace(sep, ",");
+        String resStr = closure.resData() == null ? "" : logFormatter.toLogStr(closure.asResMessage());
+        if (resStr.contains(sep) ) resStr = resStr.replace(sep, ",");
         b.append(resStr);
         b.append(sep);
         b.append(extraInfo.toString());
@@ -499,11 +512,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         String clientIp = ctx.getClientIp();
         b.append("httpClientIp:").append(clientIp).append("^");
         String reqStr = closure.getReq() == null ? "" : logFormatter.toLogStr(closure.getReq());
-        if (reqStr.indexOf(sep) >= 0) reqStr = reqStr.replace(sep, ",");
+        if (reqStr.contains(sep) ) reqStr = reqStr.replace(sep, ",");
         b.append(reqStr);
         b.append(sep);
         String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(closure.getRes());
-        if (resStr.indexOf(sep) >= 0) resStr = resStr.replace(sep, ",");
+        if (resStr.contains(sep) ) resStr = resStr.replace(sep, ",");
         b.append(resStr);
         b.append(sep);
         b.append(extraInfo.toString());

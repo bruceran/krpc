@@ -93,6 +93,12 @@ public class DefaultWebReq implements WebReq {
 
     public String getXff() {
         if (headers == null) return null;
+        String waf = headers.get("x-waf-remote-addr");
+        if (waf != null && !waf.isEmpty()) {
+            String[] ss = waf.split(",");
+            if (ss.length > 0) return ss[0].trim();
+        }
+
         String xff = headers.get("x-forwarded-for");
         if (xff != null && !xff.isEmpty()) {
             String[] ss = xff.split(",");

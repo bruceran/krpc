@@ -13,6 +13,7 @@ abstract public class RpcContextData {
     long startMicros;
     long timeUsedMicros;
     Map<String, Object> attributes;
+    int retCode;
 
     public RpcContextData(String connId, RpcMeta meta) {
         this.connId = connId;
@@ -105,5 +106,13 @@ abstract public class RpcContextData {
     public void removeAttribute(String key) {
         if (this.attributes == null) return;
         this.attributes.remove(key);
+    }
+
+    public int getRetCode() {
+        return retCode;
+    }
+
+    public void setRetCode(int retCode) {
+        this.retCode = retCode;
     }
 }
