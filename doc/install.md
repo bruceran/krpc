@@ -35,7 +35,7 @@
         运行 >mvn install 若无错误则表示编译成功
         运行 >mvn deploy 上传jar包到自己搭建的私服，需先设置私服的用户名和密码才能上传成功
 	    
-	    进入misc/starters/springboot/
+	    进入misc/springbootstarter/
 	    运行 >mvn install 完成对starter的编译和本地安装,   运行misc/samples/boot1  misc/samples/boot2需要此依赖
 	    		
 	* gradle 安装
@@ -101,11 +101,12 @@
 		compile 'ch.qos.logback:logback-core:1.2.1'   -- logback
 		compile 'ch.qos.logback:logback-classic:1.2.1'  -- logback
 		compile 'com.google.protobuf:protobuf-java:3.5.1'   -- protobuff 支持
+		compile 'com.google.protobuf:protobuf-java-util:3.5.1'   -- protobuff json 支持
 		compile 'io.netty:netty-all:4.1.16.Final'     -- netty 4
-		compile 'javassist:javassist:3.12.1.GA'    -- 字节码生成
-		compile 'com.fasterxml.jackson.core:jackson-core:2.8.8'   -- json框架
-		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.8'   -- json框架
-		compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'   -- json框架
+		compile 'javassist:javassist:3.24.0.GA'    -- 字节码生成
+		compile 'com.fasterxml.jackson.core:jackson-core:2.8.11'   -- json框架
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.11.3'   -- json框架
+		compile 'com.fasterxml.jackson.core:jackson-annotations:2.81'   -- json框架
 		compile 'org.yaml:snakeyaml:1.17'   -- 解析yaml格式的fallback配置文件
 
 	可选依赖：
@@ -125,9 +126,9 @@
 			compile 'org.apache.velocity:velocity:1.7'
 
 		SPRING框架依赖；若使用krpc schema支持需用到以下依赖
-			compile 'org.springframework:spring-core:4.1.6.RELEASE'
-			compile 'org.springframework:spring-beans:4.1.6.RELEASE'
-			compile 'org.springframework:spring-context:4.1.6.RELEASE'		
+			compile 'org.springframework:spring-core:5.0.7.RELEASE'
+			compile 'org.springframework:spring-beans:5.0.7.RELEASE'
+			compile 'org.springframework:spring-context:5.0.7.RELEASE'
         
 		SPRING BOOT依赖；若使用spring boot启动需用到以下依赖
 			compile 'org.springframework.boot:spring-boot-autoconfigure:1.5.13.RELEASE'

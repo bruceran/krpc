@@ -1,4 +1,10 @@
 
+# version 0.2.15
+
+	增加交换机模式
+	增加XmlWebPlugin
+	增加MessageUtils类，用于pb对象和map,json,java bean之间互相转换
+
 # version 0.2.5
 
 	将报警功能作为核心接口，krpc内部异常主动报警给monitorservice
