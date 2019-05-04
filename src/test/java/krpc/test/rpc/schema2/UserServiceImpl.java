@@ -51,9 +51,8 @@ class UserServiceImpl  implements UserService  {
         return UpdateProfileRes.newBuilder().setRetCode(0).setRetMsg("hello, friend. receive req#" + i).build();
     }
 
-    @Override
     public Login2Res login2(Login2Req req) {
-        return null;
+        return Login2Res.ok();
     }
 
 }

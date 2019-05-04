@@ -43,17 +43,6 @@
       <charset>UTF-8</charset>
   </encoder>
 </appender>
-<appender name="WEBSERVERLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-  <file>/opt/logs/krpc/auditlog/webserver.log</file>
-  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    <fileNamePattern>/opt/logs/krpc/auditlog/webserver.log.%d{yyyy-MM-dd}</fileNamePattern>
-    <maxHistory>5</maxHistory>
-  </rollingPolicy>
-  <encoder>
-      <pattern>%msg%n</pattern>
-      <charset>UTF-8</charset>
-  </encoder>
-</appender>
 <appender name="CLIENTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
   <file>/opt/logs/krpc/auditlog/client.log</file>
   <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -79,7 +68,7 @@
 
 <logger name="krpc" level="debug" additivity="false"><appender-ref ref="STDOUT" /></logger>
 <logger name="krpc.serverlog" level="info" additivity="false"><appender-ref ref="SERVERLOG" /></logger>
-<logger name="krpc.webserverlog" level="info" additivity="false"><appender-ref ref="WEBSERVERLOG" /></logger>
+<logger name="krpc.webserverlog" level="info" additivity="false"><appender-ref ref="SERVERLOG" /></logger>
 <logger name="krpc.clientlog" level="info" additivity="false"><appender-ref ref="CLIENTLOG" /></logger>
 <logger name="krpc.statslog" level="info" additivity="false"><appender-ref ref="STATSLOG" /></logger>
 

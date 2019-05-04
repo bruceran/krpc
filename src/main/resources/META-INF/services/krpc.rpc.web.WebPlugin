@@ -7,3 +7,4 @@ krpc.rpc.web.impl.JsonpWebPlugin
 krpc.rpc.web.impl.JsRedirectWebPlugin
 krpc.rpc.web.impl.ServerRedirectWebPlugin
 krpc.rpc.web.impl.VelocityWebPlugin
+krpc.rpc.web.impl.XmlWebPlugin
