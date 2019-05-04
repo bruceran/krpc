@@ -101,7 +101,7 @@
 		compile 'ch.qos.logback:logback-core:1.2.1'   -- logback
 		compile 'ch.qos.logback:logback-classic:1.2.1'  -- logback
 		compile 'com.google.protobuf:protobuf-java:3.5.1'   -- protobuff 支持
-		compile 'com.google.protobuf:protobuf-java-util:3.5.1'   -- protobuff json 支持
+		compile 'com.google.protobuf:protobuf-java-util:3.5.1'   -- protobuff json 支持 此包依赖 gson 2.7 和 guava 19.0
 		compile 'io.netty:netty-all:4.1.16.Final'     -- netty 4
 		compile 'javassist:javassist:3.24.0.GA'    -- 字节码生成
 		compile 'com.fasterxml.jackson.core:jackson-core:2.8.11'   -- json框架
