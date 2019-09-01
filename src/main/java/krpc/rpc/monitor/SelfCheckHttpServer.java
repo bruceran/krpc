@@ -50,6 +50,9 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
 
     String versionString;
 
+    //是否开启postman自动导出接口测试模板
+    boolean enablePostmanExport = true;
+
     NamedThreadFactory bossThreadFactory = new NamedThreadFactory("krpc_selfcheck_boss");
     NamedThreadFactory workThreadFactory = new NamedThreadFactory("krpc_selfcheck_worker");
 
@@ -68,6 +71,8 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
     List<RefreshPlugin> refreshPlugins = new ArrayList<>();
 
     Alarm alarm;
+
+    PostmanExporter postmanExporter;
 
     public SelfCheckHttpServer() {
     }
@@ -111,8 +116,8 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
         try {
             serverChannel = serverBootstrap.bind(addr).syncUninterruptibly().channel();
             log.info("selfcheck server started on host(" + host + ") port(" + port + ")");
-        } catch(Exception e) {
-            log.error("selfcheck server bind exception, port="+port);
+        } catch (Exception e) {
+            log.error("selfcheck server bind exception, port=" + port);
             System.exit(-1);
         }
     }
@@ -193,8 +198,8 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         String connId = getConnId(ctx);
-        if(log.isDebugEnabled()) {
-            log.debug("connection exception, connId="+connId+",msg="+cause.toString(),cause);
+        if (log.isDebugEnabled()) {
+            log.debug("connection exception, connId=" + connId + ",msg=" + cause.toString(), cause);
         }
         ctx.close();
     }
@@ -218,44 +223,52 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
             String uri = httpReq.uri();
             int p1 = findPathEndIndex(uri);
             String path = p1 >= 0 ? uri.substring(0, p1) : uri;
-            if( path.endsWith("/") ) path = path.substring(0,path.length()-1);
+            if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
 
-            if( path.equalsIgnoreCase("/health")) {
-                Map<String,Object>  values = doHealth();
-                sendResponse(ctx,HttpResponseStatus.OK,values);
+            if (path.equalsIgnoreCase("/health")) {
+                Map<String, Object> values = doHealth();
+                sendResponse(ctx, HttpResponseStatus.OK, values);
                 return;
             }
 
-            if( path.equalsIgnoreCase("/dump")) {
-                Map<String,Object>  values = doDump();
+            if (path.equalsIgnoreCase("/dump")) {
+                Map<String, Object> values = doDump();
 
                 log.info("----- start dump -----");
-                for(Map.Entry<String,Object> entry: values.entrySet()) {
+                for (Map.Entry<String, Object> entry : values.entrySet()) {
                     String key = entry.getKey();
                     Object value = entry.getValue();
-                    log.info("key="+key+", value="+value);
+                    log.info("key=" + key + ", value=" + value);
                 }
                 log.info("----- end dump -----");
 
-                sendResponse(ctx,HttpResponseStatus.OK,values);
+                sendResponse(ctx, HttpResponseStatus.OK, values);
                 return;
             }
 
-            if( path.equalsIgnoreCase("/refresh")) {
-                Map<String,Object>  values = doRefresh();
-                sendResponse(ctx,HttpResponseStatus.OK,values);
+            if (path.equalsIgnoreCase("/refresh")) {
+                Map<String, Object> values = doRefresh();
+                sendResponse(ctx, HttpResponseStatus.OK, values);
                 return;
             }
 
-            if( path.equalsIgnoreCase("/alive")) {
-                Map<String,Object>  values = doAlive();
-                sendResponse(ctx,HttpResponseStatus.OK,values);
+            if (path.equalsIgnoreCase("/alive")) {
+                Map<String, Object> values = doAlive();
+                sendResponse(ctx, HttpResponseStatus.OK, values);
                 return;
             }
 
-            if( path.startsWith("/logger")) {
-                Map<String,Object> values = doLogger(path);
-                sendResponse(ctx,HttpResponseStatus.OK,values);
+            if (path.startsWith("/logger")) {
+                Map<String, Object> values = doLogger(path);
+                sendResponse(ctx, HttpResponseStatus.OK, values);
+                return;
+            }
+
+            if (path.startsWith("/postman") && enablePostmanExport) {
+                String s = String.valueOf(this.port);
+                int serviceId = Integer.valueOf(s.substring(1, s.length()));
+                Map<String, Object> values = this.postmanExporter.doGeneratePostmanCollections(serviceId);
+                sendResponse(ctx, HttpResponseStatus.OK, values);
                 return;
             }
 
@@ -266,35 +279,35 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
         }
     }
 
-    Map<String,Object> doLogger(String path) {
+    Map<String, Object> doLogger(String path) {
 
-        Map<String,Object> values = new LinkedHashMap<>();
-        values.put("result","done" );
+        Map<String, Object> values = new LinkedHashMap<>();
+        values.put("result", "done");
 
         path = path.substring(1);
         String[] ss = path.split("/");
-        if( ss.length != 2 && ss.length != 3) {
-            values.put("result","failed" );
-            values.put("reason","url format not valid" );
+        if (ss.length != 2 && ss.length != 3) {
+            values.put("result", "failed");
+            values.put("reason", "url format not valid");
             return values;
         }
         String packageName = ss[1];
-        if( ss.length == 2 ) {
-            values.put("action","query log level" );
-            values.put("level",queryLoggerLevel(packageName) );
+        if (ss.length == 2) {
+            values.put("action", "query log level");
+            values.put("level", queryLoggerLevel(packageName));
             return values;
         }
 
         Level level = toLevel(ss[2]);
-        if( level == null ) {
-            values.put("result","failed" );
-            values.put("action","change log level" );
-            values.put("reason","level not valid" );
+        if (level == null) {
+            values.put("result", "failed");
+            values.put("action", "change log level");
+            values.put("reason", "level not valid");
             return values;
         }
-        changeLoggerLevel(level,packageName);
-        values.put("action","change log level" );
-        values.put("level",queryLoggerLevel(packageName) );
+        changeLoggerLevel(level, packageName);
+        values.put("action", "change log level");
+        values.put("level", queryLoggerLevel(packageName));
         return values;
     }
 
@@ -305,14 +318,14 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
                 ch.qos.logback.classic.Logger log2 = ((ch.qos.logback.classic.Logger) log);
                 return log2.getLevel().toString();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
         }
         return "unknown";
     }
 
-    void changeLoggerLevel(Level level,String packageName) {
+    void changeLoggerLevel(Level level, String packageName) {
         Logger log = LoggerFactory.getLogger(packageName);
-        if( log instanceof ch.qos.logback.classic.Logger ) {
+        if (log instanceof ch.qos.logback.classic.Logger) {
             ch.qos.logback.classic.Logger log2 = ((ch.qos.logback.classic.Logger) log);
             log2.setLevel(level);
         }
@@ -338,80 +351,80 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
         }
     }
 
-    Map<String,Object> doHealth() {
-        Map<String,Object> values = new LinkedHashMap<>();
+    Map<String, Object> doHealth() {
+        Map<String, Object> values = new LinkedHashMap<>();
 
         boolean ok = true;
         List<HealthStatus> all = new ArrayList<>();
-        for(HealthPlugin p: healthPlugins) {
+        for (HealthPlugin p : healthPlugins) {
             try {
                 p.healthCheck(all);
-            } catch(Exception e) {
-                log.error("health check exception, message="+e.getMessage(),e);
+            } catch (Exception e) {
+                log.error("health check exception, message=" + e.getMessage(), e);
                 ok = false;
             }
         }
-        if( all.size() == 0 ) {
+        if (all.size() == 0) {
             String alarmId = alarm.getAlarmId("000");
-            all.add(new HealthStatus(alarmId,true,"everything is ok"));
+            all.add(new HealthStatus(alarmId, true, "everything is ok"));
         }
-        values.put("result",ok ? "done" : "exception");
+        values.put("result", ok ? "done" : "exception");
         values.put("details", all);
         return values;
     }
 
-    public Map<String,Object> doDump() {
-        Map<String,Object> values = new LinkedHashMap<>();
-        if( versionString != null ) values.put("krpc.version",versionString);
+    public Map<String, Object> doDump() {
+        Map<String, Object> values = new LinkedHashMap<>();
+        if (versionString != null) values.put("krpc.version", versionString);
 
         SystemDump.dumpSystemProperties(values);
 
         boolean ok = true;
-        for(DumpPlugin p: dumpPlugins) {
+        for (DumpPlugin p : dumpPlugins) {
             try {
                 p.dump(values);
-            } catch(Exception e) {
-                log.error("dump exception, message="+e.getMessage(),e);
+            } catch (Exception e) {
+                log.error("dump exception, message=" + e.getMessage(), e);
                 ok = false;
             }
         }
 
-        values.put("result",ok ? "done" : "exception");
+        values.put("result", ok ? "done" : "exception");
         return values;
     }
 
-    Map<String,Object> doRefresh() {
+    Map<String, Object> doRefresh() {
 
         boolean ok = true;
-        for(RefreshPlugin p: refreshPlugins) {
+        for (RefreshPlugin p : refreshPlugins) {
             try {
                 p.refresh();
-            } catch(Exception e) {
-                log.error("refresh exception, message="+e.getMessage(),e);
+            } catch (Exception e) {
+                log.error("refresh exception, message=" + e.getMessage(), e);
                 ok = false;
             }
         }
 
-        Map<String,Object> values = new LinkedHashMap<>();
-        values.put("result",ok ? "done" : "exception");
+        Map<String, Object> values = new LinkedHashMap<>();
+        values.put("result", ok ? "done" : "exception");
         return values;
     }
 
-    Map<String,Object> doAlive() {
-        Map<String,Object> values = new LinkedHashMap<>();
-        values.put("result","alive");
+    Map<String, Object> doAlive() {
+        Map<String, Object> values = new LinkedHashMap<>();
+        values.put("result", "alive");
         return values;
     }
 
-    void sendError(ChannelHandlerContext ctx, HttpResponseStatus status, String retMsg ) {
-        Map<String,Object> values = new LinkedHashMap<>();
-        values.put("status",retMsg);
-        sendResponse(ctx,status,values);
+    void sendError(ChannelHandlerContext ctx, HttpResponseStatus status, String retMsg) {
+        Map<String, Object> values = new LinkedHashMap<>();
+        values.put("status", retMsg);
+        sendResponse(ctx, status, values);
     }
 
-    void sendResponse(ChannelHandlerContext ctx, HttpResponseStatus status, Map<String,Object> values) {
+    void sendResponse(ChannelHandlerContext ctx, HttpResponseStatus status, Map<String, Object> values) {
         String json = Json.toJson(values);
-        ByteBuf bb = ctx.alloc().buffer(json.length()*2);
+        ByteBuf bb = ctx.alloc().buffer(json.length() * 2);
         bb.writeCharSequence(json, CharsetUtil.UTF_8);
         int len = bb.readableBytes();
         DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, bb);
@@ -443,9 +456,11 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
     public void addDumpPlugin(DumpPlugin p) {
         dumpPlugins.add(p);
     }
+
     public void addHealthPlugin(HealthPlugin p) {
         healthPlugins.add(p);
     }
+
     public void addRefreshPlugin(RefreshPlugin p) {
         refreshPlugins.add(p);
     }
@@ -541,5 +556,21 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
     @Override
     public void setAlarm(Alarm alarm) {
         this.alarm = alarm;
+    }
+
+    public boolean isEnablePostmanExport() {
+        return enablePostmanExport;
+    }
+
+    public void setEnablePostmanExport(boolean enablePostmanExport) {
+        this.enablePostmanExport = enablePostmanExport;
+    }
+
+    public PostmanExporter getPostmanExporter() {
+        return postmanExporter;
+    }
+
+    public void setPostmanExporter(PostmanExporter postmanExporter) {
+        this.postmanExporter = postmanExporter;
     }
 }

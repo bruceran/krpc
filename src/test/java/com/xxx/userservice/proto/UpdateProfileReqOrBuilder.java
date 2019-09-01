@@ -10,7 +10,7 @@ public interface UpdateProfileReqOrBuilder extends
   /**
    * <code>string userId = 1;</code>
    */
-  String getUserId();
+  java.lang.String getUserId();
   /**
    * <code>string userId = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface UpdateProfileReqOrBuilder extends
   /**
    * <code>string mobile = 2;</code>
    */
-  String getMobile();
+  java.lang.String getMobile();
   /**
    * <code>string mobile = 2;</code>
    */

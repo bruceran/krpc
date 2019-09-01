@@ -1,11 +1,10 @@
 package krpc.rpc.util;
 
-import com.google.protobuf.ByteString;
+import com.google.protobuf.*;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.Message;
-import com.google.protobuf.MessageOrBuilder;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -28,7 +27,9 @@ public class MessageToMap {
             FieldDescriptor field = i.getKey();
             Object value = i.getValue();
 
-            if (field.isRepeated()) {
+            if (field.isMapField()) {
+                parseMapFieldValue(field, value, results, withDefault, maxRepeatedSizeToGet);
+            } else if (field.isRepeated()) {
                 int count = 0;
                 for (Object element : (List<?>) value) {
                     count++;
@@ -40,6 +41,63 @@ public class MessageToMap {
                 parseSingleField(field, value, results, false, withDefault, maxRepeatedSizeToGet);
             }
 
+        }
+    }
+
+    private static boolean isSimpleType(FieldDescriptor field) {
+        switch( field.getType()) {
+            case MESSAGE:
+            case BYTES:
+            case ENUM:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    private static void parseMapFieldValue(FieldDescriptor field, Object value, Map<String, Object> results, boolean withDefault, int maxRepeatedSizeToGet)   {
+        Descriptors.Descriptor type = field.getMessageType();
+        FieldDescriptor keyField = type.findFieldByName("key");
+        FieldDescriptor valueField = type.findFieldByName("value");
+        if (keyField != null && valueField != null) {
+
+            Iterator listItem = ((List)value).iterator();
+
+            Map map = new LinkedHashMap();
+            Map map0 = null;
+            while(listItem.hasNext()) {
+                Object element = listItem.next();
+                Message entry = (Message)element;
+                Object entryKey = entry.getField(keyField);
+                Object entryValue = entry.getField(valueField);
+
+                Object k = null;
+                Object v = null;
+
+                if( !isSimpleType(keyField) ) {
+                    if( map0 == null )
+                        map0 = new HashMap();
+                    parseSingleField(keyField, entryKey, map0, false, withDefault, maxRepeatedSizeToGet);
+                    k  = map0.remove(keyField.getName());
+                } else {
+                    k = entryKey;
+                }
+
+                if(  !isSimpleType(valueField) ) {
+                    if( map0 == null )
+                        map0 = new HashMap();
+                    parseSingleField(valueField, entryValue, map0, false, withDefault, maxRepeatedSizeToGet);
+                    v  = map0.remove(valueField.getName());
+                } else {
+                    v = entryValue;
+                }
+
+                map.put(k,v);
+            }
+
+            results.put( field.getName(), map);
+        } else {
+            throw new RuntimeException("Invalid map field");
         }
     }
 

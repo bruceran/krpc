@@ -14,6 +14,13 @@ public class HealthStatus {
         this.reason = reason;
     }
 
+    public HealthStatus(String type, boolean status, String reason,String target,String addrs) {
+        this.type = type;
+        this.status = status;
+        reason = reason + " [target="+target+",addrs="+addrs+"]";
+        this.reason = reason;
+    }
+
     public String getType() {
         return type;
     }

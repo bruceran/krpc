@@ -40,7 +40,7 @@ private static final long serialVersionUID = 0L;
     s41_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -51,7 +51,7 @@ private static final long serialVersionUID = 0L;
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -65,17 +65,17 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             userId_ = s;
             break;
           }
           case 66: {
-            ValidateSub.Builder subBuilder = null;
+            com.xxx.userservice.proto.ValidateSub.Builder subBuilder = null;
             if (m_ != null) {
               subBuilder = m_.toBuilder();
             }
-            m_ = input.readMessage(ValidateSub.parser(), extensionRegistry);
+            m_ = input.readMessage(com.xxx.userservice.proto.ValidateSub.parser(), extensionRegistry);
             if (subBuilder != null) {
               subBuilder.mergeFrom(m_);
               m_ = subBuilder.buildPartial();
@@ -84,13 +84,13 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 90: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s1_ = s;
             break;
           }
           case 114: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s2_ = s;
             break;
@@ -101,7 +101,7 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 130: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             i2_ = s;
             break;
@@ -112,19 +112,19 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 146: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             i4_ = s;
             break;
           }
           case 170: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s5_ = s;
             break;
           }
           case 178: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s6_ = s;
             break;
@@ -135,7 +135,7 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 194: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
             if (!((mutable_bitField0_ & 0x00000800) == 0x00000800)) {
               s7_ = new com.google.protobuf.LazyStringArrayList();
               mutable_bitField0_ |= 0x00000800;
@@ -144,70 +144,70 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 250: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s31_ = s;
             break;
           }
           case 258: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s32_ = s;
             break;
           }
           case 266: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s33_ = s;
             break;
           }
           case 274: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s34_ = s;
             break;
           }
           case 282: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s35_ = s;
             break;
           }
           case 290: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s36_ = s;
             break;
           }
           case 298: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s37_ = s;
             break;
           }
           case 306: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s38_ = s;
             break;
           }
           case 314: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             s39_ = s;
             break;
           }
           case 322: {
             if (!((mutable_bitField0_ & 0x00200000) == 0x00200000)) {
-              k_ = new java.util.ArrayList<ValidateSub>();
+              k_ = new java.util.ArrayList<com.xxx.userservice.proto.ValidateSub>();
               mutable_bitField0_ |= 0x00200000;
             }
             k_.add(
-                input.readMessage(ValidateSub.parser(), extensionRegistry));
+                input.readMessage(com.xxx.userservice.proto.ValidateSub.parser(), extensionRegistry));
             break;
           }
           case 330: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
             if (!((mutable_bitField0_ & 0x00400000) == 0x00400000)) {
               s41_ = new com.google.protobuf.LazyStringArrayList();
               mutable_bitField0_ |= 0x00400000;
@@ -245,31 +245,31 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserServiceMetas.internal_static_ValidateTestReq_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateTestReq_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserServiceMetas.internal_static_ValidateTestReq_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateTestReq_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            ValidateTestReq.class, Builder.class);
+            com.xxx.userservice.proto.ValidateTestReq.class, com.xxx.userservice.proto.ValidateTestReq.Builder.class);
   }
 
   private int bitField0_;
   public static final int USERID_FIELD_NUMBER = 1;
-  private volatile Object userId_;
+  private volatile java.lang.Object userId_;
   /**
    * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
    */
-  public String getUserId() {
-    Object ref = userId_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getUserId() {
+    java.lang.Object ref = userId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       userId_ = s;
       return s;
     }
@@ -279,11 +279,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getUserIdBytes() {
-    Object ref = userId_;
-    if (ref instanceof String) {
+    java.lang.Object ref = userId_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       userId_ = b;
       return b;
     } else {
@@ -292,18 +292,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S1_FIELD_NUMBER = 11;
-  private volatile Object s1_;
+  private volatile java.lang.Object s1_;
   /**
    * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
    */
-  public String getS1() {
-    Object ref = s1_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS1() {
+    java.lang.Object ref = s1_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s1_ = s;
       return s;
     }
@@ -313,11 +313,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS1Bytes() {
-    Object ref = s1_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s1_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s1_ = b;
       return b;
     } else {
@@ -326,18 +326,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S2_FIELD_NUMBER = 14;
-  private volatile Object s2_;
+  private volatile java.lang.Object s2_;
   /**
    * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
    */
-  public String getS2() {
-    Object ref = s2_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS2() {
+    java.lang.Object ref = s2_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s2_ = s;
       return s;
     }
@@ -347,11 +347,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS2Bytes() {
-    Object ref = s2_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s2_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s2_ = b;
       return b;
     } else {
@@ -369,18 +369,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int I2_FIELD_NUMBER = 16;
-  private volatile Object i2_;
+  private volatile java.lang.Object i2_;
   /**
    * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
    */
-  public String getI2() {
-    Object ref = i2_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getI2() {
+    java.lang.Object ref = i2_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       i2_ = s;
       return s;
     }
@@ -390,11 +390,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getI2Bytes() {
-    Object ref = i2_;
-    if (ref instanceof String) {
+    java.lang.Object ref = i2_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       i2_ = b;
       return b;
     } else {
@@ -412,18 +412,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int I4_FIELD_NUMBER = 18;
-  private volatile Object i4_;
+  private volatile java.lang.Object i4_;
   /**
    * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
    */
-  public String getI4() {
-    Object ref = i4_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getI4() {
+    java.lang.Object ref = i4_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       i4_ = s;
       return s;
     }
@@ -433,11 +433,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getI4Bytes() {
-    Object ref = i4_;
-    if (ref instanceof String) {
+    java.lang.Object ref = i4_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       i4_ = b;
       return b;
     } else {
@@ -446,7 +446,7 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int M_FIELD_NUMBER = 8;
-  private ValidateSub m_;
+  private com.xxx.userservice.proto.ValidateSub m_;
   /**
    * <code>.ValidateSub m = 8;</code>
    */
@@ -456,29 +456,29 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>.ValidateSub m = 8;</code>
    */
-  public ValidateSub getM() {
-    return m_ == null ? ValidateSub.getDefaultInstance() : m_;
+  public com.xxx.userservice.proto.ValidateSub getM() {
+    return m_ == null ? com.xxx.userservice.proto.ValidateSub.getDefaultInstance() : m_;
   }
   /**
    * <code>.ValidateSub m = 8;</code>
    */
-  public ValidateSubOrBuilder getMOrBuilder() {
+  public com.xxx.userservice.proto.ValidateSubOrBuilder getMOrBuilder() {
     return getM();
   }
 
   public static final int S5_FIELD_NUMBER = 21;
-  private volatile Object s5_;
+  private volatile java.lang.Object s5_;
   /**
    * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
    */
-  public String getS5() {
-    Object ref = s5_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS5() {
+    java.lang.Object ref = s5_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s5_ = s;
       return s;
     }
@@ -488,11 +488,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS5Bytes() {
-    Object ref = s5_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s5_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s5_ = b;
       return b;
     } else {
@@ -501,18 +501,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S6_FIELD_NUMBER = 22;
-  private volatile Object s6_;
+  private volatile java.lang.Object s6_;
   /**
    * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
    */
-  public String getS6() {
-    Object ref = s6_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS6() {
+    java.lang.Object ref = s6_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s6_ = s;
       return s;
     }
@@ -522,11 +522,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS6Bytes() {
-    Object ref = s6_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s6_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s6_ = b;
       return b;
     } else {
@@ -561,7 +561,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
    */
-  public String getS7(int index) {
+  public java.lang.String getS7(int index) {
     return s7_.get(index);
   }
   /**
@@ -573,18 +573,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S31_FIELD_NUMBER = 31;
-  private volatile Object s31_;
+  private volatile java.lang.Object s31_;
   /**
    * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
    */
-  public String getS31() {
-    Object ref = s31_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS31() {
+    java.lang.Object ref = s31_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s31_ = s;
       return s;
     }
@@ -594,11 +594,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS31Bytes() {
-    Object ref = s31_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s31_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s31_ = b;
       return b;
     } else {
@@ -607,18 +607,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S32_FIELD_NUMBER = 32;
-  private volatile Object s32_;
+  private volatile java.lang.Object s32_;
   /**
    * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
    */
-  public String getS32() {
-    Object ref = s32_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS32() {
+    java.lang.Object ref = s32_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s32_ = s;
       return s;
     }
@@ -628,11 +628,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS32Bytes() {
-    Object ref = s32_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s32_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s32_ = b;
       return b;
     } else {
@@ -641,18 +641,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S33_FIELD_NUMBER = 33;
-  private volatile Object s33_;
+  private volatile java.lang.Object s33_;
   /**
    * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
    */
-  public String getS33() {
-    Object ref = s33_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS33() {
+    java.lang.Object ref = s33_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s33_ = s;
       return s;
     }
@@ -662,11 +662,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS33Bytes() {
-    Object ref = s33_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s33_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s33_ = b;
       return b;
     } else {
@@ -675,18 +675,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S34_FIELD_NUMBER = 34;
-  private volatile Object s34_;
+  private volatile java.lang.Object s34_;
   /**
    * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
    */
-  public String getS34() {
-    Object ref = s34_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS34() {
+    java.lang.Object ref = s34_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s34_ = s;
       return s;
     }
@@ -696,11 +696,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS34Bytes() {
-    Object ref = s34_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s34_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s34_ = b;
       return b;
     } else {
@@ -709,18 +709,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S35_FIELD_NUMBER = 35;
-  private volatile Object s35_;
+  private volatile java.lang.Object s35_;
   /**
    * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
    */
-  public String getS35() {
-    Object ref = s35_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS35() {
+    java.lang.Object ref = s35_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s35_ = s;
       return s;
     }
@@ -730,11 +730,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS35Bytes() {
-    Object ref = s35_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s35_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s35_ = b;
       return b;
     } else {
@@ -743,18 +743,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S36_FIELD_NUMBER = 36;
-  private volatile Object s36_;
+  private volatile java.lang.Object s36_;
   /**
    * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
    */
-  public String getS36() {
-    Object ref = s36_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS36() {
+    java.lang.Object ref = s36_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s36_ = s;
       return s;
     }
@@ -764,11 +764,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS36Bytes() {
-    Object ref = s36_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s36_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s36_ = b;
       return b;
     } else {
@@ -777,18 +777,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S37_FIELD_NUMBER = 37;
-  private volatile Object s37_;
+  private volatile java.lang.Object s37_;
   /**
    * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
    */
-  public String getS37() {
-    Object ref = s37_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS37() {
+    java.lang.Object ref = s37_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s37_ = s;
       return s;
     }
@@ -798,11 +798,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS37Bytes() {
-    Object ref = s37_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s37_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s37_ = b;
       return b;
     } else {
@@ -811,18 +811,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S38_FIELD_NUMBER = 38;
-  private volatile Object s38_;
+  private volatile java.lang.Object s38_;
   /**
    * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
    */
-  public String getS38() {
-    Object ref = s38_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS38() {
+    java.lang.Object ref = s38_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s38_ = s;
       return s;
     }
@@ -832,11 +832,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS38Bytes() {
-    Object ref = s38_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s38_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s38_ = b;
       return b;
     } else {
@@ -845,18 +845,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int S39_FIELD_NUMBER = 39;
-  private volatile Object s39_;
+  private volatile java.lang.Object s39_;
   /**
    * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
    */
-  public String getS39() {
-    Object ref = s39_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getS39() {
+    java.lang.Object ref = s39_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       s39_ = s;
       return s;
     }
@@ -866,11 +866,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getS39Bytes() {
-    Object ref = s39_;
-    if (ref instanceof String) {
+    java.lang.Object ref = s39_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       s39_ = b;
       return b;
     } else {
@@ -879,17 +879,17 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int K_FIELD_NUMBER = 40;
-  private java.util.List<ValidateSub> k_;
+  private java.util.List<com.xxx.userservice.proto.ValidateSub> k_;
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
-  public java.util.List<ValidateSub> getKList() {
+  public java.util.List<com.xxx.userservice.proto.ValidateSub> getKList() {
     return k_;
   }
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
-  public java.util.List<? extends ValidateSubOrBuilder>
+  public java.util.List<? extends com.xxx.userservice.proto.ValidateSubOrBuilder> 
       getKOrBuilderList() {
     return k_;
   }
@@ -902,13 +902,13 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
-  public ValidateSub getK(int index) {
+  public com.xxx.userservice.proto.ValidateSub getK(int index) {
     return k_.get(index);
   }
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
-  public ValidateSubOrBuilder getKOrBuilder(
+  public com.xxx.userservice.proto.ValidateSubOrBuilder getKOrBuilder(
       int index) {
     return k_.get(index);
   }
@@ -931,7 +931,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
    */
-  public String getS41(int index) {
+  public java.lang.String getS41(int index) {
     return s41_.get(index);
   }
   /**
@@ -943,7 +943,7 @@ private static final long serialVersionUID = 0L;
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -953,7 +953,7 @@ private static final long serialVersionUID = 0L;
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (!getUserIdBytes().isEmpty()) {
@@ -1028,7 +1028,7 @@ private static final long serialVersionUID = 0L;
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -1123,15 +1123,15 @@ private static final long serialVersionUID = 0L;
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof ValidateTestReq)) {
+    if (!(obj instanceof com.xxx.userservice.proto.ValidateTestReq)) {
       return super.equals(obj);
     }
-    ValidateTestReq other = (ValidateTestReq) obj;
+    com.xxx.userservice.proto.ValidateTestReq other = (com.xxx.userservice.proto.ValidateTestReq) obj;
 
     boolean result = true;
     result = result && getUserId()
@@ -1187,7 +1187,7 @@ private static final long serialVersionUID = 0L;
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -1253,69 +1253,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static ValidateTestReq parseFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ValidateTestReq parseFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ValidateTestReq parseFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ValidateTestReq parseFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ValidateTestReq parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ValidateTestReq parseFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ValidateTestReq parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ValidateTestReq parseFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ValidateTestReq parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.ValidateTestReq parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static ValidateTestReq parseDelimitedFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ValidateTestReq parseFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ValidateTestReq parseFrom(
+  public static com.xxx.userservice.proto.ValidateTestReq parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -1323,23 +1323,23 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(ValidateTestReq prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.ValidateTestReq prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -1349,18 +1349,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:ValidateTestReq)
-      ValidateTestReqOrBuilder {
+      com.xxx.userservice.proto.ValidateTestReqOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserServiceMetas.internal_static_ValidateTestReq_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateTestReq_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserServiceMetas.internal_static_ValidateTestReq_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateTestReq_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ValidateTestReq.class, Builder.class);
+              com.xxx.userservice.proto.ValidateTestReq.class, com.xxx.userservice.proto.ValidateTestReq.Builder.class);
     }
 
     // Construct using com.xxx.userservice.proto.ValidateTestReq.newBuilder()
@@ -1369,7 +1369,7 @@ private static final long serialVersionUID = 0L;
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -1379,7 +1379,7 @@ private static final long serialVersionUID = 0L;
         getKFieldBuilder();
       }
     }
-    @Override
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       userId_ = "";
@@ -1439,29 +1439,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserServiceMetas.internal_static_ValidateTestReq_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateTestReq_descriptor;
     }
 
-    @Override
-    public ValidateTestReq getDefaultInstanceForType() {
-      return ValidateTestReq.getDefaultInstance();
+    @java.lang.Override
+    public com.xxx.userservice.proto.ValidateTestReq getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.ValidateTestReq.getDefaultInstance();
     }
 
-    @Override
-    public ValidateTestReq build() {
-      ValidateTestReq result = buildPartial();
+    @java.lang.Override
+    public com.xxx.userservice.proto.ValidateTestReq build() {
+      com.xxx.userservice.proto.ValidateTestReq result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public ValidateTestReq buildPartial() {
-      ValidateTestReq result = new ValidateTestReq(this);
+    @java.lang.Override
+    public com.xxx.userservice.proto.ValidateTestReq buildPartial() {
+      com.xxx.userservice.proto.ValidateTestReq result = new com.xxx.userservice.proto.ValidateTestReq(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       result.userId_ = userId_;
@@ -1512,50 +1512,50 @@ private static final long serialVersionUID = 0L;
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof ValidateTestReq) {
-        return mergeFrom((ValidateTestReq)other);
+      if (other instanceof com.xxx.userservice.proto.ValidateTestReq) {
+        return mergeFrom((com.xxx.userservice.proto.ValidateTestReq)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(ValidateTestReq other) {
-      if (other == ValidateTestReq.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.ValidateTestReq other) {
+      if (other == com.xxx.userservice.proto.ValidateTestReq.getDefaultInstance()) return this;
       if (!other.getUserId().isEmpty()) {
         userId_ = other.userId_;
         onChanged();
@@ -1683,21 +1683,21 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      ValidateTestReq parsedMessage = null;
+      com.xxx.userservice.proto.ValidateTestReq parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (ValidateTestReq) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.ValidateTestReq) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1708,20 +1708,20 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private Object userId_ = "";
+    private java.lang.Object userId_ = "";
     /**
      * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
      */
-    public String getUserId() {
-      Object ref = userId_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         userId_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1729,11 +1729,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getUserIdBytes() {
-      Object ref = userId_;
+      java.lang.Object ref = userId_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         userId_ = b;
         return b;
       } else {
@@ -1744,7 +1744,7 @@ private static final long serialVersionUID = 0L;
      * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
      */
     public Builder setUserId(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       userId_ = value;
@@ -1775,20 +1775,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s1_ = "";
+    private java.lang.Object s1_ = "";
     /**
      * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
      */
-    public String getS1() {
-      Object ref = s1_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS1() {
+      java.lang.Object ref = s1_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s1_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1796,11 +1796,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS1Bytes() {
-      Object ref = s1_;
+      java.lang.Object ref = s1_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s1_ = b;
         return b;
       } else {
@@ -1811,7 +1811,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS1(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s1_ = value;
@@ -1842,20 +1842,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s2_ = "";
+    private java.lang.Object s2_ = "";
     /**
      * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
      */
-    public String getS2() {
-      Object ref = s2_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS2() {
+      java.lang.Object ref = s2_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s2_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1863,11 +1863,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS2Bytes() {
-      Object ref = s2_;
+      java.lang.Object ref = s2_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s2_ = b;
         return b;
       } else {
@@ -1878,7 +1878,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS2(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s2_ = value;
@@ -1935,20 +1935,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object i2_ = "";
+    private java.lang.Object i2_ = "";
     /**
      * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
      */
-    public String getI2() {
-      Object ref = i2_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getI2() {
+      java.lang.Object ref = i2_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         i2_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1956,11 +1956,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getI2Bytes() {
-      Object ref = i2_;
+      java.lang.Object ref = i2_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         i2_ = b;
         return b;
       } else {
@@ -1971,7 +1971,7 @@ private static final long serialVersionUID = 0L;
      * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
      */
     public Builder setI2(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       i2_ = value;
@@ -2028,20 +2028,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object i4_ = "";
+    private java.lang.Object i4_ = "";
     /**
      * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
      */
-    public String getI4() {
-      Object ref = i4_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getI4() {
+      java.lang.Object ref = i4_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         i4_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2049,11 +2049,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getI4Bytes() {
-      Object ref = i4_;
+      java.lang.Object ref = i4_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         i4_ = b;
         return b;
       } else {
@@ -2064,7 +2064,7 @@ private static final long serialVersionUID = 0L;
      * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
      */
     public Builder setI4(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       i4_ = value;
@@ -2095,9 +2095,9 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private ValidateSub m_ = null;
+    private com.xxx.userservice.proto.ValidateSub m_ = null;
     private com.google.protobuf.SingleFieldBuilderV3<
-        ValidateSub, ValidateSub.Builder, ValidateSubOrBuilder> mBuilder_;
+        com.xxx.userservice.proto.ValidateSub, com.xxx.userservice.proto.ValidateSub.Builder, com.xxx.userservice.proto.ValidateSubOrBuilder> mBuilder_;
     /**
      * <code>.ValidateSub m = 8;</code>
      */
@@ -2107,9 +2107,9 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.ValidateSub m = 8;</code>
      */
-    public ValidateSub getM() {
+    public com.xxx.userservice.proto.ValidateSub getM() {
       if (mBuilder_ == null) {
-        return m_ == null ? ValidateSub.getDefaultInstance() : m_;
+        return m_ == null ? com.xxx.userservice.proto.ValidateSub.getDefaultInstance() : m_;
       } else {
         return mBuilder_.getMessage();
       }
@@ -2117,7 +2117,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.ValidateSub m = 8;</code>
      */
-    public Builder setM(ValidateSub value) {
+    public Builder setM(com.xxx.userservice.proto.ValidateSub value) {
       if (mBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -2134,7 +2134,7 @@ private static final long serialVersionUID = 0L;
      * <code>.ValidateSub m = 8;</code>
      */
     public Builder setM(
-        ValidateSub.Builder builderForValue) {
+        com.xxx.userservice.proto.ValidateSub.Builder builderForValue) {
       if (mBuilder_ == null) {
         m_ = builderForValue.build();
         onChanged();
@@ -2147,11 +2147,11 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.ValidateSub m = 8;</code>
      */
-    public Builder mergeM(ValidateSub value) {
+    public Builder mergeM(com.xxx.userservice.proto.ValidateSub value) {
       if (mBuilder_ == null) {
         if (m_ != null) {
           m_ =
-            ValidateSub.newBuilder(m_).mergeFrom(value).buildPartial();
+            com.xxx.userservice.proto.ValidateSub.newBuilder(m_).mergeFrom(value).buildPartial();
         } else {
           m_ = value;
         }
@@ -2179,7 +2179,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.ValidateSub m = 8;</code>
      */
-    public ValidateSub.Builder getMBuilder() {
+    public com.xxx.userservice.proto.ValidateSub.Builder getMBuilder() {
       
       onChanged();
       return getMFieldBuilder().getBuilder();
@@ -2187,23 +2187,23 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.ValidateSub m = 8;</code>
      */
-    public ValidateSubOrBuilder getMOrBuilder() {
+    public com.xxx.userservice.proto.ValidateSubOrBuilder getMOrBuilder() {
       if (mBuilder_ != null) {
         return mBuilder_.getMessageOrBuilder();
       } else {
         return m_ == null ?
-            ValidateSub.getDefaultInstance() : m_;
+            com.xxx.userservice.proto.ValidateSub.getDefaultInstance() : m_;
       }
     }
     /**
      * <code>.ValidateSub m = 8;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        ValidateSub, ValidateSub.Builder, ValidateSubOrBuilder>
+        com.xxx.userservice.proto.ValidateSub, com.xxx.userservice.proto.ValidateSub.Builder, com.xxx.userservice.proto.ValidateSubOrBuilder> 
         getMFieldBuilder() {
       if (mBuilder_ == null) {
         mBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            ValidateSub, ValidateSub.Builder, ValidateSubOrBuilder>(
+            com.xxx.userservice.proto.ValidateSub, com.xxx.userservice.proto.ValidateSub.Builder, com.xxx.userservice.proto.ValidateSubOrBuilder>(
                 getM(),
                 getParentForChildren(),
                 isClean());
@@ -2212,20 +2212,20 @@ private static final long serialVersionUID = 0L;
       return mBuilder_;
     }
 
-    private Object s5_ = "";
+    private java.lang.Object s5_ = "";
     /**
      * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
      */
-    public String getS5() {
-      Object ref = s5_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS5() {
+      java.lang.Object ref = s5_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s5_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2233,11 +2233,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS5Bytes() {
-      Object ref = s5_;
+      java.lang.Object ref = s5_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s5_ = b;
         return b;
       } else {
@@ -2248,7 +2248,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS5(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s5_ = value;
@@ -2279,20 +2279,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s6_ = "";
+    private java.lang.Object s6_ = "";
     /**
      * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
      */
-    public String getS6() {
-      Object ref = s6_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS6() {
+      java.lang.Object ref = s6_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s6_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2300,11 +2300,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS6Bytes() {
-      Object ref = s6_;
+      java.lang.Object ref = s6_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s6_ = b;
         return b;
       } else {
@@ -2315,7 +2315,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS6(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s6_ = value;
@@ -2395,7 +2395,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
      */
-    public String getS7(int index) {
+    public java.lang.String getS7(int index) {
       return s7_.get(index);
     }
     /**
@@ -2409,7 +2409,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS7(
-        int index, String value) {
+        int index, java.lang.String value) {
       if (value == null) value = "";
   ensureS7IsMutable();
       s7_.set(index, value);
@@ -2420,7 +2420,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
      */
     public Builder addS7(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   ensureS7IsMutable();
       s7_.add(value);
@@ -2431,7 +2431,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
      */
     public Builder addAllS7(
-        Iterable<String> values) {
+        java.lang.Iterable<java.lang.String> values) {
       ensureS7IsMutable();
       com.google.protobuf.AbstractMessageLite.Builder.addAll(
           values, s7_);
@@ -2462,20 +2462,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s31_ = "";
+    private java.lang.Object s31_ = "";
     /**
      * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
      */
-    public String getS31() {
-      Object ref = s31_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS31() {
+      java.lang.Object ref = s31_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s31_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2483,11 +2483,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS31Bytes() {
-      Object ref = s31_;
+      java.lang.Object ref = s31_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s31_ = b;
         return b;
       } else {
@@ -2498,7 +2498,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS31(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s31_ = value;
@@ -2529,20 +2529,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s32_ = "";
+    private java.lang.Object s32_ = "";
     /**
      * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
      */
-    public String getS32() {
-      Object ref = s32_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS32() {
+      java.lang.Object ref = s32_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s32_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2550,11 +2550,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS32Bytes() {
-      Object ref = s32_;
+      java.lang.Object ref = s32_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s32_ = b;
         return b;
       } else {
@@ -2565,7 +2565,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS32(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s32_ = value;
@@ -2596,20 +2596,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s33_ = "";
+    private java.lang.Object s33_ = "";
     /**
      * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
      */
-    public String getS33() {
-      Object ref = s33_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS33() {
+      java.lang.Object ref = s33_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s33_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2617,11 +2617,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS33Bytes() {
-      Object ref = s33_;
+      java.lang.Object ref = s33_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s33_ = b;
         return b;
       } else {
@@ -2632,7 +2632,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS33(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s33_ = value;
@@ -2663,20 +2663,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s34_ = "";
+    private java.lang.Object s34_ = "";
     /**
      * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
      */
-    public String getS34() {
-      Object ref = s34_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS34() {
+      java.lang.Object ref = s34_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s34_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2684,11 +2684,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS34Bytes() {
-      Object ref = s34_;
+      java.lang.Object ref = s34_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s34_ = b;
         return b;
       } else {
@@ -2699,7 +2699,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS34(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s34_ = value;
@@ -2730,20 +2730,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s35_ = "";
+    private java.lang.Object s35_ = "";
     /**
      * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
      */
-    public String getS35() {
-      Object ref = s35_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS35() {
+      java.lang.Object ref = s35_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s35_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2751,11 +2751,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS35Bytes() {
-      Object ref = s35_;
+      java.lang.Object ref = s35_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s35_ = b;
         return b;
       } else {
@@ -2766,7 +2766,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS35(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s35_ = value;
@@ -2797,20 +2797,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s36_ = "";
+    private java.lang.Object s36_ = "";
     /**
      * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
      */
-    public String getS36() {
-      Object ref = s36_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS36() {
+      java.lang.Object ref = s36_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s36_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2818,11 +2818,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS36Bytes() {
-      Object ref = s36_;
+      java.lang.Object ref = s36_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s36_ = b;
         return b;
       } else {
@@ -2833,7 +2833,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS36(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s36_ = value;
@@ -2864,20 +2864,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s37_ = "";
+    private java.lang.Object s37_ = "";
     /**
      * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
      */
-    public String getS37() {
-      Object ref = s37_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS37() {
+      java.lang.Object ref = s37_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s37_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2885,11 +2885,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS37Bytes() {
-      Object ref = s37_;
+      java.lang.Object ref = s37_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s37_ = b;
         return b;
       } else {
@@ -2900,7 +2900,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS37(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s37_ = value;
@@ -2931,20 +2931,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s38_ = "";
+    private java.lang.Object s38_ = "";
     /**
      * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
      */
-    public String getS38() {
-      Object ref = s38_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS38() {
+      java.lang.Object ref = s38_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s38_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -2952,11 +2952,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS38Bytes() {
-      Object ref = s38_;
+      java.lang.Object ref = s38_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s38_ = b;
         return b;
       } else {
@@ -2967,7 +2967,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS38(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s38_ = value;
@@ -2998,20 +2998,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object s39_ = "";
+    private java.lang.Object s39_ = "";
     /**
      * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
      */
-    public String getS39() {
-      Object ref = s39_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getS39() {
+      java.lang.Object ref = s39_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         s39_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -3019,11 +3019,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getS39Bytes() {
-      Object ref = s39_;
+      java.lang.Object ref = s39_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         s39_ = b;
         return b;
       } else {
@@ -3034,7 +3034,7 @@ private static final long serialVersionUID = 0L;
      * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS39(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       s39_ = value;
@@ -3065,22 +3065,22 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.util.List<ValidateSub> k_ =
+    private java.util.List<com.xxx.userservice.proto.ValidateSub> k_ =
       java.util.Collections.emptyList();
     private void ensureKIsMutable() {
       if (!((bitField0_ & 0x00200000) == 0x00200000)) {
-        k_ = new java.util.ArrayList<ValidateSub>(k_);
+        k_ = new java.util.ArrayList<com.xxx.userservice.proto.ValidateSub>(k_);
         bitField0_ |= 0x00200000;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        ValidateSub, ValidateSub.Builder, ValidateSubOrBuilder> kBuilder_;
+        com.xxx.userservice.proto.ValidateSub, com.xxx.userservice.proto.ValidateSub.Builder, com.xxx.userservice.proto.ValidateSubOrBuilder> kBuilder_;
 
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public java.util.List<ValidateSub> getKList() {
+    public java.util.List<com.xxx.userservice.proto.ValidateSub> getKList() {
       if (kBuilder_ == null) {
         return java.util.Collections.unmodifiableList(k_);
       } else {
@@ -3100,7 +3100,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public ValidateSub getK(int index) {
+    public com.xxx.userservice.proto.ValidateSub getK(int index) {
       if (kBuilder_ == null) {
         return k_.get(index);
       } else {
@@ -3111,7 +3111,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
     public Builder setK(
-        int index, ValidateSub value) {
+        int index, com.xxx.userservice.proto.ValidateSub value) {
       if (kBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -3128,7 +3128,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
     public Builder setK(
-        int index, ValidateSub.Builder builderForValue) {
+        int index, com.xxx.userservice.proto.ValidateSub.Builder builderForValue) {
       if (kBuilder_ == null) {
         ensureKIsMutable();
         k_.set(index, builderForValue.build());
@@ -3141,7 +3141,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public Builder addK(ValidateSub value) {
+    public Builder addK(com.xxx.userservice.proto.ValidateSub value) {
       if (kBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -3158,7 +3158,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
     public Builder addK(
-        int index, ValidateSub value) {
+        int index, com.xxx.userservice.proto.ValidateSub value) {
       if (kBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -3175,7 +3175,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
     public Builder addK(
-        ValidateSub.Builder builderForValue) {
+        com.xxx.userservice.proto.ValidateSub.Builder builderForValue) {
       if (kBuilder_ == null) {
         ensureKIsMutable();
         k_.add(builderForValue.build());
@@ -3189,7 +3189,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
     public Builder addK(
-        int index, ValidateSub.Builder builderForValue) {
+        int index, com.xxx.userservice.proto.ValidateSub.Builder builderForValue) {
       if (kBuilder_ == null) {
         ensureKIsMutable();
         k_.add(index, builderForValue.build());
@@ -3203,7 +3203,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
     public Builder addAllK(
-        Iterable<? extends ValidateSub> values) {
+        java.lang.Iterable<? extends com.xxx.userservice.proto.ValidateSub> values) {
       if (kBuilder_ == null) {
         ensureKIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -3243,14 +3243,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public ValidateSub.Builder getKBuilder(
+    public com.xxx.userservice.proto.ValidateSub.Builder getKBuilder(
         int index) {
       return getKFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public ValidateSubOrBuilder getKOrBuilder(
+    public com.xxx.userservice.proto.ValidateSubOrBuilder getKOrBuilder(
         int index) {
       if (kBuilder_ == null) {
         return k_.get(index);  } else {
@@ -3260,7 +3260,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public java.util.List<? extends ValidateSubOrBuilder>
+    public java.util.List<? extends com.xxx.userservice.proto.ValidateSubOrBuilder> 
          getKOrBuilderList() {
       if (kBuilder_ != null) {
         return kBuilder_.getMessageOrBuilderList();
@@ -3271,31 +3271,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public ValidateSub.Builder addKBuilder() {
+    public com.xxx.userservice.proto.ValidateSub.Builder addKBuilder() {
       return getKFieldBuilder().addBuilder(
-          ValidateSub.getDefaultInstance());
+          com.xxx.userservice.proto.ValidateSub.getDefaultInstance());
     }
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public ValidateSub.Builder addKBuilder(
+    public com.xxx.userservice.proto.ValidateSub.Builder addKBuilder(
         int index) {
       return getKFieldBuilder().addBuilder(
-          index, ValidateSub.getDefaultInstance());
+          index, com.xxx.userservice.proto.ValidateSub.getDefaultInstance());
     }
     /**
      * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
      */
-    public java.util.List<ValidateSub.Builder>
+    public java.util.List<com.xxx.userservice.proto.ValidateSub.Builder> 
          getKBuilderList() {
       return getKFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        ValidateSub, ValidateSub.Builder, ValidateSubOrBuilder>
+        com.xxx.userservice.proto.ValidateSub, com.xxx.userservice.proto.ValidateSub.Builder, com.xxx.userservice.proto.ValidateSubOrBuilder> 
         getKFieldBuilder() {
       if (kBuilder_ == null) {
         kBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            ValidateSub, ValidateSub.Builder, ValidateSubOrBuilder>(
+            com.xxx.userservice.proto.ValidateSub, com.xxx.userservice.proto.ValidateSub.Builder, com.xxx.userservice.proto.ValidateSubOrBuilder>(
                 k_,
                 ((bitField0_ & 0x00200000) == 0x00200000),
                 getParentForChildren(),
@@ -3328,7 +3328,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
      */
-    public String getS41(int index) {
+    public java.lang.String getS41(int index) {
       return s41_.get(index);
     }
     /**
@@ -3342,7 +3342,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
      */
     public Builder setS41(
-        int index, String value) {
+        int index, java.lang.String value) {
       if (value == null) value = "";
   ensureS41IsMutable();
       s41_.set(index, value);
@@ -3353,7 +3353,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
      */
     public Builder addS41(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   ensureS41IsMutable();
       s41_.add(value);
@@ -3364,7 +3364,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
      */
     public Builder addAllS41(
-        Iterable<String> values) {
+        java.lang.Iterable<java.lang.String> values) {
       ensureS41IsMutable();
       com.google.protobuf.AbstractMessageLite.Builder.addAll(
           values, s41_);
@@ -3394,13 +3394,13 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
-    @Override
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -3411,18 +3411,18 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:ValidateTestReq)
-  private static final ValidateTestReq DEFAULT_INSTANCE;
+  private static final com.xxx.userservice.proto.ValidateTestReq DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new ValidateTestReq();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.ValidateTestReq();
   }
 
-  public static ValidateTestReq getDefaultInstance() {
+  public static com.xxx.userservice.proto.ValidateTestReq getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<ValidateTestReq>
       PARSER = new com.google.protobuf.AbstractParser<ValidateTestReq>() {
-    @Override
+    @java.lang.Override
     public ValidateTestReq parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3435,13 +3435,13 @@ private static final long serialVersionUID = 0L;
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<ValidateTestReq> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public ValidateTestReq getDefaultInstanceForType() {
+  @java.lang.Override
+  public com.xxx.userservice.proto.ValidateTestReq getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

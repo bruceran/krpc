@@ -1,9 +1,11 @@
 package krpc.rpc.util;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.Descriptors;
 import com.google.protobuf.Descriptors.EnumDescriptor;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.MapEntry;
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
 import org.slf4j.Logger;
@@ -12,9 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MapToMessage {
 
@@ -49,7 +49,9 @@ public class MapToMessage {
             String name = field.getName();
             Object value = getValue(params, ctx, name);
             if (value == null) continue;
-            if (field.isRepeated()) {
+            if (field.isMapField()) {
+                objToMap(b, field, value);
+            } else if (field.isRepeated()) {
                 objToMessageObjRepeated(b, value, field);
             } else {
                 if (value instanceof List) {
@@ -61,6 +63,38 @@ public class MapToMessage {
         }
 
         return b.build();
+    }
+
+    private static void objToMap(Builder b, FieldDescriptor field, Object map0)   {
+
+        if( !(map0 instanceof  Map) ) return;
+
+        Descriptors.Descriptor type = field.getMessageType();
+        FieldDescriptor keyField = type.findFieldByName("key");
+        FieldDescriptor valueField = type.findFieldByName("value");
+        if (keyField != null && valueField != null) {
+
+            Map map  = (Map)map0;
+            for(Object e: map.entrySet() ) {
+                Map.Entry entry = (Map.Entry)e;
+                Object key = entry.getKey();
+                Object value = entry.getValue();
+
+                com.google.protobuf.Message.Builder entryBuilder = b.newBuilderForField(field);
+
+                Object k = objToMessageObjInner(entryBuilder,key,keyField,false);
+                Object v = objToMessageObjInner(entryBuilder,value,valueField,false);
+
+                if(k == null || v == null ) continue;
+
+                entryBuilder.setField(keyField, k);
+                entryBuilder.setField(valueField, v);
+                b.addRepeatedField(field, entryBuilder.build());
+            }
+
+        } else {
+            throw new RuntimeException("Invalid map field");
+        }
     }
 
     static void objToMessageObjRepeated(Builder b, Object value, FieldDescriptor field) {
@@ -158,7 +192,7 @@ public class MapToMessage {
 
                 Builder b2 = isRepeated ?
                         getRepeatedFieldBuilder(b, field.getName()) :
-                        getFieldBuilder(b, field.getName());
+                                getFieldBuilder(b, field);
 
                 for (FieldDescriptor subfield : b2.getDescriptorForType().getFields()) {
                     String subName = subfield.getName();
@@ -195,8 +229,15 @@ public class MapToMessage {
         }
     }
 
-    static Builder getFieldBuilder(Builder b, String fieldName) {
+    static Builder getFieldBuilder(Builder b, FieldDescriptor f) {
+
         try {
+            if(  b instanceof MapEntry.Builder ) {
+                 MapEntry.Builder bb = (MapEntry.Builder)b;
+                 return bb.newBuilderForField(f);
+            }
+
+            String fieldName = f.getName();
             String methodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1) + "Builder";
             Method method = b.getClass().getDeclaredMethod(methodName, dummyTypes);
             Builder builder = (Builder) method.invoke(b, dummyParameters);
@@ -217,9 +258,11 @@ public class MapToMessage {
         }
     }
 
-    static SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    static ThreadLocal<SimpleDateFormat> f = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
     public static String formatDate(Date d) {
-        return f.format(d);
+        return f.get().format(d);
     }
+
 }
 

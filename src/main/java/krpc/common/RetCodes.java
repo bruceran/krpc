@@ -1,7 +1,9 @@
 package krpc.common;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class RetCodes {
 
@@ -51,9 +53,27 @@ public class RetCodes {
     static public final int BIZ_DISCARDED = -701;
     static public final int BIZ_PARAM_ERROR = -702;
 
+    static public final Set<Integer> systemErrorCodes = new HashSet<>(); // 用于其他框架扩展
+
     static public boolean isSystemError(int retCode) {
+
+        if( retCode == 0 ) return false;
+
         int v = -1 * retCode;
-        return v >= 600 && v < 700 && retCode != VALIDATE_ERROR;
+
+        if( v >= 600 && v < 700 && retCode != VALIDATE_ERROR ) { // -621 pb参数校验规则校验失败  不算系统错误
+            return true;
+        }
+
+        if( systemErrorCodes.contains(retCode) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    static public boolean isSystemErrorV2(int retCode) {
+        return retCode != 0 ; // 非0都算错误
     }
 
     static public boolean isTimeout(int retCode) {
@@ -61,7 +81,7 @@ public class RetCodes {
     }
 
     static public boolean canSafeRetry(int retCode) {
-        switch( retCode ) {
+        switch (retCode) {
             case SERVER_SHUTDOWN:
             case QUEUE_FULL:
                 return true;
@@ -71,7 +91,7 @@ public class RetCodes {
     }
 
     static public boolean canRecover(int retCode) {
-        switch( retCode ) {
+        switch (retCode) {
             case VALIDATE_ERROR:
             case BIZ_NOT_IMPLEMENTED:
             case BIZ_DISCARDED:

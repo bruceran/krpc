@@ -13,7 +13,7 @@ public  final class HttpDownloadStaticRes extends
 private static final long serialVersionUID = 0L;
 public static final HttpDownloadStaticRes ok() { return HttpDownloadStaticRes.newBuilder().build(); } ;
 public static final HttpDownloadStaticRes failed(int retCode) { return HttpDownloadStaticRes.newBuilder().setRetCode(retCode).build(); } ;
-public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { return HttpDownloadStaticRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+public static final HttpDownloadStaticRes failed(int retCode,java.lang.String retMsg) { return HttpDownloadStaticRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
   // Use HttpDownloadStaticRes.newBuilder() to construct.
   private HttpDownloadStaticRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -29,7 +29,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
     filename_ = "";
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -40,7 +40,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -59,19 +59,19 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
             break;
           }
           case 18: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             retMsg_ = s;
             break;
           }
           case 26: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             downloadFile_ = s;
             break;
           }
           case 34: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             autoDelete_ = s;
             break;
@@ -92,7 +92,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
             break;
           }
           case 66: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             filename_ = s;
             break;
@@ -118,15 +118,15 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserServiceMetas.internal_static_HttpDownloadStaticRes_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpDownloadStaticRes_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserServiceMetas.internal_static_HttpDownloadStaticRes_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpDownloadStaticRes_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HttpDownloadStaticRes.class, Builder.class);
+            com.xxx.userservice.proto.HttpDownloadStaticRes.class, com.xxx.userservice.proto.HttpDownloadStaticRes.Builder.class);
   }
 
   public static final int RETCODE_FIELD_NUMBER = 1;
@@ -139,18 +139,18 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
   }
 
   public static final int RETMSG_FIELD_NUMBER = 2;
-  private volatile Object retMsg_;
+  private volatile java.lang.Object retMsg_;
   /**
    * <code>string retMsg = 2;</code>
    */
-  public String getRetMsg() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getRetMsg() {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       retMsg_ = s;
       return s;
     }
@@ -160,11 +160,11 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
    */
   public com.google.protobuf.ByteString
       getRetMsgBytes() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       retMsg_ = b;
       return b;
     } else {
@@ -173,18 +173,18 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
   }
 
   public static final int DOWNLOADFILE_FIELD_NUMBER = 3;
-  private volatile Object downloadFile_;
+  private volatile java.lang.Object downloadFile_;
   /**
    * <code>string downloadFile = 3;</code>
    */
-  public String getDownloadFile() {
-    Object ref = downloadFile_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getDownloadFile() {
+    java.lang.Object ref = downloadFile_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       downloadFile_ = s;
       return s;
     }
@@ -194,11 +194,11 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
    */
   public com.google.protobuf.ByteString
       getDownloadFileBytes() {
-    Object ref = downloadFile_;
-    if (ref instanceof String) {
+    java.lang.Object ref = downloadFile_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       downloadFile_ = b;
       return b;
     } else {
@@ -207,18 +207,18 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
   }
 
   public static final int AUTODELETE_FIELD_NUMBER = 4;
-  private volatile Object autoDelete_;
+  private volatile java.lang.Object autoDelete_;
   /**
    * <code>string autoDelete = 4;</code>
    */
-  public String getAutoDelete() {
-    Object ref = autoDelete_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getAutoDelete() {
+    java.lang.Object ref = autoDelete_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       autoDelete_ = s;
       return s;
     }
@@ -228,11 +228,11 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
    */
   public com.google.protobuf.ByteString
       getAutoDeleteBytes() {
-    Object ref = autoDelete_;
-    if (ref instanceof String) {
+    java.lang.Object ref = autoDelete_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       autoDelete_ = b;
       return b;
     } else {
@@ -268,18 +268,18 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
   }
 
   public static final int FILENAME_FIELD_NUMBER = 8;
-  private volatile Object filename_;
+  private volatile java.lang.Object filename_;
   /**
    * <code>string filename = 8;</code>
    */
-  public String getFilename() {
-    Object ref = filename_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getFilename() {
+    java.lang.Object ref = filename_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       filename_ = s;
       return s;
     }
@@ -289,11 +289,11 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
    */
   public com.google.protobuf.ByteString
       getFilenameBytes() {
-    Object ref = filename_;
-    if (ref instanceof String) {
+    java.lang.Object ref = filename_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       filename_ = b;
       return b;
     } else {
@@ -302,7 +302,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -312,7 +312,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (retCode_ != 0) {
@@ -342,7 +342,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -381,15 +381,15 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof HttpDownloadStaticRes)) {
+    if (!(obj instanceof com.xxx.userservice.proto.HttpDownloadStaticRes)) {
       return super.equals(obj);
     }
-    HttpDownloadStaticRes other = (HttpDownloadStaticRes) obj;
+    com.xxx.userservice.proto.HttpDownloadStaticRes other = (com.xxx.userservice.proto.HttpDownloadStaticRes) obj;
 
     boolean result = true;
     result = result && (getRetCode()
@@ -412,7 +412,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -440,69 +440,69 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
     return hash;
   }
 
-  public static HttpDownloadStaticRes parseFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpDownloadStaticRes parseFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpDownloadStaticRes parseFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpDownloadStaticRes parseFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpDownloadStaticRes parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpDownloadStaticRes parseFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpDownloadStaticRes parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HttpDownloadStaticRes parseFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HttpDownloadStaticRes parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static HttpDownloadStaticRes parseDelimitedFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HttpDownloadStaticRes parseFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HttpDownloadStaticRes parseFrom(
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -510,23 +510,23 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(HttpDownloadStaticRes prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.HttpDownloadStaticRes prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -536,18 +536,18 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:HttpDownloadStaticRes)
-      HttpDownloadStaticResOrBuilder {
+      com.xxx.userservice.proto.HttpDownloadStaticResOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserServiceMetas.internal_static_HttpDownloadStaticRes_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpDownloadStaticRes_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserServiceMetas.internal_static_HttpDownloadStaticRes_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpDownloadStaticRes_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HttpDownloadStaticRes.class, Builder.class);
+              com.xxx.userservice.proto.HttpDownloadStaticRes.class, com.xxx.userservice.proto.HttpDownloadStaticRes.Builder.class);
     }
 
     // Construct using com.xxx.userservice.proto.HttpDownloadStaticRes.newBuilder()
@@ -556,7 +556,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -565,7 +565,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
               .alwaysUseFieldBuilders) {
       }
     }
-    @Override
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       retCode_ = 0;
@@ -587,29 +587,29 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserServiceMetas.internal_static_HttpDownloadStaticRes_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpDownloadStaticRes_descriptor;
     }
 
-    @Override
-    public HttpDownloadStaticRes getDefaultInstanceForType() {
-      return HttpDownloadStaticRes.getDefaultInstance();
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpDownloadStaticRes getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.HttpDownloadStaticRes.getDefaultInstance();
     }
 
-    @Override
-    public HttpDownloadStaticRes build() {
-      HttpDownloadStaticRes result = buildPartial();
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpDownloadStaticRes build() {
+      com.xxx.userservice.proto.HttpDownloadStaticRes result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public HttpDownloadStaticRes buildPartial() {
-      HttpDownloadStaticRes result = new HttpDownloadStaticRes(this);
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpDownloadStaticRes buildPartial() {
+      com.xxx.userservice.proto.HttpDownloadStaticRes result = new com.xxx.userservice.proto.HttpDownloadStaticRes(this);
       result.retCode_ = retCode_;
       result.retMsg_ = retMsg_;
       result.downloadFile_ = downloadFile_;
@@ -622,50 +622,50 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof HttpDownloadStaticRes) {
-        return mergeFrom((HttpDownloadStaticRes)other);
+      if (other instanceof com.xxx.userservice.proto.HttpDownloadStaticRes) {
+        return mergeFrom((com.xxx.userservice.proto.HttpDownloadStaticRes)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(HttpDownloadStaticRes other) {
-      if (other == HttpDownloadStaticRes.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.HttpDownloadStaticRes other) {
+      if (other == com.xxx.userservice.proto.HttpDownloadStaticRes.getDefaultInstance()) return this;
       if (other.getRetCode() != 0) {
         setRetCode(other.getRetCode());
       }
@@ -699,21 +699,21 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      HttpDownloadStaticRes parsedMessage = null;
+      com.xxx.userservice.proto.HttpDownloadStaticRes parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (HttpDownloadStaticRes) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.HttpDownloadStaticRes) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -749,20 +749,20 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       return this;
     }
 
-    private Object retMsg_ = "";
+    private java.lang.Object retMsg_ = "";
     /**
      * <code>string retMsg = 2;</code>
      */
-    public String getRetMsg() {
-      Object ref = retMsg_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getRetMsg() {
+      java.lang.Object ref = retMsg_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         retMsg_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -770,11 +770,11 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
      */
     public com.google.protobuf.ByteString
         getRetMsgBytes() {
-      Object ref = retMsg_;
+      java.lang.Object ref = retMsg_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         retMsg_ = b;
         return b;
       } else {
@@ -785,7 +785,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
      * <code>string retMsg = 2;</code>
      */
     public Builder setRetMsg(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       retMsg_ = value;
@@ -816,20 +816,20 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       return this;
     }
 
-    private Object downloadFile_ = "";
+    private java.lang.Object downloadFile_ = "";
     /**
      * <code>string downloadFile = 3;</code>
      */
-    public String getDownloadFile() {
-      Object ref = downloadFile_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getDownloadFile() {
+      java.lang.Object ref = downloadFile_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         downloadFile_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -837,11 +837,11 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
      */
     public com.google.protobuf.ByteString
         getDownloadFileBytes() {
-      Object ref = downloadFile_;
+      java.lang.Object ref = downloadFile_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         downloadFile_ = b;
         return b;
       } else {
@@ -852,7 +852,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
      * <code>string downloadFile = 3;</code>
      */
     public Builder setDownloadFile(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       downloadFile_ = value;
@@ -883,20 +883,20 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       return this;
     }
 
-    private Object autoDelete_ = "";
+    private java.lang.Object autoDelete_ = "";
     /**
      * <code>string autoDelete = 4;</code>
      */
-    public String getAutoDelete() {
-      Object ref = autoDelete_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getAutoDelete() {
+      java.lang.Object ref = autoDelete_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         autoDelete_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -904,11 +904,11 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
      */
     public com.google.protobuf.ByteString
         getAutoDeleteBytes() {
-      Object ref = autoDelete_;
+      java.lang.Object ref = autoDelete_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         autoDelete_ = b;
         return b;
       } else {
@@ -919,7 +919,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
      * <code>string autoDelete = 4;</code>
      */
     public Builder setAutoDelete(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       autoDelete_ = value;
@@ -1031,20 +1031,20 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       return this;
     }
 
-    private Object filename_ = "";
+    private java.lang.Object filename_ = "";
     /**
      * <code>string filename = 8;</code>
      */
-    public String getFilename() {
-      Object ref = filename_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getFilename() {
+      java.lang.Object ref = filename_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         filename_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1052,11 +1052,11 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
      */
     public com.google.protobuf.ByteString
         getFilenameBytes() {
-      Object ref = filename_;
+      java.lang.Object ref = filename_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         filename_ = b;
         return b;
       } else {
@@ -1067,7 +1067,7 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
      * <code>string filename = 8;</code>
      */
     public Builder setFilename(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       filename_ = value;
@@ -1097,13 +1097,13 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
       onChanged();
       return this;
     }
-    @Override
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -1114,18 +1114,18 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
   }
 
   // @@protoc_insertion_point(class_scope:HttpDownloadStaticRes)
-  private static final HttpDownloadStaticRes DEFAULT_INSTANCE;
+  private static final com.xxx.userservice.proto.HttpDownloadStaticRes DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new HttpDownloadStaticRes();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.HttpDownloadStaticRes();
   }
 
-  public static HttpDownloadStaticRes getDefaultInstance() {
+  public static com.xxx.userservice.proto.HttpDownloadStaticRes getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<HttpDownloadStaticRes>
       PARSER = new com.google.protobuf.AbstractParser<HttpDownloadStaticRes>() {
-    @Override
+    @java.lang.Override
     public HttpDownloadStaticRes parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1138,13 +1138,13 @@ public static final HttpDownloadStaticRes failed(int retCode,String retMsg) { re
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<HttpDownloadStaticRes> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public HttpDownloadStaticRes getDefaultInstanceForType() {
+  @java.lang.Override
+  public com.xxx.userservice.proto.HttpDownloadStaticRes getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

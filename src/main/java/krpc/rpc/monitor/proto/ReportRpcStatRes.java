@@ -13,7 +13,7 @@ public  final class ReportRpcStatRes extends
 private static final long serialVersionUID = 0L;
 public static final ReportRpcStatRes ok() { return ReportRpcStatRes.newBuilder().build(); } ;
 public static final ReportRpcStatRes failed(int retCode) { return ReportRpcStatRes.newBuilder().setRetCode(retCode).build(); } ;
-public static final ReportRpcStatRes failed(int retCode,String retMsg) { return ReportRpcStatRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+public static final ReportRpcStatRes failed(int retCode, String retMsg) { return ReportRpcStatRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
   // Use ReportRpcStatRes.newBuilder() to construct.
   private ReportRpcStatRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);

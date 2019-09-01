@@ -21,7 +21,7 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
     boolean enableRegist = true;
     boolean enableDiscover = true;
 
-    int ttl = 90;
+    int ttl = 150;
     int interval = 15;
 
     private JedisPool jedisPool;
@@ -326,7 +326,7 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
         boolean b = healthy.get();
         if( b ) return;
         String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
-        list.add(new HealthStatus(alarmId,false,"jedis_registry connect failed"));
+        list.add(new HealthStatus(alarmId,false,"jedis_registry connect failed","redis",addrs.replaceAll(",","#")));
     }
 
     @Override
@@ -334,7 +334,7 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
         boolean b = healthy.get();
         if( b ) return;
 
-        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"jedis_registry has exception");
+        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"jedis_registry connect failed","redis",addrs.replaceAll(",","#"));
         metrics.put("krpc.consul.errorCount",1);
     }
 

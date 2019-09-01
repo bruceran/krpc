@@ -10,7 +10,7 @@ public interface HttpPluginTestReqOrBuilder extends
   /**
    * <code>string username = 1;</code>
    */
-  String getUsername();
+  java.lang.String getUsername();
   /**
    * <code>string username = 1;</code>
    */

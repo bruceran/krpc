@@ -54,4 +54,28 @@ public interface RpcStatOrBuilder extends
    * <code>repeated int32 timeUsed = 8;</code>
    */
   int getTimeUsed(int index);
+
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  java.util.List<RetCodeStat>
+      getRetCodeStatList();
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  RetCodeStat getRetCodeStat(int index);
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  int getRetCodeStatCount();
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  java.util.List<? extends RetCodeStatOrBuilder>
+      getRetCodeStatOrBuilderList();
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  RetCodeStatOrBuilder getRetCodeStatOrBuilder(
+          int index);
 }

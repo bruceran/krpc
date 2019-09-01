@@ -45,7 +45,7 @@ public class DefaultRpcFuture extends CompletableFuture<Message> {
             }
             return true;
         } catch (Exception e) {
-            log.error("queue is full for notify pool");
+            log.error("queue is full for notify pool, e="+e.getMessage());
             return false;
         }
     }

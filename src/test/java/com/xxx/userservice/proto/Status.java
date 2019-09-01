@@ -39,7 +39,7 @@ public enum Status
 
   public final int getNumber() {
     if (this == UNRECOGNIZED) {
-      throw new IllegalArgumentException(
+      throw new java.lang.IllegalArgumentException(
           "Can't get the number of an unknown enum value.");
     }
     return value;
@@ -48,7 +48,7 @@ public enum Status
   /**
    * @deprecated Use {@link #forNumber(int)} instead.
    */
-  @Deprecated
+  @java.lang.Deprecated
   public static Status valueOf(int value) {
     return forNumber(value);
   }
@@ -84,7 +84,7 @@ public enum Status
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return UserServiceMetas.getDescriptor().getEnumTypes().get(0);
+    return com.xxx.userservice.proto.UserServiceMetas.getDescriptor().getEnumTypes().get(0);
   }
 
   private static final Status[] VALUES = values();
@@ -92,7 +92,7 @@ public enum Status
   public static Status valueOf(
       com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
     if (desc.getType() != getDescriptor()) {
-      throw new IllegalArgumentException(
+      throw new java.lang.IllegalArgumentException(
         "EnumValueDescriptor is not for this type.");
     }
     if (desc.getIndex() == -1) {

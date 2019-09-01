@@ -13,6 +13,8 @@ public class ApplicationConfig {
     String fallbackPlugin = "default";
     String dynamicRoutePlugin;  // consul,etcd,zookeeper,jedis,...
 
+    boolean enablePostmanExport = true;
+
 
     public ApplicationConfig() {
     }
@@ -93,5 +95,13 @@ public class ApplicationConfig {
         return this;
     }
 
+    public boolean isEnablePostmanExport() {
+        return enablePostmanExport;
+    }
+
+    public ApplicationConfig setEnablePostmanExport(boolean enablePostmanExport) {
+        this.enablePostmanExport = enablePostmanExport;
+        return this;
+    }
 }
 

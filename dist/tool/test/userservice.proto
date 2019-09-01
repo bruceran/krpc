@@ -45,11 +45,41 @@ message Login2Res {
 	string mobile = 4;
 }
 
+message Apple {
+	string color = 1;
+	double weight = 2;
+}
+
+message Login3Req {
+	map<string,string> kvs = 1;
+	string userName = 2;
+		
+	map<string,int32> kvs2 = 3;
+	map<int32,string> kvs3 = 4;
+	map<string,Apple> apples = 5;
+}
+
+message Login3ReqCopy {
+	string userName = 1;
+	map<string,string> kvs = 2;
+	map<string,int32> kvs2 = 3;
+	map<string,Apple> apples = 4;
+	map<int32,string> kvs3 = 5;
+}
+
+message Login3Res {
+	int32 retCode = 1;
+	string retMsg = 2;
+	string userId = 3;
+	map<string,string> kvs = 4;
+}
+
 service UserService {
 	option (krpc.serviceId) = 100;
 	rpc login(LoginReq) returns (LoginRes)  { option (krpc.msgId) = 1; };
 	rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)   { option (krpc.msgId) = 2; };
 	rpc login2(Login2Req) returns (Login2Res)  { option (krpc.msgId) = 3; };
+	rpc login3(Login3Req) returns (Login3Res)  { option (krpc.msgId) = 4; };
 }
 
 

@@ -27,6 +27,17 @@ public class WebUrl {
         this.msgId = msgId;
     }
 
+    public WebUrl(String hosts, String path, String methods, String origins, int serviceId, int msgId, WebPlugins plugins,Map<String, String> attrs) {
+        this.hosts = hosts;
+        this.path = path;
+        this.methods = methods.toLowerCase();
+        this.serviceId = serviceId;
+        this.msgId = msgId;
+        this.origins = origins;
+        this.plugins = plugins;
+        this.attrs = attrs;
+    }
+
     public String getPath() {
         return path;
     }

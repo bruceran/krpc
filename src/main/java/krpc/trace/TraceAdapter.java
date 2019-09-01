@@ -1,11 +1,16 @@
 package krpc.trace;
 
 import krpc.common.Plugin;
+import krpc.common.RetCodes;
 import krpc.rpc.core.proto.RpcMeta;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public interface TraceAdapter extends Plugin {
+
+    default public boolean hasError(int retCode) {
+        return RetCodes.isSystemError(retCode);
+    }
 
     default public TraceContext newTraceContext() {
         return new DefaultTraceContext();

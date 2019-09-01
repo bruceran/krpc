@@ -42,7 +42,9 @@ public class MessageToBean {
             Descriptors.FieldDescriptor field = i.getKey();
             Object value = i.getValue();
 
-            if (field.isRepeated()) {
+            if (field.isMapField()) {
+                parseMapFieldValue(field, value, bean);
+            } else if (field.isRepeated()) {
                 for (Object element : (List<?>) value) {
                     parseSingleField(field, element, bean, true);
                 }
@@ -50,6 +52,68 @@ public class MessageToBean {
                 parseSingleField(field, value, bean, false);
             }
 
+        }
+    }
+
+    private static boolean isSimpleType(Descriptors.FieldDescriptor field) {
+        switch( field.getType()) {
+            case MESSAGE:
+            case BYTES:
+            case ENUM:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    private static void parseMapFieldValue(Descriptors.FieldDescriptor field, Object value, Object bean)   {
+        Descriptors.Descriptor type = field.getMessageType();
+        Descriptors.FieldDescriptor keyField = type.findFieldByName("key");
+        Descriptors.FieldDescriptor valueField = type.findFieldByName("value");
+        if (keyField != null && valueField != null) {
+
+            Iterator listItem = ((List)value).iterator();
+
+            Map map = new LinkedHashMap();
+            while(listItem.hasNext()) {
+                Object element = listItem.next();
+                Message entry = (Message)element;
+                Object entryKey = entry.getField(keyField);
+                Object entryValue = entry.getField(valueField);
+
+                if( !isSimpleType(keyField) ) {
+                    throw new RuntimeException("not supported map field type, keyField="+keyField.getName());
+                }
+                if(  !isSimpleType(valueField) ) {
+                    if( entryValue instanceof  Message ) {
+                        Class cls = getMapValueCls(bean,field.getName());
+                        if( cls == null ) continue;
+                        entryValue = MessageToBean.toBean((Message)entryValue,cls);
+                    } else {
+                        continue;
+//                        throw new RuntimeException("not supported map field type, valueField=" + valueField.getName());
+                    }
+                }
+
+                map.put(entryKey,entryValue);
+            }
+
+            addToResults(field.getName(), map, bean, false);
+        } else {
+            throw new RuntimeException("Invalid map field");
+        }
+    }
+
+    static Class getMapValueCls(Object bean, String field) {
+        try {
+            Field f = bean.getClass().getDeclaredField(field);
+            String s = f.getGenericType().toString();
+            int p1 = s.indexOf(",");
+            int p2 = s.indexOf(">");
+            String clsName = s.substring(p1+1,p2).trim();
+            return Class.forName(clsName);
+        }catch(Exception e) {
+            return null;
         }
     }
 
@@ -206,6 +270,17 @@ public class MessageToBean {
                 Date d = TypeSafe.anyToDate(v);
                 if (d == null) return null;
                 return new java.sql.Timestamp(d.getTime());
+            }
+            case "java.util.Map":
+            case "java.util.LinkedHashMap": {
+                if (!(v instanceof Map)) return null;
+                return v;
+            }
+            case "java.util.HashMap": {
+                if (!(v instanceof Map)) return null;
+                HashMap h = new HashMap();
+                h.putAll((Map)v);
+                return h;
             }
         }
         return null;

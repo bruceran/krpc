@@ -4,13 +4,13 @@ import krpc.common.*;
 import krpc.httpclient.HttpClientReq;
 import krpc.httpclient.HttpClientRes;
 import krpc.rpc.core.*;
+import krpc.rpc.util.IpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoutePlugin, DumpPlugin, HealthPlugin, AlarmAware {
 
@@ -25,7 +25,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
     String aclToken;
 
-    int ttl = 90;
+    int ttl = 150;
     int interval = 15;
 
     AtomicBoolean healthy = new AtomicBoolean(true);
@@ -275,7 +275,13 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         boolean b = healthy.get();
         if( b ) return;
         String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
-        list.add(new HealthStatus(alarmId,false,"consul_registry connect failed"));
+        String targetAddrs;
+        if( addrs.equals("127.0.0.1:8500") ) {
+            targetAddrs = IpUtils.localIp()+":8500";
+        } else {
+            targetAddrs = addrs.replaceAll(",","#");
+        }
+        list.add(new HealthStatus(alarmId,false,"consul_registry connect failed","consul",targetAddrs));
     }
 
     @Override
@@ -283,7 +289,13 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         boolean b = healthy.get();
         if( b ) return;
 
-        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"consul_registry has exception");
+        String targetAddrs;
+        if( addrs.equals("127.0.0.1:8500") ) {
+            targetAddrs = IpUtils.localIp()+":8500";
+        } else {
+            targetAddrs = addrs.replaceAll(",","#");
+        }
+        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"consul_registry connect failed","consul",targetAddrs);
         metrics.put("krpc.consul.errorCount",1);
     }
 

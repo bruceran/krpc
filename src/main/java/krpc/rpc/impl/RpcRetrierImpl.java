@@ -5,6 +5,7 @@ import krpc.common.*;
 import krpc.persistqueue.PersistQueue;
 import krpc.persistqueue.impl.PersistQueueManagerImpl;
 import krpc.rpc.core.*;
+import krpc.rpc.util.IpUtils;
 import krpc.rpc.util.MapToMessage;
 import krpc.rpc.util.MessageToMap;
 import org.slf4j.Logger;
@@ -345,7 +346,7 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop, AlarmAw
         int n = errorCount.getAndSet(0);
         lastErrorCount.set(n);
         if( n > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_DISKIO,"krpc retrier io error");
+            alarm.alarm(Alarm.ALARM_TYPE_DISKIO,"krpc retrier io error","diskio",IpUtils.localIp());
         }
         metrics.put("krpc.retrier.curErrorCount",n);
     }
@@ -356,7 +357,7 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop, AlarmAw
 
         int n = lastErrorCount.get();
         if( n > 0 ) {
-            list.add(new HealthStatus(alarmId,false,"krpc retrier io error"));
+            list.add(new HealthStatus(alarmId,false,"krpc retrier io error","diskio",IpUtils.localIp()));
         }
 
     }

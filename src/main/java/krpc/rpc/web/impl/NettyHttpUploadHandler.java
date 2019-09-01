@@ -145,7 +145,7 @@ public class NettyHttpUploadHandler extends ChannelInboundHandlerAdapter {
                 String json = generateJson();
 
                 ByteBuf bb = ByteBufUtil.writeUtf8(ctx.alloc(), json);
-                tempMessage.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/json; charset=utf-8");
+                tempMessage.headers().set(HttpHeaderNames.CONTENT_TYPE, WebConstants.MIMETYPE_JSON );
                 tempMessage.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, bb.readableBytes());
                 ctx.fireChannelRead(tempMessage);
                 DefaultLastHttpContent c = new DefaultLastHttpContent(bb);

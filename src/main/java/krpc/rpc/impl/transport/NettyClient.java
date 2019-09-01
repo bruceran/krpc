@@ -25,10 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Sharable
 public class NettyClient extends TransportBase implements Transport, TransportChannel, InitClose, StartStop, AlarmAware,
@@ -55,6 +57,7 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
     ConcurrentHashMap<String, Object> conns = new ConcurrentHashMap<>(); // value cannot be null, so use Object type but Channel type
     ConcurrentHashMap<String, String> connIdMap = new ConcurrentHashMap<>(); // channel.id() -> outside connId
     ConcurrentHashMap<String, Long> reconnectingConns = new ConcurrentHashMap<>(); // addr -> timestamp milliseconds
+    AtomicReference<List<HealthStatus>> lastHealthStatusList = new AtomicReference<>();
 
     Alarm alarm = new DummyAlarm();
 
@@ -170,6 +173,7 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
     void reconnect(final String connId, final String addr) {
 //log.info("reconnecting connId="+connId+",addr="+addr);
         if (!conns.containsKey(connId)) {
+            reconnectingConns.remove(connId);
             return;
         }
 
@@ -227,7 +231,9 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
         connIdMap.remove(ctx.channel().id().asLongText());
         if (connId == null)
             return;
-        conns.put(connId, dummyChannel);
+        if( conns.containsKey(connId) ) { // 如果已经被删除了，不用重新写入
+            conns.put(connId, dummyChannel);
+        }
         if( enableEncrypt) {
             keyMap.remove(connId);
         }
@@ -316,19 +322,33 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
         metrics.put("krpc.client.connectTimeout",connectTimeout);
         metrics.put("krpc.client.reconnectSeconds",reconnectSeconds);
 
-        if( reconnectingConns.size() > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_RPCSERVER,"krpc connection failed");
-            metrics.put("krpc.client.reconnectingConns",reconnectingConns.size());
+        int n = reconnectingConns.size();
+        if( n > 0 ) {
+            List<HealthStatus> healthStatusList = new ArrayList<>();
+            for(String connId: reconnectingConns.keySet()) {
+                String addr = getAddr(connId);
+                int p = addr.lastIndexOf(":");
+                String serviceId = addr.substring(p+1).substring(1); // 取端口，去掉第一个字符，一般端口格式是 7xxx
+                String alarmId = serviceId + "002";
+                String targetAddr = serviceId+":"+addr;
+                String msg = "krpc connection failed from " + alarm.getAlarmPrefix();
+                alarm.alarm4rpc(alarmId, msg,"rpc",targetAddr);
+                HealthStatus healthStatus = new HealthStatus(alarmId, false, msg,"rpc",targetAddr);
+                healthStatusList.add(healthStatus);
+            }
+            lastHealthStatusList.set(healthStatusList);
+
+            metrics.put("krpc.client.reconnectingConns", n);
         }
     }
 
     @Override
     public void healthCheck(List<HealthStatus> list) {
-        String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_RPCSERVER);
-        for (String connId: reconnectingConns.keySet()) {
-            list.add(new HealthStatus(alarmId,false,"krpc connection failed: "+getAddr(connId)));
-            return;
+        List<HealthStatus> healthStatusList = lastHealthStatusList.get();
+        if( healthStatusList != null && healthStatusList.size() > 0 ) {
+            list.addAll(healthStatusList);
         }
+
         // list.add(new HealthStatus(alarmId,true,"krpc connection ok"));
     }
 

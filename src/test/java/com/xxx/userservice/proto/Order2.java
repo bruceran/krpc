@@ -21,7 +21,7 @@ private static final long serialVersionUID = 0L;
     items_ = java.util.Collections.emptyList();
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -32,7 +32,7 @@ private static final long serialVersionUID = 0L;
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -46,7 +46,7 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             orderId_ = s;
             break;
@@ -57,11 +57,11 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 26: {
-            Session2.Builder subBuilder = null;
+            com.xxx.userservice.proto.Session2.Builder subBuilder = null;
             if (session_ != null) {
               subBuilder = session_.toBuilder();
             }
-            session_ = input.readMessage(Session2.parser(), extensionRegistry);
+            session_ = input.readMessage(com.xxx.userservice.proto.Session2.parser(), extensionRegistry);
             if (subBuilder != null) {
               subBuilder.mergeFrom(session_);
               session_ = subBuilder.buildPartial();
@@ -71,11 +71,11 @@ private static final long serialVersionUID = 0L;
           }
           case 34: {
             if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-              items_ = new java.util.ArrayList<OrderItem2>();
+              items_ = new java.util.ArrayList<com.xxx.userservice.proto.OrderItem2>();
               mutable_bitField0_ |= 0x00000008;
             }
             items_.add(
-                input.readMessage(OrderItem2.parser(), extensionRegistry));
+                input.readMessage(com.xxx.userservice.proto.OrderItem2.parser(), extensionRegistry));
             break;
           }
           default: {
@@ -102,31 +102,31 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserServiceMetas.internal_static_Order2_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order2_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserServiceMetas.internal_static_Order2_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order2_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            Order2.class, Builder.class);
+            com.xxx.userservice.proto.Order2.class, com.xxx.userservice.proto.Order2.Builder.class);
   }
 
   private int bitField0_;
   public static final int ORDERID_FIELD_NUMBER = 1;
-  private volatile Object orderId_;
+  private volatile java.lang.Object orderId_;
   /**
    * <code>string orderId = 1;</code>
    */
-  public String getOrderId() {
-    Object ref = orderId_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getOrderId() {
+    java.lang.Object ref = orderId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       orderId_ = s;
       return s;
     }
@@ -136,11 +136,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getOrderIdBytes() {
-    Object ref = orderId_;
-    if (ref instanceof String) {
+    java.lang.Object ref = orderId_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       orderId_ = b;
       return b;
     } else {
@@ -158,7 +158,7 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int SESSION_FIELD_NUMBER = 3;
-  private Session2 session_;
+  private com.xxx.userservice.proto.Session2 session_;
   /**
    * <code>.Session2 session = 3;</code>
    */
@@ -168,28 +168,28 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>.Session2 session = 3;</code>
    */
-  public Session2 getSession() {
-    return session_ == null ? Session2.getDefaultInstance() : session_;
+  public com.xxx.userservice.proto.Session2 getSession() {
+    return session_ == null ? com.xxx.userservice.proto.Session2.getDefaultInstance() : session_;
   }
   /**
    * <code>.Session2 session = 3;</code>
    */
-  public Session2OrBuilder getSessionOrBuilder() {
+  public com.xxx.userservice.proto.Session2OrBuilder getSessionOrBuilder() {
     return getSession();
   }
 
   public static final int ITEMS_FIELD_NUMBER = 4;
-  private java.util.List<OrderItem2> items_;
+  private java.util.List<com.xxx.userservice.proto.OrderItem2> items_;
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
-  public java.util.List<OrderItem2> getItemsList() {
+  public java.util.List<com.xxx.userservice.proto.OrderItem2> getItemsList() {
     return items_;
   }
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
-  public java.util.List<? extends OrderItem2OrBuilder>
+  public java.util.List<? extends com.xxx.userservice.proto.OrderItem2OrBuilder> 
       getItemsOrBuilderList() {
     return items_;
   }
@@ -202,19 +202,19 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
-  public OrderItem2 getItems(int index) {
+  public com.xxx.userservice.proto.OrderItem2 getItems(int index) {
     return items_.get(index);
   }
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
-  public OrderItem2OrBuilder getItemsOrBuilder(
+  public com.xxx.userservice.proto.OrderItem2OrBuilder getItemsOrBuilder(
       int index) {
     return items_.get(index);
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -224,7 +224,7 @@ private static final long serialVersionUID = 0L;
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (!getOrderIdBytes().isEmpty()) {
@@ -242,7 +242,7 @@ private static final long serialVersionUID = 0L;
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -268,15 +268,15 @@ private static final long serialVersionUID = 0L;
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof Order2)) {
+    if (!(obj instanceof com.xxx.userservice.proto.Order2)) {
       return super.equals(obj);
     }
-    Order2 other = (Order2) obj;
+    com.xxx.userservice.proto.Order2 other = (com.xxx.userservice.proto.Order2) obj;
 
     boolean result = true;
     result = result && getOrderId()
@@ -294,7 +294,7 @@ private static final long serialVersionUID = 0L;
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -318,69 +318,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static Order2 parseFrom(
+  public static com.xxx.userservice.proto.Order2 parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Order2 parseFrom(
+  public static com.xxx.userservice.proto.Order2 parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Order2 parseFrom(
+  public static com.xxx.userservice.proto.Order2 parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Order2 parseFrom(
+  public static com.xxx.userservice.proto.Order2 parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Order2 parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.Order2 parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Order2 parseFrom(
+  public static com.xxx.userservice.proto.Order2 parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Order2 parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.Order2 parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Order2 parseFrom(
+  public static com.xxx.userservice.proto.Order2 parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Order2 parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.Order2 parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static Order2 parseDelimitedFrom(
+  public static com.xxx.userservice.proto.Order2 parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Order2 parseFrom(
+  public static com.xxx.userservice.proto.Order2 parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Order2 parseFrom(
+  public static com.xxx.userservice.proto.Order2 parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -388,23 +388,23 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(Order2 prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.Order2 prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -414,18 +414,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:Order2)
-      Order2OrBuilder {
+      com.xxx.userservice.proto.Order2OrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserServiceMetas.internal_static_Order2_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order2_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserServiceMetas.internal_static_Order2_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order2_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Order2.class, Builder.class);
+              com.xxx.userservice.proto.Order2.class, com.xxx.userservice.proto.Order2.Builder.class);
     }
 
     // Construct using com.xxx.userservice.proto.Order2.newBuilder()
@@ -434,7 +434,7 @@ private static final long serialVersionUID = 0L;
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -444,7 +444,7 @@ private static final long serialVersionUID = 0L;
         getItemsFieldBuilder();
       }
     }
-    @Override
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       orderId_ = "";
@@ -466,29 +466,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserServiceMetas.internal_static_Order2_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_Order2_descriptor;
     }
 
-    @Override
-    public Order2 getDefaultInstanceForType() {
-      return Order2.getDefaultInstance();
+    @java.lang.Override
+    public com.xxx.userservice.proto.Order2 getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.Order2.getDefaultInstance();
     }
 
-    @Override
-    public Order2 build() {
-      Order2 result = buildPartial();
+    @java.lang.Override
+    public com.xxx.userservice.proto.Order2 build() {
+      com.xxx.userservice.proto.Order2 result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public Order2 buildPartial() {
-      Order2 result = new Order2(this);
+    @java.lang.Override
+    public com.xxx.userservice.proto.Order2 buildPartial() {
+      com.xxx.userservice.proto.Order2 result = new com.xxx.userservice.proto.Order2(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       result.orderId_ = orderId_;
@@ -512,50 +512,50 @@ private static final long serialVersionUID = 0L;
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof Order2) {
-        return mergeFrom((Order2)other);
+      if (other instanceof com.xxx.userservice.proto.Order2) {
+        return mergeFrom((com.xxx.userservice.proto.Order2)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(Order2 other) {
-      if (other == Order2.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.Order2 other) {
+      if (other == com.xxx.userservice.proto.Order2.getDefaultInstance()) return this;
       if (!other.getOrderId().isEmpty()) {
         orderId_ = other.orderId_;
         onChanged();
@@ -597,21 +597,21 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Order2 parsedMessage = null;
+      com.xxx.userservice.proto.Order2 parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (Order2) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.Order2) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -622,20 +622,20 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private Object orderId_ = "";
+    private java.lang.Object orderId_ = "";
     /**
      * <code>string orderId = 1;</code>
      */
-    public String getOrderId() {
-      Object ref = orderId_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getOrderId() {
+      java.lang.Object ref = orderId_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         orderId_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -643,11 +643,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getOrderIdBytes() {
-      Object ref = orderId_;
+      java.lang.Object ref = orderId_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         orderId_ = b;
         return b;
       } else {
@@ -658,7 +658,7 @@ private static final long serialVersionUID = 0L;
      * <code>string orderId = 1;</code>
      */
     public Builder setOrderId(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       orderId_ = value;
@@ -715,9 +715,9 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Session2 session_ = null;
+    private com.xxx.userservice.proto.Session2 session_ = null;
     private com.google.protobuf.SingleFieldBuilderV3<
-        Session2, Session2.Builder, Session2OrBuilder> sessionBuilder_;
+        com.xxx.userservice.proto.Session2, com.xxx.userservice.proto.Session2.Builder, com.xxx.userservice.proto.Session2OrBuilder> sessionBuilder_;
     /**
      * <code>.Session2 session = 3;</code>
      */
@@ -727,9 +727,9 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.Session2 session = 3;</code>
      */
-    public Session2 getSession() {
+    public com.xxx.userservice.proto.Session2 getSession() {
       if (sessionBuilder_ == null) {
-        return session_ == null ? Session2.getDefaultInstance() : session_;
+        return session_ == null ? com.xxx.userservice.proto.Session2.getDefaultInstance() : session_;
       } else {
         return sessionBuilder_.getMessage();
       }
@@ -737,7 +737,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.Session2 session = 3;</code>
      */
-    public Builder setSession(Session2 value) {
+    public Builder setSession(com.xxx.userservice.proto.Session2 value) {
       if (sessionBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -754,7 +754,7 @@ private static final long serialVersionUID = 0L;
      * <code>.Session2 session = 3;</code>
      */
     public Builder setSession(
-        Session2.Builder builderForValue) {
+        com.xxx.userservice.proto.Session2.Builder builderForValue) {
       if (sessionBuilder_ == null) {
         session_ = builderForValue.build();
         onChanged();
@@ -767,11 +767,11 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.Session2 session = 3;</code>
      */
-    public Builder mergeSession(Session2 value) {
+    public Builder mergeSession(com.xxx.userservice.proto.Session2 value) {
       if (sessionBuilder_ == null) {
         if (session_ != null) {
           session_ =
-            Session2.newBuilder(session_).mergeFrom(value).buildPartial();
+            com.xxx.userservice.proto.Session2.newBuilder(session_).mergeFrom(value).buildPartial();
         } else {
           session_ = value;
         }
@@ -799,7 +799,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.Session2 session = 3;</code>
      */
-    public Session2.Builder getSessionBuilder() {
+    public com.xxx.userservice.proto.Session2.Builder getSessionBuilder() {
       
       onChanged();
       return getSessionFieldBuilder().getBuilder();
@@ -807,23 +807,23 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.Session2 session = 3;</code>
      */
-    public Session2OrBuilder getSessionOrBuilder() {
+    public com.xxx.userservice.proto.Session2OrBuilder getSessionOrBuilder() {
       if (sessionBuilder_ != null) {
         return sessionBuilder_.getMessageOrBuilder();
       } else {
         return session_ == null ?
-            Session2.getDefaultInstance() : session_;
+            com.xxx.userservice.proto.Session2.getDefaultInstance() : session_;
       }
     }
     /**
      * <code>.Session2 session = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        Session2, Session2.Builder, Session2OrBuilder>
+        com.xxx.userservice.proto.Session2, com.xxx.userservice.proto.Session2.Builder, com.xxx.userservice.proto.Session2OrBuilder> 
         getSessionFieldBuilder() {
       if (sessionBuilder_ == null) {
         sessionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            Session2, Session2.Builder, Session2OrBuilder>(
+            com.xxx.userservice.proto.Session2, com.xxx.userservice.proto.Session2.Builder, com.xxx.userservice.proto.Session2OrBuilder>(
                 getSession(),
                 getParentForChildren(),
                 isClean());
@@ -832,22 +832,22 @@ private static final long serialVersionUID = 0L;
       return sessionBuilder_;
     }
 
-    private java.util.List<OrderItem2> items_ =
+    private java.util.List<com.xxx.userservice.proto.OrderItem2> items_ =
       java.util.Collections.emptyList();
     private void ensureItemsIsMutable() {
       if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-        items_ = new java.util.ArrayList<OrderItem2>(items_);
+        items_ = new java.util.ArrayList<com.xxx.userservice.proto.OrderItem2>(items_);
         bitField0_ |= 0x00000008;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        OrderItem2, OrderItem2.Builder, OrderItem2OrBuilder> itemsBuilder_;
+        com.xxx.userservice.proto.OrderItem2, com.xxx.userservice.proto.OrderItem2.Builder, com.xxx.userservice.proto.OrderItem2OrBuilder> itemsBuilder_;
 
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public java.util.List<OrderItem2> getItemsList() {
+    public java.util.List<com.xxx.userservice.proto.OrderItem2> getItemsList() {
       if (itemsBuilder_ == null) {
         return java.util.Collections.unmodifiableList(items_);
       } else {
@@ -867,7 +867,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public OrderItem2 getItems(int index) {
+    public com.xxx.userservice.proto.OrderItem2 getItems(int index) {
       if (itemsBuilder_ == null) {
         return items_.get(index);
       } else {
@@ -878,7 +878,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .OrderItem2 items = 4;</code>
      */
     public Builder setItems(
-        int index, OrderItem2 value) {
+        int index, com.xxx.userservice.proto.OrderItem2 value) {
       if (itemsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -895,7 +895,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .OrderItem2 items = 4;</code>
      */
     public Builder setItems(
-        int index, OrderItem2.Builder builderForValue) {
+        int index, com.xxx.userservice.proto.OrderItem2.Builder builderForValue) {
       if (itemsBuilder_ == null) {
         ensureItemsIsMutable();
         items_.set(index, builderForValue.build());
@@ -908,7 +908,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public Builder addItems(OrderItem2 value) {
+    public Builder addItems(com.xxx.userservice.proto.OrderItem2 value) {
       if (itemsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -925,7 +925,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .OrderItem2 items = 4;</code>
      */
     public Builder addItems(
-        int index, OrderItem2 value) {
+        int index, com.xxx.userservice.proto.OrderItem2 value) {
       if (itemsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -942,7 +942,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .OrderItem2 items = 4;</code>
      */
     public Builder addItems(
-        OrderItem2.Builder builderForValue) {
+        com.xxx.userservice.proto.OrderItem2.Builder builderForValue) {
       if (itemsBuilder_ == null) {
         ensureItemsIsMutable();
         items_.add(builderForValue.build());
@@ -956,7 +956,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .OrderItem2 items = 4;</code>
      */
     public Builder addItems(
-        int index, OrderItem2.Builder builderForValue) {
+        int index, com.xxx.userservice.proto.OrderItem2.Builder builderForValue) {
       if (itemsBuilder_ == null) {
         ensureItemsIsMutable();
         items_.add(index, builderForValue.build());
@@ -970,7 +970,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .OrderItem2 items = 4;</code>
      */
     public Builder addAllItems(
-        Iterable<? extends OrderItem2> values) {
+        java.lang.Iterable<? extends com.xxx.userservice.proto.OrderItem2> values) {
       if (itemsBuilder_ == null) {
         ensureItemsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -1010,14 +1010,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public OrderItem2.Builder getItemsBuilder(
+    public com.xxx.userservice.proto.OrderItem2.Builder getItemsBuilder(
         int index) {
       return getItemsFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public OrderItem2OrBuilder getItemsOrBuilder(
+    public com.xxx.userservice.proto.OrderItem2OrBuilder getItemsOrBuilder(
         int index) {
       if (itemsBuilder_ == null) {
         return items_.get(index);  } else {
@@ -1027,7 +1027,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public java.util.List<? extends OrderItem2OrBuilder>
+    public java.util.List<? extends com.xxx.userservice.proto.OrderItem2OrBuilder> 
          getItemsOrBuilderList() {
       if (itemsBuilder_ != null) {
         return itemsBuilder_.getMessageOrBuilderList();
@@ -1038,31 +1038,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public OrderItem2.Builder addItemsBuilder() {
+    public com.xxx.userservice.proto.OrderItem2.Builder addItemsBuilder() {
       return getItemsFieldBuilder().addBuilder(
-          OrderItem2.getDefaultInstance());
+          com.xxx.userservice.proto.OrderItem2.getDefaultInstance());
     }
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public OrderItem2.Builder addItemsBuilder(
+    public com.xxx.userservice.proto.OrderItem2.Builder addItemsBuilder(
         int index) {
       return getItemsFieldBuilder().addBuilder(
-          index, OrderItem2.getDefaultInstance());
+          index, com.xxx.userservice.proto.OrderItem2.getDefaultInstance());
     }
     /**
      * <code>repeated .OrderItem2 items = 4;</code>
      */
-    public java.util.List<OrderItem2.Builder>
+    public java.util.List<com.xxx.userservice.proto.OrderItem2.Builder> 
          getItemsBuilderList() {
       return getItemsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        OrderItem2, OrderItem2.Builder, OrderItem2OrBuilder>
+        com.xxx.userservice.proto.OrderItem2, com.xxx.userservice.proto.OrderItem2.Builder, com.xxx.userservice.proto.OrderItem2OrBuilder> 
         getItemsFieldBuilder() {
       if (itemsBuilder_ == null) {
         itemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            OrderItem2, OrderItem2.Builder, OrderItem2OrBuilder>(
+            com.xxx.userservice.proto.OrderItem2, com.xxx.userservice.proto.OrderItem2.Builder, com.xxx.userservice.proto.OrderItem2OrBuilder>(
                 items_,
                 ((bitField0_ & 0x00000008) == 0x00000008),
                 getParentForChildren(),
@@ -1071,13 +1071,13 @@ private static final long serialVersionUID = 0L;
       }
       return itemsBuilder_;
     }
-    @Override
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -1088,18 +1088,18 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:Order2)
-  private static final Order2 DEFAULT_INSTANCE;
+  private static final com.xxx.userservice.proto.Order2 DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new Order2();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.Order2();
   }
 
-  public static Order2 getDefaultInstance() {
+  public static com.xxx.userservice.proto.Order2 getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<Order2>
       PARSER = new com.google.protobuf.AbstractParser<Order2>() {
-    @Override
+    @java.lang.Override
     public Order2 parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1112,13 +1112,13 @@ private static final long serialVersionUID = 0L;
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<Order2> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public Order2 getDefaultInstanceForType() {
+  @java.lang.Override
+  public com.xxx.userservice.proto.Order2 getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

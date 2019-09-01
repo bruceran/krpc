@@ -419,11 +419,7 @@ public class DefaultValidator implements Validator {
 
     static class DateValidator implements FieldValidator {
 
-        ThreadLocal<SimpleDateFormat> f = new ThreadLocal<SimpleDateFormat>() {
-            public SimpleDateFormat initialValue() {
-                return new SimpleDateFormat("yyyy-MM-dd");
-            }
-        };
+        static ThreadLocal<SimpleDateFormat> f = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd"));
 
         public boolean validate(Object v) {
             String s = v.toString();
@@ -438,11 +434,7 @@ public class DefaultValidator implements Validator {
 
     static class TimestampValidator implements FieldValidator {
 
-        ThreadLocal<SimpleDateFormat> f = new ThreadLocal<SimpleDateFormat>() {
-            public SimpleDateFormat initialValue() {
-                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            }
-        };
+        static ThreadLocal<SimpleDateFormat> f = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
         public boolean validate(Object v) {
             String s = v.toString();

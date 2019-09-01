@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static krpc.rpc.web.WebConstants.*;
@@ -107,7 +108,7 @@ public class DefaultRpcDataConverter implements RpcDataConverter {
     }
 
     public void parseData(WebContextData ctx, Message message, DefaultWebRes res) {
-        HashMap<String, Object> results = new HashMap<>();
+        HashMap<String, Object> results = new LinkedHashMap<>();
         MessageToMap.parseMessage(message, results);
         res.setResults(results);
     }

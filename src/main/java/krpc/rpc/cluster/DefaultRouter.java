@@ -1,6 +1,5 @@
 package krpc.rpc.cluster;
 
-import com.google.protobuf.Message;
 import krpc.rpc.core.ClientContextData;
 import krpc.rpc.core.DynamicRouteConfig.RouteRule;
 import krpc.rpc.util.IpUtils;
@@ -24,8 +23,9 @@ public class DefaultRouter implements Router {
 
     public DefaultRouter(int serviceId, String application) {
 
-        conditionParser = new RouterExprParser("host,application,msgId");
-        targetParser = new RouterExprParser("host,addr");
+//        conditionParser = new RouterExprParser("host,application,msgId,dyeing"); // 允许所有
+        conditionParser = new RouterExprParser(); // 允许所有key
+        targetParser = new RouterExprParser("host,addr"); // 只允许 host addr
 
         host = IpUtils.localIp();
         matchData.put("application", application);
@@ -38,7 +38,16 @@ public class DefaultRouter implements Router {
             return;
         }
 
-        Collections.sort(params);
+        boolean allZero = true;
+        for (RouteRule rr : params) {
+            if( rr.getPriority() != 0 ) {
+                allZero = false;
+            }
+        }
+
+        if( !allZero ) {
+            Collections.sort(params);
+        }
 
         List<Rule> rules = new ArrayList<>(params.size());
         for (RouteRule rr : params) {
@@ -50,12 +59,35 @@ public class DefaultRouter implements Router {
         rulesList.set(rules);
     }
 
-    public List<Addr> select(List<Addr> addrs, ClientContextData ctx, Map<String,Object> req) {
-        int msgId = ctx.getMeta().getMsgId();
-        return select(addrs, msgId);
+    public boolean needReqInfo(int serviceId,int msgId) {
+        return false; // todo
     }
 
-    List<Addr> select(List<Addr> addrs, int msgId) {
+    public List<Addr> select(List<Addr> addrs, ClientContextData ctx, Map<String,Object> req) {
+        int msgId = ctx.getMeta().getMsgId();
+
+        Map<String,String> dynamicMap = new HashMap<>();
+
+//        if( req != null ) { // todo
+//                    dynamicMap.putAll(req);
+//        }
+
+        Map<String,String> tags = ctx.getTraceContext().getTagsMapForRpc();
+        if( tags != null ) {
+            dynamicMap.putAll(tags);
+        }
+
+        String dyeing = ctx.getTraceContext().getTrace().getDyeing();
+        if( dyeing != null && !dyeing.isEmpty() ) {
+            dynamicMap.put("dyeing", dyeing);
+        }
+
+        dynamicMap.put("msgId",String.valueOf(msgId));
+
+        return select(addrs, dynamicMap);
+    }
+
+    List<Addr> select(List<Addr> addrs, Map<String,String> req) {
 
         List<Rule> rules = rulesList.get();
 
@@ -64,8 +96,8 @@ public class DefaultRouter implements Router {
 
         boolean[] matchFlag = new boolean[addrs.size()];
         for (Rule r : rules) {
-            if (r.match(addrs, matchFlag, msgId)) {
-                break;
+            if (r.match(addrs, matchFlag, req)) {
+                break;  // 返回true, 表明规则匹配，已做好matchFlag标志； 无需再做下一个规则匹配
             }
         }
 
@@ -82,7 +114,7 @@ public class DefaultRouter implements Router {
     Rule toRule(RouteRule rr) {
         String from = rr.getFrom();
         Condition condition = new Condition(conditionParser, matchData, from);
-        if (!condition.isUseful()) {
+        if (!condition.hasDynamicConditions()) {
             return null;
         }
 
@@ -108,8 +140,8 @@ public class DefaultRouter implements Router {
             }
         }
 
-        boolean match(List<Addr> addrs, boolean[] matchFlag, int msgId) {
-            if (!condition.match(msgId)) return false;
+        boolean match(List<Addr> addrs, boolean[] matchFlag, Map<String,String> values) {
+            if (!condition.match(values)) return false;
             if (target == null) return false; // invalid target expr or empty expr
 
             for (int i = 0; i < addrs.size(); ++i) {
@@ -150,20 +182,25 @@ public class DefaultRouter implements Router {
             }
         }
 
-        boolean isUseful() {
+        boolean hasDynamicConditions() {
             if (expr == null) return true;
             Set<String> keys = new HashSet<>();
             expr.getKeys(keys);
-            boolean hasMsgId = keys.contains("msgId");
-            if (hasMsgId) return true;
+
+            for(String key: keys) {
+                if( !key.equals("host") && !key.equals("application") ) {
+                    return true;
+                }
+            }
+
             return expr.eval(matchData);
         }
 
-        boolean match(int msgId) {
+        boolean match(Map<String,String> values) {
             if (expr == null) return true;
             Map<String, String> newMatchData = new HashMap<>();
             newMatchData.putAll(matchData);
-            newMatchData.put("msgId", String.valueOf(msgId));
+            newMatchData.putAll(values);
             return expr.eval(newMatchData);
         }
     }

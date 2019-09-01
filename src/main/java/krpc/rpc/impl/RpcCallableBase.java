@@ -6,6 +6,7 @@ import io.netty.buffer.Unpooled;
 import krpc.common.*;
 import krpc.rpc.core.*;
 import krpc.rpc.core.proto.RpcMeta;
+import krpc.rpc.util.IpUtils;
 import krpc.trace.Span;
 import krpc.trace.Trace;
 import krpc.trace.TraceContext;
@@ -16,6 +17,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class RpcCallableBase implements TransportCallback, DataManagerCallback, RpcCallable, Continue<RpcClosure>,
         InitClose, StartStop, AlarmAware, DumpPlugin, HealthPlugin {
@@ -56,8 +58,9 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
     Alarm alarm = new DummyAlarm();
 
-    AtomicInteger errorCount = new AtomicInteger();
-    AtomicInteger lastErrorCount = new AtomicInteger();
+    ConcurrentHashMap<Integer,Integer> noConnServiceIds = new ConcurrentHashMap<>();
+    AtomicReference<List<HealthStatus>> lastHealthStatusList = new AtomicReference<>();
+
     AtomicInteger queueFullErrorCount = new AtomicInteger();
     AtomicInteger lastQueueFullErrorCount = new AtomicInteger();
 
@@ -220,7 +223,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
                 }
             }
 
-            errorCount.incrementAndGet();
+            noConnServiceIds.put(serviceId,1);
+            //errorCount.incrementAndGet();
             endCall(closure, RetCodes.NO_CONNECTION);
             return future;
         }
@@ -309,7 +313,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 //                }
 //            }
 
-            errorCount.incrementAndGet();
+            noConnServiceIds.put(serviceId,1);
+            //errorCount.incrementAndGet();
             endCall(closure, RetCodes.NO_CONNECTION);
             return future;
         }
@@ -341,6 +346,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         Trace.inject(tctx, span, traceBuilder);
         traceBuilder.setPeers(tctx.getTrace().getPeers());
         traceBuilder.setSampleFlag(tctx.getTrace().getSampleFlag());
+        traceBuilder.setDyeing(tctx.getTrace().getDyeing());
         return traceBuilder.build();
     }
 
@@ -557,7 +563,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         } catch (Exception e) {
             queueFullErrorCount.incrementAndGet();
             sendErrorResponse(ctx, data.asMessage(), RetCodes.QUEUE_FULL);
-            log.error("queue is full");
+            log.error("queue is full, e="+e.getMessage());
             return;
         }
     }
@@ -723,8 +729,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             }
         }
 
-        String status = !RetCodes.isSystemError(retCode) ? "SUCCESS" : "ERROR";
-        closure.asServerCtx().getTraceContext().stopForServer(status);
+        closure.asServerCtx().getTraceContext().stopForServer(retCode);
 
         if (monitorService == null) return;
         RpcMeta meta = closure.getCtx().getMeta();
@@ -739,8 +744,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     }
 
     void endReq(RpcClosure closure) {
-        String status = !RetCodes.isSystemError(closure.getRetCode()) ? "SUCCESS" : "ERROR";
-        closure.asServerCtx().getTraceContext().stopForServer(status);
+        closure.asServerCtx().getTraceContext().stopForServer(closure.getRetCode(),closure.getRetMsg());
 
         if (monitorService == null) return;
         monitorService.reqDone(closure);
@@ -870,18 +874,24 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     @Override
     public void dump(Map<String, Object> metrics) {
 
-        int n = errorCount.getAndSet(0);
-        lastErrorCount.set(n);
-        metrics.put("krpc.client.curErrorCount",n);
-        if( n > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_RPCSERVER,"krpc no connection");
+        List<HealthStatus> healthStatusList = new ArrayList<>();
+        for(int serviceId: noConnServiceIds.keySet()) {
+            String port = serviceId >= 1000 ? "2"+serviceId : "7" + serviceId;
+            String alarmId = serviceId + "002";
+            String targetAddr = serviceId+":*:"+port;
+            String msg = "no krpc connection from " + alarm.getAlarmPrefix();
+            alarm.alarm4rpc(alarmId,msg,"rpc",targetAddr);
+            HealthStatus healthStatus = new HealthStatus(alarmId, false, msg,"rpc",targetAddr);
+            healthStatusList.add(healthStatus);
         }
+        noConnServiceIds.clear();
+        lastHealthStatusList.set(healthStatusList);
 
         int n2 = queueFullErrorCount.getAndSet(0);
         lastQueueFullErrorCount.set(n2);
         metrics.put("krpc.server.queueFullErrorCount",n2);
         if( n2 > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_QUEUEFULL,"krpc queue is full");
+            alarm.alarm(Alarm.ALARM_TYPE_QUEUEFULL,"krpc queue is full","rpcqueue",IpUtils.localIp());
         }
 
         for (Object o : resources) {
@@ -898,17 +908,15 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     @Override
     public void healthCheck(List<HealthStatus> list) {
 
-        int n = lastErrorCount.get();
-        if( n > 0 ) {
-            String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_RPCSERVER);
-            HealthStatus healthStatus = new HealthStatus(alarmId, false, "no krpc connection");
-            list.add(healthStatus);
+        List<HealthStatus> healthStatusList = lastHealthStatusList.get();
+        if( healthStatusList != null && healthStatusList.size() > 0 ) {
+            list.addAll(healthStatusList);
         }
 
         int n2 = lastQueueFullErrorCount.get();
         if( n2 > 0 ) {
             String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_QUEUEFULL);
-            HealthStatus healthStatus = new HealthStatus(alarmId, false, "krpc queue is full");
+            HealthStatus healthStatus = new HealthStatus(alarmId, false, "krpc queue is full","rpcqueue",IpUtils.localIp());
             list.add(healthStatus);
         }
 

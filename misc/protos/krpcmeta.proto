@@ -20,6 +20,7 @@ message RpcMeta {
 	    string spanId = 4;
 	    string tags = 5; // key/value pairs passing in the chain, format: k1=v1&k2=v2&...
 	    int32 sampleFlag = 6; //  0=default(yes) 1=force 2=no
+		string dyeing = 7;
     }
 
     Direction direction = 1;
@@ -33,11 +34,11 @@ message RpcMeta {
     int32 compress = 9; // compress type, 0=no compress, 1=gzip 2=snappy
 	int32 encrypt = 10;
 
+	
 /*
     signature fields
-    encrypt fields
-    stressFlag
     clientId
 */
+
 
 };

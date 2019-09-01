@@ -5,5 +5,8 @@ public interface MonitorService {
 
     void callDone(RpcClosure closure); // ctx/req/res not null
 
-    void reportAlarm(String type,String msg); // alarm
+    void reportAlarm(String type, String msg); // alarm
+
+    void reportAlarm(String type, String msg, String target, String addrs); // alarm
+
 }

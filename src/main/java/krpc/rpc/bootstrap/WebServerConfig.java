@@ -40,6 +40,8 @@ public class WebServerConfig {
     String defaultSessionService = "memorysessionservice";
     List<String> pluginParams = new ArrayList<>(); // config WebPlugins if needed
 
+    boolean allowDynamicUrls = false;
+
     public WebServerConfig addPluginParams(String params) {
         pluginParams.add(params);
         return this;
@@ -292,5 +294,15 @@ public class WebServerConfig {
 
     public boolean isCaseSensitive() {
         return caseSensitive;
+    }
+
+
+    public boolean isAllowDynamicUrls() {
+        return allowDynamicUrls;
+    }
+
+    public WebServerConfig setAllowDynamicUrls(boolean allowDynamicUrls) {
+        this.allowDynamicUrls = allowDynamicUrls;
+        return this;
     }
 }

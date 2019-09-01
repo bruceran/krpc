@@ -197,7 +197,7 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
         boolean b = healthy.get();
         if( b ) return;
         String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
-        list.add(new HealthStatus(alarmId,false,"zk_registry connect failed"));
+        list.add(new HealthStatus(alarmId,false,"zk_registry connect failed","zookeeper",addrs.replaceAll(",","#")));
     }
 
 
@@ -206,7 +206,7 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
         boolean b = healthy.get();
         if( b ) return;
 
-        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"zk_registry has exception");
+        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"zk_registry connect failed","zookeeper",addrs.replaceAll(",","#"));
         metrics.put("krpc.consul.errorCount",1);
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema  xmlns="http://www.w3.org/2001/XMLSchema" 
+<schema  xmlns="http://www.w3.org/2001/XMLSchema"
             xmlns:beans="http://www.springframework.org/schema/beans"
             xmlns:krpc="http://krpc.org/schema/krpc"
             targetNamespace="http://krpc.org/schema/krpc">
@@ -18,7 +18,8 @@
               <attribute name="fallbackPlugin" type="string" use="optional"/>
               <attribute name="delayStart" type="string" use="optional"/>
               <attribute name="sampleRate" type="string" use="optional"/>
-	    </complexType>    
+              <attribute name="enablePostmanExport" type="string" use="optional"/>
+        </complexType>
     </element>
 
     <element name="registry">
@@ -30,20 +31,20 @@
               <attribute name="enableDiscover" type="string" use="optional"/>
               <attribute name="aclToken" type="string" use="optional"/>
               <attribute name="params" type="string" use="optional"/>
-	    </complexType>    
+	    </complexType>
     </element>
-    
+
 	<element name="plugin">
 	    <complexType>
               <attribute name="params" type="string" use="optional"/>
-	    </complexType>    
+	    </complexType>
     </element>
-        
+
     <element name="client">
 	    <complexType>
 			  <sequence minOccurs="0" maxOccurs="unbounded">
 		            <element ref="krpc:plugin" minOccurs="0" maxOccurs="unbounded"/>
-		      </sequence>	  	 	    
+		      </sequence>
               <attribute name="id" type="string" use="optional"/>
               <attribute name="pingSeconds" type="string" use="optional"/>
               <attribute name="maxPackageSize" type="string" use="optional"/>
@@ -62,14 +63,14 @@
               <attribute name="nativeNetty" type="string" use="optional"/>
               <attribute name="enableEncrypt" type="string" use="optional"/>
               <attribute name="exchangeServiceIds" type="string" use="optional"/>
-	    </complexType>    
+	    </complexType>
     </element>
-	
+
     <element name="server">
 	    <complexType>
 			  <sequence minOccurs="0" maxOccurs="unbounded">
 		            <element ref="krpc:plugin" minOccurs="0" maxOccurs="unbounded"/>
-		      </sequence>	  	 	    
+		      </sequence>
               <attribute name="id" type="string" use="optional"/>
               <attribute name="port" type="string" use="optional"/>
               <attribute name="host" type="string" use="optional"/>
@@ -89,14 +90,14 @@
               <attribute name="nativeNetty" type="string" use="optional"/>
               <attribute name="enableEncrypt" type="string" use="optional"/>
               <attribute name="exchangeServiceIds" type="string" use="optional"/>
-	    </complexType>    
+	    </complexType>
     </element>
 
     <element name="webserver">
 	    <complexType>
 			  <sequence minOccurs="0" maxOccurs="unbounded">
 		            <element ref="krpc:plugin" minOccurs="0" maxOccurs="unbounded"/>
-		      </sequence>	  	    
+		      </sequence>
               <attribute name="id" type="string" use="optional"/>
               <attribute name="port" type="string" use="optional"/>
               <attribute name="host" type="string" use="optional"/>
@@ -122,9 +123,10 @@
               <attribute name="maxContentLength" type="string" use="optional"/>
               <attribute name="maxUploadLength" type="string" use="optional"/>
               <attribute name="nativeNetty" type="string" use="optional"/>
-	    </complexType>    
+              <attribute name="allowDynamicUrls" type="string" use="optional"/>
+	    </complexType>
     </element>
-    
+
     <element name="method">
 	    <complexType>
               <attribute name="pattern" type="string" use="optional"/>
@@ -133,14 +135,14 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-	    </complexType>    
+	    </complexType>
     </element>
 
  	<element name="service">
 	    <complexType>
               <sequence minOccurs="0" maxOccurs="unbounded">
 		            <element ref="krpc:method" minOccurs="0" maxOccurs="unbounded"/>
-		      </sequence>	    
+		      </sequence>
               <attribute name="id" type="string" use="optional"/>
               <attribute name="interfaceName" type="string" use="optional"/>
               <attribute name="impl" type="string" use="optional"/>
@@ -151,14 +153,14 @@
               <attribute name="threads" type="string" use="optional"/>
               <attribute name="maxThreads" type="string" use="optional"/>
               <attribute name="queueSize" type="string" use="optional"/>
-	    </complexType>    
+	    </complexType>
     </element>
 
  	<element name="referer">
-	    <complexType>   
+	    <complexType>
               <sequence minOccurs="0" maxOccurs="unbounded">
 		            <element ref="krpc:method" minOccurs="0" maxOccurs="unbounded"/>
-		      </sequence>	  	    
+		      </sequence>
               <attribute name="id" type="string" use="optional"/>
               <attribute name="interfaceName" type="string" use="optional"/>
               <attribute name="serviceId" type="string" use="optional"/>
@@ -179,14 +181,14 @@
               <attribute name="breakerCloseRate" type="string" use="optional"/>
               <attribute name="breakerSleepSeconds" type="string" use="optional"/>
               <attribute name="breakerSuccMills" type="string" use="optional"/>
-	    </complexType>    
+	    </complexType>
     </element>
 
     <element name="monitor">
 	    <complexType>
 			  <sequence minOccurs="0" maxOccurs="unbounded">
 		            <element ref="krpc:plugin" minOccurs="0" maxOccurs="unbounded"/>
-		      </sequence>	  	    
+		      </sequence>
               <attribute name="accessLog" type="string" use="optional"/>
               <attribute name="logThreads" type="string" use="optional"/>
               <attribute name="logQueueSize" type="string" use="optional"/>
@@ -199,8 +201,8 @@
               <attribute name="selfCheckPort" type="string" use="optional"/>
               <attribute name="tags" type="string" use="optional"/>
               <attribute name="maxFieldSizeToLog" type="string" use="optional"/>
-	    </complexType>    
+	    </complexType>
     </element>
-    
+
 </schema>
 

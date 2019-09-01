@@ -86,10 +86,6 @@ public interface RpcMetaOrBuilder extends
   int getCompress();
 
   /**
-   * <pre>
-   * encrypt type, 0=no encrypt, 1=aes encrypt
-   * </pre>
-   *
    * <code>int32 encrypt = 10;</code>
    */
   int getEncrypt();

@@ -1,11 +1,15 @@
 package krpc.rpc.monitor;
 
+import com.google.protobuf.Descriptors;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
+import krpc.common.Json;
 import krpc.rpc.core.ReflectionUtils;
+import krpc.rpc.util.MessageToJson;
 import krpc.rpc.util.MessageToMap;
+import krpc.rpc.util.TypeSafe;
 import krpc.rpc.web.WebMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +134,48 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
         void printField(FieldDescriptor field, Object value, Appender appender, Level level)
                 throws IOException {
 
-            if (field.isRepeated()) {
+            if (field.isMapField()) {
+
+                if (!level.isFirst()) {
+                    appender.appendSep(level.level);
+                }
+                level.setFirst(false);
+
+                appender.appendKey(field.getName());
+                appender.appendSep9();
+                appender.appendString("{");
+
+                Descriptors.Descriptor type = field.getMessageType();
+                FieldDescriptor keyField = type.findFieldByName("key");
+                FieldDescriptor valueField = type.findFieldByName("value");
+
+                int n = 0;
+                for (Object element : (List<?>) value) {
+
+                    if( n > 0 ) {
+                        appender.appendSep(2);
+                    }
+
+                    Message entry = (Message)element;
+                    Object entryKey = entry.getField(keyField);
+                    Object entryValue = entry.getField(valueField);
+
+                    appender.appendKey(TypeSafe.anyToString(entryKey));
+                    appender.appendSep9();
+
+                    if( entryValue instanceof Message ) {
+                        String s = escapeText(MessageToJson.toJson((Message)entryValue),maxFieldSizeToLog);
+                        appender.appendString(s);
+                    } else {
+                        appender.appendString(TypeSafe.anyToString(entryValue)); // 如果有对象嵌套，这里打的日志信息不全
+                    }
+
+                    n++;
+                }
+
+                appender.appendString("}");
+
+            } else if (field.isRepeated()) {
 
                 if (!level.isFirst()) {
                     appender.appendSep(level.level);
@@ -313,6 +358,19 @@ public class SimpleLogFormatter extends AbstractLogFormatter {
 
             if (value instanceof Map) {
                 if (level.level + 1 > maxLevels) {
+                    String s = Json.toJson(value);
+                    if( s != null ) {
+
+                        if (!level.isFirst()) {
+                            appender.appendSep(level.level);
+                        }
+                        level.setFirst(false);
+
+                        appender.appendKey(key);
+                        appender.appendSep9();
+                        s = escapeText(s, maxFieldSizeToLog);
+                        appender.appendString(s);
+                    }
                     return;
                 }
             }

@@ -8,6 +8,7 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 import krpc.common.*;
 import krpc.rpc.core.*;
 import krpc.rpc.core.proto.RpcMeta;
+import krpc.rpc.util.IpUtils;
 import krpc.rpc.util.TypeSafe;
 import krpc.rpc.util.TypeSafeMap;
 import krpc.rpc.web.*;
@@ -124,6 +125,11 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         String clientTraceId = getClientTraceId(req);
         if (!isEmpty(clientTraceId)) {
             traceBuilder.setTags("x-trace-id=" + clientTraceId);
+        }
+
+        String dyeing = getDyeing(req);
+        if (!isEmpty(dyeing)) {
+            traceBuilder.setDyeing(dyeing);
         }
 
         RpcMeta.Trace trace = traceBuilder.build();
@@ -506,7 +512,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         } catch (Exception e) {
             queueFullErrorCount.incrementAndGet();
             sendErrorResponse(ctx, req, RetCodes.QUEUE_FULL);
-            log.error("queue is full");
+            log.error("queue is full, e="+e.getMessage());
             return;
         }
     }
@@ -544,13 +550,13 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
             callServiceEnd(ctx, req, closure);
         } catch (Exception e) {
             String traceId = "no_trace_id";
-            if( Trace.currentContext() != null && Trace.currentContext().getTrace() != null )
-                traceId  = Trace.currentContext().getTrace().getTraceId();
-            log.error("callService exception, traceId="+traceId, e);
+            if (Trace.currentContext() != null && Trace.currentContext().getTrace() != null)
+                traceId = Trace.currentContext().getTrace().getTraceId();
+            log.error("callService exception, traceId=" + traceId, e);
             Trace.logException(e);
             // sendErrorResponse(ctx, req, RetCodes.BUSINESS_ERROR);
-            String msg = RetCodes.retCodeText(RetCodes.BUSINESS_ERROR)+" in ("+ctx.getMeta().getServiceId()+")";
-            sendErrorResponse(ctx, req, RetCodes.BUSINESS_ERROR,msg);
+            String msg = RetCodes.retCodeText(RetCodes.BUSINESS_ERROR) + " in (" + ctx.getMeta().getServiceId() + ")";
+            sendErrorResponse(ctx, req, RetCodes.BUSINESS_ERROR, msg);
         }
     }
 
@@ -577,7 +583,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
             }
         }
 
-        ctx.setAttribute("pendingReq",msgReq);
+        ctx.setAttribute("pendingReq", msgReq);
         Message res = (Message) method.invoke(object, new Object[]{msgReq});
         return res;
     }
@@ -588,7 +594,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         if (retCode > 0)
             throw new RuntimeException("retCode>0 is not allowed");
 
-        if( !ctx.setReplied() ) return;
+        if (!ctx.setReplied()) return;
 
         DefaultWebRes res = new DefaultWebRes(req, 200);
         rpcDataConverter.parseData(ctx, closure.asResMessage(), res);
@@ -662,21 +668,21 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
     void addRetrier(WebContextData ctx) {
         try {
             String maxTimesStr = ctx.getRoute().getAttribute("retrierMaxTimes");
-            if( maxTimesStr == null) {
+            if (maxTimesStr == null) {
                 return;
             }
             String waitSecondsStr = ctx.getRoute().getAttribute("retrierWaitSeconds");
-            if( waitSecondsStr == null ) {
+            if (waitSecondsStr == null) {
                 return;
             }
             int maxTimes = Integer.parseInt(maxTimesStr);
             String[] ss = waitSecondsStr.split(",");
-            int[]  waitSeconds = new int[ss.length];
-            for(int i=0;i<ss.length;++i) {
+            int[] waitSeconds = new int[ss.length];
+            for (int i = 0; i < ss.length; ++i) {
                 waitSeconds[i] = Integer.parseInt(ss[i]);
             }
-            ClientContext.setRetrier(maxTimes,waitSeconds);
-        } catch(Throwable e) {
+            ClientContext.setRetrier(maxTimes, waitSeconds);
+        } catch (Throwable e) {
             log.error("retrier config not correct");
         }
     }
@@ -737,6 +743,19 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
             }
         }
 
+        // 动态返回文件路径也支持断点续传
+        if( res.getResults().containsKey(WebConstants.DOWNLOAD_FILE_FIELD) ) {
+            String file = (String)res.getResults().get(WebConstants.DOWNLOAD_FILE_FIELD);
+            File f = new File(file);
+            if( f.exists() ) {
+                String range = checkPartial(req, f);
+                if (range != null) {
+                    res.setHttpCode(206);
+                    res.getResults().put(WebConstants.DOWNLOAD_FILE_RANGE_FIELD, range);
+                }
+            }
+        }
+
         httpTransport.send(ctx.getConnId(), res);
 
         res.setRetCode(retCode); // may be removed by plugin
@@ -744,8 +763,8 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         WebClosure closure = new WebClosure(ctx, req, res);
         ctx.end();
 
-        String status = !RetCodes.isSystemError(res.getRetCode())  ? "SUCCESS" : "ERROR";
-        ctx.getTraceContext().stopForServer(status);
+        //状态判断修改
+        ctx.getTraceContext().stopForServer(retCode,retMsg);
 
         if (monitorService != null)
             monitorService.webReqDone(closure);
@@ -779,7 +798,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
 
     void parseJsonContent(DefaultWebReq req) {
         String contentType = req.getContentType();
-        if (!isEmpty(contentType) && contentType.equals(MIMETYPE_JSON) && !isEmpty(req.getContent())) {
+        if (!isEmpty(contentType) && contentType.equals(MIMETYPE_JSON_NO_CHARSET) && !isEmpty(req.getContent())) {
             Map<String, Object> map = Json.toMap(req.getContent());
             if (map != null) {
                 req.getParameters().putAll(map);
@@ -811,7 +830,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
                     String name = WebUtils.toHeaderName(name0);
                     String value = results.stringValue(key);
                     res.setHeader(name, value);
-                    if( removeKeys == null ) removeKeys = new ArrayList<>();
+                    if (removeKeys == null) removeKeys = new ArrayList<>();
                     removeKeys.add(key);
                 }
             }
@@ -820,13 +839,13 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
                 if (!name.equals(sessionIdCookieName)) {
                     String value = results.stringValue(key);
                     res.addCookie(name, value);
-                    if( removeKeys == null ) removeKeys = new ArrayList<>();
+                    if (removeKeys == null) removeKeys = new ArrayList<>();
                     removeKeys.add(key);
                 }
             }
         }
-        if( removeKeys != null ) {
-            for(String key:removeKeys) {
+        if (removeKeys != null) {
+            for (String key : removeKeys) {
                 results.remove(key);
             }
         }
@@ -873,9 +892,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
     void renderToJson(WebContextData ctx, DefaultWebReq req, DefaultWebRes res) {
         res.setContentType(MIMETYPE_JSON);
         Map<String, Object> m = res.getResults();
-        if(m.containsKey(WebConstants.DOWNLOAD_STREAM_FIELD)) {
+        if (m.containsKey(WebConstants.DOWNLOAD_STREAM_FIELD)) {
             ByteString downloadStream = res.getByteStringResult(WebConstants.DOWNLOAD_STREAM_FIELD);
-            if( downloadStream.isEmpty() ) {
+            if (downloadStream.isEmpty()) {
                 m.remove(WebConstants.DOWNLOAD_STREAM_FIELD);
             }
         }
@@ -915,13 +934,18 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         return req.getHeader(TraceIdName);
     }
 
+    String getDyeing(DefaultWebReq req) {
+        return req.getHeader(DyeingName);
+    }
+
+
     void sendErrorResponse(WebContextData ctx, DefaultWebReq req, int retCode) {
         sendErrorResponse(ctx, req, retCode, null);
     }
 
     void sendErrorResponse(WebContextData ctx, DefaultWebReq req, int retCode, String retMsg) {
 
-        if( !ctx.setReplied() ) return;
+        if (!ctx.setReplied()) return;
 
         DefaultWebRes res = generateError(req, retCode, 200, retMsg);
         startRender(ctx, req, res);
@@ -932,8 +956,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         WebClosure closure = new WebClosure(ctx, req, res);
         ctx.end();
 
-        String status = !RetCodes.isSystemError(retCode) ? "SUCCESS" : "ERROR";
-        ctx.getTraceContext().stopForServer(status);
+        ctx.getTraceContext().stopForServer(retCode);
 
         if (monitorService != null)
             monitorService.webReqDone(closure);
@@ -1294,9 +1317,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
 
         int n2 = queueFullErrorCount.getAndSet(0);
         lastQueueFullErrorCount.set(n2);
-        metrics.put("krpc.webserver.queueFullErrorCount",n2);
-        if( n2 > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_QUEUEFULL,"krpc queue is full");
+        metrics.put("krpc.webserver.queueFullErrorCount", n2);
+        if (n2 > 0) {
+            alarm.alarm(Alarm.ALARM_TYPE_QUEUEFULL, "krpc queue is full", "rpcqueue", IpUtils.localIp());
         }
 
         for (Object o : resources) {
@@ -1313,9 +1336,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
     @Override
     public void healthCheck(List<HealthStatus> list) {
         int n2 = lastQueueFullErrorCount.get();
-        if( n2 > 0 ) {
+        if (n2 > 0) {
             String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_QUEUEFULL);
-            HealthStatus healthStatus = new HealthStatus(alarmId, false, "krpc queue is full");
+            HealthStatus healthStatus = new HealthStatus(alarmId, false, "krpc queue is full", "rpcqueue", IpUtils.localIp());
             list.add(healthStatus);
         }
     }

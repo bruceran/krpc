@@ -10,7 +10,7 @@ public interface OrderItemAttrOrBuilder extends
   /**
    * <code>string name = 1;</code>
    */
-  String getName();
+  java.lang.String getName();
   /**
    * <code>string name = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface OrderItemAttrOrBuilder extends
   /**
    * <code>string value = 2;</code>
    */
-  String getValue();
+  java.lang.String getValue();
   /**
    * <code>string value = 2;</code>
    */

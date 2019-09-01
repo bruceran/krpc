@@ -10,7 +10,7 @@ public interface LoginReqOrBuilder extends
   /**
    * <code>string userName = 1;</code>
    */
-  String getUserName();
+  java.lang.String getUserName();
   /**
    * <code>string userName = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface LoginReqOrBuilder extends
   /**
    * <code>string password = 2;</code>
    */
-  String getPassword();
+  java.lang.String getPassword();
   /**
    * <code>string password = 2;</code>
    */
@@ -30,7 +30,7 @@ public interface LoginReqOrBuilder extends
   /**
    * <code>string gender = 3;</code>
    */
-  String getGender();
+  java.lang.String getGender();
   /**
    * <code>string gender = 3;</code>
    */

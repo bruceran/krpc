@@ -96,7 +96,7 @@ public class LogOnlyWebPlugin implements WebPlugin, RenderPlugin, PreRenderPlugi
 
     @Override
     public void render(WebContextData ctx, WebReq req, WebRes res) {
-        res.setContentType("application/json");
+        res.setContentType(WebConstants.MIMETYPE_JSON );
         res.setContent(Json.toJson(res.getResults()));
         log.info("render called");
     }

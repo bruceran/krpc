@@ -1,5 +1,6 @@
 package krpc.trace;
 
+import krpc.common.RetCodes;
 import krpc.rpc.core.proto.RpcMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +87,38 @@ public class DefaultTraceContext implements TraceContext {
     public void start(String type, String action) {
         Span child = startAsync(type, action);
         stack.addLast(child);
+    }
+
+    public Span stopForServer(int retCode) {
+        return stopForServer(retCode,null);
+    }
+
+    public Span stopForServer(int retCode,String retMsg) {
+
+        boolean hasError = Trace.getAdapter().hasError(retCode);
+        String result = !hasError ? "SUCCESS" : "ERROR";
+
+        Span span = stack.peekFirst();
+        if (span != null) {
+
+            span.tag("retCode",String.valueOf(retCode));
+            if( retCode != 0 ) {
+                if (retMsg == null) {
+                    retMsg = RetCodes.retCodeText(retCode);
+                }
+                span.tag("retMsg", retMsg);
+            }
+
+            span.stop(result);
+
+            if (!stack.isEmpty()) {
+                stack.clear();
+                // sendToTrace(span);
+            }
+            statsTimeUsed(span);
+        }
+
+        return span;
     }
 
     public Span stopForServer(String result) {
@@ -208,6 +241,11 @@ public class DefaultTraceContext implements TraceContext {
             b.append(entry.getKey()).append("=").append(encodeValue(entry.getValue()));
         }
         return b.toString();
+    }
+
+    public Map<String,String> getTagsMapForRpc() {
+        if (tagsForRpc == null) return null;
+        return tagsForRpc;
     }
 
     void initThreadNames() {

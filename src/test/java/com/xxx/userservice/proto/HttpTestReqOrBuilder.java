@@ -10,7 +10,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string httpMethod = 1;</code>
    */
-  String getHttpMethod();
+  java.lang.String getHttpMethod();
   /**
    * <code>string httpMethod = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string httpSchema = 2;</code>
    */
-  String getHttpSchema();
+  java.lang.String getHttpSchema();
   /**
    * <code>string httpSchema = 2;</code>
    */
@@ -30,7 +30,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string httpPath = 3;</code>
    */
-  String getHttpPath();
+  java.lang.String getHttpPath();
   /**
    * <code>string httpPath = 3;</code>
    */
@@ -40,7 +40,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string httpQueryString = 4;</code>
    */
-  String getHttpQueryString();
+  java.lang.String getHttpQueryString();
   /**
    * <code>string httpQueryString = 4;</code>
    */
@@ -50,7 +50,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string httpContentType = 5;</code>
    */
-  String getHttpContentType();
+  java.lang.String getHttpContentType();
   /**
    * <code>string httpContentType = 5;</code>
    */
@@ -60,7 +60,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string httpContent = 6;</code>
    */
-  String getHttpContent();
+  java.lang.String getHttpContent();
   /**
    * <code>string httpContent = 6;</code>
    */
@@ -74,16 +74,16 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>.Session session = 7;</code>
    */
-  Session getSession();
+  com.xxx.userservice.proto.Session getSession();
   /**
    * <code>.Session session = 7;</code>
    */
-  SessionOrBuilder getSessionOrBuilder();
+  com.xxx.userservice.proto.SessionOrBuilder getSessionOrBuilder();
 
   /**
    * <code>string orderId = 8;</code>
    */
-  String getOrderId();
+  java.lang.String getOrderId();
   /**
    * <code>string orderId = 8;</code>
    */
@@ -127,17 +127,17 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>.Status status = 15;</code>
    */
-  Status getStatus();
+  com.xxx.userservice.proto.Status getStatus();
 
   /**
    * <code>repeated .OrderDetail items = 16;</code>
    */
-  java.util.List<OrderDetail>
+  java.util.List<com.xxx.userservice.proto.OrderDetail> 
       getItemsList();
   /**
    * <code>repeated .OrderDetail items = 16;</code>
    */
-  OrderDetail getItems(int index);
+  com.xxx.userservice.proto.OrderDetail getItems(int index);
   /**
    * <code>repeated .OrderDetail items = 16;</code>
    */
@@ -145,18 +145,18 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>repeated .OrderDetail items = 16;</code>
    */
-  java.util.List<? extends OrderDetailOrBuilder>
+  java.util.List<? extends com.xxx.userservice.proto.OrderDetailOrBuilder> 
       getItemsOrBuilderList();
   /**
    * <code>repeated .OrderDetail items = 16;</code>
    */
-  OrderDetailOrBuilder getItemsOrBuilder(
-          int index);
+  com.xxx.userservice.proto.OrderDetailOrBuilder getItemsOrBuilder(
+      int index);
 
   /**
    * <code>string userId = 17;</code>
    */
-  String getUserId();
+  java.lang.String getUserId();
   /**
    * <code>string userId = 17;</code>
    */
@@ -166,7 +166,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string userName = 18;</code>
    */
-  String getUserName();
+  java.lang.String getUserName();
   /**
    * <code>string userName = 18;</code>
    */
@@ -176,7 +176,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string mobile = 19;</code>
    */
-  String getMobile();
+  java.lang.String getMobile();
   /**
    * <code>string mobile = 19;</code>
    */
@@ -186,7 +186,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string sessionId = 20;</code>
    */
-  String getSessionId();
+  java.lang.String getSessionId();
   /**
    * <code>string sessionId = 20;</code>
    */
@@ -196,7 +196,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string headerHost = 21;</code>
    */
-  String getHeaderHost();
+  java.lang.String getHeaderHost();
   /**
    * <code>string headerHost = 21;</code>
    */
@@ -206,7 +206,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>string cookieTnk = 22;</code>
    */
-  String getCookieTnk();
+  java.lang.String getCookieTnk();
   /**
    * <code>string cookieTnk = 22;</code>
    */
@@ -216,7 +216,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>repeated string colors = 23;</code>
    */
-  java.util.List<String>
+  java.util.List<java.lang.String>
       getColorsList();
   /**
    * <code>repeated string colors = 23;</code>
@@ -225,7 +225,7 @@ public interface HttpTestReqOrBuilder extends
   /**
    * <code>repeated string colors = 23;</code>
    */
-  String getColors(int index);
+  java.lang.String getColors(int index);
   /**
    * <code>repeated string colors = 23;</code>
    */

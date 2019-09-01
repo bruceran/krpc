@@ -13,7 +13,7 @@ public  final class HttpPluginTestRes extends
 private static final long serialVersionUID = 0L;
 public static final HttpPluginTestRes ok() { return HttpPluginTestRes.newBuilder().build(); } ;
 public static final HttpPluginTestRes failed(int retCode) { return HttpPluginTestRes.newBuilder().setRetCode(retCode).build(); } ;
-public static final HttpPluginTestRes failed(int retCode,String retMsg) { return HttpPluginTestRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+public static final HttpPluginTestRes failed(int retCode,java.lang.String retMsg) { return HttpPluginTestRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
   // Use HttpPluginTestRes.newBuilder() to construct.
   private HttpPluginTestRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -28,7 +28,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
     email_ = "";
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -39,7 +39,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -58,37 +58,37 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
             break;
           }
           case 18: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             retMsg_ = s;
             break;
           }
           case 26: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             plainText_ = s;
             break;
           }
           case 34: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             redirectUrl_ = s;
             break;
           }
           case 42: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             gender_ = s;
             break;
           }
           case 50: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             mobile_ = s;
             break;
           }
           case 58: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             email_ = s;
             break;
@@ -114,15 +114,15 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserServiceMetas.internal_static_HttpPluginTestRes_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpPluginTestRes_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserServiceMetas.internal_static_HttpPluginTestRes_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpPluginTestRes_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HttpPluginTestRes.class, Builder.class);
+            com.xxx.userservice.proto.HttpPluginTestRes.class, com.xxx.userservice.proto.HttpPluginTestRes.Builder.class);
   }
 
   public static final int RETCODE_FIELD_NUMBER = 1;
@@ -135,18 +135,18 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
 
   public static final int RETMSG_FIELD_NUMBER = 2;
-  private volatile Object retMsg_;
+  private volatile java.lang.Object retMsg_;
   /**
    * <code>string retMsg = 2;</code>
    */
-  public String getRetMsg() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getRetMsg() {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       retMsg_ = s;
       return s;
     }
@@ -156,11 +156,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
    */
   public com.google.protobuf.ByteString
       getRetMsgBytes() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       retMsg_ = b;
       return b;
     } else {
@@ -169,18 +169,18 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
 
   public static final int PLAINTEXT_FIELD_NUMBER = 3;
-  private volatile Object plainText_;
+  private volatile java.lang.Object plainText_;
   /**
    * <code>string plainText = 3;</code>
    */
-  public String getPlainText() {
-    Object ref = plainText_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getPlainText() {
+    java.lang.Object ref = plainText_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       plainText_ = s;
       return s;
     }
@@ -190,11 +190,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
    */
   public com.google.protobuf.ByteString
       getPlainTextBytes() {
-    Object ref = plainText_;
-    if (ref instanceof String) {
+    java.lang.Object ref = plainText_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       plainText_ = b;
       return b;
     } else {
@@ -203,18 +203,18 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
 
   public static final int REDIRECTURL_FIELD_NUMBER = 4;
-  private volatile Object redirectUrl_;
+  private volatile java.lang.Object redirectUrl_;
   /**
    * <code>string redirectUrl = 4;</code>
    */
-  public String getRedirectUrl() {
-    Object ref = redirectUrl_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getRedirectUrl() {
+    java.lang.Object ref = redirectUrl_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       redirectUrl_ = s;
       return s;
     }
@@ -224,11 +224,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
    */
   public com.google.protobuf.ByteString
       getRedirectUrlBytes() {
-    Object ref = redirectUrl_;
-    if (ref instanceof String) {
+    java.lang.Object ref = redirectUrl_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       redirectUrl_ = b;
       return b;
     } else {
@@ -237,18 +237,18 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
 
   public static final int GENDER_FIELD_NUMBER = 5;
-  private volatile Object gender_;
+  private volatile java.lang.Object gender_;
   /**
    * <code>string gender = 5;</code>
    */
-  public String getGender() {
-    Object ref = gender_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getGender() {
+    java.lang.Object ref = gender_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       gender_ = s;
       return s;
     }
@@ -258,11 +258,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
    */
   public com.google.protobuf.ByteString
       getGenderBytes() {
-    Object ref = gender_;
-    if (ref instanceof String) {
+    java.lang.Object ref = gender_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       gender_ = b;
       return b;
     } else {
@@ -271,18 +271,18 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
 
   public static final int MOBILE_FIELD_NUMBER = 6;
-  private volatile Object mobile_;
+  private volatile java.lang.Object mobile_;
   /**
    * <code>string mobile = 6;</code>
    */
-  public String getMobile() {
-    Object ref = mobile_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getMobile() {
+    java.lang.Object ref = mobile_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       mobile_ = s;
       return s;
     }
@@ -292,11 +292,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
    */
   public com.google.protobuf.ByteString
       getMobileBytes() {
-    Object ref = mobile_;
-    if (ref instanceof String) {
+    java.lang.Object ref = mobile_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       mobile_ = b;
       return b;
     } else {
@@ -305,18 +305,18 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
 
   public static final int EMAIL_FIELD_NUMBER = 7;
-  private volatile Object email_;
+  private volatile java.lang.Object email_;
   /**
    * <code>string email = 7;</code>
    */
-  public String getEmail() {
-    Object ref = email_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getEmail() {
+    java.lang.Object ref = email_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       email_ = s;
       return s;
     }
@@ -326,11 +326,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
    */
   public com.google.protobuf.ByteString
       getEmailBytes() {
-    Object ref = email_;
-    if (ref instanceof String) {
+    java.lang.Object ref = email_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       email_ = b;
       return b;
     } else {
@@ -339,7 +339,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -349,7 +349,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (retCode_ != 0) {
@@ -376,7 +376,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -409,15 +409,15 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof HttpPluginTestRes)) {
+    if (!(obj instanceof com.xxx.userservice.proto.HttpPluginTestRes)) {
       return super.equals(obj);
     }
-    HttpPluginTestRes other = (HttpPluginTestRes) obj;
+    com.xxx.userservice.proto.HttpPluginTestRes other = (com.xxx.userservice.proto.HttpPluginTestRes) obj;
 
     boolean result = true;
     result = result && (getRetCode()
@@ -438,7 +438,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -464,69 +464,69 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
     return hash;
   }
 
-  public static HttpPluginTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpPluginTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpPluginTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpPluginTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpPluginTestRes parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpPluginTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpPluginTestRes parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HttpPluginTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HttpPluginTestRes parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static HttpPluginTestRes parseDelimitedFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HttpPluginTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HttpPluginTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpPluginTestRes parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -534,23 +534,23 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(HttpPluginTestRes prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.HttpPluginTestRes prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -560,18 +560,18 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:HttpPluginTestRes)
-      HttpPluginTestResOrBuilder {
+      com.xxx.userservice.proto.HttpPluginTestResOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserServiceMetas.internal_static_HttpPluginTestRes_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpPluginTestRes_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserServiceMetas.internal_static_HttpPluginTestRes_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpPluginTestRes_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HttpPluginTestRes.class, Builder.class);
+              com.xxx.userservice.proto.HttpPluginTestRes.class, com.xxx.userservice.proto.HttpPluginTestRes.Builder.class);
     }
 
     // Construct using com.xxx.userservice.proto.HttpPluginTestRes.newBuilder()
@@ -580,7 +580,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -589,7 +589,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
               .alwaysUseFieldBuilders) {
       }
     }
-    @Override
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       retCode_ = 0;
@@ -609,29 +609,29 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserServiceMetas.internal_static_HttpPluginTestRes_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpPluginTestRes_descriptor;
     }
 
-    @Override
-    public HttpPluginTestRes getDefaultInstanceForType() {
-      return HttpPluginTestRes.getDefaultInstance();
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpPluginTestRes getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.HttpPluginTestRes.getDefaultInstance();
     }
 
-    @Override
-    public HttpPluginTestRes build() {
-      HttpPluginTestRes result = buildPartial();
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpPluginTestRes build() {
+      com.xxx.userservice.proto.HttpPluginTestRes result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public HttpPluginTestRes buildPartial() {
-      HttpPluginTestRes result = new HttpPluginTestRes(this);
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpPluginTestRes buildPartial() {
+      com.xxx.userservice.proto.HttpPluginTestRes result = new com.xxx.userservice.proto.HttpPluginTestRes(this);
       result.retCode_ = retCode_;
       result.retMsg_ = retMsg_;
       result.plainText_ = plainText_;
@@ -643,50 +643,50 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof HttpPluginTestRes) {
-        return mergeFrom((HttpPluginTestRes)other);
+      if (other instanceof com.xxx.userservice.proto.HttpPluginTestRes) {
+        return mergeFrom((com.xxx.userservice.proto.HttpPluginTestRes)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(HttpPluginTestRes other) {
-      if (other == HttpPluginTestRes.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.HttpPluginTestRes other) {
+      if (other == com.xxx.userservice.proto.HttpPluginTestRes.getDefaultInstance()) return this;
       if (other.getRetCode() != 0) {
         setRetCode(other.getRetCode());
       }
@@ -719,21 +719,21 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      HttpPluginTestRes parsedMessage = null;
+      com.xxx.userservice.proto.HttpPluginTestRes parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (HttpPluginTestRes) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.HttpPluginTestRes) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -769,20 +769,20 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    private Object retMsg_ = "";
+    private java.lang.Object retMsg_ = "";
     /**
      * <code>string retMsg = 2;</code>
      */
-    public String getRetMsg() {
-      Object ref = retMsg_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getRetMsg() {
+      java.lang.Object ref = retMsg_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         retMsg_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -790,11 +790,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      */
     public com.google.protobuf.ByteString
         getRetMsgBytes() {
-      Object ref = retMsg_;
+      java.lang.Object ref = retMsg_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         retMsg_ = b;
         return b;
       } else {
@@ -805,7 +805,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      * <code>string retMsg = 2;</code>
      */
     public Builder setRetMsg(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       retMsg_ = value;
@@ -836,20 +836,20 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    private Object plainText_ = "";
+    private java.lang.Object plainText_ = "";
     /**
      * <code>string plainText = 3;</code>
      */
-    public String getPlainText() {
-      Object ref = plainText_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getPlainText() {
+      java.lang.Object ref = plainText_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         plainText_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -857,11 +857,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      */
     public com.google.protobuf.ByteString
         getPlainTextBytes() {
-      Object ref = plainText_;
+      java.lang.Object ref = plainText_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         plainText_ = b;
         return b;
       } else {
@@ -872,7 +872,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      * <code>string plainText = 3;</code>
      */
     public Builder setPlainText(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       plainText_ = value;
@@ -903,20 +903,20 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    private Object redirectUrl_ = "";
+    private java.lang.Object redirectUrl_ = "";
     /**
      * <code>string redirectUrl = 4;</code>
      */
-    public String getRedirectUrl() {
-      Object ref = redirectUrl_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getRedirectUrl() {
+      java.lang.Object ref = redirectUrl_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         redirectUrl_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -924,11 +924,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      */
     public com.google.protobuf.ByteString
         getRedirectUrlBytes() {
-      Object ref = redirectUrl_;
+      java.lang.Object ref = redirectUrl_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         redirectUrl_ = b;
         return b;
       } else {
@@ -939,7 +939,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      * <code>string redirectUrl = 4;</code>
      */
     public Builder setRedirectUrl(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       redirectUrl_ = value;
@@ -970,20 +970,20 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    private Object gender_ = "";
+    private java.lang.Object gender_ = "";
     /**
      * <code>string gender = 5;</code>
      */
-    public String getGender() {
-      Object ref = gender_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getGender() {
+      java.lang.Object ref = gender_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         gender_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -991,11 +991,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      */
     public com.google.protobuf.ByteString
         getGenderBytes() {
-      Object ref = gender_;
+      java.lang.Object ref = gender_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         gender_ = b;
         return b;
       } else {
@@ -1006,7 +1006,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      * <code>string gender = 5;</code>
      */
     public Builder setGender(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       gender_ = value;
@@ -1037,20 +1037,20 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    private Object mobile_ = "";
+    private java.lang.Object mobile_ = "";
     /**
      * <code>string mobile = 6;</code>
      */
-    public String getMobile() {
-      Object ref = mobile_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getMobile() {
+      java.lang.Object ref = mobile_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         mobile_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1058,11 +1058,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      */
     public com.google.protobuf.ByteString
         getMobileBytes() {
-      Object ref = mobile_;
+      java.lang.Object ref = mobile_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         mobile_ = b;
         return b;
       } else {
@@ -1073,7 +1073,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      * <code>string mobile = 6;</code>
      */
     public Builder setMobile(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       mobile_ = value;
@@ -1104,20 +1104,20 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    private Object email_ = "";
+    private java.lang.Object email_ = "";
     /**
      * <code>string email = 7;</code>
      */
-    public String getEmail() {
-      Object ref = email_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getEmail() {
+      java.lang.Object ref = email_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         email_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1125,11 +1125,11 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      */
     public com.google.protobuf.ByteString
         getEmailBytes() {
-      Object ref = email_;
+      java.lang.Object ref = email_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         email_ = b;
         return b;
       } else {
@@ -1140,7 +1140,7 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
      * <code>string email = 7;</code>
      */
     public Builder setEmail(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       email_ = value;
@@ -1170,13 +1170,13 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
       onChanged();
       return this;
     }
-    @Override
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -1187,18 +1187,18 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
   }
 
   // @@protoc_insertion_point(class_scope:HttpPluginTestRes)
-  private static final HttpPluginTestRes DEFAULT_INSTANCE;
+  private static final com.xxx.userservice.proto.HttpPluginTestRes DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new HttpPluginTestRes();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.HttpPluginTestRes();
   }
 
-  public static HttpPluginTestRes getDefaultInstance() {
+  public static com.xxx.userservice.proto.HttpPluginTestRes getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<HttpPluginTestRes>
       PARSER = new com.google.protobuf.AbstractParser<HttpPluginTestRes>() {
-    @Override
+    @java.lang.Override
     public HttpPluginTestRes parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1211,13 +1211,13 @@ public static final HttpPluginTestRes failed(int retCode,String retMsg) { return
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<HttpPluginTestRes> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public HttpPluginTestRes getDefaultInstanceForType() {
+  @java.lang.Override
+  public com.xxx.userservice.proto.HttpPluginTestRes getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

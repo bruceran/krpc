@@ -22,7 +22,7 @@ public class XmlWebPlugin implements WebPlugin, RenderPlugin {
         if (content == null || content.isEmpty()) {
             String json = Json.toJson(res.getResults());
             res.setContent(json);
-            res.setContentType("application/json");
+            res.setContentType(WebConstants.MIMETYPE_JSON );
             return;
         }
         res.setContent(content);

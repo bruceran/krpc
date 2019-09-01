@@ -140,15 +140,15 @@
           以上除AsyncRestTemplate外使用起来或多或少都不方便，如：
       
           1) motan 需在接口上加一个异步的注解 @MotanAsync，还需配一个异步接口的maven代码生成插件； 
-             motan可返回 ResponseFuture,比Future好很多，但要并行很困难，不能和jdk 1.8的CompletableFuture相比
+          motan可返回 ResponseFuture,比Future好很多，但不能和jdk 1.8的CompletableFuture相比
           2) dubbo  需显示申明哪些接口要异步，这时会返回null, 要另外调RpcContext.getContext().getFuture()才能拿到 Future, 
              而返回的这个Future功能还非常有限，做不了什么事情
           3) dubbo 的 callback 功能既难配，也不好用； 为了客户端的异步，需要服务端配合客户端来实现回调，这个设计很糟糕
           4) venus 需显式地在接口上加注解表示异步，或者传入 InvocationListener 表示回调；也有dubbo callback一样问题：
              为了客户端的异步，需要服务端配合客户端来实现回调
           5) tars 可传入回调接口来实现异步回调，但回调接口的设计实在太丑了，正常/超时/异常是3个不同方法让使用者难以处理；
-          6) grpc 可通过ClientCalls的futureUnaryCall获取到一个ListenableFuture<T>, 比Future好很多，但要并行很困难，
-             不能和jdk 1.8的CompletableFuture相比
+          6) grpc 可通过ClientCalls的futureUnaryCall获取到一个ListenableFuture<T>, 比Future好很多，但不能和jdk 1.8的
+             CompletableFuture相比
           7) grpc 也可通过asyncUnaryCall使用回调方式StreamObserver（感觉没太大用，future版本就够了，
              StreamObserver用来处理简单的请求响应过于复杂了）
       

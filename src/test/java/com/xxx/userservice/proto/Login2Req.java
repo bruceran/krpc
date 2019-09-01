@@ -21,7 +21,7 @@ private static final long serialVersionUID = 0L;
     gender_ = "";
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -32,7 +32,7 @@ private static final long serialVersionUID = 0L;
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -46,19 +46,19 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             userName_ = s;
             break;
           }
           case 18: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             password_ = s;
             break;
           }
           case 26: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             gender_ = s;
             break;
@@ -84,30 +84,30 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserServiceMetas.internal_static_Login2Req_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_Login2Req_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserServiceMetas.internal_static_Login2Req_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_Login2Req_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            Login2Req.class, Builder.class);
+            com.xxx.userservice.proto.Login2Req.class, com.xxx.userservice.proto.Login2Req.Builder.class);
   }
 
   public static final int USERNAME_FIELD_NUMBER = 1;
-  private volatile Object userName_;
+  private volatile java.lang.Object userName_;
   /**
    * <code>string userName = 1;</code>
    */
-  public String getUserName() {
-    Object ref = userName_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getUserName() {
+    java.lang.Object ref = userName_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       userName_ = s;
       return s;
     }
@@ -117,11 +117,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getUserNameBytes() {
-    Object ref = userName_;
-    if (ref instanceof String) {
+    java.lang.Object ref = userName_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       userName_ = b;
       return b;
     } else {
@@ -130,18 +130,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int PASSWORD_FIELD_NUMBER = 2;
-  private volatile Object password_;
+  private volatile java.lang.Object password_;
   /**
    * <code>string password = 2;</code>
    */
-  public String getPassword() {
-    Object ref = password_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getPassword() {
+    java.lang.Object ref = password_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       password_ = s;
       return s;
     }
@@ -151,11 +151,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getPasswordBytes() {
-    Object ref = password_;
-    if (ref instanceof String) {
+    java.lang.Object ref = password_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       password_ = b;
       return b;
     } else {
@@ -164,18 +164,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int GENDER_FIELD_NUMBER = 3;
-  private volatile Object gender_;
+  private volatile java.lang.Object gender_;
   /**
    * <code>string gender = 3;</code>
    */
-  public String getGender() {
-    Object ref = gender_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getGender() {
+    java.lang.Object ref = gender_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       gender_ = s;
       return s;
     }
@@ -185,11 +185,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getGenderBytes() {
-    Object ref = gender_;
-    if (ref instanceof String) {
+    java.lang.Object ref = gender_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       gender_ = b;
       return b;
     } else {
@@ -198,7 +198,7 @@ private static final long serialVersionUID = 0L;
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -208,7 +208,7 @@ private static final long serialVersionUID = 0L;
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (!getUserNameBytes().isEmpty()) {
@@ -223,7 +223,7 @@ private static final long serialVersionUID = 0L;
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -243,15 +243,15 @@ private static final long serialVersionUID = 0L;
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof Login2Req)) {
+    if (!(obj instanceof com.xxx.userservice.proto.Login2Req)) {
       return super.equals(obj);
     }
-    Login2Req other = (Login2Req) obj;
+    com.xxx.userservice.proto.Login2Req other = (com.xxx.userservice.proto.Login2Req) obj;
 
     boolean result = true;
     result = result && getUserName()
@@ -264,7 +264,7 @@ private static final long serialVersionUID = 0L;
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -282,69 +282,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static Login2Req parseFrom(
+  public static com.xxx.userservice.proto.Login2Req parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Login2Req parseFrom(
+  public static com.xxx.userservice.proto.Login2Req parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Login2Req parseFrom(
+  public static com.xxx.userservice.proto.Login2Req parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Login2Req parseFrom(
+  public static com.xxx.userservice.proto.Login2Req parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Login2Req parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.Login2Req parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Login2Req parseFrom(
+  public static com.xxx.userservice.proto.Login2Req parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Login2Req parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.Login2Req parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Login2Req parseFrom(
+  public static com.xxx.userservice.proto.Login2Req parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Login2Req parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.Login2Req parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static Login2Req parseDelimitedFrom(
+  public static com.xxx.userservice.proto.Login2Req parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Login2Req parseFrom(
+  public static com.xxx.userservice.proto.Login2Req parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Login2Req parseFrom(
+  public static com.xxx.userservice.proto.Login2Req parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -352,23 +352,23 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(Login2Req prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.Login2Req prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -381,15 +381,15 @@ private static final long serialVersionUID = 0L;
       com.xxx.userservice.proto.Login2ReqOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserServiceMetas.internal_static_Login2Req_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_Login2Req_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserServiceMetas.internal_static_Login2Req_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_Login2Req_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Login2Req.class, Builder.class);
+              com.xxx.userservice.proto.Login2Req.class, com.xxx.userservice.proto.Login2Req.Builder.class);
     }
 
     // Construct using com.xxx.userservice.proto.Login2Req.newBuilder()
@@ -398,7 +398,7 @@ private static final long serialVersionUID = 0L;
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -407,7 +407,7 @@ private static final long serialVersionUID = 0L;
               .alwaysUseFieldBuilders) {
       }
     }
-    @Override
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       userName_ = "";
@@ -419,29 +419,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserServiceMetas.internal_static_Login2Req_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_Login2Req_descriptor;
     }
 
-    @Override
-    public Login2Req getDefaultInstanceForType() {
-      return Login2Req.getDefaultInstance();
+    @java.lang.Override
+    public com.xxx.userservice.proto.Login2Req getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.Login2Req.getDefaultInstance();
     }
 
-    @Override
-    public Login2Req build() {
-      Login2Req result = buildPartial();
+    @java.lang.Override
+    public com.xxx.userservice.proto.Login2Req build() {
+      com.xxx.userservice.proto.Login2Req result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public Login2Req buildPartial() {
-      Login2Req result = new Login2Req(this);
+    @java.lang.Override
+    public com.xxx.userservice.proto.Login2Req buildPartial() {
+      com.xxx.userservice.proto.Login2Req result = new com.xxx.userservice.proto.Login2Req(this);
       result.userName_ = userName_;
       result.password_ = password_;
       result.gender_ = gender_;
@@ -449,50 +449,50 @@ private static final long serialVersionUID = 0L;
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof Login2Req) {
-        return mergeFrom((Login2Req)other);
+      if (other instanceof com.xxx.userservice.proto.Login2Req) {
+        return mergeFrom((com.xxx.userservice.proto.Login2Req)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(Login2Req other) {
-      if (other == Login2Req.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.Login2Req other) {
+      if (other == com.xxx.userservice.proto.Login2Req.getDefaultInstance()) return this;
       if (!other.getUserName().isEmpty()) {
         userName_ = other.userName_;
         onChanged();
@@ -510,21 +510,21 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Login2Req parsedMessage = null;
+      com.xxx.userservice.proto.Login2Req parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (Login2Req) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.Login2Req) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -534,20 +534,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object userName_ = "";
+    private java.lang.Object userName_ = "";
     /**
      * <code>string userName = 1;</code>
      */
-    public String getUserName() {
-      Object ref = userName_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getUserName() {
+      java.lang.Object ref = userName_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         userName_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -555,11 +555,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getUserNameBytes() {
-      Object ref = userName_;
+      java.lang.Object ref = userName_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         userName_ = b;
         return b;
       } else {
@@ -570,7 +570,7 @@ private static final long serialVersionUID = 0L;
      * <code>string userName = 1;</code>
      */
     public Builder setUserName(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       userName_ = value;
@@ -601,20 +601,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object password_ = "";
+    private java.lang.Object password_ = "";
     /**
      * <code>string password = 2;</code>
      */
-    public String getPassword() {
-      Object ref = password_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getPassword() {
+      java.lang.Object ref = password_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         password_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -622,11 +622,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getPasswordBytes() {
-      Object ref = password_;
+      java.lang.Object ref = password_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         password_ = b;
         return b;
       } else {
@@ -637,7 +637,7 @@ private static final long serialVersionUID = 0L;
      * <code>string password = 2;</code>
      */
     public Builder setPassword(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       password_ = value;
@@ -668,20 +668,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object gender_ = "";
+    private java.lang.Object gender_ = "";
     /**
      * <code>string gender = 3;</code>
      */
-    public String getGender() {
-      Object ref = gender_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getGender() {
+      java.lang.Object ref = gender_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         gender_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -689,11 +689,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getGenderBytes() {
-      Object ref = gender_;
+      java.lang.Object ref = gender_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         gender_ = b;
         return b;
       } else {
@@ -704,7 +704,7 @@ private static final long serialVersionUID = 0L;
      * <code>string gender = 3;</code>
      */
     public Builder setGender(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       gender_ = value;
@@ -734,13 +734,13 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
-    @Override
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -751,18 +751,18 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:Login2Req)
-  private static final Login2Req DEFAULT_INSTANCE;
+  private static final com.xxx.userservice.proto.Login2Req DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new Login2Req();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.Login2Req();
   }
 
-  public static Login2Req getDefaultInstance() {
+  public static com.xxx.userservice.proto.Login2Req getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<Login2Req>
       PARSER = new com.google.protobuf.AbstractParser<Login2Req>() {
-    @Override
+    @java.lang.Override
     public Login2Req parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -775,13 +775,13 @@ private static final long serialVersionUID = 0L;
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<Login2Req> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public Login2Req getDefaultInstanceForType() {
+  @java.lang.Override
+  public com.xxx.userservice.proto.Login2Req getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

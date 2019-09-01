@@ -15,7 +15,7 @@ public interface HttpPluginTestResOrBuilder extends
   /**
    * <code>string retMsg = 2;</code>
    */
-  String getRetMsg();
+  java.lang.String getRetMsg();
   /**
    * <code>string retMsg = 2;</code>
    */
@@ -25,7 +25,7 @@ public interface HttpPluginTestResOrBuilder extends
   /**
    * <code>string plainText = 3;</code>
    */
-  String getPlainText();
+  java.lang.String getPlainText();
   /**
    * <code>string plainText = 3;</code>
    */
@@ -35,7 +35,7 @@ public interface HttpPluginTestResOrBuilder extends
   /**
    * <code>string redirectUrl = 4;</code>
    */
-  String getRedirectUrl();
+  java.lang.String getRedirectUrl();
   /**
    * <code>string redirectUrl = 4;</code>
    */
@@ -45,7 +45,7 @@ public interface HttpPluginTestResOrBuilder extends
   /**
    * <code>string gender = 5;</code>
    */
-  String getGender();
+  java.lang.String getGender();
   /**
    * <code>string gender = 5;</code>
    */
@@ -55,7 +55,7 @@ public interface HttpPluginTestResOrBuilder extends
   /**
    * <code>string mobile = 6;</code>
    */
-  String getMobile();
+  java.lang.String getMobile();
   /**
    * <code>string mobile = 6;</code>
    */
@@ -65,7 +65,7 @@ public interface HttpPluginTestResOrBuilder extends
   /**
    * <code>string email = 7;</code>
    */
-  String getEmail();
+  java.lang.String getEmail();
   /**
    * <code>string email = 7;</code>
    */

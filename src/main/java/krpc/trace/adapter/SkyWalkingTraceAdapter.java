@@ -61,6 +61,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
     NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_skywalking_reporter");
     ThreadPoolExecutor pool;
 
+    String servers;
     String[] queryAddrs;
     int queryAddrsIndex = 0;
     boolean enabled = true;
@@ -93,7 +94,8 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
     public void config(String paramsStr) {
         Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
 
-        queryAddrs = params.get("server").split(",");
+        servers = params.get("server");
+        queryAddrs = servers.split(",");
 
         String s = params.get("queueSize");
         if (!isEmpty(s)) queueSize = Integer.parseInt(s);
@@ -119,7 +121,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
 
         hc = new DefaultHttpClient();
         hc.init();
-        pool = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize), threadFactory);
+        pool = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(queueSize), threadFactory);
 
         boolean ok = register();
         if (!ok) {
@@ -174,12 +176,12 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
         }
         ok = registerAppId(0);
         if (!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"register appId failed");
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"register appId failed","skywalking",servers.replaceAll(",","#"));
             return false;
         }
         ok = registerInstanceId(0);
         if (!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"register instanceId failed");
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"register instanceId failed","skywalking",servers.replaceAll(",","#"));
             return false;
         }
         return ok;
@@ -199,14 +201,14 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
 
         int cnt = errorCount.getAndSet(0);
         if( cnt > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to skywalking failed " + cnt);
+            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to skywalking failed","skywalking",servers.replaceAll(",","#"));
         }
     }
 
     boolean queryRoutes() {
         boolean ok = queryRoutesInternal();
         if(!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"query skywalking routes failed");
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"query skywalking routes failed","skywalking",servers.replaceAll(",","#"));
         }
         return ok;
     }

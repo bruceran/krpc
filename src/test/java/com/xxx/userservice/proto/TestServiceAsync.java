@@ -7,7 +7,7 @@ public interface TestServiceAsync {
 
     static final public int serviceId = 101;
 
-    java.util.concurrent.CompletableFuture<ValidateTestRes> test1(ValidateTestReq req);
+    java.util.concurrent.CompletableFuture<com.xxx.userservice.proto.ValidateTestRes> test1(com.xxx.userservice.proto.ValidateTestReq req);
     static final public int test1MsgId = 1;
 
 }

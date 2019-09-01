@@ -167,6 +167,17 @@ public class DummyTraceAdapter implements TraceAdapter {
             return 0;
         }
 
+        @Override
+        public Map<String, String> getTagsMapForRpc() {
+            return null;
+        }
+
+        public Span stopForServer(int retCode) {
+            return dummySpan;
+        }
+        public Span stopForServer(int retCode,String retMsg) {
+            return dummySpan;
+        }
         public Span stopForServer(String result) {
             return dummySpan;
         }

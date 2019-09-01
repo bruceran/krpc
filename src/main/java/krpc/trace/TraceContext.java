@@ -2,36 +2,42 @@ package krpc.trace;
 
 import krpc.rpc.core.proto.RpcMeta;
 
+import java.util.Map;
+
 public interface TraceContext {
 
-    public void startForServer(String type, String action);
+    void startForServer(String type, String action);
 
-    public Span stopForServer(String result); // the server span ended
+    Span stopForServer(int retCode); // the server span ended
+    Span stopForServer(int retCode,String retMsg); // the server span ended
+    Span stopForServer(String result); // the server span ended
 
-    public void start(String type, String action);
+    void start(String type, String action);
 
-    public Span startAsync(String type, String action);
+    Span startAsync(String type, String action);
 
-    public void tagForRpc(String key, String value);
+    void tagForRpc(String key, String value);
 
-    public void tagForRpcIfAbsent(String key, String value);
+    void tagForRpcIfAbsent(String key, String value);
 
-    public String getTagForRpc(String key);
+    String getTagForRpc(String key);
 
-    public String getTagsForRpc();
+    String getTagsForRpc();
 
-    public Span currentSpan();
+    Span currentSpan();
 
-    public RpcMeta.Trace getTrace();
+    RpcMeta.Trace getTrace();
 
-    public long getThreadId();
+    long getThreadId();
 
-    public String getThreadName();
+    String getThreadName();
 
-    public String getThreadGroupName();
+    String getThreadGroupName();
 
-    public long getRequestTimeMicros();
+    long getRequestTimeMicros();
 
-    public long getStartMicros();
+    long getStartMicros();
+
+    Map<String,String> getTagsMapForRpc();
 
 } 

@@ -2,6 +2,7 @@ package krpc.rpc.util;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors;
+import com.google.protobuf.MapEntry;
 import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BeanToMessage {
@@ -47,7 +49,9 @@ public class BeanToMessage {
                 String name = field.getName();
                 Object value = getValue(bean, name);
                 if (value == null) continue;
-                if (field.isRepeated()) {
+                if (field.isMapField()) {
+                    objToMap(b, field, value);
+                } else if (field.isRepeated()) {
                     objToMessageObjRepeated(b, value, field);
                 } else {
                     objToMessageObj(b, value, field);
@@ -58,6 +62,49 @@ public class BeanToMessage {
         } catch(Exception e) {
             log.error("toMessage exception, e="+e.getMessage());
             return null;
+        }
+    }
+
+    private static boolean isSimpleType(Descriptors.FieldDescriptor field) {
+        switch( field.getType()) {
+            case MESSAGE:
+            case BYTES:
+            case ENUM:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    private static void objToMap(Builder b, Descriptors.FieldDescriptor field, Object map0)   {
+
+        if( !(map0 instanceof Map) ) return;
+
+        Descriptors.Descriptor type = field.getMessageType();
+        Descriptors.FieldDescriptor keyField = type.findFieldByName("key");
+        Descriptors.FieldDescriptor valueField = type.findFieldByName("value");
+        if (keyField != null && valueField != null) {
+
+            Map map  = (Map)map0;
+            for(Object e: map.entrySet() ) {
+                Map.Entry entry = (Map.Entry)e;
+                Object key = entry.getKey();
+                Object value = entry.getValue();
+
+                com.google.protobuf.Message.Builder entryBuilder = b.newBuilderForField(field);
+
+                Object k = objToMessageObjInner(entryBuilder,key,keyField,false);
+                Object v = objToMessageObjInner(entryBuilder,value,valueField,false);
+
+                if(k == null || v == null ) continue;
+
+                entryBuilder.setField(keyField, k);
+                entryBuilder.setField(valueField, v);
+                b.addRepeatedField(field, entryBuilder.build());
+            }
+
+        } else {
+            throw new RuntimeException("Invalid map field");
         }
     }
 
@@ -147,7 +194,7 @@ public class BeanToMessage {
 
                 Builder b2 = isRepeated ?
                         getRepeatedFieldBuilder(b, field.getName()) :
-                        getFieldBuilder(b, field.getName());
+                        getFieldBuilder(b, field);
 
                 for (Descriptors.FieldDescriptor subfield : b2.getDescriptorForType().getFields()) {
                     String subName = subfield.getName();
@@ -209,8 +256,14 @@ public class BeanToMessage {
         }
     }
 
-    static Builder getFieldBuilder(Builder b, String fieldName) {
+    static Builder getFieldBuilder(Builder b, Descriptors.FieldDescriptor f) {
         try {
+            if(  b instanceof MapEntry.Builder ) {
+                MapEntry.Builder bb = (MapEntry.Builder)b;
+                return bb.newBuilderForField(f);
+            }
+
+            String fieldName = f.getName();
             String methodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1) + "Builder";
             Method method = b.getClass().getDeclaredMethod(methodName, dummyTypes);
             Builder builder = (Builder) method.invoke(b, dummyParameters);
@@ -231,9 +284,11 @@ public class BeanToMessage {
         }
     }
 
-    static SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    static ThreadLocal<SimpleDateFormat> f = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
     public static String formatDate(Date d) {
-        return f.format(d);
+        return f.get().format(d);
     }
+
 }
 

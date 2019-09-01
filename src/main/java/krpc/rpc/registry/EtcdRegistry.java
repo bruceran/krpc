@@ -21,7 +21,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
     String basePathTemplate;
     String routesPathTemplate;
 
-    int ttl = 90;
+    int ttl = 150;
     int interval = 15;
 
     // curl "http://192.168.31.144:2379/v2/keys/services"
@@ -261,7 +261,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         boolean b = healthy.get();
         if( b ) return;
         String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
-        list.add(new HealthStatus(alarmId,false,"etcd_registry connect failed"));
+        list.add(new HealthStatus(alarmId,false,"etcd_registry connect failed","etcd",addrs.replaceAll(",","#")));
     }
 
     @Override
@@ -269,7 +269,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         boolean b = healthy.get();
         if( b ) return;
 
-        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"etcd_registry has exception");
+        alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"etcd_registry connect failed","etcd",addrs.replaceAll(",","#"));
         metrics.put("krpc.consul.errorCount",1);
     }
 

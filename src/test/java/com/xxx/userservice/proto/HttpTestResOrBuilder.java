@@ -15,7 +15,7 @@ public interface HttpTestResOrBuilder extends
   /**
    * <code>string retMsg = 2;</code>
    */
-  String getRetMsg();
+  java.lang.String getRetMsg();
   /**
    * <code>string retMsg = 2;</code>
    */
@@ -25,7 +25,7 @@ public interface HttpTestResOrBuilder extends
   /**
    * <code>string userId = 3;</code>
    */
-  String getUserId();
+  java.lang.String getUserId();
   /**
    * <code>string userId = 3;</code>
    */
@@ -39,11 +39,11 @@ public interface HttpTestResOrBuilder extends
   /**
    * <code>.Session session = 4;</code>
    */
-  Session getSession();
+  com.xxx.userservice.proto.Session getSession();
   /**
    * <code>.Session session = 4;</code>
    */
-  SessionOrBuilder getSessionOrBuilder();
+  com.xxx.userservice.proto.SessionOrBuilder getSessionOrBuilder();
 
   /**
    * <code>int32 httpCode = 5;</code>
@@ -53,7 +53,7 @@ public interface HttpTestResOrBuilder extends
   /**
    * <code>string httpContentType = 6;</code>
    */
-  String getHttpContentType();
+  java.lang.String getHttpContentType();
   /**
    * <code>string httpContentType = 6;</code>
    */
@@ -63,7 +63,7 @@ public interface HttpTestResOrBuilder extends
   /**
    * <code>string headerLocation = 7;</code>
    */
-  String getHeaderLocation();
+  java.lang.String getHeaderLocation();
   /**
    * <code>string headerLocation = 7;</code>
    */
@@ -73,7 +73,7 @@ public interface HttpTestResOrBuilder extends
   /**
    * <code>string headerXmmDddCcc = 8;</code>
    */
-  String getHeaderXmmDddCcc();
+  java.lang.String getHeaderXmmDddCcc();
   /**
    * <code>string headerXmmDddCcc = 8;</code>
    */
@@ -83,7 +83,7 @@ public interface HttpTestResOrBuilder extends
   /**
    * <code>string cookieTnk = 9;</code>
    */
-  String getCookieTnk();
+  java.lang.String getCookieTnk();
   /**
    * <code>string cookieTnk = 9;</code>
    */

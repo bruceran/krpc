@@ -1,6 +1,7 @@
 package krpc.rpc.web;
 
 import java.io.File;
+import java.util.List;
 
 public interface WebRouteService {
 
@@ -14,4 +15,7 @@ public interface WebRouteService {
 
     String findTemplateDir(String host, String path);
 
+    void clearDynamicUrls();
+
+    void setDynamicUrls(List<WebUrl> urls);
 }

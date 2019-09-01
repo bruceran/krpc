@@ -36,4 +36,40 @@ public interface AlarmInfoOrBuilder extends
    * <code>int32 count = 6;</code>
    */
   int getCount();
+
+  /**
+   * <pre>
+   * 新增
+   * </pre>
+   *
+   * <code>string target = 7;</code>
+   */
+  String getTarget();
+  /**
+   * <pre>
+   * 新增
+   * </pre>
+   *
+   * <code>string target = 7;</code>
+   */
+  com.google.protobuf.ByteString
+      getTargetBytes();
+
+  /**
+   * <pre>
+   * 新增
+   * </pre>
+   *
+   * <code>string targetAddrs = 8;</code>
+   */
+  String getTargetAddrs();
+  /**
+   * <pre>
+   * 新增
+   * </pre>
+   *
+   * <code>string targetAddrs = 8;</code>
+   */
+  com.google.protobuf.ByteString
+      getTargetAddrsBytes();
 }

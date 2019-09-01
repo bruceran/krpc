@@ -10,7 +10,7 @@ public interface OrderItem2OrBuilder extends
   /**
    * <code>string itemId = 1;</code>
    */
-  String getItemId();
+  java.lang.String getItemId();
   /**
    * <code>string itemId = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface OrderItem2OrBuilder extends
   /**
    * <code>string name = 2;</code>
    */
-  String getName();
+  java.lang.String getName();
   /**
    * <code>string name = 2;</code>
    */
@@ -35,12 +35,12 @@ public interface OrderItem2OrBuilder extends
   /**
    * <code>repeated .OrderItemAttr2 attrs = 4;</code>
    */
-  java.util.List<OrderItemAttr2>
+  java.util.List<com.xxx.userservice.proto.OrderItemAttr2> 
       getAttrsList();
   /**
    * <code>repeated .OrderItemAttr2 attrs = 4;</code>
    */
-  OrderItemAttr2 getAttrs(int index);
+  com.xxx.userservice.proto.OrderItemAttr2 getAttrs(int index);
   /**
    * <code>repeated .OrderItemAttr2 attrs = 4;</code>
    */
@@ -48,11 +48,11 @@ public interface OrderItem2OrBuilder extends
   /**
    * <code>repeated .OrderItemAttr2 attrs = 4;</code>
    */
-  java.util.List<? extends OrderItemAttr2OrBuilder>
+  java.util.List<? extends com.xxx.userservice.proto.OrderItemAttr2OrBuilder> 
       getAttrsOrBuilderList();
   /**
    * <code>repeated .OrderItemAttr2 attrs = 4;</code>
    */
-  OrderItemAttr2OrBuilder getAttrsOrBuilder(
-          int index);
+  com.xxx.userservice.proto.OrderItemAttr2OrBuilder getAttrsOrBuilder(
+      int index);
 }

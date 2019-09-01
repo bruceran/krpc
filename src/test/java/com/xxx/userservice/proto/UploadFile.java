@@ -23,7 +23,7 @@ private static final long serialVersionUID = 0L;
     contentType_ = "";
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -34,7 +34,7 @@ private static final long serialVersionUID = 0L;
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -48,13 +48,13 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             file_ = s;
             break;
           }
           case 18: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             filename_ = s;
             break;
@@ -65,13 +65,13 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 34: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             ext_ = s;
             break;
           }
           case 42: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             contentType_ = s;
             break;
@@ -97,30 +97,30 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserServiceMetas.internal_static_UploadFile_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_UploadFile_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserServiceMetas.internal_static_UploadFile_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_UploadFile_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UploadFile.class, Builder.class);
+            com.xxx.userservice.proto.UploadFile.class, com.xxx.userservice.proto.UploadFile.Builder.class);
   }
 
   public static final int FILE_FIELD_NUMBER = 1;
-  private volatile Object file_;
+  private volatile java.lang.Object file_;
   /**
    * <code>string file = 1;</code>
    */
-  public String getFile() {
-    Object ref = file_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getFile() {
+    java.lang.Object ref = file_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       file_ = s;
       return s;
     }
@@ -130,11 +130,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getFileBytes() {
-    Object ref = file_;
-    if (ref instanceof String) {
+    java.lang.Object ref = file_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       file_ = b;
       return b;
     } else {
@@ -143,18 +143,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int FILENAME_FIELD_NUMBER = 2;
-  private volatile Object filename_;
+  private volatile java.lang.Object filename_;
   /**
    * <code>string filename = 2;</code>
    */
-  public String getFilename() {
-    Object ref = filename_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getFilename() {
+    java.lang.Object ref = filename_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       filename_ = s;
       return s;
     }
@@ -164,11 +164,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getFilenameBytes() {
-    Object ref = filename_;
-    if (ref instanceof String) {
+    java.lang.Object ref = filename_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       filename_ = b;
       return b;
     } else {
@@ -186,18 +186,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int EXT_FIELD_NUMBER = 4;
-  private volatile Object ext_;
+  private volatile java.lang.Object ext_;
   /**
    * <code>string ext = 4;</code>
    */
-  public String getExt() {
-    Object ref = ext_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getExt() {
+    java.lang.Object ref = ext_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       ext_ = s;
       return s;
     }
@@ -207,11 +207,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getExtBytes() {
-    Object ref = ext_;
-    if (ref instanceof String) {
+    java.lang.Object ref = ext_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       ext_ = b;
       return b;
     } else {
@@ -220,18 +220,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int CONTENTTYPE_FIELD_NUMBER = 5;
-  private volatile Object contentType_;
+  private volatile java.lang.Object contentType_;
   /**
    * <code>string contentType = 5;</code>
    */
-  public String getContentType() {
-    Object ref = contentType_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getContentType() {
+    java.lang.Object ref = contentType_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       contentType_ = s;
       return s;
     }
@@ -241,11 +241,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getContentTypeBytes() {
-    Object ref = contentType_;
-    if (ref instanceof String) {
+    java.lang.Object ref = contentType_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       contentType_ = b;
       return b;
     } else {
@@ -254,7 +254,7 @@ private static final long serialVersionUID = 0L;
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -264,7 +264,7 @@ private static final long serialVersionUID = 0L;
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (!getFileBytes().isEmpty()) {
@@ -285,7 +285,7 @@ private static final long serialVersionUID = 0L;
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -312,15 +312,15 @@ private static final long serialVersionUID = 0L;
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UploadFile)) {
+    if (!(obj instanceof com.xxx.userservice.proto.UploadFile)) {
       return super.equals(obj);
     }
-    UploadFile other = (UploadFile) obj;
+    com.xxx.userservice.proto.UploadFile other = (com.xxx.userservice.proto.UploadFile) obj;
 
     boolean result = true;
     result = result && getFile()
@@ -337,7 +337,7 @@ private static final long serialVersionUID = 0L;
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -360,69 +360,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UploadFile parseFrom(
+  public static com.xxx.userservice.proto.UploadFile parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UploadFile parseFrom(
+  public static com.xxx.userservice.proto.UploadFile parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UploadFile parseFrom(
+  public static com.xxx.userservice.proto.UploadFile parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UploadFile parseFrom(
+  public static com.xxx.userservice.proto.UploadFile parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UploadFile parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.UploadFile parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UploadFile parseFrom(
+  public static com.xxx.userservice.proto.UploadFile parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UploadFile parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.UploadFile parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UploadFile parseFrom(
+  public static com.xxx.userservice.proto.UploadFile parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UploadFile parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.UploadFile parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UploadFile parseDelimitedFrom(
+  public static com.xxx.userservice.proto.UploadFile parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UploadFile parseFrom(
+  public static com.xxx.userservice.proto.UploadFile parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UploadFile parseFrom(
+  public static com.xxx.userservice.proto.UploadFile parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -430,23 +430,23 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UploadFile prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.UploadFile prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -456,18 +456,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:UploadFile)
-      UploadFileOrBuilder {
+      com.xxx.userservice.proto.UploadFileOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserServiceMetas.internal_static_UploadFile_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_UploadFile_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserServiceMetas.internal_static_UploadFile_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_UploadFile_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UploadFile.class, Builder.class);
+              com.xxx.userservice.proto.UploadFile.class, com.xxx.userservice.proto.UploadFile.Builder.class);
     }
 
     // Construct using com.xxx.userservice.proto.UploadFile.newBuilder()
@@ -476,7 +476,7 @@ private static final long serialVersionUID = 0L;
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -485,7 +485,7 @@ private static final long serialVersionUID = 0L;
               .alwaysUseFieldBuilders) {
       }
     }
-    @Override
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       file_ = "";
@@ -501,29 +501,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserServiceMetas.internal_static_UploadFile_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_UploadFile_descriptor;
     }
 
-    @Override
-    public UploadFile getDefaultInstanceForType() {
-      return UploadFile.getDefaultInstance();
+    @java.lang.Override
+    public com.xxx.userservice.proto.UploadFile getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.UploadFile.getDefaultInstance();
     }
 
-    @Override
-    public UploadFile build() {
-      UploadFile result = buildPartial();
+    @java.lang.Override
+    public com.xxx.userservice.proto.UploadFile build() {
+      com.xxx.userservice.proto.UploadFile result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public UploadFile buildPartial() {
-      UploadFile result = new UploadFile(this);
+    @java.lang.Override
+    public com.xxx.userservice.proto.UploadFile buildPartial() {
+      com.xxx.userservice.proto.UploadFile result = new com.xxx.userservice.proto.UploadFile(this);
       result.file_ = file_;
       result.filename_ = filename_;
       result.size_ = size_;
@@ -533,50 +533,50 @@ private static final long serialVersionUID = 0L;
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UploadFile) {
-        return mergeFrom((UploadFile)other);
+      if (other instanceof com.xxx.userservice.proto.UploadFile) {
+        return mergeFrom((com.xxx.userservice.proto.UploadFile)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UploadFile other) {
-      if (other == UploadFile.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.UploadFile other) {
+      if (other == com.xxx.userservice.proto.UploadFile.getDefaultInstance()) return this;
       if (!other.getFile().isEmpty()) {
         file_ = other.file_;
         onChanged();
@@ -601,21 +601,21 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UploadFile parsedMessage = null;
+      com.xxx.userservice.proto.UploadFile parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UploadFile) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.UploadFile) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -625,20 +625,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object file_ = "";
+    private java.lang.Object file_ = "";
     /**
      * <code>string file = 1;</code>
      */
-    public String getFile() {
-      Object ref = file_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getFile() {
+      java.lang.Object ref = file_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         file_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -646,11 +646,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getFileBytes() {
-      Object ref = file_;
+      java.lang.Object ref = file_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         file_ = b;
         return b;
       } else {
@@ -661,7 +661,7 @@ private static final long serialVersionUID = 0L;
      * <code>string file = 1;</code>
      */
     public Builder setFile(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       file_ = value;
@@ -692,20 +692,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object filename_ = "";
+    private java.lang.Object filename_ = "";
     /**
      * <code>string filename = 2;</code>
      */
-    public String getFilename() {
-      Object ref = filename_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getFilename() {
+      java.lang.Object ref = filename_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         filename_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -713,11 +713,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getFilenameBytes() {
-      Object ref = filename_;
+      java.lang.Object ref = filename_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         filename_ = b;
         return b;
       } else {
@@ -728,7 +728,7 @@ private static final long serialVersionUID = 0L;
      * <code>string filename = 2;</code>
      */
     public Builder setFilename(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       filename_ = value;
@@ -785,20 +785,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object ext_ = "";
+    private java.lang.Object ext_ = "";
     /**
      * <code>string ext = 4;</code>
      */
-    public String getExt() {
-      Object ref = ext_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getExt() {
+      java.lang.Object ref = ext_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         ext_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -806,11 +806,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getExtBytes() {
-      Object ref = ext_;
+      java.lang.Object ref = ext_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         ext_ = b;
         return b;
       } else {
@@ -821,7 +821,7 @@ private static final long serialVersionUID = 0L;
      * <code>string ext = 4;</code>
      */
     public Builder setExt(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       ext_ = value;
@@ -852,20 +852,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object contentType_ = "";
+    private java.lang.Object contentType_ = "";
     /**
      * <code>string contentType = 5;</code>
      */
-    public String getContentType() {
-      Object ref = contentType_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getContentType() {
+      java.lang.Object ref = contentType_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         contentType_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -873,11 +873,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getContentTypeBytes() {
-      Object ref = contentType_;
+      java.lang.Object ref = contentType_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         contentType_ = b;
         return b;
       } else {
@@ -888,7 +888,7 @@ private static final long serialVersionUID = 0L;
      * <code>string contentType = 5;</code>
      */
     public Builder setContentType(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       contentType_ = value;
@@ -918,13 +918,13 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
-    @Override
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -935,18 +935,18 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:UploadFile)
-  private static final UploadFile DEFAULT_INSTANCE;
+  private static final com.xxx.userservice.proto.UploadFile DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UploadFile();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.UploadFile();
   }
 
-  public static UploadFile getDefaultInstance() {
+  public static com.xxx.userservice.proto.UploadFile getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<UploadFile>
       PARSER = new com.google.protobuf.AbstractParser<UploadFile>() {
-    @Override
+    @java.lang.Override
     public UploadFile parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -959,13 +959,13 @@ private static final long serialVersionUID = 0L;
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<UploadFile> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public UploadFile getDefaultInstanceForType() {
+  @java.lang.Override
+  public com.xxx.userservice.proto.UploadFile getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

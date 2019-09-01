@@ -7,14 +7,19 @@ public interface UserService {
 
     static final public int serviceId = 100;
 
-    LoginRes login(LoginReq req);
+    com.xxx.userservice.proto.LoginRes login(com.xxx.userservice.proto.LoginReq req);
     static final public int loginMsgId = 1;
 
-    UpdateProfileRes updateProfile(UpdateProfileReq req);
+    com.xxx.userservice.proto.UpdateProfileRes updateProfile(com.xxx.userservice.proto.UpdateProfileReq req);
     static final public int updateProfileMsgId = 2;
 
-    Login2Res login2(Login2Req req);
+    com.xxx.userservice.proto.Login2Res login2(com.xxx.userservice.proto.Login2Req req);
     static final public int login2MsgId = 3;
+
+    default com.xxx.userservice.proto.Login3Res login3(com.xxx.userservice.proto.Login3Req req) {
+        return null;
+    }
+    static final public int login3MsgId = 4;
 
 }
 

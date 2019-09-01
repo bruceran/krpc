@@ -13,7 +13,7 @@ public  final class HttpUploadTestRes extends
 private static final long serialVersionUID = 0L;
 public static final HttpUploadTestRes ok() { return HttpUploadTestRes.newBuilder().build(); } ;
 public static final HttpUploadTestRes failed(int retCode) { return HttpUploadTestRes.newBuilder().setRetCode(retCode).build(); } ;
-public static final HttpUploadTestRes failed(int retCode,String retMsg) { return HttpUploadTestRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+public static final HttpUploadTestRes failed(int retCode,java.lang.String retMsg) { return HttpUploadTestRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
   // Use HttpUploadTestRes.newBuilder() to construct.
   private HttpUploadTestRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -23,7 +23,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
     retMsg_ = "";
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -34,7 +34,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -53,7 +53,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
             break;
           }
           case 18: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             retMsg_ = s;
             break;
@@ -79,15 +79,15 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserServiceMetas.internal_static_HttpUploadTestRes_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestRes_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserServiceMetas.internal_static_HttpUploadTestRes_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestRes_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HttpUploadTestRes.class, Builder.class);
+            com.xxx.userservice.proto.HttpUploadTestRes.class, com.xxx.userservice.proto.HttpUploadTestRes.Builder.class);
   }
 
   public static final int RETCODE_FIELD_NUMBER = 1;
@@ -100,18 +100,18 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
   }
 
   public static final int RETMSG_FIELD_NUMBER = 2;
-  private volatile Object retMsg_;
+  private volatile java.lang.Object retMsg_;
   /**
    * <code>string retMsg = 2;</code>
    */
-  public String getRetMsg() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getRetMsg() {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       retMsg_ = s;
       return s;
     }
@@ -121,11 +121,11 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
    */
   public com.google.protobuf.ByteString
       getRetMsgBytes() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       retMsg_ = b;
       return b;
     } else {
@@ -134,7 +134,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -144,7 +144,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (retCode_ != 0) {
@@ -156,7 +156,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -174,15 +174,15 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof HttpUploadTestRes)) {
+    if (!(obj instanceof com.xxx.userservice.proto.HttpUploadTestRes)) {
       return super.equals(obj);
     }
-    HttpUploadTestRes other = (HttpUploadTestRes) obj;
+    com.xxx.userservice.proto.HttpUploadTestRes other = (com.xxx.userservice.proto.HttpUploadTestRes) obj;
 
     boolean result = true;
     result = result && (getRetCode()
@@ -193,7 +193,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -209,69 +209,69 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
     return hash;
   }
 
-  public static HttpUploadTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpUploadTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpUploadTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpUploadTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpUploadTestRes parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpUploadTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpUploadTestRes parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HttpUploadTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HttpUploadTestRes parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static HttpUploadTestRes parseDelimitedFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HttpUploadTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HttpUploadTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpUploadTestRes parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -279,23 +279,23 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(HttpUploadTestRes prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.HttpUploadTestRes prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -305,18 +305,18 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:HttpUploadTestRes)
-      HttpUploadTestResOrBuilder {
+      com.xxx.userservice.proto.HttpUploadTestResOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserServiceMetas.internal_static_HttpUploadTestRes_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestRes_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserServiceMetas.internal_static_HttpUploadTestRes_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestRes_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HttpUploadTestRes.class, Builder.class);
+              com.xxx.userservice.proto.HttpUploadTestRes.class, com.xxx.userservice.proto.HttpUploadTestRes.Builder.class);
     }
 
     // Construct using com.xxx.userservice.proto.HttpUploadTestRes.newBuilder()
@@ -325,7 +325,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -334,7 +334,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
               .alwaysUseFieldBuilders) {
       }
     }
-    @Override
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       retCode_ = 0;
@@ -344,79 +344,79 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserServiceMetas.internal_static_HttpUploadTestRes_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpUploadTestRes_descriptor;
     }
 
-    @Override
-    public HttpUploadTestRes getDefaultInstanceForType() {
-      return HttpUploadTestRes.getDefaultInstance();
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpUploadTestRes getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.HttpUploadTestRes.getDefaultInstance();
     }
 
-    @Override
-    public HttpUploadTestRes build() {
-      HttpUploadTestRes result = buildPartial();
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpUploadTestRes build() {
+      com.xxx.userservice.proto.HttpUploadTestRes result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public HttpUploadTestRes buildPartial() {
-      HttpUploadTestRes result = new HttpUploadTestRes(this);
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpUploadTestRes buildPartial() {
+      com.xxx.userservice.proto.HttpUploadTestRes result = new com.xxx.userservice.proto.HttpUploadTestRes(this);
       result.retCode_ = retCode_;
       result.retMsg_ = retMsg_;
       onBuilt();
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof HttpUploadTestRes) {
-        return mergeFrom((HttpUploadTestRes)other);
+      if (other instanceof com.xxx.userservice.proto.HttpUploadTestRes) {
+        return mergeFrom((com.xxx.userservice.proto.HttpUploadTestRes)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(HttpUploadTestRes other) {
-      if (other == HttpUploadTestRes.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.HttpUploadTestRes other) {
+      if (other == com.xxx.userservice.proto.HttpUploadTestRes.getDefaultInstance()) return this;
       if (other.getRetCode() != 0) {
         setRetCode(other.getRetCode());
       }
@@ -429,21 +429,21 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      HttpUploadTestRes parsedMessage = null;
+      com.xxx.userservice.proto.HttpUploadTestRes parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (HttpUploadTestRes) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.HttpUploadTestRes) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -479,20 +479,20 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
       return this;
     }
 
-    private Object retMsg_ = "";
+    private java.lang.Object retMsg_ = "";
     /**
      * <code>string retMsg = 2;</code>
      */
-    public String getRetMsg() {
-      Object ref = retMsg_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getRetMsg() {
+      java.lang.Object ref = retMsg_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         retMsg_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -500,11 +500,11 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
      */
     public com.google.protobuf.ByteString
         getRetMsgBytes() {
-      Object ref = retMsg_;
+      java.lang.Object ref = retMsg_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         retMsg_ = b;
         return b;
       } else {
@@ -515,7 +515,7 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
      * <code>string retMsg = 2;</code>
      */
     public Builder setRetMsg(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       retMsg_ = value;
@@ -545,13 +545,13 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
       onChanged();
       return this;
     }
-    @Override
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -562,18 +562,18 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
   }
 
   // @@protoc_insertion_point(class_scope:HttpUploadTestRes)
-  private static final HttpUploadTestRes DEFAULT_INSTANCE;
+  private static final com.xxx.userservice.proto.HttpUploadTestRes DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new HttpUploadTestRes();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.HttpUploadTestRes();
   }
 
-  public static HttpUploadTestRes getDefaultInstance() {
+  public static com.xxx.userservice.proto.HttpUploadTestRes getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<HttpUploadTestRes>
       PARSER = new com.google.protobuf.AbstractParser<HttpUploadTestRes>() {
-    @Override
+    @java.lang.Override
     public HttpUploadTestRes parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -586,13 +586,13 @@ public static final HttpUploadTestRes failed(int retCode,String retMsg) { return
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<HttpUploadTestRes> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public HttpUploadTestRes getDefaultInstanceForType() {
+  @java.lang.Override
+  public com.xxx.userservice.proto.HttpUploadTestRes getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

@@ -13,7 +13,7 @@ public  final class ReportAlarmRes extends
 private static final long serialVersionUID = 0L;
 public static final ReportAlarmRes ok() { return ReportAlarmRes.newBuilder().build(); } ;
 public static final ReportAlarmRes failed(int retCode) { return ReportAlarmRes.newBuilder().setRetCode(retCode).build(); } ;
-public static final ReportAlarmRes failed(int retCode,String retMsg) { return ReportAlarmRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+public static final ReportAlarmRes failed(int retCode, String retMsg) { return ReportAlarmRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
   // Use ReportAlarmRes.newBuilder() to construct.
   private ReportAlarmRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);

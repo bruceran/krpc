@@ -30,9 +30,9 @@ public class DefaultExecutorManager implements ExecutorManager, InitClose, DumpP
     public void addPool(int serviceId, int threads, int maxThreads, int queueSize) {
         ThreadPoolExecutor pool = null;
         if (maxThreads > threads)
-            pool = new ThreadPoolExecutor(threads, maxThreads, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize), threadFactory);
+            pool = new ThreadPoolExecutor(threads, maxThreads, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(queueSize), threadFactory);
         else
-            pool = new ThreadPoolExecutor(threads, threads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize), threadFactory);
+            pool = new ThreadPoolExecutor(threads, threads, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(queueSize), threadFactory);
         pools.put(serviceId + ".-1", pool);
     }
 
@@ -63,12 +63,12 @@ public class DefaultExecutorManager implements ExecutorManager, InitClose, DumpP
 
     @Override
     public void dump(Map<String, Object> metrics) {
-        for (Map.Entry<String,ThreadPoolExecutor> entry: pools.entrySet()) {
-            String name = entry.getKey();
-            ThreadPoolExecutor pool = entry.getValue();
-            metrics.put("krpc.service_pool["+name+"].poolSize",pool.getPoolSize());
-            metrics.put("krpc.service_pool["+name+"].activeCount",pool.getActiveCount());
-            metrics.put("krpc.service_pool["+name+"].waitingInQueue",pool.getQueue().size());
+        int i=0;
+        for (ThreadPoolExecutor pool: pools.values()) {
+            metrics.put("krpc.krpc_service_worker["+i+"].poolSize",pool.getPoolSize());
+            metrics.put("krpc.krpc_service_worker["+i+"].activeCount",pool.getActiveCount());
+            metrics.put("krpc.krpc_service_worker["+i+"].waitingInQueue",pool.getQueue().size());
+            i++;
         }
     }
 }

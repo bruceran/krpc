@@ -20,7 +20,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DefaultMonitorService implements MonitorService, WebMonitorService, InitClose, Alarm, HealthPlugin {
@@ -66,20 +65,27 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     SelfCheckHttpServer selfCheckHttpServer;
 
+    volatile int lastErrorCount = 0;
+
     static class AlarmInfoInWait {
         String type;
         String msg;
         int count = 1;
         long timestamp = System.currentTimeMillis();
+        String target;
+        String targetAddrs;
 
-        AlarmInfoInWait(String type, String msg) {
+
+        AlarmInfoInWait(String type, String msg, String target, String targetAddrs) {
             this.type = type;
             this.msg = msg;
+            this.target = target;
+            this.targetAddrs = targetAddrs;
         }
     }
 
     private ReentrantLock alarmLock = new ReentrantLock();
-    private HashMap<String,AlarmInfoInWait> waitAlarms = new HashMap<>();
+    private HashMap<String, AlarmInfoInWait> waitAlarms = new HashMap<>();
 
     DateTimeFormatter logFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     DateTimeFormatter statsFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -94,16 +100,16 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     void initTagsMap() {
         String[] ss = tags.split("#");
-        for(String s:ss) {
+        for (String s : ss) {
             int p = s.indexOf(":");
-            String key = s.substring(0,p);
-            String value = s.substring(p+1);
+            String key = s.substring(0, p);
+            String value = s.substring(p + 1);
             String[] msgIds = value.split(",");
-            for(String msgId:msgIds) {
+            for (String msgId : msgIds) {
                 String v = tagsMap.get(msgId);
-                if( v == null ) v = key;
+                if (v == null) v = key;
                 else v = v + "," + key;
-                tagsMap.put(msgId,v);
+                tagsMap.put(msgId, v);
             }
         }
     }
@@ -112,7 +118,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
         localIp = IpUtils.localIp();
 
-        if( !isEmpty(tags) ) {
+        if (!isEmpty(tags)) {
             initTagsMap();
         }
 
@@ -221,10 +227,10 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     }
 
     private RpcClosure convertClosure(RpcClosure closure0) {
-        if( !closure0.isRaw() ) return closure0;
-        Message req = codec.decodeRawBody(closure0.getCtx().getMeta(),closure0.asReqByteBuf());
-        Message res = codec.decodeRawBody(closure0.getCtx().getMeta(),closure0.asResByteBuf());
-        return new RpcClosure(closure0,req,res);
+        if (!closure0.isRaw()) return closure0;
+        Message req = codec.decodeRawBody(closure0.getCtx().getMeta(), closure0.asReqByteBuf());
+        Message res = codec.decodeRawBody(closure0.getCtx().getMeta(), closure0.asResByteBuf());
+        return new RpcClosure(closure0, req, res);
     }
 
     public void reqDone(final RpcClosure closure0) {
@@ -358,20 +364,20 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     }
 
     String getTags(RpcMeta meta) {
-        String key = meta.getServiceId()+"."+meta.getMsgId();
+        String key = meta.getServiceId() + "." + meta.getMsgId();
         String tags = tagsMap.get(key);
         return tags;
     }
 
     private void appendVars(ServerContextData serverCtx, StringBuilder extraInfo) {
         Map<String, Object> attrs = serverCtx.getAttributes();
-        if( attrs == null ) return;
-        for(Map.Entry<String,Object> entry:attrs.entrySet()) {
+        if (attrs == null) return;
+        for (Map.Entry<String, Object> entry : attrs.entrySet()) {
             String key = entry.getKey();
-            if( key.startsWith("var:")) {
+            if (key.startsWith("var:")) {
                 key = key.substring(4);
-                String value = TypeSafe.anyToString( entry.getValue() );
-                if( extraInfo.length() > 0  ) extraInfo.append("^");
+                String value = TypeSafe.anyToString(entry.getValue());
+                if (extraInfo.length() > 0) extraInfo.append("^");
                 extraInfo.append(key).append(":").append(value);
             }
         }
@@ -379,32 +385,40 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     private void appendTimeUsed(ServerContextData serverCtx, StringBuilder extraInfo) {
         TraceContext tc = serverCtx.getTraceContext();
-        if( tc == null ) return;
-        if( !(tc instanceof DefaultTraceContext) ) return;
-        DefaultTraceContext dtc = (DefaultTraceContext)tc;
+        if (tc == null) return;
+        if (!(tc instanceof DefaultTraceContext)) return;
+        DefaultTraceContext dtc = (DefaultTraceContext) tc;
         String timeUsedStr = dtc.getTimeUsedStr();
-        if( isEmpty(timeUsedStr) ) return;
-        if( extraInfo.length() > 0  ) extraInfo.append("^");
+        if (isEmpty(timeUsedStr)) return;
+        if (extraInfo.length() > 0) extraInfo.append("^");
         extraInfo.append(timeUsedStr);
     }
 
     private void appendTimeUsedInQueue(ServerContextData serverCtx, StringBuilder extraInfo) {
-        if( extraInfo.length() > 0  ) extraInfo.append("^");
-        extraInfo.append( "Q:"+ serverCtx.getWaitInQueueMicros() );
+        if (extraInfo.length() > 0) extraInfo.append("^");
+        extraInfo.append("Q:" + serverCtx.getWaitInQueueMicros());
     }
 
     private void appendTags(RpcMeta meta, StringBuilder extraInfo) {
         String tags = getTags(meta);
-        if(isEmpty(tags)) return;
-        if( extraInfo.length() > 0  ) extraInfo.append("^");
-        extraInfo.append( "tags:"+ tags );
+        if (isEmpty(tags)) return;
+        if (extraInfo.length() > 0) extraInfo.append("^");
+        extraInfo.append("tags:" + tags);
     }
 
     private void appendRpcTags(ServerContextData serverCtx, StringBuilder extraInfo) {
         String expDivIds = serverCtx.getTraceContext().getTagForRpc("expDivIds");
-        if(expDivIds != null && !expDivIds.isEmpty() ) {
-            if( extraInfo.length() > 0  ) extraInfo.append("^");
+        if (expDivIds != null && !expDivIds.isEmpty()) {
+            if (extraInfo.length() > 0) extraInfo.append("^");
             extraInfo.append("expDivIds:" + expDivIds);
+        }
+    }
+
+    private void appendDyeing(ServerContextData serverCtx, StringBuilder extraInfo) {
+        String dyeing = serverCtx.getTraceContext().getTrace().getDyeing();
+        if (dyeing != null && !dyeing.isEmpty()) {
+            if (extraInfo.length() > 0) extraInfo.append("^");
+            extraInfo.append("dyeing:" + dyeing);
         }
     }
 
@@ -422,6 +436,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
             appendTags(meta, extraInfo);
             appendVars(serverCtx, extraInfo);
             appendRpcTags(serverCtx, extraInfo);
+            appendDyeing(serverCtx, extraInfo);
         }
 
         long responseTime = ctx.getResponseTimeMicros();
@@ -441,11 +456,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         b.append(meta.getMsgId());
         b.append(sep);
         String serviceName = "";
-        if( printOriginalMsgName )
+        if (printOriginalMsgName)
             serviceName = serviceMetas.getOriginalName(meta.getServiceId(), meta.getMsgId());
         else
             serviceName = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
-        if(serviceName == null ) serviceName = meta.getServiceId() + "." + meta.getMsgId();
+        if (serviceName == null) serviceName = meta.getServiceId() + "." + meta.getMsgId();
         b.append(serviceName);
         b.append(sep);
         b.append(closure.getRetCode());
@@ -453,11 +468,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         b.append(ctx.getTimeUsedMicros());
         b.append(sep);
         String reqStr = closure.reqData() == null ? "" : logFormatter.toLogStr(closure.asReqMessage());
-        if (reqStr.contains(sep) ) reqStr = reqStr.replace(sep, ",");
+        if (reqStr.contains(sep)) reqStr = reqStr.replace(sep, ",");
         b.append(reqStr);
         b.append(sep);
         String resStr = closure.resData() == null ? "" : logFormatter.toLogStr(closure.asResMessage());
-        if (resStr.contains(sep) ) resStr = resStr.replace(sep, ",");
+        if (resStr.contains(sep)) resStr = resStr.replace(sep, ",");
         b.append(resStr);
         b.append(sep);
         b.append(extraInfo.toString());
@@ -480,6 +495,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
             appendTags(meta, extraInfo);
             appendVars(serverCtx, extraInfo);
             appendRpcTags(serverCtx, extraInfo);
+            appendDyeing(serverCtx, extraInfo);
         }
 
         long responseTime = ctx.getResponseTimeMicros();
@@ -499,7 +515,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         b.append(meta.getMsgId());
         b.append(sep);
         String serviceName = "";
-        if( printOriginalMsgName )
+        if (printOriginalMsgName)
             serviceName = serviceMetas.getOriginalName(meta.getServiceId(), meta.getMsgId());
         else
             serviceName = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
@@ -512,11 +528,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         String clientIp = ctx.getClientIp();
         b.append("httpClientIp:").append(clientIp).append("^");
         String reqStr = closure.getReq() == null ? "" : logFormatter.toLogStr(closure.getReq());
-        if (reqStr.contains(sep) ) reqStr = reqStr.replace(sep, ",");
+        if (reqStr.contains(sep)) reqStr = reqStr.replace(sep, ",");
         b.append(reqStr);
         b.append(sep);
         String resStr = closure.getRes() == null ? "" : logFormatter.toLogStr(closure.getRes());
-        if (resStr.contains(sep) ) resStr = resStr.replace(sep, ",");
+        if (resStr.contains(sep)) resStr = resStr.replace(sep, ",");
         b.append(resStr);
         b.append(sep);
         b.append(extraInfo.toString());
@@ -530,11 +546,13 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         int failed;
         int timeout;
         int[] timeSpanCount = new int[DefaultMonitorService.timeSpans.length + 1];
+        Map<Integer, Integer> retCodeCount = new LinkedHashMap<>();
 
         MinuteItem(long time) {
             curTime = time;
         }
     }
+
 
     static class StatItem {
 
@@ -563,7 +581,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
             }
 
             if (retCode == 0) item.success++;
-            if (retCode < 0) item.failed++;
+            if (retCode < 0) {
+                item.failed++;
+                int count = item.retCodeCount.getOrDefault(retCode, 0);
+                item.retCodeCount.put(retCode, ++count);
+            }
             if (RetCodes.isTimeout(retCode)) item.timeout++;
             int index = timeToIndex(timeUsedMillis);
             item.timeSpanCount[index]++;
@@ -609,6 +631,12 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
                     b.setSuccess(i.success).setFailed(i.failed).setTimeout(i.timeout);
                     for (int k = 0; k < i.timeSpanCount.length; ++k)
                         b.addTimeUsed(i.timeSpanCount[k]);
+                    for (Map.Entry<Integer, Integer> entry : i.retCodeCount.entrySet()) {
+                        RetCodeStat.Builder retCodeStat = RetCodeStat.newBuilder();
+                        retCodeStat.setRetCode(entry.getKey());
+                        retCodeStat.setCount(entry.getValue());
+                        b.addRetCodeStat(retCodeStat);
+                    }
                     builder.addStats(b.build());
                     iter.remove();
                 }
@@ -616,7 +644,10 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
             minTime = time;
         }
+
+
     }
+
 
     String typeToName(int logType) {
         switch (logType) {
@@ -720,15 +751,17 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
                     }
                 });
             } catch (RejectedExecutionException e) {
-                log.error("asyncstats queue is full");
+                log.error("asyncstats queue is full, e="+e.getMessage());
             }
         }
     }
 
     void reportSystemInfo() {
 
-        Map<String,Object> values = null;
-        if( selfCheckHttpServer != null )
+        logErrorCount();
+
+        Map<String, Object> values = null;
+        if (selfCheckHttpServer != null)
             values = selfCheckHttpServer.doDump();
         else {
             values = new LinkedHashMap<>();
@@ -739,7 +772,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
         ReportSystemInfoReq.Builder b = ReportSystemInfoReq.newBuilder();
         b.setTimestamp(System.currentTimeMillis()).setHost(localIp).setApp(appName);
-        for(Map.Entry<String,Object> entry:values.entrySet()) {
+        for (Map.Entry<String, Object> entry : values.entrySet()) {
             String key = entry.getKey();
             String value = TypeSafe.anyToString(entry.getValue());
             b.addKvs(SystemInfoKV.newBuilder().setKey(key).setValue(value));
@@ -750,28 +783,16 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         monitorClient.send(req);
     }
 
-    public void reportAlarm(String type,String msg) {
-        if (monitorClient == null) return;
-
-        alarmLock.lock();
-        try {
-            AlarmInfoInWait w = waitAlarms.get(type);
-            if( w == null ) {
-                w = new AlarmInfoInWait(type,msg);
-                waitAlarms.put(type,w);
-            } else {
-                w.count ++;
-            }
-        } finally {
-            alarmLock.unlock();
-        }
+    //原来方法
+    public void reportAlarm(String type, String msg) {
+        reportAlarm(type, msg, "", "");
 
     }
 
     void reportAlarm() {
         if (monitorClient == null) return;
 
-        HashMap<String,AlarmInfoInWait> stats;
+        HashMap<String, AlarmInfoInWait> stats;
 
         alarmLock.lock();
         try {
@@ -781,13 +802,14 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
             alarmLock.unlock();
         }
 
-        if( stats.size() == 0 ) return;
+        if (stats.size() == 0) return;
 
         ReportAlarmReq.Builder b = ReportAlarmReq.newBuilder();
         b.setTimestamp(System.currentTimeMillis()).setHost(localIp).setApp(appName);
 
-        for(AlarmInfoInWait info:stats.values()) {
-            b.addInfo(AlarmInfo.newBuilder().setTime(info.timestamp/1000).setType(info.type).setMsg(info.msg).setCount(info.count));
+        for (AlarmInfoInWait info : stats.values()) {
+            b.addInfo(AlarmInfo.newBuilder().setTime(info.timestamp / 1000).setType(info.type).setMsg(info.msg)
+                    .setCount(info.count).setTarget(info.target).setTargetAddrs(info.targetAddrs));
         }
 
         b.setAppServiceId(TypeSafe.anyToInt(alarmPrefix));
@@ -898,12 +920,31 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     @Override
     public void healthCheck(List<HealthStatus> list) {
-        if( monitorClient == null ) return;
-        int n = monitorClient.getErrorCount();
-        if( n > 0 ) {
+        if (monitorClient == null) return;
+        if (lastErrorCount > 0) {
             String alarmId = getAlarmId(Alarm.ALARM_TYPE_MONITOR);
-            list.add(new HealthStatus(alarmId, false, "cannot connect to monitor service"));
+            list.add(new HealthStatus(alarmId, false, "cannot connect to monitor service", "monitor", serverAddr));
         }
+    }
+
+    void logErrorCount() {
+        if (monitorClient == null) return;
+        lastErrorCount = monitorClient.getErrorCount();
+        if (lastErrorCount > 0) {
+            String alarmId = getAlarmId(Alarm.ALARM_TYPE_MONITOR);
+            String s = "alarm type=" + alarmId + ",msg=cannot connect to monitor service [target=monitor,addrs=" + serverAddr + "]";
+            log.warn(s);
+        }
+    }
+
+    @Override
+    public String getAlarmPrefix() {
+        return alarmPrefix;
+    }
+
+    @Override
+    public void alarm4rpc(String alarmId, String msg, String target, String addrs) {
+        reportAlarm(alarmId, msg, target, addrs);
     }
 
     @Override
@@ -914,14 +955,50 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     @Override
     public void alarm(String type, String msg) {
         String alarmId = getAlarmId(type);
-        reportAlarm(alarmId,msg);
+        reportAlarm(alarmId, msg, "", "");
+    }
+
+    @Override
+    public void alarm(String type, String msg, String target, String addrs) {
+        String alarmId = getAlarmId(type);
+        reportAlarm(alarmId, msg, target, addrs);
     }
 
     public void setSelfCheckPort(int selfCheckPort) {
         String s = String.valueOf(selfCheckPort);
-        if( s.length() == 4 ) {
+        if (s.length() == 4 || s.length() == 5) {
             alarmPrefix = s.substring(1);
         }
     }
 
+    //新的4个参数报警
+    public void reportAlarm(String type, String msg, String target, String targetAddrs) {
+        String traceId = null;
+        ServerContextData ctx = ServerContext.get();
+        if (ctx != null && ctx.getMeta() != null) {
+            traceId = ctx.getMeta().getTrace().getTraceId();
+        }
+        String s = "alarm type=" + type + ",msg=" + msg;
+        if (target != null && !target.isEmpty()) s += ",target=" + target;
+        if (targetAddrs != null && !targetAddrs.isEmpty()) s += ",addrs=" + targetAddrs;
+        if (traceId != null && !traceId.isEmpty()) s += ",traceId=" + traceId;
+        log.warn(s);
+
+        if (monitorClient == null) return;
+
+        alarmLock.lock();
+        try {
+            String key = type + ":" + msg + ":" + target + ":" + targetAddrs;
+            AlarmInfoInWait w = waitAlarms.get(key);
+            if (w == null) {
+                w = new AlarmInfoInWait(type, msg, target, targetAddrs);
+                waitAlarms.put(key, w);
+            } else {
+                w.count++;
+            }
+        } finally {
+            alarmLock.unlock();
+        }
+
+    }
 }

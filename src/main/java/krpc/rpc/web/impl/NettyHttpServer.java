@@ -577,7 +577,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
         bb.writeCharSequence(s, CharsetUtil.UTF_8);
         int len = bb.readableBytes();
         DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, bb);
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/json");
+        response.headers().set(HttpHeaderNames.CONTENT_TYPE, WebConstants.MIMETYPE_JSON );
         response.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, len);
         ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }

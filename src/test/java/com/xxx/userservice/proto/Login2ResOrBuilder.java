@@ -15,7 +15,7 @@ public interface Login2ResOrBuilder extends
   /**
    * <code>string retMsg = 2;</code>
    */
-  String getRetMsg();
+  java.lang.String getRetMsg();
   /**
    * <code>string retMsg = 2;</code>
    */
@@ -25,7 +25,7 @@ public interface Login2ResOrBuilder extends
   /**
    * <code>string userId = 3;</code>
    */
-  String getUserId();
+  java.lang.String getUserId();
   /**
    * <code>string userId = 3;</code>
    */
@@ -35,7 +35,7 @@ public interface Login2ResOrBuilder extends
   /**
    * <code>string mobile = 4;</code>
    */
-  String getMobile();
+  java.lang.String getMobile();
   /**
    * <code>string mobile = 4;</code>
    */

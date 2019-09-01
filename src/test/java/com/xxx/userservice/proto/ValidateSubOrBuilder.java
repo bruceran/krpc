@@ -10,7 +10,7 @@ public interface ValidateSubOrBuilder extends
   /**
    * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
    */
-  String getS1();
+  java.lang.String getS1();
   /**
    * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
    */
@@ -20,7 +20,7 @@ public interface ValidateSubOrBuilder extends
   /**
    * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
    */
-  String getS2();
+  java.lang.String getS2();
   /**
    * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
    */
@@ -35,7 +35,7 @@ public interface ValidateSubOrBuilder extends
   /**
    * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
    */
-  String getI2();
+  java.lang.String getI2();
   /**
    * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
    */
@@ -50,7 +50,7 @@ public interface ValidateSubOrBuilder extends
   /**
    * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
    */
-  String getI4();
+  java.lang.String getI4();
   /**
    * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
    */

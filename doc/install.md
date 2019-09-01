@@ -104,9 +104,9 @@
 		compile 'com.google.protobuf:protobuf-java-util:3.5.1'   -- protobuff json 支持 此包依赖 gson 2.7 和 guava 19.0
 		compile 'io.netty:netty-all:4.1.16.Final'     -- netty 4
 		compile 'javassist:javassist:3.24.0.GA'    -- 字节码生成
-		compile 'com.fasterxml.jackson.core:jackson-core:2.8.11'   -- json框架
-		compile 'com.fasterxml.jackson.core:jackson-databind:2.8.11.3'   -- json框架
-		compile 'com.fasterxml.jackson.core:jackson-annotations:2.81'   -- json框架
+		compile 'com.fasterxml.jackson.core:jackson-core:2.9.9'   -- json框架
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9.2'   -- json框架
+		compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.9'   -- json框架
 		compile 'org.yaml:snakeyaml:1.17'   -- 解析yaml格式的fallback配置文件
 
 	可选依赖：

@@ -21,10 +21,15 @@ public class ConsulDynamicRoutePlugin extends AbstractHttpDynamicRoutePlugin imp
 
     int interval = 15;
 
+    String aclToken;
+
     HashSet<Integer> registeredServiceIds = new HashSet<>();
 
     // curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json.version -d 1
     // curl -X PUT http://192.168.31.144:8500/v1/kv/dynamicroutes/default/100/routes.json -d '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
+
+    // curl -H "X-Consul-Token: dde69310-cec2-eab7-4082-c53cbd556b25"  -X GET http://10.1.20.16:8500/v1/kv/dynamicroutes/default/100/routes.json.version
+    // curl -H "X-Consul-Token: dde69310-cec2-eab7-4082-c53cbd556b25" -X PUT http://10.1.20.16:8500/v1/kv/dynamicroutes/default/100/routes.json.version -d 5555
 
     ConcurrentHashMap<String, String> versionCache = new ConcurrentHashMap<>();
 
@@ -37,6 +42,9 @@ public class ConsulDynamicRoutePlugin extends AbstractHttpDynamicRoutePlugin imp
         Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
         String s = params.get("intervalSeconds");
         if (!isEmpty(s)) interval = Integer.parseInt(s);
+
+        s = params.get("aclToken");
+        if (!isEmpty(s)) aclToken = s;
 
         super.config(params);
     }
@@ -83,6 +91,11 @@ public class ConsulDynamicRoutePlugin extends AbstractHttpDynamicRoutePlugin imp
         String url = String.format(path, addr());
         url += "?raw"; // return json only
         HttpClientReq req = new HttpClientReq("GET", url);
+
+        if(!isEmpty(aclToken)) {
+            req.addHeader("X-Consul-Token", aclToken);
+        }
+
         HttpClientRes res = hc.call(req);
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
             log.error("cannot get config " + path);

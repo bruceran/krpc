@@ -25,7 +25,7 @@ public class JsRedirectWebPlugin implements WebPlugin, RenderPlugin {
         if (redirectUrl == null || redirectUrl.isEmpty()) {
             String json = Json.toJson(res.getResults());
             res.setContent(json);
-            res.setContentType("application/json");
+            res.setContentType(WebConstants.MIMETYPE_JSON );
             return;
         }
         String content = htmlStart + redirectUrl + htmlEnd;

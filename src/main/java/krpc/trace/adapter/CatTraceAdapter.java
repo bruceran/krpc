@@ -26,11 +26,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     private static final String LF = "\n";
     private static final long HOUR = 3600 * 1000L;
 
-    ThreadLocal<SimpleDateFormat> f = new ThreadLocal<SimpleDateFormat>() {
-        public SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        }
-    };
+    static ThreadLocal<SimpleDateFormat> f = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"));
 
     String domain;
     String localIp;
@@ -40,9 +36,11 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     String routeQueryUrl;
     int queueSize = 1000;
 
+    String servers;
     String[] queryAddrs;
     int queryAddrsIndex = 0;
     boolean enabled = true;
+    boolean v2ErrorCode = false;
 
     String[] serverAddrs = new String[0];
     volatile int serverAddrIndex = -1;
@@ -70,6 +68,13 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
         domain = Trace.getAppName();
     }
 
+    public boolean hasError(int retCode) {
+        if( v2ErrorCode )
+            return RetCodes.isSystemErrorV2(retCode);
+        else
+            return RetCodes.isSystemError(retCode);
+    }
+
     public void config(String paramsStr) {
         Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
 
@@ -82,8 +87,13 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
         s = params.get("enabled");
         if (!isEmpty(s)) enabled = Boolean.parseBoolean(s);
 
+        s = params.get("v2ErrorCode");
+        if (!isEmpty(s)) v2ErrorCode = Boolean.parseBoolean(s);
+
+
         if(enabled) {
-            queryAddrs = params.get("server").split(",");
+            servers = params.get("server");
+            queryAddrs = servers.split(",");
         } else {
             queryAddrs = new String[0];
         }
@@ -158,7 +168,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
         int cnt = errorCount.getAndSet(0);
         if( cnt > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to cat failed "+cnt);
+            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to cat failed","cat",servers.replaceAll(",","#"));
         }
     }
 
@@ -170,7 +180,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     boolean queryRoutes() {
         boolean ok = queryRoutesInternal();
         if(!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"query cat routes failed");
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"query cat routes failed","cat",servers.replaceAll(",","#"));
         }
         return ok;
     }

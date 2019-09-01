@@ -10,7 +10,7 @@ public interface OrderDetailOrBuilder extends
   /**
    * <code>string name = 1;</code>
    */
-  String getName();
+  java.lang.String getName();
   /**
    * <code>string name = 1;</code>
    */
@@ -30,7 +30,7 @@ public interface OrderDetailOrBuilder extends
   /**
    * <code>string note = 4;</code>
    */
-  String getNote();
+  java.lang.String getNote();
   /**
    * <code>string note = 4;</code>
    */

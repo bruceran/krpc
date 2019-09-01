@@ -10,10 +10,7 @@ import io.netty.handler.codec.http.cookie.DefaultCookie;
 import krpc.common.Plugin;
 import krpc.rpc.core.ReflectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DefaultWebRes implements WebRes {
 
@@ -67,7 +64,7 @@ public class DefaultWebRes implements WebRes {
     }
 
     public DefaultWebRes setRetCode(int code) {
-        if (results == null) results = new HashMap<>();
+        if (results == null) results = new LinkedHashMap<>();
         results.put(ReflectionUtils.retCodeFieldInMap, code);
         return this;
     }
@@ -78,7 +75,7 @@ public class DefaultWebRes implements WebRes {
     }
 
     public DefaultWebRes setRetMsg(String msg) {
-        if (results == null) results = new HashMap<>();
+        if (results == null) results = new LinkedHashMap<>();
         results.put(ReflectionUtils.retMsgFieldInMap, msg);
         return this;
     }
@@ -129,7 +126,7 @@ public class DefaultWebRes implements WebRes {
             value = value.substring(0, p);
         }
 
-        if (cookies == null) cookies = new ArrayList<Cookie>();
+        if (cookies == null) cookies = new ArrayList<>();
         Cookie c = new DefaultCookie(name, value);
         if (paramsStr != null) {
             Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
@@ -192,7 +189,7 @@ public class DefaultWebRes implements WebRes {
     }
 
     public Map<String, Object> getResults() {
-        if (results == null) results = new HashMap<>();
+        if (results == null) results = new LinkedHashMap<>();
         return results;
     }
 

@@ -11,6 +11,21 @@ import java.util.Map;
 public class RouterExprTest {
 
     @Test
+    public void test11() throws Exception {
+
+        Map<String, String> data = new HashMap<>();
+        data.put("applic-atio_n", "abc");
+        data.put("host", "192.168.1.3");
+
+        RouterExprParser parser = new RouterExprParser();
+        String s = "applic-atio_n == abc";
+        RouterExpr expr = parser.parse(s);
+        boolean match = expr.eval(data);
+        Assert.assertTrue(match);
+
+    }
+
+    @Test
     public void test1() throws Exception {
 
         Map<String, String> data = new HashMap<>();

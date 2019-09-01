@@ -20,6 +20,8 @@ private static final long serialVersionUID = 0L;
     type_ = "";
     msg_ = "";
     count_ = 0;
+    target_ = "";
+    targetAddrs_ = "";
   }
 
   @Override
@@ -66,6 +68,18 @@ private static final long serialVersionUID = 0L;
           case 48: {
 
             count_ = input.readInt32();
+            break;
+          }
+          case 58: {
+            String s = input.readStringRequireUtf8();
+
+            target_ = s;
+            break;
+          }
+          case 66: {
+            String s = input.readStringRequireUtf8();
+
+            targetAddrs_ = s;
             break;
           }
           default: {
@@ -186,6 +200,90 @@ private static final long serialVersionUID = 0L;
     return count_;
   }
 
+  public static final int TARGET_FIELD_NUMBER = 7;
+  private volatile Object target_;
+  /**
+   * <pre>
+   * 新增
+   * </pre>
+   *
+   * <code>string target = 7;</code>
+   */
+  public String getTarget() {
+    Object ref = target_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      target_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * 新增
+   * </pre>
+   *
+   * <code>string target = 7;</code>
+   */
+  public com.google.protobuf.ByteString
+      getTargetBytes() {
+    Object ref = target_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      target_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int TARGETADDRS_FIELD_NUMBER = 8;
+  private volatile Object targetAddrs_;
+  /**
+   * <pre>
+   * 新增
+   * </pre>
+   *
+   * <code>string targetAddrs = 8;</code>
+   */
+  public String getTargetAddrs() {
+    Object ref = targetAddrs_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      targetAddrs_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * 新增
+   * </pre>
+   *
+   * <code>string targetAddrs = 8;</code>
+   */
+  public com.google.protobuf.ByteString
+      getTargetAddrsBytes() {
+    Object ref = targetAddrs_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      targetAddrs_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @Override
   public final boolean isInitialized() {
@@ -212,6 +310,12 @@ private static final long serialVersionUID = 0L;
     if (count_ != 0) {
       output.writeInt32(6, count_);
     }
+    if (!getTargetBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, target_);
+    }
+    if (!getTargetAddrsBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, targetAddrs_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -234,6 +338,12 @@ private static final long serialVersionUID = 0L;
     if (count_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(6, count_);
+    }
+    if (!getTargetBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, target_);
+    }
+    if (!getTargetAddrsBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, targetAddrs_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -259,6 +369,10 @@ private static final long serialVersionUID = 0L;
         .equals(other.getMsg());
     result = result && (getCount()
         == other.getCount());
+    result = result && getTarget()
+        .equals(other.getTarget());
+    result = result && getTargetAddrs()
+        .equals(other.getTargetAddrs());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -279,6 +393,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getMsg().hashCode();
     hash = (37 * hash) + COUNT_FIELD_NUMBER;
     hash = (53 * hash) + getCount();
+    hash = (37 * hash) + TARGET_FIELD_NUMBER;
+    hash = (53 * hash) + getTarget().hashCode();
+    hash = (37 * hash) + TARGETADDRS_FIELD_NUMBER;
+    hash = (53 * hash) + getTargetAddrs().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -420,6 +538,10 @@ private static final long serialVersionUID = 0L;
 
       count_ = 0;
 
+      target_ = "";
+
+      targetAddrs_ = "";
+
       return this;
     }
 
@@ -450,6 +572,8 @@ private static final long serialVersionUID = 0L;
       result.type_ = type_;
       result.msg_ = msg_;
       result.count_ = count_;
+      result.target_ = target_;
+      result.targetAddrs_ = targetAddrs_;
       onBuilt();
       return result;
     }
@@ -511,6 +635,14 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getCount() != 0) {
         setCount(other.getCount());
+      }
+      if (!other.getTarget().isEmpty()) {
+        target_ = other.target_;
+        onChanged();
+      }
+      if (!other.getTargetAddrs().isEmpty()) {
+        targetAddrs_ = other.targetAddrs_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -723,6 +855,180 @@ private static final long serialVersionUID = 0L;
     public Builder clearCount() {
       
       count_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private Object target_ = "";
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string target = 7;</code>
+     */
+    public String getTarget() {
+      Object ref = target_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        target_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string target = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTargetBytes() {
+      Object ref = target_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        target_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string target = 7;</code>
+     */
+    public Builder setTarget(
+        String value) {
+      if (value == null) value = "";
+  
+      target_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string target = 7;</code>
+     */
+    public Builder clearTarget() {
+      
+      target_ = getDefaultInstance().getTarget();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string target = 7;</code>
+     */
+    public Builder setTargetBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      target_ = value;
+      onChanged();
+      return this;
+    }
+
+    private Object targetAddrs_ = "";
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string targetAddrs = 8;</code>
+     */
+    public String getTargetAddrs() {
+      Object ref = targetAddrs_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        targetAddrs_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string targetAddrs = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTargetAddrsBytes() {
+      Object ref = targetAddrs_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        targetAddrs_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string targetAddrs = 8;</code>
+     */
+    public Builder setTargetAddrs(
+        String value) {
+      if (value == null) value = "";
+  
+      targetAddrs_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string targetAddrs = 8;</code>
+     */
+    public Builder clearTargetAddrs() {
+      
+      targetAddrs_ = getDefaultInstance().getTargetAddrs();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 新增
+     * </pre>
+     *
+     * <code>string targetAddrs = 8;</code>
+     */
+    public Builder setTargetAddrsBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      targetAddrs_ = value;
       onChanged();
       return this;
     }

@@ -24,7 +24,7 @@ public class JsonpWebPlugin implements WebPlugin, RenderPlugin {
         String callback = req.getParameter(jsonpField);
         if (callback == null || callback.isEmpty()) {
             res.setContent(json);
-            res.setContentType("application/json");
+            res.setContentType(WebConstants.MIMETYPE_JSON );
             return;
         }
 

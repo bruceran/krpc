@@ -10,7 +10,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
    */
-  String getUserId();
+  java.lang.String getUserId();
   /**
    * <code>string userId = 1 [(.krpc.vld) = { ... }</code>
    */
@@ -20,7 +20,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
    */
-  String getS1();
+  java.lang.String getS1();
   /**
    * <code>string s1 = 11 [(.krpc.vld) = { ... }</code>
    */
@@ -30,7 +30,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
    */
-  String getS2();
+  java.lang.String getS2();
   /**
    * <code>string s2 = 14 [(.krpc.vld) = { ... }</code>
    */
@@ -45,7 +45,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
    */
-  String getI2();
+  java.lang.String getI2();
   /**
    * <code>string i2 = 16 [(.krpc.vld) = { ... }</code>
    */
@@ -60,7 +60,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
    */
-  String getI4();
+  java.lang.String getI4();
   /**
    * <code>string i4 = 18 [(.krpc.vld) = { ... }</code>
    */
@@ -74,16 +74,16 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>.ValidateSub m = 8;</code>
    */
-  ValidateSub getM();
+  com.xxx.userservice.proto.ValidateSub getM();
   /**
    * <code>.ValidateSub m = 8;</code>
    */
-  ValidateSubOrBuilder getMOrBuilder();
+  com.xxx.userservice.proto.ValidateSubOrBuilder getMOrBuilder();
 
   /**
    * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
    */
-  String getS5();
+  java.lang.String getS5();
   /**
    * <code>string s5 = 21 [(.krpc.vld) = { ... }</code>
    */
@@ -93,7 +93,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
    */
-  String getS6();
+  java.lang.String getS6();
   /**
    * <code>string s6 = 22 [(.krpc.vld) = { ... }</code>
    */
@@ -108,7 +108,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
    */
-  java.util.List<String>
+  java.util.List<java.lang.String>
       getS7List();
   /**
    * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
@@ -117,7 +117,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
    */
-  String getS7(int index);
+  java.lang.String getS7(int index);
   /**
    * <code>repeated string s7 = 24 [(.krpc.vld) = { ... }</code>
    */
@@ -127,7 +127,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
    */
-  String getS31();
+  java.lang.String getS31();
   /**
    * <code>string s31 = 31 [(.krpc.vld) = { ... }</code>
    */
@@ -137,7 +137,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
    */
-  String getS32();
+  java.lang.String getS32();
   /**
    * <code>string s32 = 32 [(.krpc.vld) = { ... }</code>
    */
@@ -147,7 +147,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
    */
-  String getS33();
+  java.lang.String getS33();
   /**
    * <code>string s33 = 33 [(.krpc.vld) = { ... }</code>
    */
@@ -157,7 +157,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
    */
-  String getS34();
+  java.lang.String getS34();
   /**
    * <code>string s34 = 34 [(.krpc.vld) = { ... }</code>
    */
@@ -167,7 +167,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
    */
-  String getS35();
+  java.lang.String getS35();
   /**
    * <code>string s35 = 35 [(.krpc.vld) = { ... }</code>
    */
@@ -177,7 +177,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
    */
-  String getS36();
+  java.lang.String getS36();
   /**
    * <code>string s36 = 36 [(.krpc.vld) = { ... }</code>
    */
@@ -187,7 +187,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
    */
-  String getS37();
+  java.lang.String getS37();
   /**
    * <code>string s37 = 37 [(.krpc.vld) = { ... }</code>
    */
@@ -197,7 +197,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
    */
-  String getS38();
+  java.lang.String getS38();
   /**
    * <code>string s38 = 38 [(.krpc.vld) = { ... }</code>
    */
@@ -207,7 +207,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
    */
-  String getS39();
+  java.lang.String getS39();
   /**
    * <code>string s39 = 39 [(.krpc.vld) = { ... }</code>
    */
@@ -217,12 +217,12 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
-  java.util.List<ValidateSub>
+  java.util.List<com.xxx.userservice.proto.ValidateSub> 
       getKList();
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
-  ValidateSub getK(int index);
+  com.xxx.userservice.proto.ValidateSub getK(int index);
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
@@ -230,18 +230,18 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
-  java.util.List<? extends ValidateSubOrBuilder>
+  java.util.List<? extends com.xxx.userservice.proto.ValidateSubOrBuilder> 
       getKOrBuilderList();
   /**
    * <code>repeated .ValidateSub k = 40 [(.krpc.vld) = { ... }</code>
    */
-  ValidateSubOrBuilder getKOrBuilder(
-          int index);
+  com.xxx.userservice.proto.ValidateSubOrBuilder getKOrBuilder(
+      int index);
 
   /**
    * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
    */
-  java.util.List<String>
+  java.util.List<java.lang.String>
       getS41List();
   /**
    * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
@@ -250,7 +250,7 @@ public interface ValidateTestReqOrBuilder extends
   /**
    * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
    */
-  String getS41(int index);
+  java.lang.String getS41(int index);
   /**
    * <code>repeated string s41 = 41 [(.krpc.vld) = { ... }</code>
    */

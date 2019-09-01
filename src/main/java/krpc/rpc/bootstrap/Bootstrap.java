@@ -18,11 +18,8 @@ import krpc.rpc.impl.*;
 import krpc.rpc.impl.transport.DefaultRpcCodec;
 import krpc.rpc.impl.transport.NettyClient;
 import krpc.rpc.impl.transport.NettyServer;
-import krpc.rpc.monitor.DefaultMonitorService;
-import krpc.rpc.monitor.LogFormatter;
-import krpc.rpc.monitor.MonitorPlugin;
+import krpc.rpc.monitor.*;
 import krpc.rpc.registry.DefaultRegistryManager;
-import krpc.rpc.monitor.SelfCheckHttpServer;
 import krpc.rpc.util.IpUtils;
 import krpc.rpc.web.*;
 import krpc.rpc.web.impl.DefaultRpcDataConverter;
@@ -53,7 +50,8 @@ public class Bootstrap {
 
     static Logger log = LoggerFactory.getLogger(Bootstrap.class);
 
-    static private final String versionString = "krpc version 0.2.15 build 1 @ 20190426";
+    static private final String versionString = "krpc version 0.2.31 build @ 20190830";
+
 
     private ApplicationConfig appConfig = new ApplicationConfig();
     private MonitorConfig monitorConfig = new MonitorConfig();
@@ -158,7 +156,7 @@ public class Bootstrap {
         return new RpcClient();
     }
 
-    public RpcRetrier newRpcRetrier(RpcCallable rpcCallable,ServiceMetas serviceMetas, String dataDir) {
+    public RpcRetrier newRpcRetrier(RpcCallable rpcCallable, ServiceMetas serviceMetas, String dataDir) {
         RpcRetrierImpl r = new RpcRetrierImpl();
         r.setDataDir(dataDir);
         r.setRpcCallable(rpcCallable);
@@ -202,13 +200,21 @@ public class Bootstrap {
         return v;
     }
 
-    public SelfCheckHttpServer newSelfCheckHttpServer(int port) {
+    public SelfCheckHttpServer newSelfCheckHttpServer(int port, PostmanExporter p) {
         SelfCheckHttpServer s = new SelfCheckHttpServer(port);
         s.setVersionString(versionString);
+        s.setEnablePostmanExport(appConfig.enablePostmanExport);
+        s.setPostmanExporter(p);
         return s;
     }
 
-    public DefaultMonitorService newMonitorService(RpcCodec codec, ServiceMetas serviceMetas, MonitorConfig c,SelfCheckHttpServer shs) {
+    public PostmanExporter newPostmanExporter(ServiceMetas metas) {
+        PostmanExporter p = new PostmanExporter();
+        p.setServiceMetas(metas);
+        return p;
+    }
+
+    public DefaultMonitorService newMonitorService(RpcCodec codec, ServiceMetas serviceMetas, MonitorConfig c, SelfCheckHttpServer shs) {
         DefaultMonitorService m = new DefaultMonitorService(codec, serviceMetas);
         m.setAppName(appConfig.name);
 
@@ -226,7 +232,7 @@ public class Bootstrap {
 
         LogFormatter lf = getPlugin(LogFormatter.class, parseType(monitorConfig.logFormatter));
         String params = parseParams(monitorConfig.logFormatter);
-        params += "maskFields=" + (c.maskFields == null ? "" : c.maskFields) + ";maxRepeatedSizeToLog=" + c.maxRepeatedSizeToLog + ";printDefault=" + c.printDefault+";maxFieldSizeToLog="+c.maxFieldSizeToLog;
+        params += "maskFields=" + (c.maskFields == null ? "" : c.maskFields) + ";maxRepeatedSizeToLog=" + c.maxRepeatedSizeToLog + ";printDefault=" + c.printDefault + ";maxFieldSizeToLog=" + c.maxFieldSizeToLog;
         lf.config(params);
         m.setLogFormatter(lf);
 
@@ -246,8 +252,9 @@ public class Bootstrap {
         DefaultWebRouteService rs = new DefaultWebRouteService();
         rs.setDataDir(dataDir);
         rs.setCaseSensitive(c.getCaseSensitive());
+        rs.setAllowDynamicUrls(c.allowDynamicUrls);
 
-        if( !c.autoRoute ) {
+        if (!c.autoRoute) {
             if (!isEmpty(c.routesFile)) {
                 loadRoutes(rs, c.routesFile);
             }
@@ -316,7 +323,7 @@ public class Bootstrap {
         initSniffer();
         prepare();
         doBuild();
-        if( !twoPhasesBuild )
+        if (!twoPhasesBuild)
             postBuild();
         return app;
     }
@@ -331,15 +338,15 @@ public class Bootstrap {
     ClientConfig lastClient = null;
     String defaultRegistry = null;
 
-    boolean splitExchangeServiceid(ClientConfig c,String s) {
+    boolean splitExchangeServiceid(ClientConfig c, String s) {
         int p = s.indexOf("->");
-        if( p <= 0 ) return false;
+        if (p <= 0) return false;
         try {
-            int src = Integer.parseInt(s.substring(0,p));
-            int dest = Integer.parseInt(s.substring(p+2));
-            c.addExchangeServiceId(src,dest);
+            int src = Integer.parseInt(s.substring(0, p));
+            int dest = Integer.parseInt(s.substring(p + 2));
+            c.addExchangeServiceId(src, dest);
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -434,13 +441,13 @@ public class Bootstrap {
             }
 
             if (!isEmpty(c.exchangeServiceIds)) { // 131->100,132->100
-                c.exchangeServiceIds = c.exchangeServiceIds.replace(';',',');
+                c.exchangeServiceIds = c.exchangeServiceIds.replace(';', ',');
                 String[] ss = c.exchangeServiceIds.split(",");
-                for(String s: ss ) {
-                    if(isEmpty(s)) continue;
-                    boolean ok = splitExchangeServiceid(c,s);
-                    if(!ok) {
-                        throw new RuntimeException("exchangeServiceId format is wrong, exchangeServiceIds="+c.exchangeServiceIds);
+                for (String s : ss) {
+                    if (isEmpty(s)) continue;
+                    boolean ok = splitExchangeServiceid(c, s);
+                    if (!ok) {
+                        throw new RuntimeException("exchangeServiceId format is wrong, exchangeServiceIds=" + c.exchangeServiceIds);
                     }
                 }
             }
@@ -706,17 +713,19 @@ public class Bootstrap {
         app.proxyGenerator = newProxyGenerator();
         app.registryManager = newRegistryManager(app.serviceMetas, appConfig.dataDir);
 
-        if( monitorConfig.selfCheckPort != 0 ) {
-            app.selfCheckHttpServer = newSelfCheckHttpServer(monitorConfig.selfCheckPort);
+        app.postmanExporter = newPostmanExporter(app.serviceMetas);
+
+        if (monitorConfig.selfCheckPort != 0) {
+            app.selfCheckHttpServer = newSelfCheckHttpServer(monitorConfig.selfCheckPort, app.postmanExporter);
         }
 
         DefaultMonitorService monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig, app.selfCheckHttpServer);
         app.monitorService = monitorService;
         Alarm alarm = monitorService;
-        if( app.traceAdapter instanceof AlarmAware ) {
-            ((AlarmAware)app.traceAdapter).setAlarm(alarm);
+        if (app.traceAdapter instanceof AlarmAware) {
+            ((AlarmAware) app.traceAdapter).setAlarm(alarm);
         }
-        if( app.selfCheckHttpServer instanceof AlarmAware ) {
+        if (app.selfCheckHttpServer instanceof AlarmAware) {
             app.selfCheckHttpServer.setAlarm(alarm);
         }
 
@@ -741,8 +750,8 @@ public class Bootstrap {
 
             Registry impl = getPlugin(Registry.class, parseType(c.type));
 
-            if( impl instanceof AlarmAware ) {
-                ((AlarmAware)impl).setAlarm(alarm);
+            if (impl instanceof AlarmAware) {
+                ((AlarmAware) impl).setAlarm(alarm);
             }
 
             String params = parseParams(c.type);
@@ -823,9 +832,9 @@ public class Bootstrap {
             ClusterManager cmi = newClusterManager(nc, c);
             client.setClusterManager(cmi);
 
-            RpcRetrier  rpcRetrier = newRpcRetrier(client,app.serviceMetas,appConfig.dataDir);
-            if( rpcRetrier instanceof AlarmAware ) {
-                ((AlarmAware)(rpcRetrier)).setAlarm(alarm);
+            RpcRetrier rpcRetrier = newRpcRetrier(client, app.serviceMetas, appConfig.dataDir);
+            if (rpcRetrier instanceof AlarmAware) {
+                ((AlarmAware) (rpcRetrier)).setAlarm(alarm);
             }
             client.setRpcRetrier(rpcRetrier);
 
@@ -926,7 +935,7 @@ public class Bootstrap {
             server.setErrorMsgConverter(app.errorMsgConverter);
             server.setMonitorService(app.monitorService);
             WebRouteService wrs = newRouteService(c, appConfig.dataDir);
-            if( c.autoRoute) autoRouteServices.add(wrs);
+            if (c.autoRoute) autoRouteServices.add(wrs);
             server.setRouteService(wrs);
             server.setRpcDataConverter(newRpcDataConverter(app.serviceMetas));
             server.setDefaultSessionService(ss);
@@ -962,7 +971,7 @@ public class Bootstrap {
 
             app.webServers.put(name, server);
 
-            loadProtos(app,c.protoDir);
+            loadProtos(app, c.protoDir);
         }
 
         for (Map.Entry<String, RefererConfig> entry : referers.entrySet()) {
@@ -1004,7 +1013,7 @@ public class Bootstrap {
 
             if (callable instanceof RpcClient) {
                 RpcClient client = (RpcClient) callable;
-                client.addRetryPolicy(serviceId, -1, c.timeout, c.retryCount,c.retryBroken);
+                client.addRetryPolicy(serviceId, -1, c.timeout, c.retryCount, c.retryBroken);
 
                 DefaultClusterManager cmi = (DefaultClusterManager) client.getClusterManager();
 
@@ -1016,11 +1025,11 @@ public class Bootstrap {
                 if (!isEmpty(c.registryName)) {
                     int exchangeServiceId = 0;
                     ClientConfig cc = clients.get(c.transport);
-                    if( cc != null ) {
+                    if (cc != null) {
                         exchangeServiceId = cc.getExchangeServiceId(serviceId);
-                        if( exchangeServiceId != 0 ) {
+                        if (exchangeServiceId != 0) {
                             String serviceName = app.serviceMetas.getServiceName(exchangeServiceId);
-                            if(isEmpty(serviceName)) {
+                            if (isEmpty(serviceName)) {
                                 throw new RuntimeException("exchangeServiceId not found, exchangeServiceId=" + exchangeServiceId);
                             }
                         }
@@ -1041,7 +1050,7 @@ public class Bootstrap {
 
                     for (int msgId : msgIds) {
                         client.addRetryPolicy(serviceId, msgId, mc.timeout,
-                                mc.retryCount,mc.retryBroken);
+                                mc.retryCount, mc.retryBroken);
                     }
                 }
             }
@@ -1083,8 +1092,9 @@ public class Bootstrap {
 
             app.serviceMetas.addService(cls, c.impl, callable);
 
-            for(WebRouteService wrs: autoRouteServices) {
-                loadAutoRoutes(wrs,serviceId, app.serviceMetas);
+            for (WebRouteService wrs : autoRouteServices) {
+                loadAutoRoutes(wrs, serviceId, app.serviceMetas);
+                loadAutoRoutePlugins(wrs);
             }
 
             if (!isEmpty(c.registryNames) && addr != null) {
@@ -1115,9 +1125,9 @@ public class Bootstrap {
 
         for (Map.Entry<String, ServerConfig> entry : servers.entrySet()) {
             ServerConfig c = entry.getValue();
-            if( !isEmpty(c.exchangeServiceIds)) {
+            if (!isEmpty(c.exchangeServiceIds)) {
                 String[] ss = c.exchangeServiceIds.split(",");
-                for(String s: ss ) {
+                for (String s : ss) {
                     app.serviceMetas.addExchangeServiceId(Integer.parseInt(s));
                 }
             }
@@ -1381,7 +1391,7 @@ public class Bootstrap {
                     PluginInfo pi = new PluginInfo(cls, implCls);
                     list.add(pi);
                 } catch (Throwable e) {
-                    log.info("cannot load plugin: " + s);
+//                    log.info("cannot load plugin: " + s);
                 }
 
             }
@@ -1649,22 +1659,52 @@ public class Bootstrap {
         rs.addUrl(url);
     }
 
+
     private void loadAutoRoutes(WebRouteService rs, int serviceId, ServiceMetas serviceMetas) {
         String serviceName = serviceMetas.getServiceName(serviceId);
         Map<Integer, String> msgNames = serviceMetas.getMsgNames(serviceId);
-        for(Map.Entry<Integer,String> entry:msgNames.entrySet()) {
+        for (Map.Entry<Integer, String> entry : msgNames.entrySet()) {
             int msgId = entry.getKey();
             String msgName = entry.getValue();
 
-            String path = "/"+serviceName.toLowerCase()+"/"+msgName.toLowerCase();
+            String path = "/" + serviceName.toLowerCase() + "/" + msgName.toLowerCase();
             WebUrl url = new WebUrl("*", path);
             url.setMethods("get,post").setServiceId(serviceId).setMsgId(msgId);
             url.setOrigins("*");
             rs.addUrl(url);
 
-            log.info("add auto route, path="+path+", serviceId="+serviceId+", msgId="+msgId);
+            log.info("add auto route, path=" + path + ", serviceId=" + serviceId + ", msgId=" + msgId);
         }
 
+    }
+
+    private void loadAutoRoutePlugins(WebRouteService rs) {
+
+        List<PluginInfo> pis = plugins.get(AutoRoutePlugin.class.getName());
+        if( pis != null ) {
+            for( PluginInfo pi: pis) {
+                AutoRoutePlugin arp = (AutoRoutePlugin)pi.bean;
+                List<WebUrl> urls = arp.generateWebUrls();
+                for(WebUrl url: urls) {
+                    Map<String, String> attrs = url.getAttrs();
+                    if( attrs != null  ) {
+                        String plugins = attrs.get("plugins");
+                        if( !isEmpty(plugins)) {
+                            WebPlugins pluginList = loadWebPlugins(plugins);
+                            url.setPlugins(pluginList);
+                        }
+                    }
+                    rs.addUrl(url);
+
+                    log.info("add auto route, path=" + url.getPath() + ", serviceId=" + url.getServiceId() + ", msgId=" + url.getMsgId());
+                }
+
+                List<WebDir> dirs = arp.generateWebDirs();
+                for(WebDir dir: dirs) {
+                    rs.addDir(dir);
+                }
+            }
+        }
     }
 
     private void loadDir(DefaultWebRouteService rs, Node node) {

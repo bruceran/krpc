@@ -13,7 +13,7 @@ public  final class HttpTestRes extends
 private static final long serialVersionUID = 0L;
 public static final HttpTestRes ok() { return HttpTestRes.newBuilder().build(); } ;
 public static final HttpTestRes failed(int retCode) { return HttpTestRes.newBuilder().setRetCode(retCode).build(); } ;
-public static final HttpTestRes failed(int retCode,String retMsg) { return HttpTestRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+public static final HttpTestRes failed(int retCode,java.lang.String retMsg) { return HttpTestRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
   // Use HttpTestRes.newBuilder() to construct.
   private HttpTestRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -30,7 +30,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     totalPrice_ = 0;
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -41,7 +41,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -60,23 +60,23 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
             break;
           }
           case 18: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             retMsg_ = s;
             break;
           }
           case 26: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             userId_ = s;
             break;
           }
           case 34: {
-            Session.Builder subBuilder = null;
+            com.xxx.userservice.proto.Session.Builder subBuilder = null;
             if (session_ != null) {
               subBuilder = session_.toBuilder();
             }
-            session_ = input.readMessage(Session.parser(), extensionRegistry);
+            session_ = input.readMessage(com.xxx.userservice.proto.Session.parser(), extensionRegistry);
             if (subBuilder != null) {
               subBuilder.mergeFrom(session_);
               session_ = subBuilder.buildPartial();
@@ -90,25 +90,25 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
             break;
           }
           case 50: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             httpContentType_ = s;
             break;
           }
           case 58: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             headerLocation_ = s;
             break;
           }
           case 66: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             headerXmmDddCcc_ = s;
             break;
           }
           case 74: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             cookieTnk_ = s;
             break;
@@ -139,15 +139,15 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserServiceMetas.internal_static_HttpTestRes_descriptor;
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserServiceMetas.internal_static_HttpTestRes_fieldAccessorTable
+    return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HttpTestRes.class, Builder.class);
+            com.xxx.userservice.proto.HttpTestRes.class, com.xxx.userservice.proto.HttpTestRes.Builder.class);
   }
 
   public static final int RETCODE_FIELD_NUMBER = 1;
@@ -160,18 +160,18 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   public static final int RETMSG_FIELD_NUMBER = 2;
-  private volatile Object retMsg_;
+  private volatile java.lang.Object retMsg_;
   /**
    * <code>string retMsg = 2;</code>
    */
-  public String getRetMsg() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getRetMsg() {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       retMsg_ = s;
       return s;
     }
@@ -181,11 +181,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
    */
   public com.google.protobuf.ByteString
       getRetMsgBytes() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       retMsg_ = b;
       return b;
     } else {
@@ -194,18 +194,18 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   public static final int USERID_FIELD_NUMBER = 3;
-  private volatile Object userId_;
+  private volatile java.lang.Object userId_;
   /**
    * <code>string userId = 3;</code>
    */
-  public String getUserId() {
-    Object ref = userId_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getUserId() {
+    java.lang.Object ref = userId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       userId_ = s;
       return s;
     }
@@ -215,11 +215,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
    */
   public com.google.protobuf.ByteString
       getUserIdBytes() {
-    Object ref = userId_;
-    if (ref instanceof String) {
+    java.lang.Object ref = userId_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       userId_ = b;
       return b;
     } else {
@@ -228,7 +228,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   public static final int SESSION_FIELD_NUMBER = 4;
-  private Session session_;
+  private com.xxx.userservice.proto.Session session_;
   /**
    * <code>.Session session = 4;</code>
    */
@@ -238,13 +238,13 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   /**
    * <code>.Session session = 4;</code>
    */
-  public Session getSession() {
-    return session_ == null ? Session.getDefaultInstance() : session_;
+  public com.xxx.userservice.proto.Session getSession() {
+    return session_ == null ? com.xxx.userservice.proto.Session.getDefaultInstance() : session_;
   }
   /**
    * <code>.Session session = 4;</code>
    */
-  public SessionOrBuilder getSessionOrBuilder() {
+  public com.xxx.userservice.proto.SessionOrBuilder getSessionOrBuilder() {
     return getSession();
   }
 
@@ -258,18 +258,18 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   public static final int HTTPCONTENTTYPE_FIELD_NUMBER = 6;
-  private volatile Object httpContentType_;
+  private volatile java.lang.Object httpContentType_;
   /**
    * <code>string httpContentType = 6;</code>
    */
-  public String getHttpContentType() {
-    Object ref = httpContentType_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getHttpContentType() {
+    java.lang.Object ref = httpContentType_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       httpContentType_ = s;
       return s;
     }
@@ -279,11 +279,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
    */
   public com.google.protobuf.ByteString
       getHttpContentTypeBytes() {
-    Object ref = httpContentType_;
-    if (ref instanceof String) {
+    java.lang.Object ref = httpContentType_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       httpContentType_ = b;
       return b;
     } else {
@@ -292,18 +292,18 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   public static final int HEADERLOCATION_FIELD_NUMBER = 7;
-  private volatile Object headerLocation_;
+  private volatile java.lang.Object headerLocation_;
   /**
    * <code>string headerLocation = 7;</code>
    */
-  public String getHeaderLocation() {
-    Object ref = headerLocation_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getHeaderLocation() {
+    java.lang.Object ref = headerLocation_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       headerLocation_ = s;
       return s;
     }
@@ -313,11 +313,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
    */
   public com.google.protobuf.ByteString
       getHeaderLocationBytes() {
-    Object ref = headerLocation_;
-    if (ref instanceof String) {
+    java.lang.Object ref = headerLocation_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       headerLocation_ = b;
       return b;
     } else {
@@ -326,18 +326,18 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   public static final int HEADERXMMDDDCCC_FIELD_NUMBER = 8;
-  private volatile Object headerXmmDddCcc_;
+  private volatile java.lang.Object headerXmmDddCcc_;
   /**
    * <code>string headerXmmDddCcc = 8;</code>
    */
-  public String getHeaderXmmDddCcc() {
-    Object ref = headerXmmDddCcc_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getHeaderXmmDddCcc() {
+    java.lang.Object ref = headerXmmDddCcc_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       headerXmmDddCcc_ = s;
       return s;
     }
@@ -347,11 +347,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
    */
   public com.google.protobuf.ByteString
       getHeaderXmmDddCccBytes() {
-    Object ref = headerXmmDddCcc_;
-    if (ref instanceof String) {
+    java.lang.Object ref = headerXmmDddCcc_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       headerXmmDddCcc_ = b;
       return b;
     } else {
@@ -360,18 +360,18 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   public static final int COOKIETNK_FIELD_NUMBER = 9;
-  private volatile Object cookieTnk_;
+  private volatile java.lang.Object cookieTnk_;
   /**
    * <code>string cookieTnk = 9;</code>
    */
-  public String getCookieTnk() {
-    Object ref = cookieTnk_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getCookieTnk() {
+    java.lang.Object ref = cookieTnk_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       cookieTnk_ = s;
       return s;
     }
@@ -381,11 +381,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
    */
   public com.google.protobuf.ByteString
       getCookieTnkBytes() {
-    Object ref = cookieTnk_;
-    if (ref instanceof String) {
+    java.lang.Object ref = cookieTnk_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       cookieTnk_ = b;
       return b;
     } else {
@@ -403,7 +403,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -413,7 +413,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (retCode_ != 0) {
@@ -449,7 +449,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -494,15 +494,15 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof HttpTestRes)) {
+    if (!(obj instanceof com.xxx.userservice.proto.HttpTestRes)) {
       return super.equals(obj);
     }
-    HttpTestRes other = (HttpTestRes) obj;
+    com.xxx.userservice.proto.HttpTestRes other = (com.xxx.userservice.proto.HttpTestRes) obj;
 
     boolean result = true;
     result = result && (getRetCode()
@@ -532,7 +532,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -566,69 +566,69 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     return hash;
   }
 
-  public static HttpTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpTestRes parseFrom(byte[] data)
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HttpTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HttpTestRes parseFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HttpTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HttpTestRes parseDelimitedFrom(java.io.InputStream input)
+  public static com.xxx.userservice.proto.HttpTestRes parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static HttpTestRes parseDelimitedFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HttpTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HttpTestRes parseFrom(
+  public static com.xxx.userservice.proto.HttpTestRes parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -636,23 +636,23 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(HttpTestRes prototype) {
+  public static Builder newBuilder(com.xxx.userservice.proto.HttpTestRes prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -662,18 +662,18 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:HttpTestRes)
-      HttpTestResOrBuilder {
+      com.xxx.userservice.proto.HttpTestResOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserServiceMetas.internal_static_HttpTestRes_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserServiceMetas.internal_static_HttpTestRes_fieldAccessorTable
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HttpTestRes.class, Builder.class);
+              com.xxx.userservice.proto.HttpTestRes.class, com.xxx.userservice.proto.HttpTestRes.Builder.class);
     }
 
     // Construct using com.xxx.userservice.proto.HttpTestRes.newBuilder()
@@ -682,7 +682,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -691,7 +691,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
               .alwaysUseFieldBuilders) {
       }
     }
-    @Override
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       retCode_ = 0;
@@ -721,29 +721,29 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserServiceMetas.internal_static_HttpTestRes_descriptor;
+      return com.xxx.userservice.proto.UserServiceMetas.internal_static_HttpTestRes_descriptor;
     }
 
-    @Override
-    public HttpTestRes getDefaultInstanceForType() {
-      return HttpTestRes.getDefaultInstance();
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpTestRes getDefaultInstanceForType() {
+      return com.xxx.userservice.proto.HttpTestRes.getDefaultInstance();
     }
 
-    @Override
-    public HttpTestRes build() {
-      HttpTestRes result = buildPartial();
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpTestRes build() {
+      com.xxx.userservice.proto.HttpTestRes result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public HttpTestRes buildPartial() {
-      HttpTestRes result = new HttpTestRes(this);
+    @java.lang.Override
+    public com.xxx.userservice.proto.HttpTestRes buildPartial() {
+      com.xxx.userservice.proto.HttpTestRes result = new com.xxx.userservice.proto.HttpTestRes(this);
       result.retCode_ = retCode_;
       result.retMsg_ = retMsg_;
       result.userId_ = userId_;
@@ -762,50 +762,50 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof HttpTestRes) {
-        return mergeFrom((HttpTestRes)other);
+      if (other instanceof com.xxx.userservice.proto.HttpTestRes) {
+        return mergeFrom((com.xxx.userservice.proto.HttpTestRes)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(HttpTestRes other) {
-      if (other == HttpTestRes.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.xxx.userservice.proto.HttpTestRes other) {
+      if (other == com.xxx.userservice.proto.HttpTestRes.getDefaultInstance()) return this;
       if (other.getRetCode() != 0) {
         setRetCode(other.getRetCode());
       }
@@ -847,21 +847,21 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      HttpTestRes parsedMessage = null;
+      com.xxx.userservice.proto.HttpTestRes parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (HttpTestRes) e.getUnfinishedMessage();
+        parsedMessage = (com.xxx.userservice.proto.HttpTestRes) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -897,20 +897,20 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    private Object retMsg_ = "";
+    private java.lang.Object retMsg_ = "";
     /**
      * <code>string retMsg = 2;</code>
      */
-    public String getRetMsg() {
-      Object ref = retMsg_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getRetMsg() {
+      java.lang.Object ref = retMsg_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         retMsg_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -918,11 +918,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      */
     public com.google.protobuf.ByteString
         getRetMsgBytes() {
-      Object ref = retMsg_;
+      java.lang.Object ref = retMsg_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         retMsg_ = b;
         return b;
       } else {
@@ -933,7 +933,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      * <code>string retMsg = 2;</code>
      */
     public Builder setRetMsg(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       retMsg_ = value;
@@ -964,20 +964,20 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    private Object userId_ = "";
+    private java.lang.Object userId_ = "";
     /**
      * <code>string userId = 3;</code>
      */
-    public String getUserId() {
-      Object ref = userId_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         userId_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -985,11 +985,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      */
     public com.google.protobuf.ByteString
         getUserIdBytes() {
-      Object ref = userId_;
+      java.lang.Object ref = userId_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         userId_ = b;
         return b;
       } else {
@@ -1000,7 +1000,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      * <code>string userId = 3;</code>
      */
     public Builder setUserId(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       userId_ = value;
@@ -1031,9 +1031,9 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    private Session session_ = null;
+    private com.xxx.userservice.proto.Session session_ = null;
     private com.google.protobuf.SingleFieldBuilderV3<
-        Session, Session.Builder, SessionOrBuilder> sessionBuilder_;
+        com.xxx.userservice.proto.Session, com.xxx.userservice.proto.Session.Builder, com.xxx.userservice.proto.SessionOrBuilder> sessionBuilder_;
     /**
      * <code>.Session session = 4;</code>
      */
@@ -1043,9 +1043,9 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     /**
      * <code>.Session session = 4;</code>
      */
-    public Session getSession() {
+    public com.xxx.userservice.proto.Session getSession() {
       if (sessionBuilder_ == null) {
-        return session_ == null ? Session.getDefaultInstance() : session_;
+        return session_ == null ? com.xxx.userservice.proto.Session.getDefaultInstance() : session_;
       } else {
         return sessionBuilder_.getMessage();
       }
@@ -1053,7 +1053,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     /**
      * <code>.Session session = 4;</code>
      */
-    public Builder setSession(Session value) {
+    public Builder setSession(com.xxx.userservice.proto.Session value) {
       if (sessionBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -1070,7 +1070,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      * <code>.Session session = 4;</code>
      */
     public Builder setSession(
-        Session.Builder builderForValue) {
+        com.xxx.userservice.proto.Session.Builder builderForValue) {
       if (sessionBuilder_ == null) {
         session_ = builderForValue.build();
         onChanged();
@@ -1083,11 +1083,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     /**
      * <code>.Session session = 4;</code>
      */
-    public Builder mergeSession(Session value) {
+    public Builder mergeSession(com.xxx.userservice.proto.Session value) {
       if (sessionBuilder_ == null) {
         if (session_ != null) {
           session_ =
-            Session.newBuilder(session_).mergeFrom(value).buildPartial();
+            com.xxx.userservice.proto.Session.newBuilder(session_).mergeFrom(value).buildPartial();
         } else {
           session_ = value;
         }
@@ -1115,7 +1115,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     /**
      * <code>.Session session = 4;</code>
      */
-    public Session.Builder getSessionBuilder() {
+    public com.xxx.userservice.proto.Session.Builder getSessionBuilder() {
       
       onChanged();
       return getSessionFieldBuilder().getBuilder();
@@ -1123,23 +1123,23 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     /**
      * <code>.Session session = 4;</code>
      */
-    public SessionOrBuilder getSessionOrBuilder() {
+    public com.xxx.userservice.proto.SessionOrBuilder getSessionOrBuilder() {
       if (sessionBuilder_ != null) {
         return sessionBuilder_.getMessageOrBuilder();
       } else {
         return session_ == null ?
-            Session.getDefaultInstance() : session_;
+            com.xxx.userservice.proto.Session.getDefaultInstance() : session_;
       }
     }
     /**
      * <code>.Session session = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        Session, Session.Builder, SessionOrBuilder>
+        com.xxx.userservice.proto.Session, com.xxx.userservice.proto.Session.Builder, com.xxx.userservice.proto.SessionOrBuilder> 
         getSessionFieldBuilder() {
       if (sessionBuilder_ == null) {
         sessionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            Session, Session.Builder, SessionOrBuilder>(
+            com.xxx.userservice.proto.Session, com.xxx.userservice.proto.Session.Builder, com.xxx.userservice.proto.SessionOrBuilder>(
                 getSession(),
                 getParentForChildren(),
                 isClean());
@@ -1174,20 +1174,20 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    private Object httpContentType_ = "";
+    private java.lang.Object httpContentType_ = "";
     /**
      * <code>string httpContentType = 6;</code>
      */
-    public String getHttpContentType() {
-      Object ref = httpContentType_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getHttpContentType() {
+      java.lang.Object ref = httpContentType_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         httpContentType_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1195,11 +1195,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      */
     public com.google.protobuf.ByteString
         getHttpContentTypeBytes() {
-      Object ref = httpContentType_;
+      java.lang.Object ref = httpContentType_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         httpContentType_ = b;
         return b;
       } else {
@@ -1210,7 +1210,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      * <code>string httpContentType = 6;</code>
      */
     public Builder setHttpContentType(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       httpContentType_ = value;
@@ -1241,20 +1241,20 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    private Object headerLocation_ = "";
+    private java.lang.Object headerLocation_ = "";
     /**
      * <code>string headerLocation = 7;</code>
      */
-    public String getHeaderLocation() {
-      Object ref = headerLocation_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getHeaderLocation() {
+      java.lang.Object ref = headerLocation_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         headerLocation_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1262,11 +1262,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      */
     public com.google.protobuf.ByteString
         getHeaderLocationBytes() {
-      Object ref = headerLocation_;
+      java.lang.Object ref = headerLocation_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         headerLocation_ = b;
         return b;
       } else {
@@ -1277,7 +1277,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      * <code>string headerLocation = 7;</code>
      */
     public Builder setHeaderLocation(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       headerLocation_ = value;
@@ -1308,20 +1308,20 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    private Object headerXmmDddCcc_ = "";
+    private java.lang.Object headerXmmDddCcc_ = "";
     /**
      * <code>string headerXmmDddCcc = 8;</code>
      */
-    public String getHeaderXmmDddCcc() {
-      Object ref = headerXmmDddCcc_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getHeaderXmmDddCcc() {
+      java.lang.Object ref = headerXmmDddCcc_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         headerXmmDddCcc_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1329,11 +1329,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      */
     public com.google.protobuf.ByteString
         getHeaderXmmDddCccBytes() {
-      Object ref = headerXmmDddCcc_;
+      java.lang.Object ref = headerXmmDddCcc_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         headerXmmDddCcc_ = b;
         return b;
       } else {
@@ -1344,7 +1344,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      * <code>string headerXmmDddCcc = 8;</code>
      */
     public Builder setHeaderXmmDddCcc(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       headerXmmDddCcc_ = value;
@@ -1375,20 +1375,20 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       return this;
     }
 
-    private Object cookieTnk_ = "";
+    private java.lang.Object cookieTnk_ = "";
     /**
      * <code>string cookieTnk = 9;</code>
      */
-    public String getCookieTnk() {
-      Object ref = cookieTnk_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getCookieTnk() {
+      java.lang.Object ref = cookieTnk_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         cookieTnk_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -1396,11 +1396,11 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      */
     public com.google.protobuf.ByteString
         getCookieTnkBytes() {
-      Object ref = cookieTnk_;
+      java.lang.Object ref = cookieTnk_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         cookieTnk_ = b;
         return b;
       } else {
@@ -1411,7 +1411,7 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
      * <code>string cookieTnk = 9;</code>
      */
     public Builder setCookieTnk(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       cookieTnk_ = value;
@@ -1467,13 +1467,13 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
       onChanged();
       return this;
     }
-    @Override
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -1484,18 +1484,18 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
   }
 
   // @@protoc_insertion_point(class_scope:HttpTestRes)
-  private static final HttpTestRes DEFAULT_INSTANCE;
+  private static final com.xxx.userservice.proto.HttpTestRes DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new HttpTestRes();
+    DEFAULT_INSTANCE = new com.xxx.userservice.proto.HttpTestRes();
   }
 
-  public static HttpTestRes getDefaultInstance() {
+  public static com.xxx.userservice.proto.HttpTestRes getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<HttpTestRes>
       PARSER = new com.google.protobuf.AbstractParser<HttpTestRes>() {
-    @Override
+    @java.lang.Override
     public HttpTestRes parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1508,13 +1508,13 @@ public static final HttpTestRes failed(int retCode,String retMsg) { return HttpT
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<HttpTestRes> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public HttpTestRes getDefaultInstanceForType() {
+  @java.lang.Override
+  public com.xxx.userservice.proto.HttpTestRes getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

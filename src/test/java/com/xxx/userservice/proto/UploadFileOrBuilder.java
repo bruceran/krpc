@@ -10,7 +10,7 @@ public interface UploadFileOrBuilder extends
   /**
    * <code>string file = 1;</code>
    */
-  String getFile();
+  java.lang.String getFile();
   /**
    * <code>string file = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface UploadFileOrBuilder extends
   /**
    * <code>string filename = 2;</code>
    */
-  String getFilename();
+  java.lang.String getFilename();
   /**
    * <code>string filename = 2;</code>
    */
@@ -35,7 +35,7 @@ public interface UploadFileOrBuilder extends
   /**
    * <code>string ext = 4;</code>
    */
-  String getExt();
+  java.lang.String getExt();
   /**
    * <code>string ext = 4;</code>
    */
@@ -45,7 +45,7 @@ public interface UploadFileOrBuilder extends
   /**
    * <code>string contentType = 5;</code>
    */
-  String getContentType();
+  java.lang.String getContentType();
   /**
    * <code>string contentType = 5;</code>
    */

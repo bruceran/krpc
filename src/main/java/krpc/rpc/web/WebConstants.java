@@ -5,6 +5,7 @@ public class WebConstants {
     static public final String DefaultCharSet = "utf-8";
 
     static public final String TraceIdName = "x-trace-id";
+    static public final String DyeingName = "x-dyeing";
 
     static public final String LoginFlagName = "loginFlag";
     static public final String SessionMapName = "session";
@@ -17,7 +18,8 @@ public class WebConstants {
     static public final String HttpCodeName = "httpCode";
     static public final String HttpContentTypeName = "httpContentType";
 
-    static public final String MIMETYPE_JSON = "application/json";
+    static public final String MIMETYPE_JSON_NO_CHARSET = "application/json";
+    static public final String MIMETYPE_JSON = "application/json; charset=utf-8";
     static public final String MIMETYPE_FORM = "application/x-www-form-urlencoded";
 
     static public final String ContentFormat = "{\"retCode\":%d,\"retMsg\":\"%s\"}";

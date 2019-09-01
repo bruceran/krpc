@@ -15,4 +15,16 @@ public class DummyAlarm implements Alarm {
         log.error("alarm message received, alarmId={},msg={}",getAlarmId(type),msg);
     }
 
+    public void alarm(String type,String msg,String target,String addrs) {
+        msg = msg + "[target="+target+",addrs="+addrs+"]";
+        alarm(type,msg);
+    }
+
+    public String getAlarmPrefix() {
+        return "999";
+    }
+    public void alarm4rpc(String alarmId,String msg,String target,String addrs) {
+        msg = msg + "[target="+target+",addrs="+addrs+"]";
+        log.error("alarm message received, alarmId={},msg={}",alarmId,msg);
+    }
 }

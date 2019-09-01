@@ -25,6 +25,7 @@ public class MonitorConfig {
 
     int selfCheckPort = 0; // self check port
 
+
     public MonitorConfig addPluginParams(String params) {
         pluginParams.add(params);
         return this;
@@ -155,5 +156,6 @@ public class MonitorConfig {
         this.maxFieldSizeToLog = maxFieldSizeToLog;
         return this;
     }
+
 }
 

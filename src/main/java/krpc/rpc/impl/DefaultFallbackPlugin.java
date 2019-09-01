@@ -21,11 +21,7 @@ public class DefaultFallbackPlugin implements FallbackPlugin, InitClose, Service
 
     String file = "fallback.yaml";
 
-    ThreadLocal<SimpleDateFormat> f = new ThreadLocal<SimpleDateFormat>() {
-        public SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        }
-    };
+    static ThreadLocal<SimpleDateFormat> f = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
     static class Item {
         String forName;

@@ -10,7 +10,7 @@ public interface SessionOrBuilder extends
   /**
    * <code>string loginFlag = 1;</code>
    */
-  String getLoginFlag();
+  java.lang.String getLoginFlag();
   /**
    * <code>string loginFlag = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface SessionOrBuilder extends
   /**
    * <code>string userId = 2;</code>
    */
-  String getUserId();
+  java.lang.String getUserId();
   /**
    * <code>string userId = 2;</code>
    */
@@ -30,7 +30,7 @@ public interface SessionOrBuilder extends
   /**
    * <code>string userName = 3;</code>
    */
-  String getUserName();
+  java.lang.String getUserName();
   /**
    * <code>string userName = 3;</code>
    */
@@ -40,7 +40,7 @@ public interface SessionOrBuilder extends
   /**
    * <code>string mobile = 4;</code>
    */
-  String getMobile();
+  java.lang.String getMobile();
   /**
    * <code>string mobile = 4;</code>
    */

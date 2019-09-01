@@ -133,7 +133,7 @@ public class DynamicRouteConfig {
         public int compareTo(RouteRule rr) {
             if (priority < rr.priority) return 1;
             if (priority > rr.priority) return -1;
-            return from.compareTo(rr.from);
+            return 0;
         }
 
         public boolean equals(final java.lang.Object obj) {

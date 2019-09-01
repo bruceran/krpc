@@ -234,8 +234,7 @@ public abstract class TransportBase extends ChannelDuplexHandler{
         RpcClosure closure = new RpcClosure(rpcCtx, null, isRaw);
         closure.done(res);
 
-        String status = retCode == 0 ? "SUCCESS" : "ERROR";
-        closure.asServerCtx().getTraceContext().stopForServer(status);
+        closure.asServerCtx().getTraceContext().stopForServer(retCode);
 
         monitorService.reqDone(closure);
     }

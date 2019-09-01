@@ -10,7 +10,7 @@ public interface HttpUploadTestReq2OrBuilder extends
   /**
    * <code>string httpContentType = 1;</code>
    */
-  String getHttpContentType();
+  java.lang.String getHttpContentType();
   /**
    * <code>string httpContentType = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface HttpUploadTestReq2OrBuilder extends
   /**
    * <code>string httpContent = 2;</code>
    */
-  String getHttpContent();
+  java.lang.String getHttpContent();
   /**
    * <code>string httpContent = 2;</code>
    */
@@ -30,7 +30,7 @@ public interface HttpUploadTestReq2OrBuilder extends
   /**
    * <code>repeated string a = 3;</code>
    */
-  java.util.List<String>
+  java.util.List<java.lang.String>
       getAList();
   /**
    * <code>repeated string a = 3;</code>
@@ -39,7 +39,7 @@ public interface HttpUploadTestReq2OrBuilder extends
   /**
    * <code>repeated string a = 3;</code>
    */
-  String getA(int index);
+  java.lang.String getA(int index);
   /**
    * <code>repeated string a = 3;</code>
    */
@@ -49,7 +49,7 @@ public interface HttpUploadTestReq2OrBuilder extends
   /**
    * <code>string b = 4;</code>
    */
-  String getB();
+  java.lang.String getB();
   /**
    * <code>string b = 4;</code>
    */
@@ -63,9 +63,9 @@ public interface HttpUploadTestReq2OrBuilder extends
   /**
    * <code>.UploadFile files = 5;</code>
    */
-  UploadFile getFiles();
+  com.xxx.userservice.proto.UploadFile getFiles();
   /**
    * <code>.UploadFile files = 5;</code>
    */
-  UploadFileOrBuilder getFilesOrBuilder();
+  com.xxx.userservice.proto.UploadFileOrBuilder getFilesOrBuilder();
 }

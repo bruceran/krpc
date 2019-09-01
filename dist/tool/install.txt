@@ -1,9 +1,8 @@
-
 git clone https://github.com/bruceran/protobuf.git
 cd protobuf
 git checkout v3.5.1-krpc
 
 ./autogen.sh
-./confgure
+./configure
 make
 make install

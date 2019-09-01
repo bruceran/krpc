@@ -6,6 +6,7 @@ import krpc.common.StartStop;
 import krpc.rpc.core.*;
 import krpc.rpc.impl.RpcClient;
 import krpc.rpc.impl.RpcServer;
+import krpc.rpc.monitor.PostmanExporter;
 import krpc.rpc.monitor.SelfCheckHttpServer;
 import krpc.rpc.web.WebMonitorService;
 import krpc.rpc.web.impl.WebServer;
@@ -33,6 +34,7 @@ public class RpcApp implements InitClose, StartStop, DumpPlugin, HealthPlugin {
     Validator validator;
     FallbackPlugin fallbackPlugin;
     SelfCheckHttpServer selfCheckHttpServer;
+    PostmanExporter postmanExporter;
 
     HashMap<String, RpcServer> servers = new HashMap<>();
     HashMap<String, WebServer> webServers = new HashMap<>();
@@ -127,6 +129,7 @@ public class RpcApp implements InitClose, StartStop, DumpPlugin, HealthPlugin {
         }
 
         resources.add(selfCheckHttpServer);
+        resources.add(postmanExporter);
     }
 
     public void init() {

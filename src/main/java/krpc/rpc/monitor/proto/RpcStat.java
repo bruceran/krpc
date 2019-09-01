@@ -24,6 +24,7 @@ private static final long serialVersionUID = 0L;
     failed_ = 0;
     timeout_ = 0;
     timeUsed_ = java.util.Collections.emptyList();
+    retCodeStat_ = java.util.Collections.emptyList();
   }
 
   @Override
@@ -106,6 +107,15 @@ private static final long serialVersionUID = 0L;
             input.popLimit(limit);
             break;
           }
+          case 74: {
+            if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+              retCodeStat_ = new java.util.ArrayList<RetCodeStat>();
+              mutable_bitField0_ |= 0x00000100;
+            }
+            retCodeStat_.add(
+                input.readMessage(RetCodeStat.parser(), extensionRegistry));
+            break;
+          }
           default: {
             if (!parseUnknownFieldProto3(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -123,6 +133,9 @@ private static final long serialVersionUID = 0L;
     } finally {
       if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
         timeUsed_ = java.util.Collections.unmodifiableList(timeUsed_);
+      }
+      if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+        retCodeStat_ = java.util.Collections.unmodifiableList(retCodeStat_);
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -228,6 +241,41 @@ private static final long serialVersionUID = 0L;
   }
   private int timeUsedMemoizedSerializedSize = -1;
 
+  public static final int RETCODESTAT_FIELD_NUMBER = 9;
+  private java.util.List<RetCodeStat> retCodeStat_;
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  public java.util.List<RetCodeStat> getRetCodeStatList() {
+    return retCodeStat_;
+  }
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  public java.util.List<? extends RetCodeStatOrBuilder>
+      getRetCodeStatOrBuilderList() {
+    return retCodeStat_;
+  }
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  public int getRetCodeStatCount() {
+    return retCodeStat_.size();
+  }
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  public RetCodeStat getRetCodeStat(int index) {
+    return retCodeStat_.get(index);
+  }
+  /**
+   * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+   */
+  public RetCodeStatOrBuilder getRetCodeStatOrBuilder(
+      int index) {
+    return retCodeStat_.get(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @Override
   public final boolean isInitialized() {
@@ -270,6 +318,9 @@ private static final long serialVersionUID = 0L;
     }
     for (int i = 0; i < timeUsed_.size(); i++) {
       output.writeInt32NoTag(timeUsed_.get(i));
+    }
+    for (int i = 0; i < retCodeStat_.size(); i++) {
+      output.writeMessage(9, retCodeStat_.get(i));
     }
     unknownFields.writeTo(output);
   }
@@ -322,6 +373,10 @@ private static final long serialVersionUID = 0L;
       }
       timeUsedMemoizedSerializedSize = dataSize;
     }
+    for (int i = 0; i < retCodeStat_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(9, retCodeStat_.get(i));
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -354,6 +409,8 @@ private static final long serialVersionUID = 0L;
         == other.getTimeout());
     result = result && getTimeUsedList()
         .equals(other.getTimeUsedList());
+    result = result && getRetCodeStatList()
+        .equals(other.getRetCodeStatList());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -383,6 +440,10 @@ private static final long serialVersionUID = 0L;
     if (getTimeUsedCount() > 0) {
       hash = (37 * hash) + TIMEUSED_FIELD_NUMBER;
       hash = (53 * hash) + getTimeUsedList().hashCode();
+    }
+    if (getRetCodeStatCount() > 0) {
+      hash = (37 * hash) + RETCODESTAT_FIELD_NUMBER;
+      hash = (53 * hash) + getRetCodeStatList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -512,6 +573,7 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
+        getRetCodeStatFieldBuilder();
       }
     }
     @Override
@@ -533,6 +595,12 @@ private static final long serialVersionUID = 0L;
 
       timeUsed_ = java.util.Collections.emptyList();
       bitField0_ = (bitField0_ & ~0x00000080);
+      if (retCodeStatBuilder_ == null) {
+        retCodeStat_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000100);
+      } else {
+        retCodeStatBuilder_.clear();
+      }
       return this;
     }
 
@@ -573,6 +641,15 @@ private static final long serialVersionUID = 0L;
         bitField0_ = (bitField0_ & ~0x00000080);
       }
       result.timeUsed_ = timeUsed_;
+      if (retCodeStatBuilder_ == null) {
+        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+          retCodeStat_ = java.util.Collections.unmodifiableList(retCodeStat_);
+          bitField0_ = (bitField0_ & ~0x00000100);
+        }
+        result.retCodeStat_ = retCodeStat_;
+      } else {
+        result.retCodeStat_ = retCodeStatBuilder_.build();
+      }
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -652,6 +729,32 @@ private static final long serialVersionUID = 0L;
           timeUsed_.addAll(other.timeUsed_);
         }
         onChanged();
+      }
+      if (retCodeStatBuilder_ == null) {
+        if (!other.retCodeStat_.isEmpty()) {
+          if (retCodeStat_.isEmpty()) {
+            retCodeStat_ = other.retCodeStat_;
+            bitField0_ = (bitField0_ & ~0x00000100);
+          } else {
+            ensureRetCodeStatIsMutable();
+            retCodeStat_.addAll(other.retCodeStat_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.retCodeStat_.isEmpty()) {
+          if (retCodeStatBuilder_.isEmpty()) {
+            retCodeStatBuilder_.dispose();
+            retCodeStatBuilder_ = null;
+            retCodeStat_ = other.retCodeStat_;
+            bitField0_ = (bitField0_ & ~0x00000100);
+            retCodeStatBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getRetCodeStatFieldBuilder() : null;
+          } else {
+            retCodeStatBuilder_.addAllMessages(other.retCodeStat_);
+          }
+        }
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -929,6 +1032,246 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000080);
       onChanged();
       return this;
+    }
+
+    private java.util.List<RetCodeStat> retCodeStat_ =
+      java.util.Collections.emptyList();
+    private void ensureRetCodeStatIsMutable() {
+      if (!((bitField0_ & 0x00000100) == 0x00000100)) {
+        retCodeStat_ = new java.util.ArrayList<RetCodeStat>(retCodeStat_);
+        bitField0_ |= 0x00000100;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        RetCodeStat, RetCodeStat.Builder, RetCodeStatOrBuilder> retCodeStatBuilder_;
+
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public java.util.List<RetCodeStat> getRetCodeStatList() {
+      if (retCodeStatBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(retCodeStat_);
+      } else {
+        return retCodeStatBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public int getRetCodeStatCount() {
+      if (retCodeStatBuilder_ == null) {
+        return retCodeStat_.size();
+      } else {
+        return retCodeStatBuilder_.getCount();
+      }
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public RetCodeStat getRetCodeStat(int index) {
+      if (retCodeStatBuilder_ == null) {
+        return retCodeStat_.get(index);
+      } else {
+        return retCodeStatBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder setRetCodeStat(
+        int index, RetCodeStat value) {
+      if (retCodeStatBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureRetCodeStatIsMutable();
+        retCodeStat_.set(index, value);
+        onChanged();
+      } else {
+        retCodeStatBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder setRetCodeStat(
+        int index, RetCodeStat.Builder builderForValue) {
+      if (retCodeStatBuilder_ == null) {
+        ensureRetCodeStatIsMutable();
+        retCodeStat_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        retCodeStatBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder addRetCodeStat(RetCodeStat value) {
+      if (retCodeStatBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureRetCodeStatIsMutable();
+        retCodeStat_.add(value);
+        onChanged();
+      } else {
+        retCodeStatBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder addRetCodeStat(
+        int index, RetCodeStat value) {
+      if (retCodeStatBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureRetCodeStatIsMutable();
+        retCodeStat_.add(index, value);
+        onChanged();
+      } else {
+        retCodeStatBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder addRetCodeStat(
+        RetCodeStat.Builder builderForValue) {
+      if (retCodeStatBuilder_ == null) {
+        ensureRetCodeStatIsMutable();
+        retCodeStat_.add(builderForValue.build());
+        onChanged();
+      } else {
+        retCodeStatBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder addRetCodeStat(
+        int index, RetCodeStat.Builder builderForValue) {
+      if (retCodeStatBuilder_ == null) {
+        ensureRetCodeStatIsMutable();
+        retCodeStat_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        retCodeStatBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder addAllRetCodeStat(
+        Iterable<? extends RetCodeStat> values) {
+      if (retCodeStatBuilder_ == null) {
+        ensureRetCodeStatIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, retCodeStat_);
+        onChanged();
+      } else {
+        retCodeStatBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder clearRetCodeStat() {
+      if (retCodeStatBuilder_ == null) {
+        retCodeStat_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000100);
+        onChanged();
+      } else {
+        retCodeStatBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public Builder removeRetCodeStat(int index) {
+      if (retCodeStatBuilder_ == null) {
+        ensureRetCodeStatIsMutable();
+        retCodeStat_.remove(index);
+        onChanged();
+      } else {
+        retCodeStatBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public RetCodeStat.Builder getRetCodeStatBuilder(
+        int index) {
+      return getRetCodeStatFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public RetCodeStatOrBuilder getRetCodeStatOrBuilder(
+        int index) {
+      if (retCodeStatBuilder_ == null) {
+        return retCodeStat_.get(index);  } else {
+        return retCodeStatBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public java.util.List<? extends RetCodeStatOrBuilder>
+         getRetCodeStatOrBuilderList() {
+      if (retCodeStatBuilder_ != null) {
+        return retCodeStatBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(retCodeStat_);
+      }
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public RetCodeStat.Builder addRetCodeStatBuilder() {
+      return getRetCodeStatFieldBuilder().addBuilder(
+          RetCodeStat.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public RetCodeStat.Builder addRetCodeStatBuilder(
+        int index) {
+      return getRetCodeStatFieldBuilder().addBuilder(
+          index, RetCodeStat.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .RetCodeStat retCodeStat = 9;</code>
+     */
+    public java.util.List<RetCodeStat.Builder>
+         getRetCodeStatBuilderList() {
+      return getRetCodeStatFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        RetCodeStat, RetCodeStat.Builder, RetCodeStatOrBuilder>
+        getRetCodeStatFieldBuilder() {
+      if (retCodeStatBuilder_ == null) {
+        retCodeStatBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            RetCodeStat, RetCodeStat.Builder, RetCodeStatOrBuilder>(
+                retCodeStat_,
+                ((bitField0_ & 0x00000100) == 0x00000100),
+                getParentForChildren(),
+                isClean());
+        retCodeStat_ = null;
+      }
+      return retCodeStatBuilder_;
     }
     @Override
     public final Builder setUnknownFields(

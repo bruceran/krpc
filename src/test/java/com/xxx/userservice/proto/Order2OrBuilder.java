@@ -10,7 +10,7 @@ public interface Order2OrBuilder extends
   /**
    * <code>string orderId = 1;</code>
    */
-  String getOrderId();
+  java.lang.String getOrderId();
   /**
    * <code>string orderId = 1;</code>
    */
@@ -29,21 +29,21 @@ public interface Order2OrBuilder extends
   /**
    * <code>.Session2 session = 3;</code>
    */
-  Session2 getSession();
+  com.xxx.userservice.proto.Session2 getSession();
   /**
    * <code>.Session2 session = 3;</code>
    */
-  Session2OrBuilder getSessionOrBuilder();
+  com.xxx.userservice.proto.Session2OrBuilder getSessionOrBuilder();
 
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
-  java.util.List<OrderItem2>
+  java.util.List<com.xxx.userservice.proto.OrderItem2> 
       getItemsList();
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
-  OrderItem2 getItems(int index);
+  com.xxx.userservice.proto.OrderItem2 getItems(int index);
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
@@ -51,11 +51,11 @@ public interface Order2OrBuilder extends
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
-  java.util.List<? extends OrderItem2OrBuilder>
+  java.util.List<? extends com.xxx.userservice.proto.OrderItem2OrBuilder> 
       getItemsOrBuilderList();
   /**
    * <code>repeated .OrderItem2 items = 4;</code>
    */
-  OrderItem2OrBuilder getItemsOrBuilder(
-          int index);
+  com.xxx.userservice.proto.OrderItem2OrBuilder getItemsOrBuilder(
+      int index);
 }

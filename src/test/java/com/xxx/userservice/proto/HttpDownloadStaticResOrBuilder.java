@@ -15,7 +15,7 @@ public interface HttpDownloadStaticResOrBuilder extends
   /**
    * <code>string retMsg = 2;</code>
    */
-  String getRetMsg();
+  java.lang.String getRetMsg();
   /**
    * <code>string retMsg = 2;</code>
    */
@@ -25,7 +25,7 @@ public interface HttpDownloadStaticResOrBuilder extends
   /**
    * <code>string downloadFile = 3;</code>
    */
-  String getDownloadFile();
+  java.lang.String getDownloadFile();
   /**
    * <code>string downloadFile = 3;</code>
    */
@@ -35,7 +35,7 @@ public interface HttpDownloadStaticResOrBuilder extends
   /**
    * <code>string autoDelete = 4;</code>
    */
-  String getAutoDelete();
+  java.lang.String getAutoDelete();
   /**
    * <code>string autoDelete = 4;</code>
    */
@@ -60,7 +60,7 @@ public interface HttpDownloadStaticResOrBuilder extends
   /**
    * <code>string filename = 8;</code>
    */
-  String getFilename();
+  java.lang.String getFilename();
   /**
    * <code>string filename = 8;</code>
    */

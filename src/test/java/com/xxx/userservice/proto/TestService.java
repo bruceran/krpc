@@ -7,7 +7,7 @@ public interface TestService {
 
     static final public int serviceId = 101;
 
-    ValidateTestRes test1(ValidateTestReq req);
+    com.xxx.userservice.proto.ValidateTestRes test1(com.xxx.userservice.proto.ValidateTestReq req);
     static final public int test1MsgId = 1;
 
 }

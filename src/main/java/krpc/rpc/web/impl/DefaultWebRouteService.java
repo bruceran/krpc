@@ -25,7 +25,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
         DirInfo(String hosts, String path, String templateDir) {
             this.hosts = hosts;
             if (!hosts.equals("*")) {
-                hostSet = new HashSet<String>();
+                hostSet = new HashSet<>();
                 String[] ss = hosts.split(",");
                 for (String s : ss) hostSet.add(s);
             }
@@ -237,13 +237,16 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
 
     private boolean caseSensitive = false;
 
-    private List<WebUrl> urlList = new ArrayList<WebUrl>();
-    private List<WebDir> dirList = new ArrayList<WebDir>();
+    private List<WebUrl> urlList = new ArrayList<>();
+    private List<WebDir> dirList = new ArrayList<>();
 
     private List<StaticDirMapping> staticDirs = new ArrayList<>();
     private List<DirInfo> dirInfos = new ArrayList<>();
 
-    private Map<String, HostMapping> hostMappings = new HashMap<String, HostMapping>();
+    private Map<String, HostMapping> staticHostMappings = new HashMap<>();
+
+    private boolean allowDynamicUrls = false;
+    private volatile Map<String, HostMapping> dynamicHostMappings = null;
 
     private Map<String, WebPlugin> plugins = new HashMap<>();
 
@@ -257,9 +260,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
 
     public void init() {
 
-
         jarCacheDir = dataDir + "/jarcache";
-
 
         for (WebDir wd : dirList) {
 
@@ -278,7 +279,16 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
         Collections.sort(staticDirs);
         Collections.sort(dirInfos);
 
-        for (WebUrl url : urlList) {
+        initUrls(urlList,staticHostMappings);
+
+        for (WebPlugin p : plugins.values()) {
+            InitCloseUtils.init(p);
+        }
+    }
+
+    public void initUrls(List<WebUrl> tempUrls, Map<String, HostMapping> tempHostMappings) {
+
+        for (WebUrl url : tempUrls) {
 
             if (isEmpty(url.getHosts())) {
                 throw new RuntimeException("host must be specified");
@@ -295,7 +305,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
             String host = url.getHosts();
             String[] ss = host.split(",");
             for (String s : ss) {
-                addHostMapping(s, sm);
+                addHostMapping(tempHostMappings, s, sm);
             }
 
             if (url.getPlugins() != null) {
@@ -306,19 +316,15 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
 
         }
 
-        for (HostMapping hm : hostMappings.values()) {
+        for (HostMapping hm : tempHostMappings.values()) {
             for (List<ServiceMapping> lsm : hm.pathMappings.values()) {
                 Collections.sort(lsm);
             }
         }
 
-        for (WebPlugin p : plugins.values()) {
-            InitCloseUtils.init(p);
-        }
-
     }
 
-    void addHostMapping(String host, ServiceMapping sm) {
+    void addHostMapping(Map<String, HostMapping> hostMappings, String host, ServiceMapping sm) {
         HostMapping hm = hostMappings.get(host);
         if (hm == null) {
             hm = new HostMapping();
@@ -328,11 +334,24 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
         String t = sm.path;
         List<ServiceMapping> lsm = hm.pathMappings.get(t);
         if (lsm == null) {
-            lsm = new ArrayList<ServiceMapping>();
+            lsm = new ArrayList<>();
             hm.pathMappings.put(t, lsm);
         }
 
         lsm.add(sm);
+    }
+
+    public void clearDynamicUrls() {
+        dynamicHostMappings = null;
+    }
+
+    public void setDynamicUrls(List<WebUrl> urls) {
+
+        Map<String, HostMapping> tempHostMappings = new HashMap<>();
+
+        initUrls(urls,tempHostMappings);
+
+        dynamicHostMappings = tempHostMappings;
     }
 
     public void start() {
@@ -357,7 +376,15 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
     }
 
     public WebRoute findRoute(String host, String path, String method) {
-        WebRoute r = findByHost(host, path, method.toLowerCase());
+        WebRoute r = null;
+        String loweredMethod = method.toLowerCase();
+
+        if( allowDynamicUrls && dynamicHostMappings != null ) {
+            r = findByHost(dynamicHostMappings, host, path, loweredMethod);
+        }
+        if( r == null ) {
+            r = findByHost(staticHostMappings, host, path, loweredMethod);
+        }
         if (r != null) {
             String templateDir = findTemplateDir(host, path);
             if (!isEmpty(templateDir)) {
@@ -367,7 +394,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
         return r;
     }
 
-    private WebRoute findByHost(String host, String path, String method) {
+    private WebRoute findByHost(Map<String, HostMapping> hostMappings, String host, String path, String method) {
 
         if (method.equals("head")) method = "get";
 
@@ -377,7 +404,7 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
         if (hm == null)
             return null;
 
-        HashMap<String, String> variables = new HashMap<String, String>();
+        HashMap<String, String> variables = new HashMap<>();
         String t = path;
         if(!caseSensitive) t = t.toLowerCase();
         while (!t.isEmpty()) {
@@ -564,4 +591,11 @@ public class DefaultWebRouteService implements WebRouteService, InitClose, Start
         this.caseSensitive = caseSensitive;
     }
 
+    public boolean isAllowDynamicUrls() {
+        return allowDynamicUrls;
+    }
+
+    public void setAllowDynamicUrls(boolean allowDynamicUrls) {
+        this.allowDynamicUrls = allowDynamicUrls;
+    }
 }

@@ -11,7 +11,7 @@ public class RouterExprParser {
 
     static Logger log = LoggerFactory.getLogger(RouterExprParser.class);
 
-    static final Pattern reg1 = Pattern.compile("^([a-zA-Z]+)( *!= *| *== *) *(.+)$");
+    static final Pattern reg1 = Pattern.compile("^([a-zA-Z\\-_]+)( *!= *| *== *) *(.+)$");
 
     Set<String> allowedKeySet = new HashSet<>();
 

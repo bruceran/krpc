@@ -120,7 +120,7 @@ public class CatNettyClient extends ChannelDuplexHandler implements InitClose {
     }
 
     void reconnect(final String addr) {
-
+//System.out.println("reconnect conns="+conns.keySet());
         if (!conns.containsKey(addr)) {
             return;
         }
@@ -171,7 +171,10 @@ public class CatNettyClient extends ChannelDuplexHandler implements InitClose {
         addrMap.remove(ctx.channel().id().asLongText());
         if (addr == null)
             return;
-        conns.put(addr, dummyChannel);
+
+        if( conns.containsKey(addr) ) {
+            conns.put(addr, dummyChannel);
+        }
         log.info("connection ended, addr={}", addr);
 
         scheduleToReconnect(addr);
@@ -209,7 +212,7 @@ public class CatNettyClient extends ChannelDuplexHandler implements InitClose {
 
     @Override
     public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
-        System.out.println("channelRead, msg=" + msg);
+        // System.out.println("channelRead, msg=" + msg);
 
         String addr = getAddr(ctx);
         if (addr == null) {

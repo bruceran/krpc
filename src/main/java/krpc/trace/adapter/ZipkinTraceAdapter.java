@@ -32,6 +32,7 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_zipkin_reporter");
     ThreadPoolExecutor pool;
 
+    String servers;
     String[] serverAddrs;
     int serverIndex = 0;
 
@@ -40,7 +41,8 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     public void config(String paramsStr) {
         Map<String, String> params = Plugin.defaultSplitParams(paramsStr);
 
-        serverAddrs = params.get("server").split(",");
+        servers = params.get("server");
+        serverAddrs = servers.split(",");
         postUrl = "http://%s/api/v2/spans";
 
         String s = params.get("queueSize");
@@ -64,7 +66,7 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
         hc = new DefaultHttpClient();
         hc.init();
-        pool = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize), threadFactory);
+        pool = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(queueSize), threadFactory);
     }
 
     public void close() {
@@ -105,7 +107,7 @@ public class ZipkinTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     boolean report(TraceContext ctx, Span span) {
         boolean ok = reportInternal(ctx,span);
         if(!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"report to zipkin failed");
+            alarm.alarm(Alarm.ALARM_TYPE_APM,"report to zipkin failed","zipkin",servers.replaceAll(",","#"));
         }
         return ok;
     }

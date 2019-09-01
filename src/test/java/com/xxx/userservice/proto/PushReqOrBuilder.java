@@ -10,7 +10,7 @@ public interface PushReqOrBuilder extends
   /**
    * <code>string clientId = 1;</code>
    */
-  String getClientId();
+  java.lang.String getClientId();
   /**
    * <code>string clientId = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface PushReqOrBuilder extends
   /**
    * <code>string message = 2;</code>
    */
-  String getMessage();
+  java.lang.String getMessage();
   /**
    * <code>string message = 2;</code>
    */

@@ -13,7 +13,7 @@ public  final class ReportSystemInfoRes extends
 private static final long serialVersionUID = 0L;
 public static final ReportSystemInfoRes ok() { return ReportSystemInfoRes.newBuilder().build(); } ;
 public static final ReportSystemInfoRes failed(int retCode) { return ReportSystemInfoRes.newBuilder().setRetCode(retCode).build(); } ;
-public static final ReportSystemInfoRes failed(int retCode,String retMsg) { return ReportSystemInfoRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+public static final ReportSystemInfoRes failed(int retCode, String retMsg) { return ReportSystemInfoRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
   // Use ReportSystemInfoRes.newBuilder() to construct.
   private ReportSystemInfoRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);

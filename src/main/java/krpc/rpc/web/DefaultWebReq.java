@@ -5,6 +5,7 @@ import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import krpc.rpc.util.TypeSafe;
 
+import java.net.Inet4Address;
 import java.util.*;
 
 public class DefaultWebReq implements WebReq {
@@ -102,9 +103,39 @@ public class DefaultWebReq implements WebReq {
         String xff = headers.get("x-forwarded-for");
         if (xff != null && !xff.isEmpty()) {
             String[] ss = xff.split(",");
-            if (ss.length > 0) return ss[0].trim();
+            if (ss.length > 0) {
+                return getClientIp(ss);
+            }
         }
         return null;
+    }
+
+
+    public String getClientIp(String[] ss) {
+
+        int lastPublicIpIdx = -1;
+        for(int i=ss.length-1;i>=0;--i) {
+            String ip = ss[i].trim();
+            if( !isLocalIp(ip) ) {
+                lastPublicIpIdx = i;
+                break;
+            }
+        }
+
+        if( lastPublicIpIdx >= 1 ) {
+            return ss[lastPublicIpIdx-1].trim();
+        }
+
+        return ss[0].trim();
+    }
+
+    boolean isLocalIp(String ip) {
+        if( ip.equals("127.0.0.1") ) return true;
+        try {
+            return Inet4Address.getByName(ip).isSiteLocalAddress();
+        } catch(Exception e) {
+            return true;
+        }
     }
 
     public boolean isHttps() {

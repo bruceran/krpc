@@ -12,6 +12,7 @@ import java.util.Map;
 
 abstract public class AbstractHttpRegistry implements Registry, InitClose, AlarmAware {
 
+    String addrs;
     String[] addrArray;
     int addrIndex = 0;
     boolean enableRegist = true;
@@ -27,7 +28,7 @@ abstract public class AbstractHttpRegistry implements Registry, InitClose, Alarm
 
     public void config(Map<String, String> params) {
 
-        String addrs = params.get("addrs");
+        addrs = params.get("addrs");
         addrArray = addrs.split(",");
 
         String s = params.get("enableRegist");

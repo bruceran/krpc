@@ -7,6 +7,7 @@ import krpc.rpc.cluster.LoadBalance;
 import krpc.rpc.core.*;
 import krpc.rpc.monitor.LogFormatter;
 import krpc.rpc.monitor.MonitorPlugin;
+import krpc.rpc.web.AutoRoutePlugin;
 import krpc.rpc.web.WebPlugin;
 import krpc.trace.TraceAdapter;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -67,6 +68,7 @@ public class SpringBootstrap {
             loadPluginBean(FallbackPlugin.class, beanPlugins);
             loadPluginBean(TraceAdapter.class, beanPlugins);
             loadPluginBean(ConnectionPlugin.class, beanPlugins);
+            loadPluginBean(AutoRoutePlugin.class, beanPlugins);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

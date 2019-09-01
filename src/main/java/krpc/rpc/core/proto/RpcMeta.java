@@ -336,6 +336,16 @@ private static final long serialVersionUID = 0L;
      * <code>int32 sampleFlag = 6;</code>
      */
     int getSampleFlag();
+
+    /**
+     * <code>string dyeing = 7;</code>
+     */
+    java.lang.String getDyeing();
+    /**
+     * <code>string dyeing = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getDyeingBytes();
   }
   /**
    * Protobuf type {@code krpc.rpc.core.proto.RpcMeta.Trace}
@@ -356,6 +366,7 @@ private static final long serialVersionUID = 0L;
       spanId_ = "";
       tags_ = "";
       sampleFlag_ = 0;
+      dyeing_ = "";
     }
 
     @java.lang.Override
@@ -415,6 +426,12 @@ private static final long serialVersionUID = 0L;
             case 48: {
 
               sampleFlag_ = input.readInt32();
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              dyeing_ = s;
               break;
             }
             default: {
@@ -656,6 +673,40 @@ private static final long serialVersionUID = 0L;
       return sampleFlag_;
     }
 
+    public static final int DYEING_FIELD_NUMBER = 7;
+    private volatile java.lang.Object dyeing_;
+    /**
+     * <code>string dyeing = 7;</code>
+     */
+    public java.lang.String getDyeing() {
+      java.lang.Object ref = dyeing_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        dyeing_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string dyeing = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDyeingBytes() {
+      java.lang.Object ref = dyeing_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        dyeing_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -688,6 +739,9 @@ private static final long serialVersionUID = 0L;
       if (sampleFlag_ != 0) {
         output.writeInt32(6, sampleFlag_);
       }
+      if (!getDyeingBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, dyeing_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -715,6 +769,9 @@ private static final long serialVersionUID = 0L;
       if (sampleFlag_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(6, sampleFlag_);
+      }
+      if (!getDyeingBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, dyeing_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -744,6 +801,8 @@ private static final long serialVersionUID = 0L;
           .equals(other.getTags());
       result = result && (getSampleFlag()
           == other.getSampleFlag());
+      result = result && getDyeing()
+          .equals(other.getDyeing());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -767,6 +826,8 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + getTags().hashCode();
       hash = (37 * hash) + SAMPLEFLAG_FIELD_NUMBER;
       hash = (53 * hash) + getSampleFlag();
+      hash = (37 * hash) + DYEING_FIELD_NUMBER;
+      hash = (53 * hash) + getDyeing().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -912,6 +973,8 @@ private static final long serialVersionUID = 0L;
 
         sampleFlag_ = 0;
 
+        dyeing_ = "";
+
         return this;
       }
 
@@ -944,6 +1007,7 @@ private static final long serialVersionUID = 0L;
         result.spanId_ = spanId_;
         result.tags_ = tags_;
         result.sampleFlag_ = sampleFlag_;
+        result.dyeing_ = dyeing_;
         onBuilt();
         return result;
       }
@@ -1014,6 +1078,10 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getSampleFlag() != 0) {
           setSampleFlag(other.getSampleFlag());
+        }
+        if (!other.getDyeing().isEmpty()) {
+          dyeing_ = other.dyeing_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1476,6 +1544,73 @@ private static final long serialVersionUID = 0L;
         onChanged();
         return this;
       }
+
+      private java.lang.Object dyeing_ = "";
+      /**
+       * <code>string dyeing = 7;</code>
+       */
+      public java.lang.String getDyeing() {
+        java.lang.Object ref = dyeing_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          dyeing_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string dyeing = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDyeingBytes() {
+        java.lang.Object ref = dyeing_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          dyeing_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string dyeing = 7;</code>
+       */
+      public Builder setDyeing(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        dyeing_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string dyeing = 7;</code>
+       */
+      public Builder clearDyeing() {
+        
+        dyeing_ = getDefaultInstance().getDyeing();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string dyeing = 7;</code>
+       */
+      public Builder setDyeingBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        dyeing_ = value;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1674,10 +1809,6 @@ private static final long serialVersionUID = 0L;
   public static final int ENCRYPT_FIELD_NUMBER = 10;
   private int encrypt_;
   /**
-   * <pre>
-   * encrypt type, 0=no encrypt, 1=aes encrypt
-   * </pre>
-   *
    * <code>int32 encrypt = 10;</code>
    */
   public int getEncrypt() {
@@ -2583,20 +2714,12 @@ private static final long serialVersionUID = 0L;
 
     private int encrypt_ ;
     /**
-     * <pre>
-     * encrypt type, 0=no encrypt, 1=aes encrypt
-     * </pre>
-     *
      * <code>int32 encrypt = 10;</code>
      */
     public int getEncrypt() {
       return encrypt_;
     }
     /**
-     * <pre>
-     * encrypt type, 0=no encrypt, 1=aes encrypt
-     * </pre>
-     *
      * <code>int32 encrypt = 10;</code>
      */
     public Builder setEncrypt(int value) {
@@ -2606,10 +2729,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * encrypt type, 0=no encrypt, 1=aes encrypt
-     * </pre>
-     *
      * <code>int32 encrypt = 10;</code>
      */
     public Builder clearEncrypt() {
