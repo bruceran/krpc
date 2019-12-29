@@ -70,7 +70,7 @@ public abstract class TransportBase extends ChannelDuplexHandler{
         if (data == null)
             return false;
 
-        if (stopFlag.get()) { // allow response, disallow request
+        if (stopFlag.get() && isServerSide() ) { // allow response, disallow request
             if (isRequest(data.getMeta()))
                 return false;
         }
@@ -122,17 +122,6 @@ public abstract class TransportBase extends ChannelDuplexHandler{
         }
 
         RpcMeta meta = codec.decodeMeta(bb); // don't catch the exception, close the connection
-        if (isRequest(meta)) {
-            ReflectionUtils.adjustPeers(meta, connId);
-        }
-
-        if (stopFlag.get()) {
-            if (isRequest(meta)) {
-                responseError(ctx, connId, meta, RetCodes.SERVER_SHUTDOWN);
-                log.info("shutingdown, reject request");
-                return null;
-            }
-        }
 
         if (isHeartBeat(meta)) {
             if (isServerSide() && isRequest(meta)) {
@@ -141,6 +130,18 @@ public abstract class TransportBase extends ChannelDuplexHandler{
                 ctx.writeAndFlush(encoded);
             }
             return null;
+        }
+
+        if (stopFlag.get() && isServerSide() ) {
+            if (isRequest(meta)) {
+                responseError(ctx, connId, meta, RetCodes.SERVER_SHUTDOWN);
+                log.info("shutingdown, reject request");
+                return null;
+            }
+        }
+
+        if (isRequest(meta)) {
+            ReflectionUtils.adjustPeers(meta, connId);
         }
 
         boolean isExchange = callback.isExchange(connId,meta);
