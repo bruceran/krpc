@@ -105,6 +105,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     long lastReportMetaTime = 0;
     long reportMetaMinute = 0; // 哪一分钟上报，错开时间上报
 
+    long lastReportRpcTime = 0;
 
     public DefaultMonitorService(RpcCodec codec, ServiceMetas serviceMetas,ErrorMsgConverter errorMsgConverter) {
         this.codec = codec;
@@ -863,8 +864,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     void statsTimer() {
         long now = System.currentTimeMillis();
+
         long seconds = (now / 1000) % 60;
-        if (seconds == 3) {
+        long intervalSeconds = (now - lastReportRpcTime) / 1000;
+
+        if (seconds >= 3 && seconds < 10 && intervalSeconds >= 30) {
             final long time = ((now / 1000) / 60) * 60 - 60;
 
             try {
@@ -880,7 +884,10 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
             } catch (RejectedExecutionException e) {
                 log.error("asyncstats queue is full, e="+e.getMessage());
             }
+
+            lastReportRpcTime = now;
         }
+
     }
 
     void reportSystemInfo() {
