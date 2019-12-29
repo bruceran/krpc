@@ -40,19 +40,21 @@ public class TraceObj2 {
     public static void initSniffer() {
         AdviceInstance.instance = new Advice() {
 
+            Span span;
             public void start(String type, String action) {
                 System.out.println("TraceSniffer start called in app");
-                Trace.start(type, action);
+                span = Trace.start(type, action);
             }
 
             public long stop(boolean ok) {
                 System.out.println("TraceSniffer stop called in app");
-                return Trace.stop(ok);
+                if( span != null ) return span.stop(ok);
+                return 0;
             }
 
             public void logException(Throwable e) {
                 System.out.println("TraceSniffer logException called in app");
-                Trace.logException(e);
+                if( span != null ) span.logException(e);
             }
 
         };
@@ -62,7 +64,7 @@ public class TraceObj2 {
 
         initSniffer();
 
-        Trace.start("Test", "Test");
+        Span s = Trace.start("Test", "Test");
 
         TraceObj2 t = new TraceObj2();
 
@@ -76,13 +78,12 @@ public class TraceObj2 {
         } catch (Exception e) {
         }
 
-        Span s = Trace.currentSpan();
         System.out.println("children=" + s.getChildren().size());
         System.out.println("span 1 ts=" + s.getChildren().get(0).getTimeUsedMicros());
         System.out.println("span 1 status=" + s.getChildren().get(0).getStatus());
         System.out.println("span 2 ts=" + s.getChildren().get(1).getTimeUsedMicros());
         System.out.println("span 2 status=" + s.getChildren().get(1).getStatus());
-        Trace.stop();
+        s.stop();
     }
 
 }

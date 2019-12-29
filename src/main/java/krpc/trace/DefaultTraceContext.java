@@ -7,22 +7,17 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultTraceContext implements TraceContext {
-
-    static Logger log = LoggerFactory.getLogger(DefaultTraceContext.class);
 
     RpcMeta.Trace trace;
 
     long requestTimeMicros = System.currentTimeMillis() * 1000;
     long startMicros = System.nanoTime() / 1000;
     AtomicInteger subCalls = new AtomicInteger();
-    Deque<Span> stack = new ArrayDeque<Span>();
+    Deque<Span> stack = new ArrayDeque<>();
     Map<String, String> tagsForRpc;
 
     long threadId;
@@ -62,19 +57,43 @@ public class DefaultTraceContext implements TraceContext {
         this.trace = traceBuilder.build();
     }
 
-    public void startForServer(String type, String action) {
+    public TraceContext detach() {
+        DefaultTraceContext newCtx = new DefaultTraceContext();
+        newCtx.trace = this.trace; // trace_id 不变
+        newCtx.requestTimeMicros = this.requestTimeMicros;
+        newCtx.startMicros = this.startMicros;
+        newCtx.threadId = this.threadId;
+        newCtx.threadName = this.threadName;
+        newCtx.threadGroupName = this.threadGroupName;
+        newCtx.subCalls = this.subCalls;
+        if( this.tagsForRpc != null ) {
+            newCtx.tagsForRpc = new LinkedHashMap<>(this.tagsForRpc);
+        }
+        // donot copy stack and timeUsedStr
+        return newCtx;
+    }
+
+    public Span startForServer(String type, String action) {
         SpanIds spanIds = new SpanIds(trace.getParentSpanId(), trace.getSpanId());
         Span rootSpan = new DefaultSpan(this, spanIds, type, action, startMicros, subCalls);
-        stack.addLast(rootSpan);
+
+        synchronized (stack) {
+            stack.addLast(rootSpan);
+        }
 
         if (!isEmpty(trace.getTags())) {
             parseTags(rootSpan, trace.getTags());
         }
+
+        return rootSpan;
     }
 
     // create a span
     public Span startAsync(String type, String action) {
-        Span tail = stack.peekLast();
+        Span tail;
+        synchronized (stack) {
+            tail = stack.peekLast();
+        }
         if (tail == null) {
             SpanIds childIds = Trace.getAdapter().newChildSpanIds(trace.getSpanId(), subCalls);
             return new DefaultSpan(this, childIds, type, action, -1, subCalls);
@@ -83,10 +102,39 @@ public class DefaultTraceContext implements TraceContext {
         }
     }
 
+    // append a finished span
+    public Span appendSpan(String type, String action,long startMicros, String status, long timeUsedMicros) {
+        Span tail;
+        synchronized (stack) {
+            tail = stack.peekLast();
+        }
+        DefaultSpan span;
+        if (tail == null) {
+            SpanIds childIds = Trace.getAdapter().newChildSpanIds(trace.getSpanId(), subCalls);
+            span = new DefaultSpan(this, childIds, type, action, startMicros, subCalls);
+        } else {
+            span = (DefaultSpan)tail.newChild(type, action, startMicros);
+        }
+        span.stopWithTime(status, timeUsedMicros);
+        return span;
+    }
+
     // push the new span to the stack top
-    public void start(String type, String action) {
+    public Span start(String type, String action) {
         Span child = startAsync(type, action);
-        stack.addLast(child);
+        synchronized (stack) {
+            stack.addLast(child);
+        }
+        return child;
+    }
+
+
+    public Span rootSpan()  {
+        Span span;
+        synchronized (stack) {
+            span = stack.peekFirst();
+        }
+        return span;
     }
 
     public Span stopForServer(int retCode) {
@@ -98,7 +146,12 @@ public class DefaultTraceContext implements TraceContext {
         boolean hasError = Trace.getAdapter().hasError(retCode);
         String result = !hasError ? "SUCCESS" : "ERROR";
 
-        Span span = stack.peekFirst();
+        Span span;
+        synchronized (stack) {
+            span = stack.peekFirst();
+            stack.clear();
+        }
+
         if (span != null) {
 
             span.tag("retCode",String.valueOf(retCode));
@@ -109,102 +162,52 @@ public class DefaultTraceContext implements TraceContext {
                 span.tag("retMsg", retMsg);
             }
 
-            span.stop(result);
-
-            if (!stack.isEmpty()) {
-                stack.clear();
-                // sendToTrace(span);
-            }
+            span.stopForServer(result);
             statsTimeUsed(span);
+            sendToTrace(span);
         }
 
         return span;
     }
 
-    public Span stopForServer(String result) {
+    public void removeFromStack(Span span, boolean isRootSpan) {
 
-        Span span = stack.peekFirst();
-        if (span != null) {
-            span.stop(result);
-            if (!stack.isEmpty()) {
+        boolean needSendToTrace = false;
+
+        synchronized (stack) {
+            if (span == stack.peekLast()) {
+                stack.removeLast();
+            } else if (span == stack.peekFirst()) {
                 stack.clear();
-                // sendToTrace(span);
             }
-            statsTimeUsed(span);
-        }
-
-        return span;
-    }
-
-    public void stopped(Span span) {
-
-        if (span == stack.peekLast()) {
-            stack.removeLast();
             if (stack.isEmpty()) {
-                sendToTrace(span);
-                Trace.clearCurrentContext();
-                return;
-            }
-        } else {
-            if (span == stack.peekFirst()) {
-                stack.clear();
-                sendToTrace(span);
-                Trace.clearCurrentContext();
-                return;
-            } else if (stack.isEmpty()) {
-                sendToTrace(span);
-                Trace.clearCurrentContext();
-                return;
+                needSendToTrace = true;
             }
         }
+
+        if( !isRootSpan ) { // 被嵌套的span不发给cat
+            return;
+        }
+
+        if (needSendToTrace) {
+            sendToTrace(span);
+        }
+
     }
 
     private void sendToTrace(Span span) {
-        stopAsync(span);
+//        stopAsync(span);
         doSend(span);
     }
 
     private void statsTimeUsed(Span span) {
         if( span == null ) return;
-        timeUsedStr = "";
-        if (span.getChildren() != null) {
-            StringBuilder b = new StringBuilder();
-            for (Span child : span.getChildren()) {
-                DefaultSpan ds = (DefaultSpan) child;
-                String type = ds.getType();
-                long t = ds.getTimeUsedMicros();
-                if( b.length() > 0 ) b.append("^");
-                b.append(type).append(":").append(t);
-            }
-            timeUsedStr = b.toString();
-        }
+        timeUsedStr = span.statsTimeUsed();
     }
 
     private void doSend(Span span) {
         if (trace.getSampleFlag() == 2) return; // ignore
         Trace.getAdapter().send(this, span);
-    }
-
-    private void stopAsync(Span span) {
-        ((DefaultSpan) span).stopAsyncIfNeeded();
-        if (span.getChildren() != null) {
-            for (Span child : span.getChildren()) {
-                ((DefaultSpan) child).stopAsyncIfNeeded();
-            }
-        }
-    }
-
-    public String getRemoteAddr() {
-        String peers = trace.getPeers();
-        if (isEmpty(peers)) return "0.0.0.0:0";
-        int p = peers.lastIndexOf(",");
-        if (p >= 0) return peers.substring(p + 1);
-        return peers;
-    }
-
-    public Span currentSpan() {
-        Span tail = stack.peekLast();
-        return tail;
     }
 
     void parseTags(Span rootSpan, String tags) {

@@ -12,16 +12,19 @@ public class DefaultSpan implements Span {
     private String type;
     private String action;
     long startMicros;
-    long timeUsedMicros;
-    String status = "unset";
+
     String remoteAddr;
     Map<String, String> tags;
     List<Event> events;
-    List<Span> children;
     List<Metric> metrics;
-    AtomicInteger subCalls;
 
-    AtomicInteger completed = new AtomicInteger(0); // 0=pending 1=stopped
+    Object childrenLock = new Object();
+    List<DefaultSpan> children; // 可能被其它线程读写
+
+    volatile long timeUsedMicros;
+    volatile String status = "unset";
+
+    AtomicInteger subCalls;
 
     DefaultSpan(Object parent, SpanIds spanIds, String type, String action, long startMicros, AtomicInteger parentSubCalls) {
         this.parent = parent;
@@ -37,11 +40,17 @@ public class DefaultSpan implements Span {
     }
 
     public Span newChild(String type, String action) {
+        return newChild(type,action,-1);
+    }
+
+    public Span newChild(String type, String action, long startMicros) {
         if (subCalls == null) subCalls = new AtomicInteger();
         SpanIds childIds = Trace.getAdapter().newChildSpanIds(spanIds.getSpanId(), subCalls);
-        Span child = new DefaultSpan(this, childIds, type, action, -1, subCalls);
-        if (children == null) children = new ArrayList<>();
-        children.add(child);
+        DefaultSpan child = new DefaultSpan(this, childIds, type, action, startMicros, subCalls);
+        synchronized (childrenLock) {
+            if (children == null) children = new ArrayList<>();
+            children.add(child);
+        }
         return child;
     }
 
@@ -69,23 +78,24 @@ public class DefaultSpan implements Span {
     }
 
     public long stop(String status) {
-        if (!completed.compareAndSet(0, 1)) {
-            return 0;
-        }
-        this.status = status;
-        timeUsedMicros = System.nanoTime() / 1000 - startMicros;
-        DefaultTraceContext ctx = getContext();
-        ctx.stopped(this);
-        return getTimeUsedMicros();
+        return stopWithTime(status,System.nanoTime()/1000 - startMicros);
     }
 
-    public void stopAsyncIfNeeded() {
-        if (!completed.compareAndSet(0, 2)) {
-            return;
-        }
-        this.status = "ASYNC";
-        // timeUsedMicros = System.nanoTime() / 1000 - startMicros;
-        timeUsedMicros = 0;
+    public long stopWithTime(String status,long timeUsedMicros) {
+        this.status = status;
+        this.timeUsedMicros = timeUsedMicros;
+
+        DefaultTraceContext ctx = getContext();
+        ctx.removeFromStack(this, parent == ctx);
+
+        return timeUsedMicros;
+    }
+
+    public long stopForServer(String status) {
+        long t = System.nanoTime()/1000 - startMicros;
+        this.status = status;
+        this.timeUsedMicros = t;
+        return t;
     }
 
     public void logEvent(String type, String action, String status, String data) {
@@ -165,12 +175,37 @@ public class DefaultSpan implements Span {
         }
     }
 
-    public void setRemoteAddr(String addr) {
-        this.remoteAddr = addr;
+    public String statsTimeUsed() {
+
+        synchronized (childrenLock) {
+            if ( children != null) {
+                StringBuilder b = new StringBuilder();
+                long sum = 0;
+                for (DefaultSpan child : children ) {
+                    String type = child.getType();
+                    long t = child.getTimeUsedMicros();
+                    sum += t;
+                    if( b.length() > 0 ) b.append("^");
+                    b.append(type).append(":").append(t);
+                }
+                b.append("^IOSUM").append(":").append(sum);
+                return b.toString();
+            } else {
+                return "";
+            }
+        }
+
     }
 
-    public AtomicInteger getCompleted() {
-        return completed;
+    public List<Span> getChildren() {
+        synchronized (childrenLock) {
+            if( children == null ) return null;
+            return new ArrayList<>(children);
+        }
+    }
+
+    public void setRemoteAddr(String addr) {
+        this.remoteAddr = addr;
     }
 
     public String getType() {
@@ -187,10 +222,6 @@ public class DefaultSpan implements Span {
 
     public String getAction() {
         return action;
-    }
-
-    public List<Span> getChildren() {
-        return children;
     }
 
     public long getStartMicros() {
@@ -227,5 +258,9 @@ public class DefaultSpan implements Span {
 
     public void removeTags() {
         tags = null;
+    }
+
+    public void changeAction(String action) {
+        this.action = action;
     }
 }

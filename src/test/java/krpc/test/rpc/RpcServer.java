@@ -6,6 +6,7 @@ import krpc.rpc.bootstrap.RpcApp;
 import krpc.rpc.core.RpcClosure;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.ServerContext;
+import krpc.trace.Span;
 import krpc.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,36 +57,36 @@ class UserServiceImpl implements UserService {
         System.out.println("username=" + req.getUserName());
         RpcContextData ctx = ServerContext.get();
 
-        Trace.start("DB", "queryUser");
+        Span span = Trace.start("DB", "queryUser");
         try {
             Thread.sleep(100);
         } catch (Exception e) {
         }
-        Trace.logEvent("QUERY", "FINDUSER");
-        Trace.logEvent("QUERY", "FINDUSER", "ERROR", "id not found");
-        Trace.tag("secret", "xxx");
-        Trace.stop();
+        span.logEvent("QUERY", "FINDUSER", "SUCCESS","test");
+        span.logEvent("QUERY", "FINDUSER", "ERROR", "id not found");
+        span.tag("secret", "xxx");
+        span.stop();
 
-        Trace.start("REDIS", "set");
+        span = Trace.start("REDIS", "set");
         try {
             Thread.sleep(100);
         } catch (Exception e) {
         }
-        Trace.setRemoteAddr("10.1.2.198:8909");
-        Trace.tag("userId", "mmm");
-        Trace.tag("userName", "nnn");
-        Trace.stop(false);
+        span.setRemoteAddr("10.1.2.198:8909");
+        span.tag("userId", "mmm");
+        span.tag("userName", "nnn");
+        span.stop(false);
 
-        Trace.incCount("ORDER_COUNT");
-        Trace.incSum("ORDER_AMOUNT", 100);
+        span.incCount("ORDER_COUNT");
+        span.incSum("ORDER_AMOUNT", 100);
 
-        Trace.logEvent("QUERY", "GETRATE");
+        span.logEvent("QUERY", "GETRATE", "SUCCESS", "test");
 
 
         try {
             throw new RuntimeException("test");
         } catch (Exception e) {
-            Trace.logException(e);
+            span.logException(e);
         }
         /*	*/
 

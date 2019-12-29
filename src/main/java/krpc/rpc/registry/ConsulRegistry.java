@@ -28,7 +28,6 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
     int ttl = 150;
     int interval = 15;
 
-    AtomicBoolean healthy = new AtomicBoolean(true);
 
     HashMap<Integer,Long> registeredServiceIds = new HashMap<>();
 
@@ -81,7 +80,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
         String newVersion = getData(versionPath);
         if (newVersion == null || newVersion.isEmpty()) {
-            log.error("cannot get routes json version for service " + serviceName);
+            // log.error("cannot get routes json version for service " + serviceName);
             return null;
         }
 
@@ -114,7 +113,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         }
         HttpClientRes res = hc.call(req);
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
-            log.error("cannot get config " + path);
+            log.error("cannot get config " + url);
             if (res.getHttpCode() != 404) nextAddr();
             return null;
         }
@@ -141,7 +140,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
                         ", httpCode="+res.getHttpCode()+", content=" + res.getContent());
                 registeredServiceIds.remove(serviceId);
                 nextAddr();
-                healthy.set(false);
+                updateLastErrorTime();
                 return;
             }
             registeredServiceIds.put(serviceId,System.currentTimeMillis());
@@ -183,12 +182,12 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
             log.error("cannot register service " + serviceName + ", retCode="+res.getRetCode()+
                     ", httpCode="+res.getHttpCode()+", content=" + res.getContent());
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return;
         }
 
         registeredServiceIds.put(serviceId,System.currentTimeMillis());
-        healthy.set(true);
+        lastErrorTime = 0;
     }
 
     public void deregister(int serviceId, String serviceName, String group, String addr) {
@@ -207,12 +206,12 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
             log.error("cannot deregister service " + serviceName + ", retCode="+res.getRetCode()+
                     ", httpCode="+res.getHttpCode()+", content=" + res.getContent());
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return;
         }
 
         registeredServiceIds.remove(serviceId);
-        healthy.set(true);
+        lastErrorTime = 0;
     }
 
     @SuppressWarnings("unchecked")
@@ -230,7 +229,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
             log.error("cannot discover service " + serviceName + ", retCode="+res.getRetCode()+
                     ", httpCode="+res.getHttpCode()+", content=" + res.getContent());
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return null;
         }
 
@@ -238,11 +237,11 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
         List<Object> list = Json.toList(json);
         if (list == null) {
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return null;
         }
 
-        healthy.set(true);
+        lastErrorTime = 0;
 
         TreeSet<String> set = new TreeSet<>();
         for (Object o : list) {
@@ -272,8 +271,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
     @Override
     public void healthCheck(List<HealthStatus> list) {
-        boolean b = healthy.get();
-        if( b ) return;
+        if( !needAlarm() ) return;
         String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
         String targetAddrs;
         if( addrs.equals("127.0.0.1:8500") ) {
@@ -286,8 +284,7 @@ public class ConsulRegistry extends AbstractHttpRegistry implements DynamicRoute
 
     @Override
     public void dump(Map<String, Object> metrics) {
-        boolean b = healthy.get();
-        if( b ) return;
+        if( !needAlarm() ) return;
 
         String targetAddrs;
         if( addrs.equals("127.0.0.1:8500") ) {

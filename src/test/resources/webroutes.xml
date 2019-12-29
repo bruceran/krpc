@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>    
-<routes>    
+<routes>
 
-    <url hosts="*" path="/user/test1" methods="get,post" origins="localhost88"  serviceId="100" msgId="1" sessionMode="0"  plugins=""/>  
-    <url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>  
+	<url hosts="*" path="/user/test1" methods="get,post" origins="localhost88"  serviceId="100" msgId="1" sessionMode="0"  plugins=""/>
+	<url hosts="*" path="/user/test2" methods="get,post" serviceId="100" msgId="2"/>
 
-    <group   prefix="/abc"  methods="get,post" serviceId="100">  
-    	<url path="/test3" msgId="3"/>  
-    	<url path="/test4" msgId="4"/>  
+	<group   prefix="/abc"  methods="get,post" serviceId="100">
+		<url path="/test3" msgId="3"/>
+		<url path="/test4" msgId="4"/>
 	</group>
 
 	<url hosts="*" path="/plugin/test0" methods="get,post,put,delete" serviceId="104" msgId="1"   />
-	<url hosts="*" path="/plugin/test1" methods="get,post" serviceId="104" msgId="1"    plugins="plainText"/>  
-	<url hosts="*" path="/plugin/test2" methods="get,post" serviceId="104" msgId="1"    plugins="jsonp"/>  
-	<url hosts="*" path="/plugin/test3" methods="get,post" serviceId="104" msgId="1"    plugins="jsRedirect"/>  
-	<url hosts="*" path="/plugin/test4" methods="get,post" serviceId="104" msgId="1"    plugins="serverRedirect"/>  
-	<url hosts="*" path="/plugin/test5" methods="get,post" serviceId="104" msgId="2"   />  
-	<url hosts="*" path="/template1/test6" methods="get,post" serviceId="104" msgId="1"   plugins="velocity" template="a"/> 
-	<url hosts="*" path="/template2/test6" methods="get,post" serviceId="104" msgId="1"   plugins="velocity" template="d"/>  
-	<url hosts="*" path="/template3/test6" methods="get,post" serviceId="104" msgId="1"   plugins="velocity" template="template/a"/>  
+	<url hosts="*" path="/plugin/test1" methods="get,post" serviceId="104" msgId="1"    plugins="plainText"/>
+	<url hosts="*" path="/plugin/test2" methods="get,post" serviceId="104" msgId="1"    plugins="jsonp"/>
+	<url hosts="*" path="/plugin/test3" methods="get,post" serviceId="104" msgId="1"    plugins="jsRedirect"/>
+	<url hosts="*" path="/plugin/test4" methods="get,post" serviceId="104" msgId="1"    plugins="serverRedirect"/>
+	<url hosts="*" path="/plugin/test5" methods="get,post" serviceId="104" msgId="2"   />
+	<url hosts="*" path="/template1/test6" methods="get,post" serviceId="104" msgId="1"   plugins="velocity" template="a"/>
+	<url hosts="*" path="/template2/test6" methods="get,post" serviceId="104" msgId="1"   plugins="velocity" template="d"/>
+	<url hosts="*" path="/template3/test6" methods="get,post" serviceId="104" msgId="1"   plugins="velocity" template="template/a"/>
 
-	<url hosts="*" path="/upload1" methods="post" serviceId="104" msgId="3"   />  
-	<url hosts="*" path="/upload2" methods="post" serviceId="104" msgId="4"   />  
-	
+	<url hosts="*" path="/upload1" methods="post" serviceId="104" msgId="3"   />
+	<url hosts="*" path="/upload2" methods="post" serviceId="104" msgId="4"   />
+
 	<!--  sample: import  other files -->
-	<import file="webroutes2.xml" />  
-	
-    <dir hosts="*" path="/site" staticDir="c:\ws\site\static\"/>
-    <dir hosts="*" path="/assets1" staticDir="classpath:assets1/"/>
-    <dir hosts="*" path="/template1" templateDir="c:\ws\site\template"/>
-    <dir hosts="*" path="/template2" templateDir="classpath:vm/"/>
-    
-    
-    <dir hosts="*" path="/assets2" staticDir="classpath:assets2/static/"/>
-    <dir hosts="*" path="/template3" templateDir="classpath:assets2/"/>
- 	<!--  -->
- 	
+	<import file="webroutes2.xml" />
+
+<!--	<dir hosts="*" path="/site" staticDir="c:\ws\site\static\"/>-->
+	<dir hosts="*" path="/assets1" staticDir="classpath:assets1/"/>
+<!--	<dir hosts="*" path="/template1" templateDir="c:\ws\site\template"/>-->
+	<dir hosts="*" path="/template2" templateDir="classpath:vm/"/>
+
+
+	<dir hosts="*" path="/assets2" staticDir="classpath:assets2/static/"/>
+	<dir hosts="*" path="/template3" templateDir="classpath:assets2/"/>
+	<!--  -->
+
 </routes>  

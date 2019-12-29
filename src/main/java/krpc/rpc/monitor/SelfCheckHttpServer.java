@@ -231,6 +231,13 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
                 return;
             }
 
+            if (path.equalsIgnoreCase("/healthcode")) { // return diffirent http code
+                Map<String, Object> values = doHealth();
+                String result = (String)values.get("result");
+                sendResponse(ctx, result.equals("done") ? HttpResponseStatus.OK : HttpResponseStatus.INTERNAL_SERVER_ERROR , values);
+                return;
+            }
+
             if (path.equalsIgnoreCase("/dump")) {
                 Map<String, Object> values = doDump();
 
@@ -383,7 +390,7 @@ public class SelfCheckHttpServer extends ChannelDuplexHandler implements InitClo
         for (DumpPlugin p : dumpPlugins) {
             try {
                 p.dump(values);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.error("dump exception, message=" + e.getMessage(), e);
                 ok = false;
             }

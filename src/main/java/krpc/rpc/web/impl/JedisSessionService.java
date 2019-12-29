@@ -5,6 +5,7 @@ import krpc.common.Plugin;
 import krpc.rpc.core.Continue;
 import krpc.rpc.web.SessionService;
 import krpc.rpc.web.WebPlugin;
+import krpc.trace.Span;
 import krpc.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ public class JedisSessionService implements WebPlugin, SessionService, InitClose
     public void load(String sessionId, Map<String, String> values, Continue<Integer> cont) {
         String key = key(sessionId);
 
-        Trace.start("REDIS", "hgetall");
+        Span span = Trace.start("JEDIS", "hgetall");
 
         if (!clusterMode) {
             Jedis jedis = null;
@@ -88,10 +89,10 @@ public class JedisSessionService implements WebPlugin, SessionService, InitClose
                 jedis = jedisPool.getResource();
                 Map<String, String> v = jedis.hgetAll(key);
                 values.putAll(v);
-                Trace.stop(true);
+                span.stop(true);
             } catch (Exception e) {
                 log.error("cannot load key, key=" + key);
-                Trace.stop(false);
+                span.stop(false);
             } finally {
                 try {
                     if (jedis != null)
@@ -103,10 +104,10 @@ public class JedisSessionService implements WebPlugin, SessionService, InitClose
             try {
                 Map<String, String> v = jedisCluster.hgetAll(key);
                 values.putAll(v);
-                Trace.stop(true);
+                span.stop(true);
             } catch (Exception e) {
                 log.error("cannot load key, key=" + key);
-                Trace.stop(false);
+                span.stop(false);
             }
         }
 
@@ -119,7 +120,7 @@ public class JedisSessionService implements WebPlugin, SessionService, InitClose
 
         String key = key(sessionId);
 
-        Trace.start("REDIS", "hmset");
+        Span span = Trace.start("JEDIS", "hmset");
 
         if (!clusterMode) {
             Jedis jedis = null;
@@ -127,10 +128,10 @@ public class JedisSessionService implements WebPlugin, SessionService, InitClose
                 jedis = jedisPool.getResource();
                 jedis.hmset(key, values);
                 jedis.expire(key, expireSeconds);
-                Trace.stop(true);
+                span.stop(true);
             } catch (Exception e) {
                 log.error("cannot update key, key=" + key);
-                Trace.stop(false);
+                span.stop(false);
             } finally {
                 try {
                     if (jedis != null)
@@ -142,10 +143,10 @@ public class JedisSessionService implements WebPlugin, SessionService, InitClose
             try {
                 jedisCluster.hmset(key, values);
                 jedisCluster.expire(key, expireSeconds);
-                Trace.stop(true);
+                span.stop(true);
             } catch (Exception e) {
                 log.error("cannot update key, key=" + key);
-                Trace.stop(false);
+                span.stop(false);
             }
         }
 
@@ -158,17 +159,17 @@ public class JedisSessionService implements WebPlugin, SessionService, InitClose
 
         String key = key(sessionId);
 
-        Trace.start("REDIS", "del");
+        Span span = Trace.start("JEDIS", "del");
 
         if (!clusterMode) {
             Jedis jedis = null;
             try {
                 jedis = jedisPool.getResource();
                 jedis.del(key);
-                Trace.stop(true);
+                span.stop(true);
             } catch (Exception e) {
                 log.error("cannot delete key, key=" + key);
-                Trace.stop(false);
+                span.stop(false);
             } finally {
                 try {
                     if (jedis != null)
@@ -179,10 +180,10 @@ public class JedisSessionService implements WebPlugin, SessionService, InitClose
         } else {
             try {
                 jedisCluster.del(key);
-                Trace.stop(true);
+                span.stop(true);
             } catch (Exception e) {
                 log.error("cannot del key, key=" + key);
-                Trace.stop(false);
+                span.stop(false);
             }
         }
 

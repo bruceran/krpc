@@ -143,7 +143,11 @@ public class CatNettyClient extends ChannelDuplexHandler implements InitClose {
             timer.schedule(new TimerTask() {
 
                 public void run() {
-                    reconnect(addr);
+                    try {
+                        reconnect(addr);
+                    } catch(Throwable e) {
+                        log.error("reconnect exception",e);
+                    }
                 }
 
             }, reconnectSeconds * 1000);

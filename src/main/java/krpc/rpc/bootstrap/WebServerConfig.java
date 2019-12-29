@@ -7,12 +7,15 @@ import java.util.List;
 
 public class WebServerConfig {
 
+    static public int DEFAULT_PORT = 8600;
+
     String id;
 
-    int port = 8600;
+    int port = DEFAULT_PORT;
     String host = "*";
     int backlog = 128;
     int idleSeconds = 30;
+    int idleSecondsForDownload = 0;
     int maxConns = 500000;
     int ioThreads = 0;    // auto
     boolean nativeNetty = false;
@@ -303,6 +306,15 @@ public class WebServerConfig {
 
     public WebServerConfig setAllowDynamicUrls(boolean allowDynamicUrls) {
         this.allowDynamicUrls = allowDynamicUrls;
+        return this;
+    }
+
+    public int getIdleSecondsForDownload() {
+        return idleSecondsForDownload;
+    }
+
+    public WebServerConfig setIdleSecondsForDownload(int idleSecondsForDownload) {
+        this.idleSecondsForDownload = idleSecondsForDownload;
         return this;
     }
 }

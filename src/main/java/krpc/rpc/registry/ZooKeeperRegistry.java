@@ -31,7 +31,8 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
 
     CuratorFramework client;
 
-    AtomicBoolean healthy = new AtomicBoolean(true);
+    int errorTimeToAlarm = 60;
+    volatile long lastErrorTime = 0;
 
     ConcurrentHashMap<String, String> versionCache = new ConcurrentHashMap<>();
 
@@ -66,6 +67,18 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
 
     public void close() {
         client.close();
+    }
+
+    boolean needAlarm() {
+        if( lastErrorTime == 0 ) return false;
+        long now = System.currentTimeMillis();
+        return (now - lastErrorTime >= errorTimeToAlarm * 1000 );
+    }
+
+    void updateLastErrorTime() {
+        if( lastErrorTime == 0 ) {
+            lastErrorTime = System.currentTimeMillis();
+        }
     }
 
     boolean isEmpty(String s) {
@@ -135,10 +148,10 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
 
         try {
             client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, data.getBytes());
-            healthy.set(true);
+            lastErrorTime = 0;
         } catch (Exception e) {
             if (e.getMessage().indexOf("NodeExists") < 0) {
-                healthy.set(false);
+                updateLastErrorTime();
                 log.error("cannot register service " + serviceName + ", exception=" + e.getMessage());
             }
         }
@@ -153,9 +166,9 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
 
         try {
             client.delete().forPath(path);
-            healthy.set(true);
+            lastErrorTime = 0;
         } catch (Exception e) {
-            healthy.set(false);
+            updateLastErrorTime();
             log.error("cannot deregister service " + serviceName + ", exception=" + e.getMessage());
         }
 
@@ -171,10 +184,10 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
 
         try {
             list = client.getChildren().forPath(path);
-            healthy.set(true);
+            lastErrorTime = 0;
         } catch (Exception e) {
             log.error("cannot discover service " + serviceName + ", exception=" + e.getMessage());
-            healthy.set(false);
+            updateLastErrorTime();
             return null;
         }
 
@@ -194,8 +207,8 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
 
     @Override
     public void healthCheck(List<HealthStatus> list) {
-        boolean b = healthy.get();
-        if( b ) return;
+        if( !needAlarm() ) return;
+
         String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
         list.add(new HealthStatus(alarmId,false,"zk_registry connect failed","zookeeper",addrs.replaceAll(",","#")));
     }
@@ -203,8 +216,7 @@ public class ZooKeeperRegistry implements Registry, InitClose, DynamicRoutePlugi
 
     @Override
     public void dump(Map<String, Object> metrics) {
-        boolean b = healthy.get();
-        if( b ) return;
+        if( !needAlarm() ) return;
 
         alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"zk_registry connect failed","zookeeper",addrs.replaceAll(",","#"));
         metrics.put("krpc.consul.errorCount",1);

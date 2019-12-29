@@ -10,6 +10,7 @@ import krpc.rpc.util.IpUtils;
 import krpc.trace.Span;
 import krpc.trace.Trace;
 import krpc.trace.TraceContext;
+import krpc.trace.TraceIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,6 +166,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
         RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(serviceId).setMsgId(msgId);
 
+        String ctxConnId = ClientContext.getConnId();
+
         int timeout = ClientContext.removeTimeout();
         if (timeout > 0)
             builder.setTimeout(timeout);
@@ -175,6 +178,11 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         if (clientAttachment != null)
             builder.setAttachment(clientAttachment);
 
+        String dyeing = ClientContext.removeDyeing();
+        if( isEmpty(dyeing) && !isEmpty(Dyeing.dyeingGlobal) ) {
+            dyeing = Dyeing.dyeingGlobal;
+        }
+
         String action = serviceMetas.getName(serviceId, msgId);
         if( action == null ) action = serviceId + "." + msgId;
         Span span = Trace.startAsync("RPCCLIENT", action);
@@ -183,7 +191,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         String connId = NO_CONNECTION_STR;
         span.setRemoteAddr(getAddr(connId));
 
-        RpcMeta.Trace trace = generateTraceInfo(tctx, span);
+        RpcMeta.Trace trace = generateTraceInfo(tctx, span, dyeing);
 
         RpcMeta meta = builder.setTrace(trace).build();
         ClientContextData ctx = new ClientContextData(NO_CONNECTION_STR, meta, tctx, span);
@@ -247,13 +255,17 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             }
         }
 
-        sendCall(closure, true);
+        boolean allowRetry = ctxConnId == null; // 业务端指定了连接ID，不应允许自动重试
+
+        sendCall(closure, allowRetry);
         return future;
     }
 
     public CompletableFuture<RpcRawMessage> callAsyncInner(int serviceId, int msgId, ByteBuf req, boolean isAsync) {
 
         RpcMeta.Builder builder = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.REQUEST).setServiceId(serviceId).setMsgId(msgId);
+
+        String ctxConnId = ClientContext.getConnId();
 
         int timeout = ClientContext.removeTimeout();
         if (timeout > 0)
@@ -265,6 +277,11 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         if (clientAttachment != null)
             builder.setAttachment(clientAttachment);
 
+        String dyeing = ClientContext.removeDyeing();
+        if( isEmpty(dyeing) && !isEmpty(Dyeing.dyeingGlobal) ) {
+            dyeing = Dyeing.dyeingGlobal;
+        }
+
         String action = serviceMetas.getName(serviceId, msgId);
         if( action == null ) action = serviceId + "." + msgId;
         Span span = Trace.startAsync("RPCCLIENT", action);
@@ -273,7 +290,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         String connId = NO_CONNECTION_STR;
         span.setRemoteAddr(getAddr(connId));
 
-        RpcMeta.Trace trace = generateTraceInfo(tctx, span);
+        RpcMeta.Trace trace = generateTraceInfo(tctx, span, dyeing);
 
         RpcMeta meta = builder.setTrace(trace).build();
         ClientContextData ctx = new ClientContextData(NO_CONNECTION_STR, meta, tctx, span);
@@ -337,16 +354,21 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 //            }
 //        }
 
-        sendCall(closure, true);
+        boolean allowRetry = ctxConnId == null; // 业务端指定了连接ID，不应允许自动重试
+
+        sendCall(closure,  allowRetry);
         return future;
     }
 
-    private RpcMeta.Trace generateTraceInfo(TraceContext tctx, Span span) {
+    private RpcMeta.Trace generateTraceInfo(TraceContext tctx, Span span, String dyeing) {
         RpcMeta.Trace.Builder traceBuilder = RpcMeta.Trace.newBuilder();
         Trace.inject(tctx, span, traceBuilder);
         traceBuilder.setPeers(tctx.getTrace().getPeers());
         traceBuilder.setSampleFlag(tctx.getTrace().getSampleFlag());
         traceBuilder.setDyeing(tctx.getTrace().getDyeing());
+
+        if( dyeing != null && !dyeing.isEmpty() ) traceBuilder.setDyeing(dyeing);
+
         return traceBuilder.build();
     }
 
@@ -392,6 +414,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             retryPool.execute(new Runnable() {
                 public void run() {
 
+                    dataManager.remove(closure); // 由于sequence会变，老的数据需要清掉
+
                     int newSequence = nextSequence(newConnId);
                     RpcMeta newMeta = meta.toBuilder().setSequence(newSequence).build();
                     closure.getCtx().setConnId(newConnId);
@@ -422,16 +446,23 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         }
     }
 
-    public void receive(String connId, RpcData data) {
+    public void receive(String connId, RpcData data,long receiveMicros) {
 
         if (isRequest(data.getMeta())) {
 
             RpcMeta meta = data.getMeta();
+
+            if( meta.getTrace().getTraceId().isEmpty() ) {
+                TraceIds traceIds = Trace.newStartTraceIds(true);
+                ReflectionUtils.adjustTrace(meta,traceIds.getTraceId(),traceIds.getParentSpanId(),traceIds.getSpanId());
+            }
+
             String action = serviceMetas.getName(meta.getServiceId(), meta.getMsgId());
             if( action == null ) action = meta.getServiceId() + "."+ meta.getMsgId(); // may be empty in exchange mode
-            Trace.startForServer(meta.getTrace(), "RPCSERVER", action);
-            Trace.setRemoteAddr(getAddr(connId));
+            Span span = Trace.startForServer(meta.getTrace(), "RPCSERVER", action);
+            span.setRemoteAddr(getAddr(connId));
             ServerContextData ctx = new ServerContextData(connId, data.getMeta(), Trace.currentContext());
+            ctx.setDecodeMicros( ctx.getStartMicros() - receiveMicros );
             ServerContext.set(ctx);
 
             if( serviceMetas.isExchangeServiceId(data.getMeta().getServiceId())) {
@@ -516,7 +547,9 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         else
             closure.done((RpcRawMessage)res);
 
-        closure.asClientCtx().getFuture().complete(res);
+        ClientContextData ctx = closure.asClientCtx();
+
+        ctx.getFuture().complete(res);
 
         RpcRetryTask retryTask = (RpcRetryTask) closure.getCtx().getAttribute("retryTask");
         if (retryTask != null && !closure.isRaw() ) {
@@ -524,7 +557,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         }
 
         String status = closure.getRetCode() == 0 ? "SUCCESS" : "ERROR";
-        closure.asClientCtx().getSpan().stop(status);
+        long timeUsedMicros = ctx.getTimeUsedMicros();
+        ctx.getSpan().stopWithTime(status,timeUsedMicros);
         if (monitorService != null) {
             monitorService.callDone(closure);
         }
@@ -627,34 +661,39 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             }
 
             if (validator != null) {
-                String result = validator.validate(req);
+                ValidateResult result = validator.validate(req);
                 if (result != null) {
-                    String message = RetCodes.retCodeText(RetCodes.VALIDATE_ERROR) + result;
-                    sendErrorResponse(ctx, req, RetCodes.VALIDATE_ERROR, message);
+                    sendErrorResponse(ctx, req, result.getRetCode(), result.getRetMsg());
                     return;
                 }
             }
 
             ctx.setAttribute("pendingReq",req);
-
             Message res = (Message) method.invoke(object, new Object[]{req});
             if (res == null) return; // an async service or exception, do nothing
-
             RpcClosure closure = new RpcClosure(ctx, req, res);
             readyToContinue(closure);
         } catch (Exception e) {
             String traceId = "no_trace_id";
-            if( Trace.currentContext() != null && Trace.currentContext().getTrace() != null )
-                traceId  = Trace.currentContext().getTrace().getTraceId();
+            TraceContext tctx = Trace.currentContext();
+            if( tctx != null ) {
+                if( tctx.getTrace() != null ) {
+                    traceId  = Trace.currentContext().getTrace().getTraceId();
+                }
+                Span rootSpan = tctx.rootSpan();
+                if( rootSpan != null ) {
+                    rootSpan.logException(e);
+                }
+            }
+
             log.error("callService exception, traceId="+traceId, e);
-            Trace.logException(e);
-            String msg = RetCodes.retCodeText(RetCodes.BUSINESS_ERROR)+" in ("+meta.getServiceId()+")";
-            sendErrorResponse(ctx, data.asMessage(), RetCodes.BUSINESS_ERROR,msg);
+
+            int retCode = RetCodes.getExceptionRetCode(e);
+            String msg = RetCodes.retCodeText(retCode)+" in ("+meta.getServiceId()+")";
+            sendErrorResponse(ctx, data.asMessage(), retCode,msg);
         }
     }
-
     public void readyToContinue(RpcClosure closure) {
-
         String connId = closure.getCtx().getConnId();
         RpcMeta reqMeta = closure.getCtx().getMeta();
         int retCode = closure.getRetCode();
@@ -673,12 +712,14 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
                 }
             }
         }
-
         RpcMeta resMeta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE).setServiceId(reqMeta.getServiceId()).setMsgId(reqMeta.getMsgId()).setEncrypt(reqMeta.getEncrypt()).setSequence(reqMeta.getSequence()).setRetCode(retCode).build();
+        Span soutSpan = Trace.startAsync("OUTTS","send");
+        boolean sendOk;
         if(!closure.isRaw())
-            transport.send(connId, new RpcData(resMeta, closure.asResMessage()));
+            sendOk = transport.send(connId, new RpcData(resMeta, closure.asResMessage()));
         else
-            transport.send(connId, new RpcData(resMeta, closure.asResByteBuf()));
+            sendOk = transport.send(connId, new RpcData(resMeta, closure.asResByteBuf()));
+        soutSpan.stop(sendOk);
 
         endReq(closure);
     }
@@ -690,7 +731,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
         RpcMeta resMeta = RpcMeta.newBuilder().setDirection(RpcMeta.Direction.RESPONSE).setServiceId(reqMeta.getServiceId()).setMsgId(reqMeta.getMsgId()).setEncrypt(reqMeta.getEncrypt()).setSequence(reqMeta.getSequence()).setRetCode(retCode).build();
         RpcData data = new RpcData(resMeta);
-        transport.send(ctx.getConnId(), data);
+
+        Span soutSpan = Trace.startAsync("OUTTS","send");
+        boolean sendOk = transport.send(ctx.getConnId(), data);
+        soutSpan.stop(sendOk);
 
         RpcClosure closure = new RpcClosure(ctx, req, true);
         endReq(closure, retCode);
@@ -714,7 +758,10 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
         } else {
             data = new RpcData(resMeta);
         }
-        transport.send(ctx.getConnId(), data);
+
+        Span soutSpan = Trace.startAsync("OUTTS","send");
+        boolean sendOk = transport.send(ctx.getConnId(), data);
+        soutSpan.stop(sendOk);
 
         RpcClosure closure = new RpcClosure(ctx, req, false);
         endReq(closure, retCode);
@@ -729,7 +776,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
             }
         }
 
-        closure.asServerCtx().getTraceContext().stopForServer(retCode);
+        Span span = closure.asServerCtx().getTraceContext().stopForServer(retCode);
+        closure.asServerCtx().endWithTime(span.getTimeUsedMicros());
 
         if (monitorService == null) return;
         RpcMeta meta = closure.getCtx().getMeta();
@@ -744,8 +792,8 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
     }
 
     void endReq(RpcClosure closure) {
-        closure.asServerCtx().getTraceContext().stopForServer(closure.getRetCode(),closure.getRetMsg());
-
+        Span span = closure.asServerCtx().getTraceContext().stopForServer(closure.getRetCode(),closure.getRetMsg());
+        closure.asServerCtx().endWithTime(span.getTimeUsedMicros());
         if (monitorService == null) return;
         monitorService.reqDone(closure);
     }
@@ -876,7 +924,7 @@ public abstract class RpcCallableBase implements TransportCallback, DataManagerC
 
         List<HealthStatus> healthStatusList = new ArrayList<>();
         for(int serviceId: noConnServiceIds.keySet()) {
-            String port = serviceId >= 1000 ? "2"+serviceId : "7" + serviceId;
+            int port = serviceId >= 1000 ? 20000+serviceId : 7000 + serviceId;
             String alarmId = serviceId + "002";
             String targetAddr = serviceId+":*:"+port;
             String msg = "no krpc connection from " + alarm.getAlarmPrefix();

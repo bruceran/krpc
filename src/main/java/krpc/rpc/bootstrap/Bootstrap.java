@@ -6,10 +6,7 @@ import com.google.protobuf.Descriptors.*;
 import com.google.protobuf.Descriptors.FileDescriptor;
 import com.google.protobuf.UnknownFieldSet.Field;
 import krpc.KrpcExt;
-import krpc.common.Alarm;
-import krpc.common.AlarmAware;
-import krpc.common.Plugin;
-import krpc.common.RetCodes;
+import krpc.common.*;
 import krpc.rpc.cluster.*;
 import krpc.rpc.core.*;
 import krpc.rpc.core.proto.RpcMetas;
@@ -20,12 +17,14 @@ import krpc.rpc.impl.transport.NettyClient;
 import krpc.rpc.impl.transport.NettyServer;
 import krpc.rpc.monitor.*;
 import krpc.rpc.registry.DefaultRegistryManager;
+import krpc.rpc.util.EnvNamesUtils;
 import krpc.rpc.util.IpUtils;
 import krpc.rpc.web.*;
 import krpc.rpc.web.impl.DefaultRpcDataConverter;
 import krpc.rpc.web.impl.DefaultWebRouteService;
 import krpc.rpc.web.impl.NettyHttpServer;
 import krpc.rpc.web.impl.WebServer;
+import krpc.trace.Span;
 import krpc.trace.Trace;
 import krpc.trace.TraceAdapter;
 import krpc.trace.sniffer.Advice;
@@ -43,6 +42,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.*;
+import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -50,17 +50,14 @@ public class Bootstrap {
 
     static Logger log = LoggerFactory.getLogger(Bootstrap.class);
 
-    static private final String versionString = "krpc version 0.2.31 build @ 20190830";
-
-
     private ApplicationConfig appConfig = new ApplicationConfig();
     private MonitorConfig monitorConfig = new MonitorConfig();
-    private List<RegistryConfig> registryList = new ArrayList<RegistryConfig>();
-    private List<ServerConfig> serverList = new ArrayList<ServerConfig>();
-    private List<ClientConfig> clientList = new ArrayList<ClientConfig>();
-    private List<ServiceConfig> serviceList = new ArrayList<ServiceConfig>();
-    private List<RefererConfig> refererList = new ArrayList<RefererConfig>();
-    private List<WebServerConfig> webServerList = new ArrayList<WebServerConfig>();
+    private List<RegistryConfig> registryList = new ArrayList<>();
+    private List<ServerConfig> serverList = new ArrayList<>();
+    private List<ClientConfig> clientList = new ArrayList<>();
+    private List<ServiceConfig> serviceList = new ArrayList<>();
+    private List<RefererConfig> refererList = new ArrayList<>();
+    private List<WebServerConfig> webServerList = new ArrayList<>();
 
     private HashMap<String, RegistryConfig> registries = new LinkedHashMap<>();
     private HashMap<String, ServerConfig> servers = new LinkedHashMap<>();
@@ -70,6 +67,14 @@ public class Bootstrap {
     private HashMap<String, RefererConfig> referers = new LinkedHashMap<>();
     private HashSet<String> refererInterfaces = new LinkedHashSet<>();
     private HashMap<String, WebServerConfig> webServers = new LinkedHashMap<>();
+
+    private List<Integer> serviceIds = new ArrayList<>();
+
+    private Function<String,String> envVarGetter = null;
+
+    public void setEnvVarGetter(Function<String,String> var) {
+        this.envVarGetter = var;
+    }
 
     @SuppressWarnings("rawtypes")
     static public class PluginInfo {
@@ -111,7 +116,7 @@ public class Bootstrap {
     private boolean twoPhasesBuild = false;
 
     public Bootstrap() {
-        log.info(versionString);
+        log.info(KrpcVersion.versionString);
         RetCodes.init();
         initSniffer();
         loadSpi();
@@ -140,8 +145,10 @@ public class Bootstrap {
         return new DefaultProxyGenerator();
     }
 
-    public ExecutorManager newExecutorManager() {
-        return new DefaultExecutorManager();
+    public ExecutorManager newExecutorManager(String name) {
+        DefaultExecutorManager dem = new DefaultExecutorManager();
+        dem.setOwner(name);
+        return dem;
     }
 
     public DataManager newDataManager(DataManagerCallback callback) {
@@ -185,7 +192,30 @@ public class Bootstrap {
     public RegistryManager newRegistryManager(ServiceMetas serviceMetas, String tempDir) {
         DefaultRegistryManager m = new DefaultRegistryManager(tempDir);
         m.setServiceMetas(serviceMetas);
+
+        // escape connecting to same service same ip, but connecting to diffirent ips of same service is allowed
+        if( serviceIds != null && serviceIds.size() > 0 ) {
+            Set<Integer> ignoredServiceIds = new HashSet<>();
+            ignoredServiceIds.addAll(serviceIds);
+            Set<String> ignoredServiceAddrs = generateIgnoredServiceAddrs();
+            m.setDiscoverFreeServices(ignoredServiceIds, ignoredServiceAddrs);
+        }
+
         return m;
+    }
+
+    Set<String> generateIgnoredServiceAddrs() {
+        Set<String> set = new HashSet<>();
+        String localIp = IpUtils.localIp();
+
+        for(ServerConfig cfg: serverList) {
+            if( cfg.port <= 0 ) continue;
+            set.add(localIp+":"+cfg.port);
+            set.add("127.0.0.1:"+cfg.port);
+            set.add("localhost:"+cfg.port);
+        }
+
+        return set;
     }
 
     public DynamicRouteManager newDynamicRouteManager(ServiceMetas serviceMetas, String tempDir) {
@@ -202,7 +232,7 @@ public class Bootstrap {
 
     public SelfCheckHttpServer newSelfCheckHttpServer(int port, PostmanExporter p) {
         SelfCheckHttpServer s = new SelfCheckHttpServer(port);
-        s.setVersionString(versionString);
+        s.setVersionString(KrpcVersion.versionString);
         s.setEnablePostmanExport(appConfig.enablePostmanExport);
         s.setPostmanExporter(p);
         return s;
@@ -214,8 +244,8 @@ public class Bootstrap {
         return p;
     }
 
-    public DefaultMonitorService newMonitorService(RpcCodec codec, ServiceMetas serviceMetas, MonitorConfig c, SelfCheckHttpServer shs) {
-        DefaultMonitorService m = new DefaultMonitorService(codec, serviceMetas);
+    public DefaultMonitorService newMonitorService(RpcCodec codec, ServiceMetas serviceMetas, MonitorConfig c, SelfCheckHttpServer shs, ErrorMsgConverter errorMsgConverter) {
+        DefaultMonitorService m = new DefaultMonitorService(codec, serviceMetas, errorMsgConverter);
         m.setAppName(appConfig.name);
 
         m.setLogThreads(c.logThreads);
@@ -224,7 +254,8 @@ public class Bootstrap {
         m.setPrintOriginalMsgName(c.printOriginalMsgName);
         m.setSelfCheckHttpServer(shs);
         m.setTags(c.tags);
-        m.setSelfCheckPort(c.selfCheckPort);
+        m.setSelfCheckPort(c.selfCheckPort,c.stdSelfCheckPort);
+        m.setAuditFreeServiceIds(c.auditFreeServiceIds);
 
         if (!isEmpty(c.serverAddr)) {
             m.setServerAddr(c.serverAddr);
@@ -301,19 +332,22 @@ public class Bootstrap {
     public void initSniffer() {
         AdviceInstance.instance = new Advice() {
 
+            Span span;
+
             public void start(String type, String action) {
                 System.out.println("TraceSniffer start called in app");
-                Trace.start(type, action);
+                span = Trace.start(type, action);
             }
 
             public long stop(boolean ok) {
                 System.out.println("TraceSniffer stop called in app");
-                return Trace.stop(ok);
+                if(span != null ) return span.stop(ok);
+                return 0;
             }
 
             public void logException(Throwable e) {
                 System.out.println("TraceSniffer logException called in app");
-                Trace.logException(e);
+                if(span != null ) span.logException(e);
             }
 
         };
@@ -435,8 +469,11 @@ public class Bootstrap {
                 }
             }
             if (!isEmpty(c.connectionPlugin)) {
-                if (getPlugin(ConnectionPlugin.class, c.connectionPlugin) == null) {
-                    throw new RuntimeException("connection plugin not registered");
+                String[] ss = c.connectionPlugin.split(",");
+                for(String onePlugin: ss) {
+                    if (getPlugin(ConnectionPlugin.class, onePlugin) == null) {
+                        throw new RuntimeException("connection plugin not registered, plugin="+onePlugin);
+                    }
                 }
             }
 
@@ -457,6 +494,9 @@ public class Bootstrap {
         }
 
         for (ServerConfig c : serverList) {
+
+            if( c.getPort() <= 0 ) continue;
+
             if (isEmpty(c.id))
                 c.id = "default";
             if (servers.containsKey(c.id))
@@ -477,8 +517,11 @@ public class Bootstrap {
                 }
             }
             if (!isEmpty(c.connectionPlugin)) {
-                if (getPlugin(ConnectionPlugin.class, c.connectionPlugin) == null) {
-                    throw new RuntimeException("connection plugin not registered");
+                String[] ss = c.connectionPlugin.split(",");
+                for(String onePlugin: ss) {
+                    if (getPlugin(ConnectionPlugin.class, onePlugin) == null) {
+                        throw new RuntimeException("connection plugin not registered, plugin="+onePlugin);
+                    }
                 }
             }
 
@@ -487,6 +530,9 @@ public class Bootstrap {
         }
 
         for (WebServerConfig c : webServerList) {
+
+            if( c.getPort() <= 0 ) continue;
+
             if (isEmpty(c.id))
                 c.id = "default";
             if (webServers.containsKey(c.id))
@@ -611,10 +657,16 @@ public class Bootstrap {
         }
 
         for (ServiceConfig c : serviceList) {
+
             if (isEmpty(c.interfaceName))
                 throw new RuntimeException("service interface must specified");
-            if (ReflectionUtils.getClass(c.interfaceName) == null)
+
+            Class<?> cls = ReflectionUtils.getClass(c.interfaceName);
+            if ( cls == null)
                 throw new RuntimeException(String.format("service interface %s must be specified", c.interfaceName));
+
+            serviceIds.add(ReflectionUtils.getServiceId(cls));
+
             if (isEmpty(c.id))
                 c.id = c.interfaceName;
             if (services.containsKey(c.id))
@@ -715,11 +767,17 @@ public class Bootstrap {
 
         app.postmanExporter = newPostmanExporter(app.serviceMetas);
 
-        if (monitorConfig.selfCheckPort != 0) {
+        if (monitorConfig.startSelfCheckPort && monitorConfig.selfCheckPort > 0) {
             app.selfCheckHttpServer = newSelfCheckHttpServer(monitorConfig.selfCheckPort, app.postmanExporter);
         }
 
-        DefaultMonitorService monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig, app.selfCheckHttpServer);
+        if (!isEmpty(appConfig.errorMsgConverter)) {
+            ErrorMsgConverter p = getPlugin(ErrorMsgConverter.class, appConfig.errorMsgConverter);
+            app.errorMsgConverter = p;
+            ValidateResult.errorMsgConverter = p;
+        }
+
+        DefaultMonitorService monitorService = newMonitorService(app.codec, app.serviceMetas, monitorConfig, app.selfCheckHttpServer,app.errorMsgConverter);
         app.monitorService = monitorService;
         Alarm alarm = monitorService;
         if (app.traceAdapter instanceof AlarmAware) {
@@ -729,10 +787,8 @@ public class Bootstrap {
             app.selfCheckHttpServer.setAlarm(alarm);
         }
 
-        if (!isEmpty(appConfig.errorMsgConverter)) {
-            ErrorMsgConverter p = getPlugin(ErrorMsgConverter.class, appConfig.errorMsgConverter);
-            app.errorMsgConverter = p;
-        }
+
+        TracablePool.alarm = monitorService;
 
         if (!isEmpty(appConfig.fallbackPlugin)) {
             FallbackPlugin p = getPlugin(FallbackPlugin.class, appConfig.fallbackPlugin);
@@ -802,7 +858,10 @@ public class Bootstrap {
                 client.setPlugins(plugins);
             }
             if (!isEmpty(c.connectionPlugin)) {
-                client.setConnectionPlugin(getPlugin(ConnectionPlugin.class, c.connectionPlugin));
+                String[] ss = c.connectionPlugin.split(",");
+                for(String onePlugin: ss) {
+                    client.addConnectionPlugin(getPlugin(ConnectionPlugin.class, onePlugin));
+                }
             }
 
             NettyClient nc = newNettyClient();
@@ -840,7 +899,7 @@ public class Bootstrap {
 
 
             if (hasReverseService(name)) {
-                ExecutorManager em = newExecutorManager();
+                ExecutorManager em = newExecutorManager("client");
                 if (c.threads >= 0) {
                     if (c.threads == 0)
                         c.threads = processors;
@@ -857,8 +916,11 @@ public class Bootstrap {
         }
 
         for (Map.Entry<String, ServerConfig> entry : servers.entrySet()) {
+
             String name = entry.getKey();
             ServerConfig c = entry.getValue();
+
+            if( c.port <= 0 ) continue;
 
             RpcServer server = newRpcServer();
             server.setServiceMetas(app.serviceMetas);
@@ -874,7 +936,10 @@ public class Bootstrap {
                 server.setPlugins(plugins);
             }
             if (!isEmpty(c.connectionPlugin)) {
-                server.setConnectionPlugin(getPlugin(ConnectionPlugin.class, c.connectionPlugin));
+                String[] ss = c.connectionPlugin.split(",");
+                for(String onePlugin: ss) {
+                    server.addConnectionPlugin(getPlugin(ConnectionPlugin.class, onePlugin));
+                }
             }
 
             server.setErrorMsgConverter(app.errorMsgConverter);
@@ -898,7 +963,7 @@ public class Bootstrap {
             ns.setEnableEncrypt(c.enableEncrypt);
             server.setTransport(ns);
 
-            ExecutorManager em = newExecutorManager();
+            ExecutorManager em = newExecutorManager("server");
             if (c.threads >= 0) {
                 if (c.threads == 0)
                     c.threads = processors;
@@ -925,6 +990,8 @@ public class Bootstrap {
             String name = entry.getKey();
             WebServerConfig c = entry.getValue();
 
+            if( c.getPort() <= 0 ) continue;
+
             SessionService ss = (SessionService) getPlugin(WebPlugin.class, c.defaultSessionService);
 
             WebServer server = newWebServer();
@@ -949,6 +1016,7 @@ public class Bootstrap {
             ns.setHost(c.host);
             ns.setBacklog(c.backlog);
             ns.setIdleSeconds(c.idleSeconds);
+            ns.setIdleSecondsForDownload(c.idleSecondsForDownload);
             ns.setDataDir(appConfig.dataDir);
             ns.setMaxConns(c.maxConns);
             ns.setWorkerThreads(c.ioThreads);
@@ -961,7 +1029,7 @@ public class Bootstrap {
 
             server.setHttpTransport(ns);
 
-            ExecutorManager em = newExecutorManager();
+            ExecutorManager em = newExecutorManager("webserver");
             if (c.threads >= 0) {
                 if (c.threads == 0)
                     c.threads = processors;
@@ -1056,6 +1124,13 @@ public class Bootstrap {
             }
         }
 
+        // check req cls same as res cls
+        for (Map.Entry<String, ServiceConfig> entry : services.entrySet()) {
+            ServiceConfig c = entry.getValue();
+            Class<?> cls = ReflectionUtils.getClass(c.interfaceName);
+            ReflectionUtils.checkReqResSame(cls);
+        }
+
     }
 
     private void doBuildServices() {
@@ -1084,17 +1159,25 @@ public class Bootstrap {
                     addr = IpUtils.localIp() + ":" + sc.port;
                 } else {
                     WebServer webServer = app.webServers.get(c.transport);
-                    em = webServer.getExecutorManager();
-                    //WebServerConfig wsc = webServers.get(c.transport);
-                    //addr = IpUtils.localIp()+":"+wsc.port;
+                    if( webServer != null ) {
+                        em = webServer.getExecutorManager();
+                        //WebServerConfig wsc = webServers.get(c.transport);
+                        //addr = IpUtils.localIp()+":"+wsc.port;
+                    }
                 }
+            }
+
+            if( em == null ) {
+                throw new RuntimeException("no executor found for service: " + name);
             }
 
             app.serviceMetas.addService(cls, c.impl, callable);
 
-            for (WebRouteService wrs : autoRouteServices) {
-                loadAutoRoutes(wrs, serviceId, app.serviceMetas);
-                loadAutoRoutePlugins(wrs);
+            if( !c.reverse ) {
+                for (WebRouteService wrs : autoRouteServices) {
+                    loadAutoRoutes(wrs, serviceId, app.serviceMetas);
+                    loadAutoRoutePlugins(wrs);
+                }
             }
 
             if (!isEmpty(c.registryNames) && addr != null) {
@@ -1125,6 +1208,9 @@ public class Bootstrap {
 
         for (Map.Entry<String, ServerConfig> entry : servers.entrySet()) {
             ServerConfig c = entry.getValue();
+
+            if( c.port <= 0 ) continue;
+
             if (!isEmpty(c.exchangeServiceIds)) {
                 String[] ss = c.exchangeServiceIds.split(",");
                 for (String s : ss) {
@@ -1454,18 +1540,45 @@ public class Bootstrap {
     private void loadRoutes(DefaultWebRouteService rs, String routesFile) {
 
         try {
-            loadRoutesFileInternal(rs, routesFile);
+            String fileContent = readResource(routesFile);
+            String preparedContent = prepareEnvVariables(fileContent);
+            loadRoutesFileInternal(rs, preparedContent);
         } catch (Exception e) {
             throw new RuntimeException("cannot load mapping file, file=" + routesFile, e);
         }
 
     }
+    private String readResource(String resourceName) {
+        try {
+            InputStream is = getResource(resourceName);
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            is.close();
+            return result.toString("UTF-8");
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
-    void loadRoutesFileInternal(DefaultWebRouteService rs, String mappingFile) throws Exception {
+    String prepareEnvVariables(String content) {
+        if( envVarGetter == null ) return content;
+        List<String> names = EnvNamesUtils.parseEnvNames(content);
+        for(String name: names ) {
+            String value = envVarGetter.apply(name);
+            content = content.replace("%"+name+"%",value);
+        }
+        return content;
+    }
+
+    void loadRoutesFileInternal(DefaultWebRouteService rs, String preparedContent) throws Exception {
 
         DocumentBuilderFactory docbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docb = docbf.newDocumentBuilder();
-        Document doc = docb.parse(getResource(mappingFile));
+        Document doc = docb.parse(new ByteArrayInputStream(preparedContent.getBytes("utf-8")));
         Node root = doc.getChildNodes().item(0);
         NodeList rootChildren = root.getChildNodes();
 
@@ -1743,7 +1856,10 @@ public class Bootstrap {
         String file = attrs.get("file");
         if (isEmpty(file))
             throw new RuntimeException("import file must be specified");
-        loadRoutesFileInternal(rs, file);
+
+        String fileContent = readResource(file);
+        String preparedContent = prepareEnvVariables(fileContent);
+        loadRoutesFileInternal(rs, preparedContent);
     }
 
     InputStream getResource(String file) {

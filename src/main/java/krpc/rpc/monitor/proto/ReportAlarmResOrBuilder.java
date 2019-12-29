@@ -15,7 +15,7 @@ public interface ReportAlarmResOrBuilder extends
   /**
    * <code>string retMsg = 2;</code>
    */
-  String getRetMsg();
+  java.lang.String getRetMsg();
   /**
    * <code>string retMsg = 2;</code>
    */

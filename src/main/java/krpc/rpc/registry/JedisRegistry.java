@@ -11,7 +11,6 @@ import redis.clients.jedis.JedisPool;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, DumpPlugin, HealthPlugin, AlarmAware {
 
@@ -28,12 +27,13 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
     private JedisCluster jedisCluster;
     private boolean clusterMode = false;
 
-    AtomicBoolean healthy = new AtomicBoolean(true);
-
     ConcurrentHashMap<String, String> versionCache = new ConcurrentHashMap<>();
 
     // set dynamicroutes.default.100.routes.json.version 1
     // set dynamicroutes.default.100.routes.json '{"serviceId":100,"disabled":false,"weights":[{"addr":"192.168.31.27","weight":50},{"addr":"192.168.31.28","weight":50}],"rules":[{"from":"host = 192.168.31.27","to":"host = 192.168.31.27","priority":2},{"from":"host = 192.168.31.28","to":"host = $host","priority":1}]}'
+
+    int errorTimeToAlarm = 60;
+    volatile long lastErrorTime = 0;
 
     Alarm alarm = new DummyAlarm();
 
@@ -90,6 +90,18 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
             } catch (Exception e) {
                 log.error("close cluster exception, e=" + e.getMessage());
             }
+        }
+    }
+
+    boolean needAlarm() {
+        if( lastErrorTime == 0 ) return false;
+        long now = System.currentTimeMillis();
+        return (now - lastErrorTime >= errorTimeToAlarm * 1000 );
+    }
+
+    void updateLastErrorTime() {
+        if( lastErrorTime == 0 ) {
+            lastErrorTime = System.currentTimeMillis();
         }
     }
 
@@ -201,10 +213,10 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
             try {
                 jedis = jedisPool.getResource();
                 jedis.hset(path, instanceId, data);
-                healthy.set(true);
+                lastErrorTime = 0;
             } catch (Exception e) {
                 log.error("cannot register service " + serviceName + ", exception=" + e.getMessage());
-                healthy.set(false);
+                updateLastErrorTime();
                 return;
             } finally {
                 try {
@@ -216,10 +228,10 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
         } else {
             try {
                 jedisCluster.hset(path, instanceId, data);
-                healthy.set(true);
+                lastErrorTime = 0;
             } catch (Exception e) {
                 log.error("cannot register service " + serviceName + ", exception=" + e.getMessage());
-                healthy.set(false);
+                updateLastErrorTime();
                 return;
             }
         }
@@ -238,10 +250,10 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
             try {
                 jedis = jedisPool.getResource();
                 jedis.hdel(path, instanceId);
-                healthy.set(true);
+                lastErrorTime = 0;
             } catch (Exception e) {
                 log.error("cannot deregister service " + serviceName + ", exception=" + e.getMessage());
-                healthy.set(false);
+                updateLastErrorTime();
                 return;
             } finally {
                 try {
@@ -253,10 +265,10 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
         } else {
             try {
                 jedisCluster.hdel(path, instanceId);
-                healthy.set(true);
+                lastErrorTime = 0;
             } catch (Exception e) {
                 log.error("cannot deregister service " + serviceName + ", exception=" + e.getMessage());
-                healthy.set(false);
+                updateLastErrorTime();
                 return;
             }
         }
@@ -276,10 +288,10 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
             try {
                 jedis = jedisPool.getResource();
                 v = jedis.hgetAll(path);
-                healthy.set(true);
+                lastErrorTime = 0;
             } catch (Exception e) {
                 log.error("cannot load key, key=" + path);
-                healthy.set(false);
+                updateLastErrorTime();
                 return null;
             } finally {
                 try {
@@ -291,10 +303,10 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
         } else {
             try {
                 v = jedisCluster.hgetAll(path);
-                healthy.set(true);
+                lastErrorTime = 0;
             } catch (Exception e) {
                 log.error("cannot load key, key=" + path);
-                healthy.set(false);
+                updateLastErrorTime();
                 return null;
             }
         }
@@ -323,16 +335,15 @@ public class JedisRegistry implements Registry, InitClose, DynamicRoutePlugin, D
 
     @Override
     public void healthCheck(List<HealthStatus> list) {
-        boolean b = healthy.get();
-        if( b ) return;
+        if( !needAlarm() ) return;
+
         String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
         list.add(new HealthStatus(alarmId,false,"jedis_registry connect failed","redis",addrs.replaceAll(",","#")));
     }
 
     @Override
     public void dump(Map<String, Object> metrics) {
-        boolean b = healthy.get();
-        if( b ) return;
+        if( !needAlarm() ) return;
 
         alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"jedis_registry connect failed","redis",addrs.replaceAll(",","#"));
         metrics.put("krpc.consul.errorCount",1);

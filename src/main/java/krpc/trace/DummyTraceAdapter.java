@@ -18,6 +18,9 @@ public class DummyTraceAdapter implements TraceAdapter {
         public Span newChild(String type, String action) {
             return dummySpan;
         }
+        public Span newChild(String type, String action,long timeUsedMicros) {
+            return dummySpan;
+        }
 
         public long stop() {
             return 0;
@@ -30,6 +33,12 @@ public class DummyTraceAdapter implements TraceAdapter {
         public long stop(String result) {
             return 0;
         }
+
+        public long stopForServer(String status) {
+            return 0;
+        }
+
+        public long stopWithTime(String status,long timeUsedMicros) {return 0;}
 
         public void logEvent(String type, String action, String status, String data) {
         }
@@ -118,28 +127,33 @@ public class DummyTraceAdapter implements TraceAdapter {
         public void incQuantitySum(String key, long v1, double v2) {
         }
 
-        public AtomicInteger getCompleted() {
-            return null;
-        }
-
         public void removeTag(String key) {}
 
         public void removeTags() {}
+
+        public String statsTimeUsed() {return "";}
+
+        public void changeAction(String action) {}
     };
 
     TraceContext dummyTraceContext = new TraceContext() {
 
-        public void startForServer(String type, String action) {
+        public Span startForServer(String type, String action) {
+            return dummySpan;
         }
 
-        public void start(String type, String action) {
+        public Span start(String type, String action) {
+            return dummySpan;
         }
 
         public Span startAsync(String type, String action) {
             return dummySpan;
         }
+        public Span appendSpan(String type, String action,long startMicros, String status, long timeUsedMicros) {
+            return dummySpan;
+        }
 
-        public Span currentSpan() {
+        public Span rootSpan()  {
             return dummySpan;
         }
 
@@ -178,9 +192,6 @@ public class DummyTraceAdapter implements TraceAdapter {
         public Span stopForServer(int retCode,String retMsg) {
             return dummySpan;
         }
-        public Span stopForServer(String result) {
-            return dummySpan;
-        }
 
         public void tagForRpc(String key, String value) {
 
@@ -197,6 +208,8 @@ public class DummyTraceAdapter implements TraceAdapter {
         public String getTagForRpc(String key) {
             return "";
         }
+
+        public TraceContext detach() {return null; }
     };
 
     public TraceContext newTraceContext() {

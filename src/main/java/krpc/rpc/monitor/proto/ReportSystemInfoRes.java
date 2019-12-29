@@ -13,7 +13,7 @@ public  final class ReportSystemInfoRes extends
 private static final long serialVersionUID = 0L;
 public static final ReportSystemInfoRes ok() { return ReportSystemInfoRes.newBuilder().build(); } ;
 public static final ReportSystemInfoRes failed(int retCode) { return ReportSystemInfoRes.newBuilder().setRetCode(retCode).build(); } ;
-public static final ReportSystemInfoRes failed(int retCode, String retMsg) { return ReportSystemInfoRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
+public static final ReportSystemInfoRes failed(int retCode,java.lang.String retMsg) { return ReportSystemInfoRes.newBuilder().setRetCode(retCode).setRetMsg(retMsg).build(); } ;
   // Use ReportSystemInfoRes.newBuilder() to construct.
   private ReportSystemInfoRes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -23,7 +23,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
     retMsg_ = "";
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -34,7 +34,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -53,7 +53,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
             break;
           }
           case 18: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             retMsg_ = s;
             break;
@@ -79,15 +79,15 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return MonitorProtos.internal_static_ReportSystemInfoRes_descriptor;
+    return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportSystemInfoRes_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return MonitorProtos.internal_static_ReportSystemInfoRes_fieldAccessorTable
+    return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportSystemInfoRes_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            ReportSystemInfoRes.class, Builder.class);
+            krpc.rpc.monitor.proto.ReportSystemInfoRes.class, krpc.rpc.monitor.proto.ReportSystemInfoRes.Builder.class);
   }
 
   public static final int RETCODE_FIELD_NUMBER = 1;
@@ -100,18 +100,18 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
   }
 
   public static final int RETMSG_FIELD_NUMBER = 2;
-  private volatile Object retMsg_;
+  private volatile java.lang.Object retMsg_;
   /**
    * <code>string retMsg = 2;</code>
    */
-  public String getRetMsg() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getRetMsg() {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       retMsg_ = s;
       return s;
     }
@@ -121,11 +121,11 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
    */
   public com.google.protobuf.ByteString
       getRetMsgBytes() {
-    Object ref = retMsg_;
-    if (ref instanceof String) {
+    java.lang.Object ref = retMsg_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       retMsg_ = b;
       return b;
     } else {
@@ -134,7 +134,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -144,7 +144,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (retCode_ != 0) {
@@ -156,7 +156,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -174,15 +174,15 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof ReportSystemInfoRes)) {
+    if (!(obj instanceof krpc.rpc.monitor.proto.ReportSystemInfoRes)) {
       return super.equals(obj);
     }
-    ReportSystemInfoRes other = (ReportSystemInfoRes) obj;
+    krpc.rpc.monitor.proto.ReportSystemInfoRes other = (krpc.rpc.monitor.proto.ReportSystemInfoRes) obj;
 
     boolean result = true;
     result = result && (getRetCode()
@@ -193,7 +193,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -209,69 +209,69 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
     return hash;
   }
 
-  public static ReportSystemInfoRes parseFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ReportSystemInfoRes parseFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ReportSystemInfoRes parseFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ReportSystemInfoRes parseFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ReportSystemInfoRes parseFrom(byte[] data)
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ReportSystemInfoRes parseFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ReportSystemInfoRes parseFrom(java.io.InputStream input)
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ReportSystemInfoRes parseFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ReportSystemInfoRes parseDelimitedFrom(java.io.InputStream input)
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static ReportSystemInfoRes parseDelimitedFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ReportSystemInfoRes parseFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ReportSystemInfoRes parseFrom(
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -279,23 +279,23 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(ReportSystemInfoRes prototype) {
+  public static Builder newBuilder(krpc.rpc.monitor.proto.ReportSystemInfoRes prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -305,18 +305,17 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:ReportSystemInfoRes)
-      ReportSystemInfoResOrBuilder {
+      krpc.rpc.monitor.proto.ReportSystemInfoResOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return MonitorProtos.internal_static_ReportSystemInfoRes_descriptor;
+      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportSystemInfoRes_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return MonitorProtos.internal_static_ReportSystemInfoRes_fieldAccessorTable
+      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportSystemInfoRes_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ReportSystemInfoRes.class, Builder.class);
+              krpc.rpc.monitor.proto.ReportSystemInfoRes.class, krpc.rpc.monitor.proto.ReportSystemInfoRes.Builder.class);
     }
 
     // Construct using krpc.rpc.monitor.proto.ReportSystemInfoRes.newBuilder()
@@ -325,7 +324,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -334,7 +333,6 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
               .alwaysUseFieldBuilders) {
       }
     }
-    @Override
     public Builder clear() {
       super.clear();
       retCode_ = 0;
@@ -344,79 +342,68 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
       return this;
     }
 
-    @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return MonitorProtos.internal_static_ReportSystemInfoRes_descriptor;
+      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportSystemInfoRes_descriptor;
     }
 
-    @Override
-    public ReportSystemInfoRes getDefaultInstanceForType() {
-      return ReportSystemInfoRes.getDefaultInstance();
+    public krpc.rpc.monitor.proto.ReportSystemInfoRes getDefaultInstanceForType() {
+      return krpc.rpc.monitor.proto.ReportSystemInfoRes.getDefaultInstance();
     }
 
-    @Override
-    public ReportSystemInfoRes build() {
-      ReportSystemInfoRes result = buildPartial();
+    public krpc.rpc.monitor.proto.ReportSystemInfoRes build() {
+      krpc.rpc.monitor.proto.ReportSystemInfoRes result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public ReportSystemInfoRes buildPartial() {
-      ReportSystemInfoRes result = new ReportSystemInfoRes(this);
+    public krpc.rpc.monitor.proto.ReportSystemInfoRes buildPartial() {
+      krpc.rpc.monitor.proto.ReportSystemInfoRes result = new krpc.rpc.monitor.proto.ReportSystemInfoRes(this);
       result.retCode_ = retCode_;
       result.retMsg_ = retMsg_;
       onBuilt();
       return result;
     }
 
-    @Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof ReportSystemInfoRes) {
-        return mergeFrom((ReportSystemInfoRes)other);
+      if (other instanceof krpc.rpc.monitor.proto.ReportSystemInfoRes) {
+        return mergeFrom((krpc.rpc.monitor.proto.ReportSystemInfoRes)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(ReportSystemInfoRes other) {
-      if (other == ReportSystemInfoRes.getDefaultInstance()) return this;
+    public Builder mergeFrom(krpc.rpc.monitor.proto.ReportSystemInfoRes other) {
+      if (other == krpc.rpc.monitor.proto.ReportSystemInfoRes.getDefaultInstance()) return this;
       if (other.getRetCode() != 0) {
         setRetCode(other.getRetCode());
       }
@@ -429,21 +416,19 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
       return this;
     }
 
-    @Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      ReportSystemInfoRes parsedMessage = null;
+      krpc.rpc.monitor.proto.ReportSystemInfoRes parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (ReportSystemInfoRes) e.getUnfinishedMessage();
+        parsedMessage = (krpc.rpc.monitor.proto.ReportSystemInfoRes) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -479,20 +464,20 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
       return this;
     }
 
-    private Object retMsg_ = "";
+    private java.lang.Object retMsg_ = "";
     /**
      * <code>string retMsg = 2;</code>
      */
-    public String getRetMsg() {
-      Object ref = retMsg_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getRetMsg() {
+      java.lang.Object ref = retMsg_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         retMsg_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -500,11 +485,11 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
      */
     public com.google.protobuf.ByteString
         getRetMsgBytes() {
-      Object ref = retMsg_;
+      java.lang.Object ref = retMsg_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         retMsg_ = b;
         return b;
       } else {
@@ -515,7 +500,7 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
      * <code>string retMsg = 2;</code>
      */
     public Builder setRetMsg(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       retMsg_ = value;
@@ -545,13 +530,11 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
       onChanged();
       return this;
     }
-    @Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -562,18 +545,18 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
   }
 
   // @@protoc_insertion_point(class_scope:ReportSystemInfoRes)
-  private static final ReportSystemInfoRes DEFAULT_INSTANCE;
+  private static final krpc.rpc.monitor.proto.ReportSystemInfoRes DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new ReportSystemInfoRes();
+    DEFAULT_INSTANCE = new krpc.rpc.monitor.proto.ReportSystemInfoRes();
   }
 
-  public static ReportSystemInfoRes getDefaultInstance() {
+  public static krpc.rpc.monitor.proto.ReportSystemInfoRes getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<ReportSystemInfoRes>
       PARSER = new com.google.protobuf.AbstractParser<ReportSystemInfoRes>() {
-    @Override
+    @java.lang.Override
     public ReportSystemInfoRes parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -586,13 +569,13 @@ public static final ReportSystemInfoRes failed(int retCode, String retMsg) { ret
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<ReportSystemInfoRes> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public ReportSystemInfoRes getDefaultInstanceForType() {
+  @java.lang.Override
+  public krpc.rpc.monitor.proto.ReportSystemInfoRes getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

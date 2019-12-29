@@ -23,11 +23,19 @@ public interface Alarm {
     // 016 curve 1
     // 017 curve 2
     // 018 mongodb
+    // 019 aysncflow block
+
+    String ALARM_TYPE_APMCFG = "900";
+    String ALARM_TYPE_TRACABLE_POOL = "902";
 
     String getAlarmId(String type);
+
+    @Deprecated
     void alarm(String type,String msg);
+
     void alarm(String type,String msg,String target,String addrs);
 
     String getAlarmPrefix();
+
     void alarm4rpc(String alarmId,String msg,String target,String addrs);
 }

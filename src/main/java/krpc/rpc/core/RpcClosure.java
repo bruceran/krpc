@@ -46,7 +46,7 @@ public class RpcClosure {
         if (ctx instanceof ServerContextData) {
             ServerContextData sctx = (ServerContextData) ctx;
             ServerContext.set(sctx);
-            Trace.setCurrentContext(sctx.getTraceContext());
+            Trace.restoreContext(sctx.getTraceContext());
         }
     }
 

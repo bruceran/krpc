@@ -51,6 +51,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
     int port = 8600;
     String host = "*";
     int idleSeconds = 30;
+    int idleSecondsForDownload = 0; // 文件下载时的超时时间
     int maxConns = 500000;
     int workerThreads = 0;
     int backlog = 128;
@@ -253,6 +254,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
     @Override
     public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
         //debugLog("channelRead");
+        long receiveMicros = System.nanoTime() / 1000;
 
         DefaultWebReq req = null;
         try {
@@ -286,7 +288,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 
             if (callback != null) {
                 try {
-                    callback.receive(connId, req);
+                    callback.receive(connId, req, receiveMicros);
                 } catch (Exception ex) {
                     ctx.close();
                     log.error("impossible exception, connId=" + connId, ex);
@@ -354,6 +356,10 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
 
     void writeStaticFile(Channel ch, DefaultWebRes data, String downloadFileStr) {
         try {
+            if( idleSecondsForDownload > 0 ) {
+                ch.pipeline().remove("timeout");
+                ch.pipeline().addFirst( "timeout", new IdleStateHandler(0, 0, idleSecondsForDownload) );
+            }
             writeStaticFile0(ch, data, downloadFileStr);
         } catch (Exception e) {
             DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
@@ -545,6 +551,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
             res.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, len);
         } else {
             res = new DefaultFullHttpResponse(data.getVersion(), HttpResponseStatus.valueOf(data.getHttpCode()));
+            res.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, 0);  // 302 不返回长度会导致客户端卡住
         }
         res.headers().set(HttpHeaderNames.SERVER, WebConstants.Server);
 
@@ -768,6 +775,14 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
         this.nativeNetty = nativeNetty;
     }
 
+    public int getIdleSecondsForDownload() {
+        return idleSecondsForDownload;
+    }
+
+    public void setIdleSecondsForDownload(int idleSecondsForDownload) {
+        this.idleSecondsForDownload = idleSecondsForDownload;
+    }
+
     @Override
     public void dump(Map<String, Object> metrics) {
         if( nativeNetty) {
@@ -784,6 +799,7 @@ public class NettyHttpServer extends ChannelDuplexHandler implements HttpTranspo
         metrics.put("krpc.webserver.port",port);
         metrics.put("krpc.webserver.host",host);
         metrics.put("krpc.webserver.idleSeconds",idleSeconds);
+        metrics.put("krpc.webserver.idleSecondsForDownload",idleSecondsForDownload);
         metrics.put("krpc.webserver.maxConns",maxConns);
         metrics.put("krpc.webserver.backlog",backlog);
 

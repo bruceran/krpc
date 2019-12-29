@@ -16,10 +16,5 @@ public interface UserService {
     com.xxx.userservice.proto.Login2Res login2(com.xxx.userservice.proto.Login2Req req);
     static final public int login2MsgId = 3;
 
-    default com.xxx.userservice.proto.Login3Res login3(com.xxx.userservice.proto.Login3Req req) {
-        return null;
-    }
-    static final public int login3MsgId = 4;
-
 }
 

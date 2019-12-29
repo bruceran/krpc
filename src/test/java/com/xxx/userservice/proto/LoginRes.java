@@ -413,7 +413,6 @@ public static final LoginRes failed(int retCode,java.lang.String retMsg) { retur
       return com.xxx.userservice.proto.UserServiceMetas.internal_static_LoginRes_descriptor;
     }
 
-    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.xxx.userservice.proto.UserServiceMetas.internal_static_LoginRes_fieldAccessorTable
@@ -436,7 +435,6 @@ public static final LoginRes failed(int retCode,java.lang.String retMsg) { retur
               .alwaysUseFieldBuilders) {
       }
     }
-    @java.lang.Override
     public Builder clear() {
       super.clear();
       retCode_ = 0;
@@ -450,18 +448,15 @@ public static final LoginRes failed(int retCode,java.lang.String retMsg) { retur
       return this;
     }
 
-    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
       return com.xxx.userservice.proto.UserServiceMetas.internal_static_LoginRes_descriptor;
     }
 
-    @java.lang.Override
     public com.xxx.userservice.proto.LoginRes getDefaultInstanceForType() {
       return com.xxx.userservice.proto.LoginRes.getDefaultInstance();
     }
 
-    @java.lang.Override
     public com.xxx.userservice.proto.LoginRes build() {
       com.xxx.userservice.proto.LoginRes result = buildPartial();
       if (!result.isInitialized()) {
@@ -470,7 +465,6 @@ public static final LoginRes failed(int retCode,java.lang.String retMsg) { retur
       return result;
     }
 
-    @java.lang.Override
     public com.xxx.userservice.proto.LoginRes buildPartial() {
       com.xxx.userservice.proto.LoginRes result = new com.xxx.userservice.proto.LoginRes(this);
       result.retCode_ = retCode_;
@@ -481,39 +475,32 @@ public static final LoginRes failed(int retCode,java.lang.String retMsg) { retur
       return result;
     }
 
-    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
       if (other instanceof com.xxx.userservice.proto.LoginRes) {
         return mergeFrom((com.xxx.userservice.proto.LoginRes)other);
@@ -545,12 +532,10 @@ public static final LoginRes failed(int retCode,java.lang.String retMsg) { retur
       return this;
     }
 
-    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -795,13 +780,11 @@ public static final LoginRes failed(int retCode,java.lang.String retMsg) { retur
       onChanged();
       return this;
     }
-    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);

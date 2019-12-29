@@ -12,13 +12,16 @@ import krpc.rpc.util.IpUtils;
 import krpc.rpc.util.TypeSafe;
 import krpc.rpc.util.TypeSafeMap;
 import krpc.rpc.web.*;
+import krpc.trace.Span;
 import krpc.trace.Trace;
+import krpc.trace.TraceContext;
 import krpc.trace.TraceIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -128,6 +131,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         }
 
         String dyeing = getDyeing(req);
+        if( isEmpty(dyeing) && !isEmpty(Dyeing.dyeingGlobal) ) {
+            dyeing = Dyeing.dyeingGlobal;
+        }
         if (!isEmpty(dyeing)) {
             traceBuilder.setDyeing(dyeing);
         }
@@ -135,8 +141,8 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         RpcMeta.Trace trace = traceBuilder.build();
 
         String action = serviceMetas.getName(r.getServiceId(), r.getMsgId());
-        Trace.startForServer(trace, "HTTPSERVER", action);
-        Trace.setRemoteAddr(getRemoteAddr(connId));
+        Span span = Trace.startForServer(trace, "HTTPSERVER", action);
+        span.setRemoteAddr(getRemoteAddr(connId));
 
         return trace;
     }
@@ -154,7 +160,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         httpTransport.send(connId, res);
     }
 
-    public void receive(String connId, DefaultWebReq req) {
+    public void receive(String connId, DefaultWebReq req,long receiveMicros) {
 
         if (req.getMethod() == HttpMethod.OPTIONS) {
             processCorsPreRequest(connId, req);
@@ -174,6 +180,7 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         }
 
         WebContextData ctx = generateCtx(connId, req, r);
+        ctx.setDecodeMicros( ctx.getStartMicros() - receiveMicros );
         ServerContext.set(ctx);
 
         List<PreParsePlugin> ppps = r.getPreParsePlugins();
@@ -550,15 +557,26 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
             callServiceEnd(ctx, req, closure);
         } catch (Exception e) {
             String traceId = "no_trace_id";
-            if (Trace.currentContext() != null && Trace.currentContext().getTrace() != null)
-                traceId = Trace.currentContext().getTrace().getTraceId();
+            TraceContext tctx = Trace.currentContext();
+            if( tctx != null ) {
+                if( tctx.getTrace() != null ) {
+                    traceId  = Trace.currentContext().getTrace().getTraceId();
+                }
+                Span rootSpan = tctx.rootSpan();
+                if( rootSpan != null ) {
+                    rootSpan.logException(e);
+                }
+            }
+
             log.error("callService exception, traceId=" + traceId, e);
-            Trace.logException(e);
+            int retCode = RetCodes.getExceptionRetCode(e);
+
             // sendErrorResponse(ctx, req, RetCodes.BUSINESS_ERROR);
-            String msg = RetCodes.retCodeText(RetCodes.BUSINESS_ERROR) + " in (" + ctx.getMeta().getServiceId() + ")";
-            sendErrorResponse(ctx, req, RetCodes.BUSINESS_ERROR, msg);
+            String msg = RetCodes.retCodeText(retCode) + " in (" + ctx.getMeta().getServiceId() + ")";
+            sendErrorResponse(ctx, req, retCode, msg);
         }
     }
+
 
     Message doCallService(WebContextData ctx, DefaultWebReq req, Message msgReq) throws Exception {
         RpcMeta meta = ctx.getMeta();
@@ -575,10 +593,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         }
 
         if (validator != null) {
-            String result = validator.validate(msgReq);
+            ValidateResult result = validator.validate(msgReq);
             if (result != null) {
-                String retMsg = RetCodes.retCodeText(RetCodes.VALIDATE_ERROR) + result;
-                sendErrorResponse(ctx, req, RetCodes.VALIDATE_ERROR, retMsg);
+                sendErrorResponse(ctx, req, result.getRetCode(), result.getRetMsg());
                 return null;
             }
         }
@@ -756,7 +773,9 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
             }
         }
 
-        httpTransport.send(ctx.getConnId(), res);
+        Span soutSpan = Trace.startAsync("OUTTS","send");
+        boolean sendOk = httpTransport.send(ctx.getConnId(), res);
+        soutSpan.stop(sendOk);
 
         res.setRetCode(retCode); // may be removed by plugin
 
@@ -764,7 +783,8 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         ctx.end();
 
         //状态判断修改
-        ctx.getTraceContext().stopForServer(retCode,retMsg);
+        Span span = ctx.getTraceContext().stopForServer(retCode,retMsg);
+        ctx.endWithTime(span.getTimeUsedMicros());
 
         if (monitorService != null)
             monitorService.webReqDone(closure);
@@ -956,7 +976,8 @@ public class WebServer implements HttpTransportCallback, InitClose, StartStop, A
         WebClosure closure = new WebClosure(ctx, req, res);
         ctx.end();
 
-        ctx.getTraceContext().stopForServer(retCode);
+        Span span = ctx.getTraceContext().stopForServer(retCode);
+        ctx.endWithTime(span.getTimeUsedMicros());
 
         if (monitorService != null)
             monitorService.webReqDone(closure);

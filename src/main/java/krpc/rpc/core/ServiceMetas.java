@@ -4,6 +4,7 @@ import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Message;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 public interface ServiceMetas {
@@ -65,4 +66,9 @@ public interface ServiceMetas {
     void addExchangeServiceId(int serviceId);
 
     boolean isExchangeServiceId(int serviceId);
+
+    List<Integer> getServiceIds();
+
+    Map<String,String> getServiceMetaInfo();
+    Map<String,String> getMsgMetaInfo();
 }

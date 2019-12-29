@@ -3,10 +3,12 @@ package krpc.rpc.impl;
 import krpc.common.InitClose;
 import krpc.common.Plugin;
 import krpc.rpc.core.ErrorMsgConverter;
+import krpc.rpc.util.TypeSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStreamReader;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -58,5 +60,15 @@ public class FileErrorMsgConverter implements ErrorMsgConverter, InitClose {
         this.location = location;
     }
 
+    public Map<String,String> getAllMsgs() {
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        prop.forEach( (k,v)-> {
+            int retCode = TypeSafe.anyToInt(k);
+            if( retCode <= -1000 ) { // 仅限业务层错误码
+                map.put(String.valueOf(k),String.valueOf(v));
+            }
+        });
+        return map;
+    }
 }
 

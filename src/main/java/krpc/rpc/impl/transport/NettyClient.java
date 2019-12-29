@@ -21,6 +21,7 @@ import io.netty.util.TimerTask;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import krpc.common.*;
 import krpc.rpc.core.*;
+import krpc.rpc.util.TypeSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -328,7 +329,7 @@ public class NettyClient extends TransportBase implements Transport, TransportCh
             for(String connId: reconnectingConns.keySet()) {
                 String addr = getAddr(connId);
                 int p = addr.lastIndexOf(":");
-                String serviceId = addr.substring(p+1).substring(1); // 取端口，去掉第一个字符，一般端口格式是 7xxx
+                int serviceId = TypeSafe.anyToInt(addr.substring(p+1).substring(1)); // 取端口，去掉第一个字符，一般端口格式是 7xxx
                 String alarmId = serviceId + "002";
                 String targetAddr = serviceId+":"+addr;
                 String msg = "krpc connection failed from " + alarm.getAlarmPrefix();

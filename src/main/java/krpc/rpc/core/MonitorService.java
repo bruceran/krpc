@@ -9,4 +9,5 @@ public interface MonitorService {
 
     void reportAlarm(String type, String msg, String target, String addrs); // alarm
 
+    void virtualServiceDone(VirtualServiceClosure closure);
 }

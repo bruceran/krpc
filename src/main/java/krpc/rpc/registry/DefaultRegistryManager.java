@@ -25,6 +25,8 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
     private String dataDir;
     private String localFile = "registry.cache";
     Map<String, String> localData = new HashMap<>();
+    Set<Integer> ignoredServiceIds;
+    Set<String> ignoredAddrs;
 
     private int startInterval = 1000;
     private int checkInterval = 1000;
@@ -35,6 +37,40 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
 
     public DefaultRegistryManager(String dataDir) {
         this.dataDir = dataDir;
+    }
+
+    public void setDiscoverFreeServices(Set<Integer> ignoredServiceIds, Set<String> ignoredAddrs) {
+        this.ignoredServiceIds = ignoredServiceIds;
+        this.ignoredAddrs = ignoredAddrs;
+    }
+
+    void ignoreProcess(Map<Integer, String> results) {
+        if (results.size() == 0) return;
+        if (ignoredServiceIds == null || ignoredServiceIds.isEmpty() ) return;
+        if (ignoredAddrs == null || ignoredAddrs.isEmpty() ) return;
+
+        for (Integer serviceId : results.keySet()) {
+            if (!ignoredServiceIds.contains(serviceId)) continue;
+            String addrs = results.get(serviceId);
+            addrs = ignoreProcessAddr(addrs);
+            results.put(serviceId,addrs);
+        }
+    }
+
+    String ignoreProcessAddr(String addrs) {
+        if( addrs == null || addrs.isEmpty() ) return addrs;
+        String[] ss = addrs.split(",");
+        StringBuilder b = new StringBuilder();
+
+        for( String s: ss) {
+            if( ignoredAddrs.contains(s) ) {
+                continue;
+            }
+            if( b.length() > 0 ) b.append(",");
+            b.append(s);
+        }
+
+        return b.toString();
     }
 
     public void addRegistry(String registryName, Registry impl) {
@@ -94,7 +130,11 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
             timer = new Timer("krpc_registry_heartbeat_timer");
             timer.schedule(new TimerTask() {
                 public void run() {
-                    heartBeat();
+                    try {
+                        heartBeat();
+                    } catch(Throwable e) {
+                        log.error("heartBeat exception",e);
+                    }
                 }
             }, startInterval, checkInterval);
         }
@@ -134,6 +174,7 @@ public class DefaultRegistryManager implements RegistryManager, InitClose, Start
                 if (addrs == null) addrs = "";
                 results.put(serviceId, addrs);
             }
+            ignoreProcess(results);
             b.callback.addrChanged(results);
         }
     }

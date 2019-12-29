@@ -98,7 +98,7 @@ public class ConsulDynamicRoutePlugin extends AbstractHttpDynamicRoutePlugin imp
 
         HttpClientRes res = hc.call(req);
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
-            log.error("cannot get config " + path);
+            log.error("cannot get config " + url);
             if (res.getHttpCode() != 404) nextAddr();
             return null;
         }

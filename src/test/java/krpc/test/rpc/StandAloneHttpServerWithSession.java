@@ -19,7 +19,7 @@ public class StandAloneHttpServerWithSession {
 
         RpcApp app = new Bootstrap()
                 .addWebServer(new WebServerConfig(8888).setDefaultSessionService("jedissessionservice:addrs=127.0.0.1:6379"))
-                .addServer(5600)
+                .addServer(7600)
                 .addService(UserService.class, impl)
                 .build();
 

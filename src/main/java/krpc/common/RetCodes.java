@@ -1,5 +1,6 @@
 package krpc.common;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -53,31 +54,37 @@ public class RetCodes {
     static public final int BIZ_DISCARDED = -701;
     static public final int BIZ_PARAM_ERROR = -702;
 
+    static public final int BPE_INVOKE_TIMEOUT = -802;
+
     static public final Set<Integer> systemErrorCodes = new HashSet<>(); // 用于其他框架扩展
 
     static public boolean isSystemError(int retCode) {
-
-        if( retCode == 0 ) return false;
-
-        int v = -1 * retCode;
-
-        if( v >= 600 && v < 700 && retCode != VALIDATE_ERROR ) { // -621 pb参数校验规则校验失败  不算系统错误
-            return true;
-        }
-
-        if( systemErrorCodes.contains(retCode) ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    static public boolean isSystemErrorV2(int retCode) {
         return retCode != 0 ; // 非0都算错误
     }
 
+    public static int getExceptionRetCode(Throwable e) {
+        if (e instanceof SocketTimeoutException) {
+            return RetCodes.RPC_TIMEOUT;
+        }
+
+        String message = e.getMessage();
+        if (message != null) {
+            message = message.toLowerCase();
+            if (message.contains("timeout") || message.contains("timed out")) { // SocketTimeoutException
+                return RetCodes.RPC_TIMEOUT;
+            }
+        }
+
+        Throwable c = e.getCause();
+        if (c != null) {
+            return getExceptionRetCode(c);
+        }
+
+        return RetCodes.BUSINESS_ERROR;
+    }
+
     static public boolean isTimeout(int retCode) {
-        return retCode == RPC_TIMEOUT || retCode == QUEUE_TIMEOUT;
+        return retCode == RPC_TIMEOUT || retCode == QUEUE_TIMEOUT || retCode == BPE_INVOKE_TIMEOUT;
     }
 
     static public boolean canSafeRetry(int retCode) {
@@ -110,8 +117,7 @@ public class RetCodes {
 
     static private final Map<Integer, String> map = new HashMap<>();
 
-    static public void init() {
-    } // used for static initialization
+    static public void init() { } // used for static initialization
 
     static {
         map.put(0, "");
@@ -127,7 +133,7 @@ public class RetCodes {
         map.put(DECODE_RES_ERROR, "decode res error");
 
         map.put(BUSINESS_ERROR, "business exception");
-        map.put(VALIDATE_ERROR, "validate error: ");
+        map.put(VALIDATE_ERROR, "validate error:");
         map.put(SERVER_SHUTDOWN, "server shutdown");
         map.put(QUEUE_FULL, "queue is full");
         map.put(QUEUE_TIMEOUT, "timeout in queue");
@@ -154,6 +160,7 @@ public class RetCodes {
         map.put(HTTP_NO_LOGIN, "not login yet");
         map.put(HTTP_SERVICE_NOT_FOUND, "service not found");
 
+        map.put(BPE_INVOKE_TIMEOUT, "invoke timeout");
     }
 
 }

@@ -22,7 +22,7 @@ public class RpcFutureUtils  {
 
     public static ServiceMetas serviceMetas; // ugly, can be used by single RpcApp instance only
 
-    private static RpcClosure createRpcClosure() {
+    public static RpcClosure createRpcClosure() {
         ServerContextData ctx = ServerContext.get();
         if( ctx != null ) {
             Message req = (Message)ctx.getAttribute("pendingReq");

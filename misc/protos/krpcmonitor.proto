@@ -82,6 +82,24 @@ message ReportAlarmRes {
     string retMsg = 2;
 };
 
+message MetaInfo {
+    int32 type = 1; // 1=serviceId 2=serviceId.msgId  3=errorCode
+    string value = 2;
+    string text = 3;
+};
+
+message ReportMetaReq {
+    int64 timestamp = 1;
+    string host = 2;
+    string app = 3;
+    int32 appServiceId = 4;
+    repeated MetaInfo info = 5;
+};
+
+message ReportMetaRes {
+    int32 retCode = 1;
+    string retMsg = 2;
+};
 
 service MonitorService {
 
@@ -95,6 +113,9 @@ service MonitorService {
     };
     rpc reportAlarm (ReportAlarmReq) returns (ReportAlarmRes) {
         option (krpc.msgId) = 3;
+    };
+    rpc reportMeta (ReportMetaReq) returns (ReportMetaRes) {
+        option (krpc.msgId) = 4;
     };
 
 }

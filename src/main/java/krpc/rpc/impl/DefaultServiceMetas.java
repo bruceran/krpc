@@ -7,10 +7,7 @@ import krpc.common.RetCodes;
 import krpc.rpc.core.*;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DefaultServiceMetas implements ServiceMetas {
 
@@ -88,6 +85,10 @@ public class DefaultServiceMetas implements ServiceMetas {
     }
     public RpcCallable findCallable(int serviceId) {
         return callableMapForServiceId.get(serviceId);
+    }
+
+    public List<Integer> getServiceIds() {
+        return new ArrayList<>(services.keySet());
     }
 
     public Map<Integer, String> getMsgNames(int serviceId) {
@@ -317,4 +318,24 @@ public class DefaultServiceMetas implements ServiceMetas {
         return exchangeServiceIds.contains(serviceId);
     }
 
+    public Map<String,String> getServiceMetaInfo() {
+        Map<String,String> map = new LinkedHashMap<>();
+        List<Integer> serviceIds = getServiceIds();
+        for(Integer serviceId: serviceIds) {
+            map.put(String.valueOf(serviceId),getServiceName(serviceId));
+        }
+        return map;
+    }
+    public Map<String,String> getMsgMetaInfo() {
+        Map<String,String> map = new LinkedHashMap<>();
+        List<Integer> serviceIds = getServiceIds();
+        for(Integer serviceId: serviceIds) {
+            Map<Integer, String> names = getMsgNames(serviceId);
+            String prefix = serviceId + ".";
+            for (Map.Entry<Integer, String> entry : names.entrySet()) {
+                map.put(prefix+entry.getKey(),entry.getValue());
+            }
+        }
+        return map;
+    }
 }

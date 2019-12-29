@@ -1,6 +1,5 @@
 package krpc.rpc.cluster.lb;
 
-import com.google.protobuf.Message;
 import krpc.rpc.cluster.Addr;
 import krpc.rpc.cluster.LoadBalance;
 import krpc.rpc.cluster.Weights;

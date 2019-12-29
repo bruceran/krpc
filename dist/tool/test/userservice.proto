@@ -79,7 +79,7 @@ service UserService {
 	rpc login(LoginReq) returns (LoginRes)  { option (krpc.msgId) = 1; };
 	rpc updateProfile(UpdateProfileReq) returns (UpdateProfileRes)   { option (krpc.msgId) = 2; };
 	rpc login2(Login2Req) returns (Login2Res)  { option (krpc.msgId) = 3; };
-	rpc login3(Login3Req) returns (Login3Res)  { option (krpc.msgId) = 4; };
+	// rpc login3(Login3Req) returns (Login3Res)  { option (krpc.msgId) = 4; };
 }
 
 
@@ -123,6 +123,22 @@ message ValidateTestReq {
 	int32 retCode = 1;
 	string retMsg = 2;
 }
+
+message ValidateTest2Req {
+	string userId = 1 [  (krpc.vld).required = true  ] ;
+	string s1 = 11  [  (krpc.vld) = {empty_or_srange :"bbb,ccc"; retCode: -100} ] ;
+	int32 i1 = 15  [  (krpc.vld) = {empty_or_nrange :"20,50"; retMsg: "值范围必须在20到50之间"} ] ;
+	string s5 = 21  [  (krpc.vld) = { empty_or_values :"aaa,bbb,ccc" ; retCode: -101; retMsg: "枚举值不正确" } ] ;
+	string s6 = 22  [  (krpc.vld) = { empty_or_length :"4,8"} ] ;
+	repeated string s7 = 24  [  (krpc.vld) = { empty_or_arrlen :"2,8"} ];
+	string s31 = 31  [  (krpc.vld).empty_or_match="int" ] ;
+}
+
+message GiclReq {
+	int32 a = 11  [  (krpc.gicl) = {default: "1"} ] ;
+	string b = 15  [  (krpc.gicl) = { field: "b2"; compare: "sd"} ] ;
+}
+
 
 service TestService {
 	option (krpc.serviceId) = 101;

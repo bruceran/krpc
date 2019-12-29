@@ -15,7 +15,7 @@ public interface ReportRpcStatReqOrBuilder extends
   /**
    * <code>string host = 2;</code>
    */
-  String getHost();
+  java.lang.String getHost();
   /**
    * <code>string host = 2;</code>
    */
@@ -25,7 +25,7 @@ public interface ReportRpcStatReqOrBuilder extends
   /**
    * <code>string app = 3;</code>
    */
-  String getApp();
+  java.lang.String getApp();
   /**
    * <code>string app = 3;</code>
    */
@@ -35,12 +35,12 @@ public interface ReportRpcStatReqOrBuilder extends
   /**
    * <code>repeated .RpcStat stats = 4;</code>
    */
-  java.util.List<RpcStat>
+  java.util.List<krpc.rpc.monitor.proto.RpcStat> 
       getStatsList();
   /**
    * <code>repeated .RpcStat stats = 4;</code>
    */
-  RpcStat getStats(int index);
+  krpc.rpc.monitor.proto.RpcStat getStats(int index);
   /**
    * <code>repeated .RpcStat stats = 4;</code>
    */
@@ -48,13 +48,13 @@ public interface ReportRpcStatReqOrBuilder extends
   /**
    * <code>repeated .RpcStat stats = 4;</code>
    */
-  java.util.List<? extends RpcStatOrBuilder>
+  java.util.List<? extends krpc.rpc.monitor.proto.RpcStatOrBuilder> 
       getStatsOrBuilderList();
   /**
    * <code>repeated .RpcStat stats = 4;</code>
    */
-  RpcStatOrBuilder getStatsOrBuilder(
-          int index);
+  krpc.rpc.monitor.proto.RpcStatOrBuilder getStatsOrBuilder(
+      int index);
 
   /**
    * <code>int32 appServiceId = 5;</code>

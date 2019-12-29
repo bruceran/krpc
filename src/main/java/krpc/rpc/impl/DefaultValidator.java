@@ -6,6 +6,8 @@ import com.google.protobuf.Message;
 import com.google.protobuf.Message.Builder;
 import krpc.KrpcExt;
 import krpc.rpc.core.ReflectionUtils;
+import krpc.rpc.core.ValidateFieldInfo;
+import krpc.rpc.core.ValidateResult;
 import krpc.rpc.core.Validator;
 import krpc.rpc.util.TypeSafe;
 
@@ -22,21 +24,18 @@ public class DefaultValidator implements Validator {
     static final int TYPE_SRANGE = 5;
     static final int TYPE_ARRLEN = 6;
 
+    static final int TYPE_EMPTY_OR_MATCH = 11;
+    static final int TYPE_EMPTY_OR_VALUES = 12;
+    static final int TYPE_EMPTY_OR_LENGTH = 13;
+    static final int TYPE_EMPTY_OR_NRANGE = 14;
+    static final int TYPE_EMPTY_OR_SRANGE = 15;
+    static final int TYPE_EMPTY_OR_ARRLEN = 16;
+
     FieldValidator requiredValidator = new RequiredValidator();
 
     HashMap<String, FieldValidator> validatorCache = new HashMap<>();
 
-    static class FieldInfo {
-        Descriptors.FieldDescriptor field;
-        KrpcExt.Validate vld;
-
-        FieldInfo(Descriptors.FieldDescriptor field, KrpcExt.Validate vld) {
-            this.field = field;
-            this.vld = vld;
-        }
-    }
-
-    HashMap<String, List<FieldInfo>> fieldCache = new HashMap<>();
+    HashMap<String, List<ValidateFieldInfo>> fieldCache = new HashMap<>();
 
     public boolean prepare(Class<?> cls) {
         Builder b = ReflectionUtils.generateBuilder(cls);
@@ -46,14 +45,14 @@ public class DefaultValidator implements Validator {
 
     boolean prepare(Descriptors.Descriptor desc) {
 
-        List<FieldInfo> l = new ArrayList<>();
+        List<ValidateFieldInfo> l = new ArrayList<>();
         fieldCache.put(desc.getFullName(), l);
 
         for (Descriptors.FieldDescriptor field : desc.getFields()) {
 
             KrpcExt.Validate v = getVldOption(field);
             if (v != null) {
-                l.add(new FieldInfo(field, v));
+                l.add(new ValidateFieldInfo(field, v));
                 continue;
             }
 
@@ -61,7 +60,7 @@ public class DefaultValidator implements Validator {
                 Descriptors.Descriptor sub = field.getMessageType();
                 boolean has = prepare(sub);
                 if (has) {
-                    l.add(new FieldInfo(field, null));
+                    l.add(new ValidateFieldInfo(field, null));
                     continue;
                 }
             }
@@ -80,13 +79,13 @@ public class DefaultValidator implements Validator {
         return null;
     }
 
-    public String validate(Message message) {
+    public ValidateResult validate(Message message) {
 
         Descriptors.Descriptor desc = message.getDescriptorForType();
-        List<FieldInfo> l = fieldCache.get(desc.getFullName());
+        List<ValidateFieldInfo> l = fieldCache.get(desc.getFullName());
         if (l == null || l.size() == 0) return null;
 
-        for (FieldInfo fi : l) {
+        for (ValidateFieldInfo fi : l) {
 
             KrpcExt.Validate v = fi.vld;
             Object fieldValue = message.getField(fi.field);
@@ -95,27 +94,27 @@ public class DefaultValidator implements Validator {
                 if (v != null) {
                     boolean ok = doValidateArray(fieldValue, v);
                     if (!ok)
-                        return fi.field.getFullName();
+                        return new ValidateResult(fi);
                 }
                 for (Object element : (List<?>) fieldValue) {
                     if (element instanceof Message) {
-                        String res = validate((Message) element);
+                        ValidateResult res = validate((Message) element);
                         if (res != null) return res;
                     } else {
                         if (v != null) {
                             boolean ok = doValidateSingle(element, v);
-                            if (!ok) return fi.field.getFullName();
+                            if (!ok) return new ValidateResult(fi);
                         }
                     }
                 }
             } else if (fieldValue instanceof Message) {
-                String res = validate((Message) fieldValue);
+                ValidateResult res = validate((Message) fieldValue);
                 if (res != null) return res;
             } else {
                 if (v != null) {
                     boolean ok = doValidateSingle(fieldValue, v);
                     if (!ok)
-                        return fi.field.getFullName();
+                        return new ValidateResult(fi);
                 }
             }
         }
@@ -130,6 +129,13 @@ public class DefaultValidator implements Validator {
 
         if (!v.getArrlen().isEmpty()) {
             FieldValidator fv = getValidatorWithCache(TYPE_ARRLEN, v.getArrlen());
+            boolean ok = fv.validate(fieldValue);
+            if (!ok)
+                return false;
+        }
+
+        if (!v.getEmptyOrArrlen().isEmpty()) {
+            FieldValidator fv = getValidatorWithCache(TYPE_EMPTY_OR_ARRLEN, v.getEmptyOrArrlen());
             boolean ok = fv.validate(fieldValue);
             if (!ok)
                 return false;
@@ -179,6 +185,37 @@ public class DefaultValidator implements Validator {
                 return false;
         }
 
+        if (!v.getEmptyOrMatch().isEmpty()) {
+            FieldValidator fv = getValidatorWithCache(TYPE_EMPTY_OR_MATCH, v.getEmptyOrMatch());
+            boolean ok = fv.validate(fieldValue);
+            if (!ok)
+                return false;
+        }
+        if (!v.getEmptyOrValues().isEmpty()) {
+            FieldValidator fv = getValidatorWithCache(TYPE_EMPTY_OR_VALUES, v.getEmptyOrValues());
+            boolean ok = fv.validate(fieldValue);
+            if (!ok)
+                return false;
+        }
+        if (!v.getEmptyOrLength().isEmpty()) {
+            FieldValidator fv = getValidatorWithCache(TYPE_EMPTY_OR_LENGTH, v.getEmptyOrLength());
+            boolean ok = fv.validate(fieldValue);
+            if (!ok)
+                return false;
+        }
+        if (!v.getEmptyOrNrange().isEmpty()) {
+            FieldValidator fv = getValidatorWithCache(TYPE_EMPTY_OR_NRANGE, v.getEmptyOrNrange());
+            boolean ok = fv.validate(fieldValue);
+            if (!ok)
+                return false;
+        }
+        if (!v.getEmptyOrSrange().isEmpty()) {
+            FieldValidator fv = getValidatorWithCache(TYPE_EMPTY_OR_SRANGE, v.getEmptyOrSrange());
+            boolean ok = fv.validate(fieldValue);
+            if (!ok)
+                return false;
+        }
+
         return true;
     }
 
@@ -206,12 +243,24 @@ public class DefaultValidator implements Validator {
                 return new ArrlenValidator(params);
             case TYPE_MATCH:
                 return getMatchValidator(params);
+            case TYPE_EMPTY_OR_VALUES:
+                return new EmptyOrValuesValidator(params);
+            case TYPE_EMPTY_OR_LENGTH:
+                return new EmptyOrLengthValidator(params);
+            case TYPE_EMPTY_OR_NRANGE:
+                return new EmptyOrNrangeValidator(params);
+            case TYPE_EMPTY_OR_SRANGE:
+                return new EmptyOrSrangeValidator(params);
+            case TYPE_EMPTY_OR_MATCH:
+                return getEmptyOrMatchValidator(params);
+            case TYPE_EMPTY_OR_ARRLEN:
+                return new EmptyOrArrlenValidator(params);
             default:
                 return null; // impossible
         }
     }
 
-    FieldValidator getMatchValidator(String params) {
+    static FieldValidator getMatchValidator(String params) {
         switch (params) {
             case "int":
                 return new IntValidator();
@@ -227,6 +276,25 @@ public class DefaultValidator implements Validator {
                 return new PatternValidator("^[A-Za-z0-9_.-]+@[a-zA-Z0-9_-]+[.][a-zA-Z0-9_-]+$");
             default:
                 return new PatternValidator(params);
+        }
+    }
+
+    static FieldValidator getEmptyOrMatchValidator(String params) {
+        switch (params) {
+            case "int":
+                return new EmptyOrIntValidator();
+            case "long":
+                return new EmptyOrLongValidator();
+            case "double":
+                return new EmptyOrDoubleValidator();
+            case "date":
+                return new EmptyOrDateValidator();
+            case "timestamp":
+                return new EmptyOrTimestampValidator();
+            case "email":
+                return new EmptyOrPatternValidator("^[A-Za-z0-9_.-]+@[a-zA-Z0-9_-]+[.][a-zA-Z0-9_-]+$");
+            default:
+                return new EmptyOrPatternValidator(params);
         }
     }
 
@@ -265,6 +333,20 @@ public class DefaultValidator implements Validator {
         }
     }
 
+    static class EmptyOrValuesValidator extends ValuesValidator {
+        EmptyOrValuesValidator(String values) {
+            super(values);
+        }
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
+    }
+
     static class LengthValidator implements FieldValidator {
         int min = 0;
         int max = Integer.MAX_VALUE;
@@ -286,6 +368,20 @@ public class DefaultValidator implements Validator {
             return len >= min && len <= max;
         }
 
+    }
+
+    static class EmptyOrLengthValidator extends LengthValidator {
+        EmptyOrLengthValidator(String s) {
+            super(s);
+        }
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
     }
 
     static class ArrlenValidator implements FieldValidator {
@@ -313,6 +409,20 @@ public class DefaultValidator implements Validator {
             return len >= min && len <= max;
         }
 
+    }
+
+    static class EmptyOrArrlenValidator extends ArrlenValidator {
+        EmptyOrArrlenValidator(String s) {
+            super(s);
+        }
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof List ) {
+                List s = (List)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
     }
 
     static class NrangeValidator implements FieldValidator {
@@ -352,6 +462,20 @@ public class DefaultValidator implements Validator {
 
     }
 
+    static class EmptyOrNrangeValidator extends NrangeValidator {
+        EmptyOrNrangeValidator(String s) {
+            super(s);
+        }
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
+    }
+
     static class SrangeValidator implements FieldValidator {
         String min = "";
         String max = "";
@@ -373,6 +497,20 @@ public class DefaultValidator implements Validator {
 
     }
 
+    static class EmptyOrSrangeValidator extends SrangeValidator {
+        EmptyOrSrangeValidator(String s) {
+            super(s);
+        }
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
+    }
+
     static class IntValidator implements FieldValidator {
         public boolean validate(Object v) {
             if (v instanceof Integer)
@@ -388,6 +526,17 @@ public class DefaultValidator implements Validator {
         }
     }
 
+    static class EmptyOrIntValidator extends IntValidator {
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
+    }
+
     static class LongValidator implements FieldValidator {
         public boolean validate(Object v) {
             if (v instanceof Integer || v instanceof Long)
@@ -399,6 +548,17 @@ public class DefaultValidator implements Validator {
             } catch (Exception e) {
                 return false;
             }
+        }
+    }
+
+    static class EmptyOrLongValidator extends LongValidator {
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
         }
     }
 
@@ -417,6 +577,17 @@ public class DefaultValidator implements Validator {
         }
     }
 
+    static class EmptyOrDoubleValidator extends DoubleValidator {
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
+    }
+
     static class DateValidator implements FieldValidator {
 
         static ThreadLocal<SimpleDateFormat> f = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd"));
@@ -429,6 +600,17 @@ public class DefaultValidator implements Validator {
             } catch (Exception e) {
                 return false;
             }
+        }
+    }
+
+    static class EmptyOrDateValidator extends DateValidator {
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
         }
     }
 
@@ -447,6 +629,18 @@ public class DefaultValidator implements Validator {
         }
     }
 
+    static class EmptyOrTimestampValidator extends TimestampValidator {
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
+    }
+
+
     static class PatternValidator implements FieldValidator {
         Pattern pattern;
 
@@ -459,5 +653,22 @@ public class DefaultValidator implements Validator {
             return pattern.matcher(s).matches();
         }
     }
+
+
+    static class EmptyOrPatternValidator extends PatternValidator {
+
+        EmptyOrPatternValidator(String s) {
+            super(s);
+        }
+        public boolean validate(Object v) {
+            if( v == null ) return true;
+            if( v instanceof String ) {
+                String s = (String)v;
+                if(s.isEmpty()) return true;
+            }
+            return super.validate(v);
+        }
+    }
+
 
 }

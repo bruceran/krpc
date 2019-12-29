@@ -10,7 +10,7 @@ public final class KrpcExt {
     registry.add(krpc.KrpcExt.serviceId);
     registry.add(krpc.KrpcExt.msgId);
     registry.add(krpc.KrpcExt.vld);
-    registry.add(krpc.KrpcExt.map);
+    registry.add(krpc.KrpcExt.gicl);
   }
 
   public static void registerAllExtensions(
@@ -138,6 +138,93 @@ public final class KrpcExt {
      */
     com.google.protobuf.ByteString
         getArrlenBytes();
+
+    /**
+     * <code>string empty_or_match = 8;</code>
+     */
+    java.lang.String getEmptyOrMatch();
+    /**
+     * <code>string empty_or_match = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmptyOrMatchBytes();
+
+    /**
+     * <code>string empty_or_values = 9;</code>
+     */
+    java.lang.String getEmptyOrValues();
+    /**
+     * <code>string empty_or_values = 9;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmptyOrValuesBytes();
+
+    /**
+     * <code>string empty_or_length = 10;</code>
+     */
+    java.lang.String getEmptyOrLength();
+    /**
+     * <code>string empty_or_length = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmptyOrLengthBytes();
+
+    /**
+     * <code>string empty_or_nrange = 11;</code>
+     */
+    java.lang.String getEmptyOrNrange();
+    /**
+     * <code>string empty_or_nrange = 11;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmptyOrNrangeBytes();
+
+    /**
+     * <code>string empty_or_srange = 12;</code>
+     */
+    java.lang.String getEmptyOrSrange();
+    /**
+     * <code>string empty_or_srange = 12;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmptyOrSrangeBytes();
+
+    /**
+     * <code>string empty_or_arrlen = 13;</code>
+     */
+    java.lang.String getEmptyOrArrlen();
+    /**
+     * <code>string empty_or_arrlen = 13;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmptyOrArrlenBytes();
+
+    /**
+     * <pre>
+     * error code
+     * </pre>
+     *
+     * <code>int32 retCode = 14;</code>
+     */
+    int getRetCode();
+
+    /**
+     * <pre>
+     * error msg
+     * </pre>
+     *
+     * <code>string retMsg = 15;</code>
+     */
+    java.lang.String getRetMsg();
+    /**
+     * <pre>
+     * error msg
+     * </pre>
+     *
+     * <code>string retMsg = 15;</code>
+     */
+    com.google.protobuf.ByteString
+        getRetMsgBytes();
   }
   /**
    * Protobuf type {@code krpc.Validate}
@@ -159,6 +246,14 @@ public final class KrpcExt {
       nrange_ = "";
       srange_ = "";
       arrlen_ = "";
+      emptyOrMatch_ = "";
+      emptyOrValues_ = "";
+      emptyOrLength_ = "";
+      emptyOrNrange_ = "";
+      emptyOrSrange_ = "";
+      emptyOrArrlen_ = "";
+      retCode_ = 0;
+      retMsg_ = "";
     }
 
     @java.lang.Override
@@ -224,6 +319,53 @@ public final class KrpcExt {
               java.lang.String s = input.readStringRequireUtf8();
 
               arrlen_ = s;
+              break;
+            }
+            case 66: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              emptyOrMatch_ = s;
+              break;
+            }
+            case 74: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              emptyOrValues_ = s;
+              break;
+            }
+            case 82: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              emptyOrLength_ = s;
+              break;
+            }
+            case 90: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              emptyOrNrange_ = s;
+              break;
+            }
+            case 98: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              emptyOrSrange_ = s;
+              break;
+            }
+            case 106: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              emptyOrArrlen_ = s;
+              break;
+            }
+            case 112: {
+
+              retCode_ = input.readInt32();
+              break;
+            }
+            case 122: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              retMsg_ = s;
               break;
             }
             default: {
@@ -523,6 +665,265 @@ public final class KrpcExt {
       }
     }
 
+    public static final int EMPTY_OR_MATCH_FIELD_NUMBER = 8;
+    private volatile java.lang.Object emptyOrMatch_;
+    /**
+     * <code>string empty_or_match = 8;</code>
+     */
+    public java.lang.String getEmptyOrMatch() {
+      java.lang.Object ref = emptyOrMatch_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        emptyOrMatch_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string empty_or_match = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmptyOrMatchBytes() {
+      java.lang.Object ref = emptyOrMatch_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        emptyOrMatch_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EMPTY_OR_VALUES_FIELD_NUMBER = 9;
+    private volatile java.lang.Object emptyOrValues_;
+    /**
+     * <code>string empty_or_values = 9;</code>
+     */
+    public java.lang.String getEmptyOrValues() {
+      java.lang.Object ref = emptyOrValues_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        emptyOrValues_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string empty_or_values = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmptyOrValuesBytes() {
+      java.lang.Object ref = emptyOrValues_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        emptyOrValues_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EMPTY_OR_LENGTH_FIELD_NUMBER = 10;
+    private volatile java.lang.Object emptyOrLength_;
+    /**
+     * <code>string empty_or_length = 10;</code>
+     */
+    public java.lang.String getEmptyOrLength() {
+      java.lang.Object ref = emptyOrLength_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        emptyOrLength_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string empty_or_length = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmptyOrLengthBytes() {
+      java.lang.Object ref = emptyOrLength_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        emptyOrLength_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EMPTY_OR_NRANGE_FIELD_NUMBER = 11;
+    private volatile java.lang.Object emptyOrNrange_;
+    /**
+     * <code>string empty_or_nrange = 11;</code>
+     */
+    public java.lang.String getEmptyOrNrange() {
+      java.lang.Object ref = emptyOrNrange_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        emptyOrNrange_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string empty_or_nrange = 11;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmptyOrNrangeBytes() {
+      java.lang.Object ref = emptyOrNrange_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        emptyOrNrange_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EMPTY_OR_SRANGE_FIELD_NUMBER = 12;
+    private volatile java.lang.Object emptyOrSrange_;
+    /**
+     * <code>string empty_or_srange = 12;</code>
+     */
+    public java.lang.String getEmptyOrSrange() {
+      java.lang.Object ref = emptyOrSrange_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        emptyOrSrange_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string empty_or_srange = 12;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmptyOrSrangeBytes() {
+      java.lang.Object ref = emptyOrSrange_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        emptyOrSrange_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EMPTY_OR_ARRLEN_FIELD_NUMBER = 13;
+    private volatile java.lang.Object emptyOrArrlen_;
+    /**
+     * <code>string empty_or_arrlen = 13;</code>
+     */
+    public java.lang.String getEmptyOrArrlen() {
+      java.lang.Object ref = emptyOrArrlen_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        emptyOrArrlen_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string empty_or_arrlen = 13;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmptyOrArrlenBytes() {
+      java.lang.Object ref = emptyOrArrlen_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        emptyOrArrlen_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int RETCODE_FIELD_NUMBER = 14;
+    private int retCode_;
+    /**
+     * <pre>
+     * error code
+     * </pre>
+     *
+     * <code>int32 retCode = 14;</code>
+     */
+    public int getRetCode() {
+      return retCode_;
+    }
+
+    public static final int RETMSG_FIELD_NUMBER = 15;
+    private volatile java.lang.Object retMsg_;
+    /**
+     * <pre>
+     * error msg
+     * </pre>
+     *
+     * <code>string retMsg = 15;</code>
+     */
+    public java.lang.String getRetMsg() {
+      java.lang.Object ref = retMsg_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        retMsg_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * error msg
+     * </pre>
+     *
+     * <code>string retMsg = 15;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRetMsgBytes() {
+      java.lang.Object ref = retMsg_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        retMsg_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -558,6 +959,30 @@ public final class KrpcExt {
       if (!getArrlenBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 7, arrlen_);
       }
+      if (!getEmptyOrMatchBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, emptyOrMatch_);
+      }
+      if (!getEmptyOrValuesBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, emptyOrValues_);
+      }
+      if (!getEmptyOrLengthBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, emptyOrLength_);
+      }
+      if (!getEmptyOrNrangeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, emptyOrNrange_);
+      }
+      if (!getEmptyOrSrangeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, emptyOrSrange_);
+      }
+      if (!getEmptyOrArrlenBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 13, emptyOrArrlen_);
+      }
+      if (retCode_ != 0) {
+        output.writeInt32(14, retCode_);
+      }
+      if (!getRetMsgBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 15, retMsg_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -589,6 +1014,31 @@ public final class KrpcExt {
       if (!getArrlenBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, arrlen_);
       }
+      if (!getEmptyOrMatchBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, emptyOrMatch_);
+      }
+      if (!getEmptyOrValuesBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, emptyOrValues_);
+      }
+      if (!getEmptyOrLengthBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, emptyOrLength_);
+      }
+      if (!getEmptyOrNrangeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, emptyOrNrange_);
+      }
+      if (!getEmptyOrSrangeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, emptyOrSrange_);
+      }
+      if (!getEmptyOrArrlenBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(13, emptyOrArrlen_);
+      }
+      if (retCode_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(14, retCode_);
+      }
+      if (!getRetMsgBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(15, retMsg_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -619,6 +1069,22 @@ public final class KrpcExt {
           .equals(other.getSrange());
       result = result && getArrlen()
           .equals(other.getArrlen());
+      result = result && getEmptyOrMatch()
+          .equals(other.getEmptyOrMatch());
+      result = result && getEmptyOrValues()
+          .equals(other.getEmptyOrValues());
+      result = result && getEmptyOrLength()
+          .equals(other.getEmptyOrLength());
+      result = result && getEmptyOrNrange()
+          .equals(other.getEmptyOrNrange());
+      result = result && getEmptyOrSrange()
+          .equals(other.getEmptyOrSrange());
+      result = result && getEmptyOrArrlen()
+          .equals(other.getEmptyOrArrlen());
+      result = result && (getRetCode()
+          == other.getRetCode());
+      result = result && getRetMsg()
+          .equals(other.getRetMsg());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -645,6 +1111,22 @@ public final class KrpcExt {
       hash = (53 * hash) + getSrange().hashCode();
       hash = (37 * hash) + ARRLEN_FIELD_NUMBER;
       hash = (53 * hash) + getArrlen().hashCode();
+      hash = (37 * hash) + EMPTY_OR_MATCH_FIELD_NUMBER;
+      hash = (53 * hash) + getEmptyOrMatch().hashCode();
+      hash = (37 * hash) + EMPTY_OR_VALUES_FIELD_NUMBER;
+      hash = (53 * hash) + getEmptyOrValues().hashCode();
+      hash = (37 * hash) + EMPTY_OR_LENGTH_FIELD_NUMBER;
+      hash = (53 * hash) + getEmptyOrLength().hashCode();
+      hash = (37 * hash) + EMPTY_OR_NRANGE_FIELD_NUMBER;
+      hash = (53 * hash) + getEmptyOrNrange().hashCode();
+      hash = (37 * hash) + EMPTY_OR_SRANGE_FIELD_NUMBER;
+      hash = (53 * hash) + getEmptyOrSrange().hashCode();
+      hash = (37 * hash) + EMPTY_OR_ARRLEN_FIELD_NUMBER;
+      hash = (53 * hash) + getEmptyOrArrlen().hashCode();
+      hash = (37 * hash) + RETCODE_FIELD_NUMBER;
+      hash = (53 * hash) + getRetCode();
+      hash = (37 * hash) + RETMSG_FIELD_NUMBER;
+      hash = (53 * hash) + getRetMsg().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -752,7 +1234,6 @@ public final class KrpcExt {
         return krpc.KrpcExt.internal_static_krpc_Validate_descriptor;
       }
 
-      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return krpc.KrpcExt.internal_static_krpc_Validate_fieldAccessorTable
@@ -775,7 +1256,6 @@ public final class KrpcExt {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @java.lang.Override
       public Builder clear() {
         super.clear();
         required_ = false;
@@ -792,21 +1272,34 @@ public final class KrpcExt {
 
         arrlen_ = "";
 
+        emptyOrMatch_ = "";
+
+        emptyOrValues_ = "";
+
+        emptyOrLength_ = "";
+
+        emptyOrNrange_ = "";
+
+        emptyOrSrange_ = "";
+
+        emptyOrArrlen_ = "";
+
+        retCode_ = 0;
+
+        retMsg_ = "";
+
         return this;
       }
 
-      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return krpc.KrpcExt.internal_static_krpc_Validate_descriptor;
       }
 
-      @java.lang.Override
       public krpc.KrpcExt.Validate getDefaultInstanceForType() {
         return krpc.KrpcExt.Validate.getDefaultInstance();
       }
 
-      @java.lang.Override
       public krpc.KrpcExt.Validate build() {
         krpc.KrpcExt.Validate result = buildPartial();
         if (!result.isInitialized()) {
@@ -815,7 +1308,6 @@ public final class KrpcExt {
         return result;
       }
 
-      @java.lang.Override
       public krpc.KrpcExt.Validate buildPartial() {
         krpc.KrpcExt.Validate result = new krpc.KrpcExt.Validate(this);
         result.required_ = required_;
@@ -825,43 +1317,44 @@ public final class KrpcExt {
         result.nrange_ = nrange_;
         result.srange_ = srange_;
         result.arrlen_ = arrlen_;
+        result.emptyOrMatch_ = emptyOrMatch_;
+        result.emptyOrValues_ = emptyOrValues_;
+        result.emptyOrLength_ = emptyOrLength_;
+        result.emptyOrNrange_ = emptyOrNrange_;
+        result.emptyOrSrange_ = emptyOrSrange_;
+        result.emptyOrArrlen_ = emptyOrArrlen_;
+        result.retCode_ = retCode_;
+        result.retMsg_ = retMsg_;
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
       public Builder clone() {
         return (Builder) super.clone();
       }
-      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
-      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return (Builder) super.clearField(field);
       }
-      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return (Builder) super.clearOneof(oneof);
       }
-      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
-      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof krpc.KrpcExt.Validate) {
           return mergeFrom((krpc.KrpcExt.Validate)other);
@@ -900,17 +1393,46 @@ public final class KrpcExt {
           arrlen_ = other.arrlen_;
           onChanged();
         }
+        if (!other.getEmptyOrMatch().isEmpty()) {
+          emptyOrMatch_ = other.emptyOrMatch_;
+          onChanged();
+        }
+        if (!other.getEmptyOrValues().isEmpty()) {
+          emptyOrValues_ = other.emptyOrValues_;
+          onChanged();
+        }
+        if (!other.getEmptyOrLength().isEmpty()) {
+          emptyOrLength_ = other.emptyOrLength_;
+          onChanged();
+        }
+        if (!other.getEmptyOrNrange().isEmpty()) {
+          emptyOrNrange_ = other.emptyOrNrange_;
+          onChanged();
+        }
+        if (!other.getEmptyOrSrange().isEmpty()) {
+          emptyOrSrange_ = other.emptyOrSrange_;
+          onChanged();
+        }
+        if (!other.getEmptyOrArrlen().isEmpty()) {
+          emptyOrArrlen_ = other.emptyOrArrlen_;
+          onChanged();
+        }
+        if (other.getRetCode() != 0) {
+          setRetCode(other.getRetCode());
+        }
+        if (!other.getRetMsg().isEmpty()) {
+          retMsg_ = other.retMsg_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
       }
 
-      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1488,13 +2010,538 @@ public final class KrpcExt {
         onChanged();
         return this;
       }
-      @java.lang.Override
+
+      private java.lang.Object emptyOrMatch_ = "";
+      /**
+       * <code>string empty_or_match = 8;</code>
+       */
+      public java.lang.String getEmptyOrMatch() {
+        java.lang.Object ref = emptyOrMatch_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          emptyOrMatch_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_match = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmptyOrMatchBytes() {
+        java.lang.Object ref = emptyOrMatch_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          emptyOrMatch_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_match = 8;</code>
+       */
+      public Builder setEmptyOrMatch(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        emptyOrMatch_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_match = 8;</code>
+       */
+      public Builder clearEmptyOrMatch() {
+        
+        emptyOrMatch_ = getDefaultInstance().getEmptyOrMatch();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_match = 8;</code>
+       */
+      public Builder setEmptyOrMatchBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        emptyOrMatch_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object emptyOrValues_ = "";
+      /**
+       * <code>string empty_or_values = 9;</code>
+       */
+      public java.lang.String getEmptyOrValues() {
+        java.lang.Object ref = emptyOrValues_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          emptyOrValues_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_values = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmptyOrValuesBytes() {
+        java.lang.Object ref = emptyOrValues_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          emptyOrValues_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_values = 9;</code>
+       */
+      public Builder setEmptyOrValues(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        emptyOrValues_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_values = 9;</code>
+       */
+      public Builder clearEmptyOrValues() {
+        
+        emptyOrValues_ = getDefaultInstance().getEmptyOrValues();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_values = 9;</code>
+       */
+      public Builder setEmptyOrValuesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        emptyOrValues_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object emptyOrLength_ = "";
+      /**
+       * <code>string empty_or_length = 10;</code>
+       */
+      public java.lang.String getEmptyOrLength() {
+        java.lang.Object ref = emptyOrLength_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          emptyOrLength_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_length = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmptyOrLengthBytes() {
+        java.lang.Object ref = emptyOrLength_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          emptyOrLength_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_length = 10;</code>
+       */
+      public Builder setEmptyOrLength(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        emptyOrLength_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_length = 10;</code>
+       */
+      public Builder clearEmptyOrLength() {
+        
+        emptyOrLength_ = getDefaultInstance().getEmptyOrLength();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_length = 10;</code>
+       */
+      public Builder setEmptyOrLengthBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        emptyOrLength_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object emptyOrNrange_ = "";
+      /**
+       * <code>string empty_or_nrange = 11;</code>
+       */
+      public java.lang.String getEmptyOrNrange() {
+        java.lang.Object ref = emptyOrNrange_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          emptyOrNrange_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_nrange = 11;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmptyOrNrangeBytes() {
+        java.lang.Object ref = emptyOrNrange_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          emptyOrNrange_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_nrange = 11;</code>
+       */
+      public Builder setEmptyOrNrange(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        emptyOrNrange_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_nrange = 11;</code>
+       */
+      public Builder clearEmptyOrNrange() {
+        
+        emptyOrNrange_ = getDefaultInstance().getEmptyOrNrange();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_nrange = 11;</code>
+       */
+      public Builder setEmptyOrNrangeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        emptyOrNrange_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object emptyOrSrange_ = "";
+      /**
+       * <code>string empty_or_srange = 12;</code>
+       */
+      public java.lang.String getEmptyOrSrange() {
+        java.lang.Object ref = emptyOrSrange_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          emptyOrSrange_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_srange = 12;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmptyOrSrangeBytes() {
+        java.lang.Object ref = emptyOrSrange_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          emptyOrSrange_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_srange = 12;</code>
+       */
+      public Builder setEmptyOrSrange(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        emptyOrSrange_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_srange = 12;</code>
+       */
+      public Builder clearEmptyOrSrange() {
+        
+        emptyOrSrange_ = getDefaultInstance().getEmptyOrSrange();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_srange = 12;</code>
+       */
+      public Builder setEmptyOrSrangeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        emptyOrSrange_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object emptyOrArrlen_ = "";
+      /**
+       * <code>string empty_or_arrlen = 13;</code>
+       */
+      public java.lang.String getEmptyOrArrlen() {
+        java.lang.Object ref = emptyOrArrlen_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          emptyOrArrlen_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_arrlen = 13;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmptyOrArrlenBytes() {
+        java.lang.Object ref = emptyOrArrlen_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          emptyOrArrlen_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string empty_or_arrlen = 13;</code>
+       */
+      public Builder setEmptyOrArrlen(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        emptyOrArrlen_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_arrlen = 13;</code>
+       */
+      public Builder clearEmptyOrArrlen() {
+        
+        emptyOrArrlen_ = getDefaultInstance().getEmptyOrArrlen();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string empty_or_arrlen = 13;</code>
+       */
+      public Builder setEmptyOrArrlenBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        emptyOrArrlen_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int retCode_ ;
+      /**
+       * <pre>
+       * error code
+       * </pre>
+       *
+       * <code>int32 retCode = 14;</code>
+       */
+      public int getRetCode() {
+        return retCode_;
+      }
+      /**
+       * <pre>
+       * error code
+       * </pre>
+       *
+       * <code>int32 retCode = 14;</code>
+       */
+      public Builder setRetCode(int value) {
+        
+        retCode_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * error code
+       * </pre>
+       *
+       * <code>int32 retCode = 14;</code>
+       */
+      public Builder clearRetCode() {
+        
+        retCode_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object retMsg_ = "";
+      /**
+       * <pre>
+       * error msg
+       * </pre>
+       *
+       * <code>string retMsg = 15;</code>
+       */
+      public java.lang.String getRetMsg() {
+        java.lang.Object ref = retMsg_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          retMsg_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * error msg
+       * </pre>
+       *
+       * <code>string retMsg = 15;</code>
+       */
+      public com.google.protobuf.ByteString
+          getRetMsgBytes() {
+        java.lang.Object ref = retMsg_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          retMsg_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * error msg
+       * </pre>
+       *
+       * <code>string retMsg = 15;</code>
+       */
+      public Builder setRetMsg(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        retMsg_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * error msg
+       * </pre>
+       *
+       * <code>string retMsg = 15;</code>
+       */
+      public Builder clearRetMsg() {
+        
+        retMsg_ = getDefaultInstance().getRetMsg();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * error msg
+       * </pre>
+       *
+       * <code>string retMsg = 15;</code>
+       */
+      public Builder setRetMsgBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        retMsg_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -1541,6 +2588,1389 @@ public final class KrpcExt {
 
   }
 
+  public interface GiclOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:krpc.Gicl)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string field = 1;</code>
+     */
+    java.lang.String getField();
+    /**
+     * <code>string field = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getFieldBytes();
+
+    /**
+     * <code>string default = 2;</code>
+     */
+    java.lang.String getDefault();
+    /**
+     * <code>string default = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getDefaultBytes();
+
+    /**
+     * <code>bool dynamic = 3;</code>
+     */
+    boolean getDynamic();
+
+    /**
+     * <code>string dynamicValues = 4;</code>
+     */
+    java.lang.String getDynamicValues();
+    /**
+     * <code>string dynamicValues = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getDynamicValuesBytes();
+
+    /**
+     * <code>string compare = 5;</code>
+     */
+    java.lang.String getCompare();
+    /**
+     * <code>string compare = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getCompareBytes();
+
+    /**
+     * <code>bool must = 6;</code>
+     */
+    boolean getMust();
+
+    /**
+     * <code>bool any = 7;</code>
+     */
+    boolean getAny();
+
+    /**
+     * <code>bool sortable = 8;</code>
+     */
+    boolean getSortable();
+
+    /**
+     * <code>bool sensitive = 9;</code>
+     */
+    boolean getSensitive();
+
+    /**
+     * <code>int32 minRows = 10;</code>
+     */
+    int getMinRows();
+
+    /**
+     * <code>bool key = 11;</code>
+     */
+    boolean getKey();
+  }
+  /**
+   * Protobuf type {@code krpc.Gicl}
+   */
+  public  static final class Gicl extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:krpc.Gicl)
+      GiclOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Gicl.newBuilder() to construct.
+    private Gicl(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Gicl() {
+      field_ = "";
+      default_ = "";
+      dynamic_ = false;
+      dynamicValues_ = "";
+      compare_ = "";
+      must_ = false;
+      any_ = false;
+      sortable_ = false;
+      sensitive_ = false;
+      minRows_ = 0;
+      key_ = false;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Gicl(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              field_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              default_ = s;
+              break;
+            }
+            case 24: {
+
+              dynamic_ = input.readBool();
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              dynamicValues_ = s;
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              compare_ = s;
+              break;
+            }
+            case 48: {
+
+              must_ = input.readBool();
+              break;
+            }
+            case 56: {
+
+              any_ = input.readBool();
+              break;
+            }
+            case 64: {
+
+              sortable_ = input.readBool();
+              break;
+            }
+            case 72: {
+
+              sensitive_ = input.readBool();
+              break;
+            }
+            case 80: {
+
+              minRows_ = input.readInt32();
+              break;
+            }
+            case 88: {
+
+              key_ = input.readBool();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return krpc.KrpcExt.internal_static_krpc_Gicl_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return krpc.KrpcExt.internal_static_krpc_Gicl_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              krpc.KrpcExt.Gicl.class, krpc.KrpcExt.Gicl.Builder.class);
+    }
+
+    public static final int FIELD_FIELD_NUMBER = 1;
+    private volatile java.lang.Object field_;
+    /**
+     * <code>string field = 1;</code>
+     */
+    public java.lang.String getField() {
+      java.lang.Object ref = field_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        field_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string field = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFieldBytes() {
+      java.lang.Object ref = field_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        field_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DEFAULT_FIELD_NUMBER = 2;
+    private volatile java.lang.Object default_;
+    /**
+     * <code>string default = 2;</code>
+     */
+    public java.lang.String getDefault() {
+      java.lang.Object ref = default_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        default_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string default = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDefaultBytes() {
+      java.lang.Object ref = default_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        default_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DYNAMIC_FIELD_NUMBER = 3;
+    private boolean dynamic_;
+    /**
+     * <code>bool dynamic = 3;</code>
+     */
+    public boolean getDynamic() {
+      return dynamic_;
+    }
+
+    public static final int DYNAMICVALUES_FIELD_NUMBER = 4;
+    private volatile java.lang.Object dynamicValues_;
+    /**
+     * <code>string dynamicValues = 4;</code>
+     */
+    public java.lang.String getDynamicValues() {
+      java.lang.Object ref = dynamicValues_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        dynamicValues_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string dynamicValues = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDynamicValuesBytes() {
+      java.lang.Object ref = dynamicValues_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        dynamicValues_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int COMPARE_FIELD_NUMBER = 5;
+    private volatile java.lang.Object compare_;
+    /**
+     * <code>string compare = 5;</code>
+     */
+    public java.lang.String getCompare() {
+      java.lang.Object ref = compare_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        compare_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string compare = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCompareBytes() {
+      java.lang.Object ref = compare_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        compare_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MUST_FIELD_NUMBER = 6;
+    private boolean must_;
+    /**
+     * <code>bool must = 6;</code>
+     */
+    public boolean getMust() {
+      return must_;
+    }
+
+    public static final int ANY_FIELD_NUMBER = 7;
+    private boolean any_;
+    /**
+     * <code>bool any = 7;</code>
+     */
+    public boolean getAny() {
+      return any_;
+    }
+
+    public static final int SORTABLE_FIELD_NUMBER = 8;
+    private boolean sortable_;
+    /**
+     * <code>bool sortable = 8;</code>
+     */
+    public boolean getSortable() {
+      return sortable_;
+    }
+
+    public static final int SENSITIVE_FIELD_NUMBER = 9;
+    private boolean sensitive_;
+    /**
+     * <code>bool sensitive = 9;</code>
+     */
+    public boolean getSensitive() {
+      return sensitive_;
+    }
+
+    public static final int MINROWS_FIELD_NUMBER = 10;
+    private int minRows_;
+    /**
+     * <code>int32 minRows = 10;</code>
+     */
+    public int getMinRows() {
+      return minRows_;
+    }
+
+    public static final int KEY_FIELD_NUMBER = 11;
+    private boolean key_;
+    /**
+     * <code>bool key = 11;</code>
+     */
+    public boolean getKey() {
+      return key_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getFieldBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, field_);
+      }
+      if (!getDefaultBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, default_);
+      }
+      if (dynamic_ != false) {
+        output.writeBool(3, dynamic_);
+      }
+      if (!getDynamicValuesBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, dynamicValues_);
+      }
+      if (!getCompareBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, compare_);
+      }
+      if (must_ != false) {
+        output.writeBool(6, must_);
+      }
+      if (any_ != false) {
+        output.writeBool(7, any_);
+      }
+      if (sortable_ != false) {
+        output.writeBool(8, sortable_);
+      }
+      if (sensitive_ != false) {
+        output.writeBool(9, sensitive_);
+      }
+      if (minRows_ != 0) {
+        output.writeInt32(10, minRows_);
+      }
+      if (key_ != false) {
+        output.writeBool(11, key_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getFieldBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, field_);
+      }
+      if (!getDefaultBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, default_);
+      }
+      if (dynamic_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, dynamic_);
+      }
+      if (!getDynamicValuesBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, dynamicValues_);
+      }
+      if (!getCompareBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, compare_);
+      }
+      if (must_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(6, must_);
+      }
+      if (any_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(7, any_);
+      }
+      if (sortable_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(8, sortable_);
+      }
+      if (sensitive_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(9, sensitive_);
+      }
+      if (minRows_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(10, minRows_);
+      }
+      if (key_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(11, key_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof krpc.KrpcExt.Gicl)) {
+        return super.equals(obj);
+      }
+      krpc.KrpcExt.Gicl other = (krpc.KrpcExt.Gicl) obj;
+
+      boolean result = true;
+      result = result && getField()
+          .equals(other.getField());
+      result = result && getDefault()
+          .equals(other.getDefault());
+      result = result && (getDynamic()
+          == other.getDynamic());
+      result = result && getDynamicValues()
+          .equals(other.getDynamicValues());
+      result = result && getCompare()
+          .equals(other.getCompare());
+      result = result && (getMust()
+          == other.getMust());
+      result = result && (getAny()
+          == other.getAny());
+      result = result && (getSortable()
+          == other.getSortable());
+      result = result && (getSensitive()
+          == other.getSensitive());
+      result = result && (getMinRows()
+          == other.getMinRows());
+      result = result && (getKey()
+          == other.getKey());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + FIELD_FIELD_NUMBER;
+      hash = (53 * hash) + getField().hashCode();
+      hash = (37 * hash) + DEFAULT_FIELD_NUMBER;
+      hash = (53 * hash) + getDefault().hashCode();
+      hash = (37 * hash) + DYNAMIC_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getDynamic());
+      hash = (37 * hash) + DYNAMICVALUES_FIELD_NUMBER;
+      hash = (53 * hash) + getDynamicValues().hashCode();
+      hash = (37 * hash) + COMPARE_FIELD_NUMBER;
+      hash = (53 * hash) + getCompare().hashCode();
+      hash = (37 * hash) + MUST_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getMust());
+      hash = (37 * hash) + ANY_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getAny());
+      hash = (37 * hash) + SORTABLE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getSortable());
+      hash = (37 * hash) + SENSITIVE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getSensitive());
+      hash = (37 * hash) + MINROWS_FIELD_NUMBER;
+      hash = (53 * hash) + getMinRows();
+      hash = (37 * hash) + KEY_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getKey());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static krpc.KrpcExt.Gicl parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static krpc.KrpcExt.Gicl parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static krpc.KrpcExt.Gicl parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static krpc.KrpcExt.Gicl parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(krpc.KrpcExt.Gicl prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code krpc.Gicl}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:krpc.Gicl)
+        krpc.KrpcExt.GiclOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return krpc.KrpcExt.internal_static_krpc_Gicl_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return krpc.KrpcExt.internal_static_krpc_Gicl_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                krpc.KrpcExt.Gicl.class, krpc.KrpcExt.Gicl.Builder.class);
+      }
+
+      // Construct using krpc.KrpcExt.Gicl.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        field_ = "";
+
+        default_ = "";
+
+        dynamic_ = false;
+
+        dynamicValues_ = "";
+
+        compare_ = "";
+
+        must_ = false;
+
+        any_ = false;
+
+        sortable_ = false;
+
+        sensitive_ = false;
+
+        minRows_ = 0;
+
+        key_ = false;
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return krpc.KrpcExt.internal_static_krpc_Gicl_descriptor;
+      }
+
+      public krpc.KrpcExt.Gicl getDefaultInstanceForType() {
+        return krpc.KrpcExt.Gicl.getDefaultInstance();
+      }
+
+      public krpc.KrpcExt.Gicl build() {
+        krpc.KrpcExt.Gicl result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public krpc.KrpcExt.Gicl buildPartial() {
+        krpc.KrpcExt.Gicl result = new krpc.KrpcExt.Gicl(this);
+        result.field_ = field_;
+        result.default_ = default_;
+        result.dynamic_ = dynamic_;
+        result.dynamicValues_ = dynamicValues_;
+        result.compare_ = compare_;
+        result.must_ = must_;
+        result.any_ = any_;
+        result.sortable_ = sortable_;
+        result.sensitive_ = sensitive_;
+        result.minRows_ = minRows_;
+        result.key_ = key_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof krpc.KrpcExt.Gicl) {
+          return mergeFrom((krpc.KrpcExt.Gicl)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(krpc.KrpcExt.Gicl other) {
+        if (other == krpc.KrpcExt.Gicl.getDefaultInstance()) return this;
+        if (!other.getField().isEmpty()) {
+          field_ = other.field_;
+          onChanged();
+        }
+        if (!other.getDefault().isEmpty()) {
+          default_ = other.default_;
+          onChanged();
+        }
+        if (other.getDynamic() != false) {
+          setDynamic(other.getDynamic());
+        }
+        if (!other.getDynamicValues().isEmpty()) {
+          dynamicValues_ = other.dynamicValues_;
+          onChanged();
+        }
+        if (!other.getCompare().isEmpty()) {
+          compare_ = other.compare_;
+          onChanged();
+        }
+        if (other.getMust() != false) {
+          setMust(other.getMust());
+        }
+        if (other.getAny() != false) {
+          setAny(other.getAny());
+        }
+        if (other.getSortable() != false) {
+          setSortable(other.getSortable());
+        }
+        if (other.getSensitive() != false) {
+          setSensitive(other.getSensitive());
+        }
+        if (other.getMinRows() != 0) {
+          setMinRows(other.getMinRows());
+        }
+        if (other.getKey() != false) {
+          setKey(other.getKey());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        krpc.KrpcExt.Gicl parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (krpc.KrpcExt.Gicl) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object field_ = "";
+      /**
+       * <code>string field = 1;</code>
+       */
+      public java.lang.String getField() {
+        java.lang.Object ref = field_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          field_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string field = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getFieldBytes() {
+        java.lang.Object ref = field_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          field_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string field = 1;</code>
+       */
+      public Builder setField(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        field_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string field = 1;</code>
+       */
+      public Builder clearField() {
+        
+        field_ = getDefaultInstance().getField();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string field = 1;</code>
+       */
+      public Builder setFieldBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        field_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object default_ = "";
+      /**
+       * <code>string default = 2;</code>
+       */
+      public java.lang.String getDefault() {
+        java.lang.Object ref = default_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          default_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string default = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDefaultBytes() {
+        java.lang.Object ref = default_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          default_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string default = 2;</code>
+       */
+      public Builder setDefault(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        default_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string default = 2;</code>
+       */
+      public Builder clearDefault() {
+        
+        default_ = getDefaultInstance().getDefault();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string default = 2;</code>
+       */
+      public Builder setDefaultBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        default_ = value;
+        onChanged();
+        return this;
+      }
+
+      private boolean dynamic_ ;
+      /**
+       * <code>bool dynamic = 3;</code>
+       */
+      public boolean getDynamic() {
+        return dynamic_;
+      }
+      /**
+       * <code>bool dynamic = 3;</code>
+       */
+      public Builder setDynamic(boolean value) {
+        
+        dynamic_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool dynamic = 3;</code>
+       */
+      public Builder clearDynamic() {
+        
+        dynamic_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object dynamicValues_ = "";
+      /**
+       * <code>string dynamicValues = 4;</code>
+       */
+      public java.lang.String getDynamicValues() {
+        java.lang.Object ref = dynamicValues_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          dynamicValues_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string dynamicValues = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDynamicValuesBytes() {
+        java.lang.Object ref = dynamicValues_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          dynamicValues_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string dynamicValues = 4;</code>
+       */
+      public Builder setDynamicValues(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        dynamicValues_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string dynamicValues = 4;</code>
+       */
+      public Builder clearDynamicValues() {
+        
+        dynamicValues_ = getDefaultInstance().getDynamicValues();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string dynamicValues = 4;</code>
+       */
+      public Builder setDynamicValuesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        dynamicValues_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object compare_ = "";
+      /**
+       * <code>string compare = 5;</code>
+       */
+      public java.lang.String getCompare() {
+        java.lang.Object ref = compare_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          compare_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string compare = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCompareBytes() {
+        java.lang.Object ref = compare_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          compare_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string compare = 5;</code>
+       */
+      public Builder setCompare(
+          java.lang.String value) {
+        if (value == null) value = "";
+  
+        compare_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string compare = 5;</code>
+       */
+      public Builder clearCompare() {
+        
+        compare_ = getDefaultInstance().getCompare();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string compare = 5;</code>
+       */
+      public Builder setCompareBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        compare_ = value;
+        onChanged();
+        return this;
+      }
+
+      private boolean must_ ;
+      /**
+       * <code>bool must = 6;</code>
+       */
+      public boolean getMust() {
+        return must_;
+      }
+      /**
+       * <code>bool must = 6;</code>
+       */
+      public Builder setMust(boolean value) {
+        
+        must_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool must = 6;</code>
+       */
+      public Builder clearMust() {
+        
+        must_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean any_ ;
+      /**
+       * <code>bool any = 7;</code>
+       */
+      public boolean getAny() {
+        return any_;
+      }
+      /**
+       * <code>bool any = 7;</code>
+       */
+      public Builder setAny(boolean value) {
+        
+        any_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool any = 7;</code>
+       */
+      public Builder clearAny() {
+        
+        any_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean sortable_ ;
+      /**
+       * <code>bool sortable = 8;</code>
+       */
+      public boolean getSortable() {
+        return sortable_;
+      }
+      /**
+       * <code>bool sortable = 8;</code>
+       */
+      public Builder setSortable(boolean value) {
+        
+        sortable_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool sortable = 8;</code>
+       */
+      public Builder clearSortable() {
+        
+        sortable_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean sensitive_ ;
+      /**
+       * <code>bool sensitive = 9;</code>
+       */
+      public boolean getSensitive() {
+        return sensitive_;
+      }
+      /**
+       * <code>bool sensitive = 9;</code>
+       */
+      public Builder setSensitive(boolean value) {
+        
+        sensitive_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool sensitive = 9;</code>
+       */
+      public Builder clearSensitive() {
+        
+        sensitive_ = false;
+        onChanged();
+        return this;
+      }
+
+      private int minRows_ ;
+      /**
+       * <code>int32 minRows = 10;</code>
+       */
+      public int getMinRows() {
+        return minRows_;
+      }
+      /**
+       * <code>int32 minRows = 10;</code>
+       */
+      public Builder setMinRows(int value) {
+        
+        minRows_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 minRows = 10;</code>
+       */
+      public Builder clearMinRows() {
+        
+        minRows_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private boolean key_ ;
+      /**
+       * <code>bool key = 11;</code>
+       */
+      public boolean getKey() {
+        return key_;
+      }
+      /**
+       * <code>bool key = 11;</code>
+       */
+      public Builder setKey(boolean value) {
+        
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool key = 11;</code>
+       */
+      public Builder clearKey() {
+        
+        key_ = false;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:krpc.Gicl)
+    }
+
+    // @@protoc_insertion_point(class_scope:krpc.Gicl)
+    private static final krpc.KrpcExt.Gicl DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new krpc.KrpcExt.Gicl();
+    }
+
+    public static krpc.KrpcExt.Gicl getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Gicl>
+        PARSER = new com.google.protobuf.AbstractParser<Gicl>() {
+      @java.lang.Override
+      public Gicl parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Gicl(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Gicl> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Gicl> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public krpc.KrpcExt.Gicl getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public static final int SERVICEID_FIELD_NUMBER = 50001;
   /**
    * <code>extend .google.protobuf.ServiceOptions { ... }</code>
@@ -1574,22 +4004,27 @@ public final class KrpcExt {
           .newFileScopedGeneratedExtension(
         krpc.KrpcExt.Validate.class,
         krpc.KrpcExt.Validate.getDefaultInstance());
-  public static final int MAP_FIELD_NUMBER = 50004;
+  public static final int GICL_FIELD_NUMBER = 50005;
   /**
    * <code>extend .google.protobuf.FieldOptions { ... }</code>
    */
   public static final
     com.google.protobuf.GeneratedMessage.GeneratedExtension<
       com.google.protobuf.DescriptorProtos.FieldOptions,
-      java.lang.String> map = com.google.protobuf.GeneratedMessage
+      krpc.KrpcExt.Gicl> gicl = com.google.protobuf.GeneratedMessage
           .newFileScopedGeneratedExtension(
-        java.lang.String.class,
-        null);
+        krpc.KrpcExt.Gicl.class,
+        krpc.KrpcExt.Gicl.getDefaultInstance());
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_krpc_Validate_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_krpc_Validate_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_krpc_Gicl_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_krpc_Gicl_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1600,15 +4035,25 @@ public final class KrpcExt {
   static {
     java.lang.String[] descriptorData = {
       "\n\rkrpcext.proto\022\004krpc\032\020descriptor.proto\"" +
-      "{\n\010Validate\022\020\n\010required\030\001 \001(\010\022\r\n\005match\030\002" +
-      " \001(\t\022\016\n\006values\030\003 \001(\t\022\016\n\006length\030\004 \001(\t\022\016\n\006" +
-      "nrange\030\005 \001(\t\022\016\n\006srange\030\006 \001(\t\022\016\n\006arrlen\030\007" +
-      " \001(\t:4\n\tserviceId\022\037.google.protobuf.Serv" +
-      "iceOptions\030\321\206\003 \001(\005:/\n\005msgId\022\036.google.pro" +
-      "tobuf.MethodOptions\030\322\206\003 \001(\005:<\n\003vld\022\035.goo" +
-      "gle.protobuf.FieldOptions\030\323\206\003 \001(\0132\016.krpc" +
-      ".Validate:,\n\003map\022\035.google.protobuf.Field" +
-      "Options\030\324\206\003 \001(\tB\017\n\004krpcB\007KrpcExtb\006proto3"
+      "\261\002\n\010Validate\022\020\n\010required\030\001 \001(\010\022\r\n\005match\030" +
+      "\002 \001(\t\022\016\n\006values\030\003 \001(\t\022\016\n\006length\030\004 \001(\t\022\016\n" +
+      "\006nrange\030\005 \001(\t\022\016\n\006srange\030\006 \001(\t\022\016\n\006arrlen\030" +
+      "\007 \001(\t\022\026\n\016empty_or_match\030\010 \001(\t\022\027\n\017empty_o" +
+      "r_values\030\t \001(\t\022\027\n\017empty_or_length\030\n \001(\t\022" +
+      "\027\n\017empty_or_nrange\030\013 \001(\t\022\027\n\017empty_or_sra" +
+      "nge\030\014 \001(\t\022\027\n\017empty_or_arrlen\030\r \001(\t\022\017\n\007re" +
+      "tCode\030\016 \001(\005\022\016\n\006retMsg\030\017 \001(\t\"\275\001\n\004Gicl\022\r\n\005" +
+      "field\030\001 \001(\t\022\017\n\007default\030\002 \001(\t\022\017\n\007dynamic\030" +
+      "\003 \001(\010\022\025\n\rdynamicValues\030\004 \001(\t\022\017\n\007compare\030" +
+      "\005 \001(\t\022\014\n\004must\030\006 \001(\010\022\013\n\003any\030\007 \001(\010\022\020\n\010sort" +
+      "able\030\010 \001(\010\022\021\n\tsensitive\030\t \001(\010\022\017\n\007minRows" +
+      "\030\n \001(\005\022\013\n\003key\030\013 \001(\010:4\n\tserviceId\022\037.googl" +
+      "e.protobuf.ServiceOptions\030\321\206\003 \001(\005:/\n\005msg" +
+      "Id\022\036.google.protobuf.MethodOptions\030\322\206\003 \001" +
+      "(\005:<\n\003vld\022\035.google.protobuf.FieldOptions" +
+      "\030\323\206\003 \001(\0132\016.krpc.Validate:9\n\004gicl\022\035.googl" +
+      "e.protobuf.FieldOptions\030\325\206\003 \001(\0132\n.krpc.G" +
+      "iclB\017\n\004krpcB\007KrpcExtb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1628,11 +4073,17 @@ public final class KrpcExt {
     internal_static_krpc_Validate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_krpc_Validate_descriptor,
-        new java.lang.String[] { "Required", "Match", "Values", "Length", "Nrange", "Srange", "Arrlen", });
+        new java.lang.String[] { "Required", "Match", "Values", "Length", "Nrange", "Srange", "Arrlen", "EmptyOrMatch", "EmptyOrValues", "EmptyOrLength", "EmptyOrNrange", "EmptyOrSrange", "EmptyOrArrlen", "RetCode", "RetMsg", });
+    internal_static_krpc_Gicl_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_krpc_Gicl_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_krpc_Gicl_descriptor,
+        new java.lang.String[] { "Field", "Default", "Dynamic", "DynamicValues", "Compare", "Must", "Any", "Sortable", "Sensitive", "MinRows", "Key", });
     serviceId.internalInit(descriptor.getExtensions().get(0));
     msgId.internalInit(descriptor.getExtensions().get(1));
     vld.internalInit(descriptor.getExtensions().get(2));
-    map.internalInit(descriptor.getExtensions().get(3));
+    gicl.internalInit(descriptor.getExtensions().get(3));
     com.google.protobuf.DescriptorProtos.getDescriptor();
   }
 

@@ -2,11 +2,12 @@ package krpc.rpc.core;
 
 public class ClientContext {
 
-    static private ThreadLocal<ClientContextData> tlData = new ThreadLocal<ClientContextData>();
-    static private ThreadLocal<String> tlConnId = new ThreadLocal<String>();
-    static private ThreadLocal<Integer> tlTimeout = new ThreadLocal<Integer>();
-    static private ThreadLocal<String> tlAttachment = new ThreadLocal<String>();
-    static private ThreadLocal<RetrierInfo> tlRetrier = new ThreadLocal<RetrierInfo>(); // persist to disk and retry
+    static private ThreadLocal<ClientContextData> tlData = new ThreadLocal<>();
+    static private ThreadLocal<String> tlConnId = new ThreadLocal<>();
+    static private ThreadLocal<Integer> tlTimeout = new ThreadLocal<>();
+    static private ThreadLocal<String> tlAttachment = new ThreadLocal<>();
+    static private ThreadLocal<String> tlDyeing = new ThreadLocal<>();
+    static private ThreadLocal<RetrierInfo> tlRetrier = new ThreadLocal<>(); // persist to disk and retry
 
     public static ClientContextData get() {
         return tlData.get();
@@ -28,12 +29,12 @@ public class ClientContext {
     }
 
     public static String getConnId() {
-        String s = (String) tlConnId.get();
+        String s = tlConnId.get();
         return s;
     }
 
     public static String removeConnId() {
-        String s = (String) tlConnId.get();
+        String s = tlConnId.get();
         if (s != null)
             tlConnId.remove();
         return s;
@@ -44,12 +45,12 @@ public class ClientContext {
     }
 
     public static int getTimeout() {
-        Integer i = (Integer) tlTimeout.get();
+        Integer i = tlTimeout.get();
         return i == null ? 0 : i;
     }
 
     public static int removeTimeout() {
-        Integer i = (Integer) tlTimeout.get();
+        Integer i = tlTimeout.get();
         if (i != null)
             tlTimeout.remove();
         return i == null ? 0 : i;
@@ -60,12 +61,12 @@ public class ClientContext {
     }
 
     public static String getAttachment() {
-        String s = (String) tlAttachment.get();
+        String s = tlAttachment.get();
         return s;
     }
 
     public static String removeAttachment() {
-        String s = (String) tlAttachment.get();
+        String s = tlAttachment.get();
         if (s != null)
             tlAttachment.remove();
         return s;
@@ -86,10 +87,28 @@ public class ClientContext {
     }
 
     public static RetrierInfo removeRetrier() {
-        RetrierInfo r = (RetrierInfo) tlRetrier.get();
+        RetrierInfo r = tlRetrier.get();
         if (r != null)
             tlRetrier.remove();
         return r;
     }
+
+    public static void setDyeing(String dyeing) {
+        tlDyeing.set(dyeing);
+    }
+
+    public static String getDyeing() {
+        String s = tlDyeing.get();
+        return s;
+    }
+
+    public static String removeDyeing() {
+        String s = tlDyeing.get();
+        if (s != null)
+            tlDyeing.remove();
+        return s;
+    }
+
+
 
 }

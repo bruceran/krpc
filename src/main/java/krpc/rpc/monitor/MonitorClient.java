@@ -25,6 +25,7 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
     static final public int MONITOR_RPCSTATS_MSGID = 1;
     static final public int MONITOR_SYSTEMINFO_MSGID = 2;
     static final public int MONITOR_ALARM_MSGID = 3;
+    static final public int MONITOR_METAINFO_MSGID = 4;
 
     static class AddrInfo {
         String addr;
@@ -59,6 +60,8 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
                 ReportSystemInfoReq.class, ReportSystemInfoRes.class);
         serviceMetas.addDirect(MONITOR_SERVICEID, MONITOR_ALARM_MSGID,
                 ReportAlarmReq.class, ReportAlarmRes.class);
+        serviceMetas.addDirect(MONITOR_SERVICEID, MONITOR_METAINFO_MSGID,
+                ReportMetaReq.class, ReportMetaRes.class);
 
         this.timer = timer;
 
@@ -141,14 +144,33 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
         }, 0);
     }
 
+    public void send(ReportMetaReq req) {
+        timer.schedule(new TimerTask() {
+            public void run() {
+                doReport(req);
+            }
+        }, 0);
+    }
+
     void doReport(Message req) {
+        try {
+            doReportInternal(req);
+        } catch(Throwable e) {
+            log.error("doReportInternal exception",e);
+        }
+    }
+    void doReportInternal(Message req) {
         int sequence = nextSequence();
         dataManager.put(sequence, req);
         boolean ok = send(sequence, req);
         if (ok) {
             timer.schedule(new TimerTask() {
                 public void run() {
-                    checkTimeout(sequence);
+                    try {
+                        checkTimeout(sequence);
+                    } catch(Throwable e) {
+                        log.error("checkTimeout exception",e);
+                    }
                 }
             }, sendTimeout * 1000);
         } else {
@@ -178,6 +200,7 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
         if( req instanceof  ReportRpcStatReq ) return ((ReportRpcStatReq)req).getTimestamp();
         if( req instanceof  ReportSystemInfoReq ) return ((ReportSystemInfoReq)req).getTimestamp();
         if( req instanceof  ReportAlarmReq ) return ((ReportAlarmReq)req).getTimestamp();
+        if( req instanceof  ReportMetaReq ) return ((ReportMetaReq)req).getTimestamp();
         return 0;
     }
 
@@ -185,11 +208,19 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
         if( req instanceof  ReportRpcStatReq ) return MONITOR_RPCSTATS_MSGID;
         if( req instanceof  ReportSystemInfoReq ) return MONITOR_SYSTEMINFO_MSGID;
         if( req instanceof  ReportAlarmReq ) return MONITOR_ALARM_MSGID;
+        if( req instanceof  ReportMetaReq ) return MONITOR_METAINFO_MSGID;
         return 0;
     }
 
     boolean send(int sequence, Message req) {
-        boolean ok = sendInternal(sequence,req);
+        boolean ok;
+
+        try {
+            ok = sendInternal(sequence, req);
+        } catch(Throwable e) {
+            log.error("sendInternal exception",e);
+            ok = false;
+        }
         if(!ok) {
             errorCount.incrementAndGet();
         }
@@ -211,7 +242,7 @@ public class MonitorClient implements TransportCallback, InitClose, StartStop {
         return false;
     }
 
-    public void receive(String connId, RpcData data) {
+    public void receive(String connId, RpcData data,long receiveMicros) {
         if (data.getMeta().getDirection() == RpcMeta.Direction.REQUEST) return;
         Message req = dataManager.remove(data.getMeta().getSequence());
         if (req == null) return;

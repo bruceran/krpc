@@ -36,6 +36,10 @@ abstract public class RpcContextData {
         return timeUsedMicros;
     }
 
+    public void endWithTime(long timeUsedMicros) {
+        this.timeUsedMicros = timeUsedMicros;
+    }
+
     public long getTimeUsedMillis() {
         return timeUsedMicros / 1000;
     }
@@ -44,7 +48,7 @@ abstract public class RpcContextData {
         String peers = meta.getTrace().getPeers();
         if (peers.isEmpty()) return getRemoteIp();
         String s = peers.split(",")[0];
-        int p = s.indexOf(":");
+        int p = s.lastIndexOf(":");
         if( p >= 0 ) return s.substring(0,p);
         return s;
     }

@@ -20,6 +20,21 @@ abstract public class AbstractHttpRegistry implements Registry, InitClose, Alarm
 
     DefaultHttpClient hc;
 
+    int errorTimeToAlarm = 60;
+    volatile long lastErrorTime = 0;
+
+    boolean needAlarm() {
+        if( lastErrorTime == 0 ) return false;
+        long now = System.currentTimeMillis();
+        return (now - lastErrorTime >= errorTimeToAlarm * 1000 );
+    }
+
+    void updateLastErrorTime() {
+        if( lastErrorTime == 0 ) {
+            lastErrorTime = System.currentTimeMillis();
+        }
+    }
+
     public void config(String paramsStr) {
 
         Map<String, String> params = Plugin.defaultSplitParams(paramsStr);

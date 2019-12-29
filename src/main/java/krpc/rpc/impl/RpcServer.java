@@ -7,6 +7,8 @@ import krpc.rpc.core.ConnectionPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,7 +34,7 @@ public class RpcServer extends RpcCallableBase {
     }
 
     ConcurrentHashMap<String, ConnInfo> clientConns = new ConcurrentHashMap<String, ConnInfo>();
-    ConnectionPlugin connectionPlugin;
+    List<ConnectionPlugin> connectionPlugins;
 
     boolean isServerSide() {
         return true;
@@ -54,16 +56,20 @@ public class RpcServer extends RpcCallableBase {
         super.connected(connId, localAddr);
         ConnInfo ci = new ConnInfo(localAddr);
         clientConns.put(connId, ci);
-        if( connectionPlugin != null ) {
-            connectionPlugin.connected(connId,localAddr);
+        if( connectionPlugins != null ) {
+            for( ConnectionPlugin c: connectionPlugins ) {
+                c.connected(connId, localAddr);
+            }
         }
     }
 
     public void disconnected(String connId) {
         super.disconnected(connId);
         clientConns.remove(connId);
-        if( connectionPlugin != null ) {
-            connectionPlugin.disconnected(connId);
+        if( connectionPlugins != null ) {
+            for( ConnectionPlugin c: connectionPlugins ) {
+                c.disconnected(connId);
+            }
         }
     }
 
@@ -71,11 +77,12 @@ public class RpcServer extends RpcCallableBase {
         return clientConns.containsKey(connId);
     }
 
-    public ConnectionPlugin getConnectionPlugin() {
-        return connectionPlugin;
+    public List<ConnectionPlugin> getConnectionPlugins() {
+        return connectionPlugins;
     }
 
-    public void setConnectionPlugin(ConnectionPlugin connectionPlugin) {
-        this.connectionPlugin = connectionPlugin;
+    public void addConnectionPlugin(ConnectionPlugin connectionPlugin) {
+        if( connectionPlugins == null ) connectionPlugins = new ArrayList<>();
+        connectionPlugins.add(connectionPlugin);
     }
 }

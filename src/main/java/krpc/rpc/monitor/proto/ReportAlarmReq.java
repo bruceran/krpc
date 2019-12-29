@@ -23,7 +23,7 @@ private static final long serialVersionUID = 0L;
     appServiceId_ = 0;
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return this.unknownFields;
@@ -34,7 +34,7 @@ private static final long serialVersionUID = 0L;
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     if (extensionRegistry == null) {
-      throw new NullPointerException();
+      throw new java.lang.NullPointerException();
     }
     int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -53,24 +53,24 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 18: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             host_ = s;
             break;
           }
           case 26: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             app_ = s;
             break;
           }
           case 34: {
             if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-              info_ = new java.util.ArrayList<AlarmInfo>();
+              info_ = new java.util.ArrayList<krpc.rpc.monitor.proto.AlarmInfo>();
               mutable_bitField0_ |= 0x00000008;
             }
             info_.add(
-                input.readMessage(AlarmInfo.parser(), extensionRegistry));
+                input.readMessage(krpc.rpc.monitor.proto.AlarmInfo.parser(), extensionRegistry));
             break;
           }
           case 40: {
@@ -102,15 +102,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return MonitorProtos.internal_static_ReportAlarmReq_descriptor;
+    return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportAlarmReq_descriptor;
   }
 
-  @Override
-  protected FieldAccessorTable
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return MonitorProtos.internal_static_ReportAlarmReq_fieldAccessorTable
+    return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportAlarmReq_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            ReportAlarmReq.class, Builder.class);
+            krpc.rpc.monitor.proto.ReportAlarmReq.class, krpc.rpc.monitor.proto.ReportAlarmReq.Builder.class);
   }
 
   private int bitField0_;
@@ -124,18 +124,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int HOST_FIELD_NUMBER = 2;
-  private volatile Object host_;
+  private volatile java.lang.Object host_;
   /**
    * <code>string host = 2;</code>
    */
-  public String getHost() {
-    Object ref = host_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getHost() {
+    java.lang.Object ref = host_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       host_ = s;
       return s;
     }
@@ -145,11 +145,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getHostBytes() {
-    Object ref = host_;
-    if (ref instanceof String) {
+    java.lang.Object ref = host_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       host_ = b;
       return b;
     } else {
@@ -158,18 +158,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int APP_FIELD_NUMBER = 3;
-  private volatile Object app_;
+  private volatile java.lang.Object app_;
   /**
    * <code>string app = 3;</code>
    */
-  public String getApp() {
-    Object ref = app_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getApp() {
+    java.lang.Object ref = app_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       app_ = s;
       return s;
     }
@@ -179,11 +179,11 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.protobuf.ByteString
       getAppBytes() {
-    Object ref = app_;
-    if (ref instanceof String) {
+    java.lang.Object ref = app_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       app_ = b;
       return b;
     } else {
@@ -192,17 +192,17 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int INFO_FIELD_NUMBER = 4;
-  private java.util.List<AlarmInfo> info_;
+  private java.util.List<krpc.rpc.monitor.proto.AlarmInfo> info_;
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
-  public java.util.List<AlarmInfo> getInfoList() {
+  public java.util.List<krpc.rpc.monitor.proto.AlarmInfo> getInfoList() {
     return info_;
   }
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
-  public java.util.List<? extends AlarmInfoOrBuilder>
+  public java.util.List<? extends krpc.rpc.monitor.proto.AlarmInfoOrBuilder> 
       getInfoOrBuilderList() {
     return info_;
   }
@@ -215,13 +215,13 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
-  public AlarmInfo getInfo(int index) {
+  public krpc.rpc.monitor.proto.AlarmInfo getInfo(int index) {
     return info_.get(index);
   }
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
-  public AlarmInfoOrBuilder getInfoOrBuilder(
+  public krpc.rpc.monitor.proto.AlarmInfoOrBuilder getInfoOrBuilder(
       int index) {
     return info_.get(index);
   }
@@ -236,7 +236,7 @@ private static final long serialVersionUID = 0L;
   }
 
   private byte memoizedIsInitialized = -1;
-  @Override
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -246,7 +246,7 @@ private static final long serialVersionUID = 0L;
     return true;
   }
 
-  @Override
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (timestamp_ != 0L) {
@@ -267,7 +267,7 @@ private static final long serialVersionUID = 0L;
     unknownFields.writeTo(output);
   }
 
-  @Override
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -296,15 +296,15 @@ private static final long serialVersionUID = 0L;
     return size;
   }
 
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof ReportAlarmReq)) {
+    if (!(obj instanceof krpc.rpc.monitor.proto.ReportAlarmReq)) {
       return super.equals(obj);
     }
-    ReportAlarmReq other = (ReportAlarmReq) obj;
+    krpc.rpc.monitor.proto.ReportAlarmReq other = (krpc.rpc.monitor.proto.ReportAlarmReq) obj;
 
     boolean result = true;
     result = result && (getTimestamp()
@@ -321,7 +321,7 @@ private static final long serialVersionUID = 0L;
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -346,69 +346,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static ReportAlarmReq parseFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ReportAlarmReq parseFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ReportAlarmReq parseFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ReportAlarmReq parseFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ReportAlarmReq parseFrom(byte[] data)
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ReportAlarmReq parseFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ReportAlarmReq parseFrom(java.io.InputStream input)
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ReportAlarmReq parseFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ReportAlarmReq parseDelimitedFrom(java.io.InputStream input)
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static ReportAlarmReq parseDelimitedFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ReportAlarmReq parseFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ReportAlarmReq parseFrom(
+  public static krpc.rpc.monitor.proto.ReportAlarmReq parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -416,23 +416,23 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  @Override
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(ReportAlarmReq prototype) {
+  public static Builder newBuilder(krpc.rpc.monitor.proto.ReportAlarmReq prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  @Override
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -442,18 +442,17 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:ReportAlarmReq)
-      ReportAlarmReqOrBuilder {
+      krpc.rpc.monitor.proto.ReportAlarmReqOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return MonitorProtos.internal_static_ReportAlarmReq_descriptor;
+      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportAlarmReq_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return MonitorProtos.internal_static_ReportAlarmReq_fieldAccessorTable
+      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportAlarmReq_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ReportAlarmReq.class, Builder.class);
+              krpc.rpc.monitor.proto.ReportAlarmReq.class, krpc.rpc.monitor.proto.ReportAlarmReq.Builder.class);
     }
 
     // Construct using krpc.rpc.monitor.proto.ReportAlarmReq.newBuilder()
@@ -462,7 +461,7 @@ private static final long serialVersionUID = 0L;
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -472,7 +471,6 @@ private static final long serialVersionUID = 0L;
         getInfoFieldBuilder();
       }
     }
-    @Override
     public Builder clear() {
       super.clear();
       timestamp_ = 0L;
@@ -492,29 +490,25 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return MonitorProtos.internal_static_ReportAlarmReq_descriptor;
+      return krpc.rpc.monitor.proto.MonitorProtos.internal_static_ReportAlarmReq_descriptor;
     }
 
-    @Override
-    public ReportAlarmReq getDefaultInstanceForType() {
-      return ReportAlarmReq.getDefaultInstance();
+    public krpc.rpc.monitor.proto.ReportAlarmReq getDefaultInstanceForType() {
+      return krpc.rpc.monitor.proto.ReportAlarmReq.getDefaultInstance();
     }
 
-    @Override
-    public ReportAlarmReq build() {
-      ReportAlarmReq result = buildPartial();
+    public krpc.rpc.monitor.proto.ReportAlarmReq build() {
+      krpc.rpc.monitor.proto.ReportAlarmReq result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    @Override
-    public ReportAlarmReq buildPartial() {
-      ReportAlarmReq result = new ReportAlarmReq(this);
+    public krpc.rpc.monitor.proto.ReportAlarmReq buildPartial() {
+      krpc.rpc.monitor.proto.ReportAlarmReq result = new krpc.rpc.monitor.proto.ReportAlarmReq(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       result.timestamp_ = timestamp_;
@@ -535,50 +529,43 @@ private static final long serialVersionUID = 0L;
       return result;
     }
 
-    @Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof ReportAlarmReq) {
-        return mergeFrom((ReportAlarmReq)other);
+      if (other instanceof krpc.rpc.monitor.proto.ReportAlarmReq) {
+        return mergeFrom((krpc.rpc.monitor.proto.ReportAlarmReq)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(ReportAlarmReq other) {
-      if (other == ReportAlarmReq.getDefaultInstance()) return this;
+    public Builder mergeFrom(krpc.rpc.monitor.proto.ReportAlarmReq other) {
+      if (other == krpc.rpc.monitor.proto.ReportAlarmReq.getDefaultInstance()) return this;
       if (other.getTimestamp() != 0L) {
         setTimestamp(other.getTimestamp());
       }
@@ -624,21 +611,19 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    @Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      ReportAlarmReq parsedMessage = null;
+      krpc.rpc.monitor.proto.ReportAlarmReq parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (ReportAlarmReq) e.getUnfinishedMessage();
+        parsedMessage = (krpc.rpc.monitor.proto.ReportAlarmReq) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -675,20 +660,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object host_ = "";
+    private java.lang.Object host_ = "";
     /**
      * <code>string host = 2;</code>
      */
-    public String getHost() {
-      Object ref = host_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getHost() {
+      java.lang.Object ref = host_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         host_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -696,11 +681,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getHostBytes() {
-      Object ref = host_;
+      java.lang.Object ref = host_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         host_ = b;
         return b;
       } else {
@@ -711,7 +696,7 @@ private static final long serialVersionUID = 0L;
      * <code>string host = 2;</code>
      */
     public Builder setHost(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       host_ = value;
@@ -742,20 +727,20 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object app_ = "";
+    private java.lang.Object app_ = "";
     /**
      * <code>string app = 3;</code>
      */
-    public String getApp() {
-      Object ref = app_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getApp() {
+      java.lang.Object ref = app_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         app_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -763,11 +748,11 @@ private static final long serialVersionUID = 0L;
      */
     public com.google.protobuf.ByteString
         getAppBytes() {
-      Object ref = app_;
+      java.lang.Object ref = app_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         app_ = b;
         return b;
       } else {
@@ -778,7 +763,7 @@ private static final long serialVersionUID = 0L;
      * <code>string app = 3;</code>
      */
     public Builder setApp(
-        String value) {
+        java.lang.String value) {
       if (value == null) value = "";
   
       app_ = value;
@@ -809,22 +794,22 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.util.List<AlarmInfo> info_ =
+    private java.util.List<krpc.rpc.monitor.proto.AlarmInfo> info_ =
       java.util.Collections.emptyList();
     private void ensureInfoIsMutable() {
       if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-        info_ = new java.util.ArrayList<AlarmInfo>(info_);
+        info_ = new java.util.ArrayList<krpc.rpc.monitor.proto.AlarmInfo>(info_);
         bitField0_ |= 0x00000008;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        AlarmInfo, AlarmInfo.Builder, AlarmInfoOrBuilder> infoBuilder_;
+        krpc.rpc.monitor.proto.AlarmInfo, krpc.rpc.monitor.proto.AlarmInfo.Builder, krpc.rpc.monitor.proto.AlarmInfoOrBuilder> infoBuilder_;
 
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public java.util.List<AlarmInfo> getInfoList() {
+    public java.util.List<krpc.rpc.monitor.proto.AlarmInfo> getInfoList() {
       if (infoBuilder_ == null) {
         return java.util.Collections.unmodifiableList(info_);
       } else {
@@ -844,7 +829,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public AlarmInfo getInfo(int index) {
+    public krpc.rpc.monitor.proto.AlarmInfo getInfo(int index) {
       if (infoBuilder_ == null) {
         return info_.get(index);
       } else {
@@ -855,7 +840,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .AlarmInfo info = 4;</code>
      */
     public Builder setInfo(
-        int index, AlarmInfo value) {
+        int index, krpc.rpc.monitor.proto.AlarmInfo value) {
       if (infoBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -872,7 +857,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .AlarmInfo info = 4;</code>
      */
     public Builder setInfo(
-        int index, AlarmInfo.Builder builderForValue) {
+        int index, krpc.rpc.monitor.proto.AlarmInfo.Builder builderForValue) {
       if (infoBuilder_ == null) {
         ensureInfoIsMutable();
         info_.set(index, builderForValue.build());
@@ -885,7 +870,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public Builder addInfo(AlarmInfo value) {
+    public Builder addInfo(krpc.rpc.monitor.proto.AlarmInfo value) {
       if (infoBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -902,7 +887,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .AlarmInfo info = 4;</code>
      */
     public Builder addInfo(
-        int index, AlarmInfo value) {
+        int index, krpc.rpc.monitor.proto.AlarmInfo value) {
       if (infoBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -919,7 +904,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .AlarmInfo info = 4;</code>
      */
     public Builder addInfo(
-        AlarmInfo.Builder builderForValue) {
+        krpc.rpc.monitor.proto.AlarmInfo.Builder builderForValue) {
       if (infoBuilder_ == null) {
         ensureInfoIsMutable();
         info_.add(builderForValue.build());
@@ -933,7 +918,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .AlarmInfo info = 4;</code>
      */
     public Builder addInfo(
-        int index, AlarmInfo.Builder builderForValue) {
+        int index, krpc.rpc.monitor.proto.AlarmInfo.Builder builderForValue) {
       if (infoBuilder_ == null) {
         ensureInfoIsMutable();
         info_.add(index, builderForValue.build());
@@ -947,7 +932,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .AlarmInfo info = 4;</code>
      */
     public Builder addAllInfo(
-        Iterable<? extends AlarmInfo> values) {
+        java.lang.Iterable<? extends krpc.rpc.monitor.proto.AlarmInfo> values) {
       if (infoBuilder_ == null) {
         ensureInfoIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -987,14 +972,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public AlarmInfo.Builder getInfoBuilder(
+    public krpc.rpc.monitor.proto.AlarmInfo.Builder getInfoBuilder(
         int index) {
       return getInfoFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public AlarmInfoOrBuilder getInfoOrBuilder(
+    public krpc.rpc.monitor.proto.AlarmInfoOrBuilder getInfoOrBuilder(
         int index) {
       if (infoBuilder_ == null) {
         return info_.get(index);  } else {
@@ -1004,7 +989,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public java.util.List<? extends AlarmInfoOrBuilder>
+    public java.util.List<? extends krpc.rpc.monitor.proto.AlarmInfoOrBuilder> 
          getInfoOrBuilderList() {
       if (infoBuilder_ != null) {
         return infoBuilder_.getMessageOrBuilderList();
@@ -1015,31 +1000,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public AlarmInfo.Builder addInfoBuilder() {
+    public krpc.rpc.monitor.proto.AlarmInfo.Builder addInfoBuilder() {
       return getInfoFieldBuilder().addBuilder(
-          AlarmInfo.getDefaultInstance());
+          krpc.rpc.monitor.proto.AlarmInfo.getDefaultInstance());
     }
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public AlarmInfo.Builder addInfoBuilder(
+    public krpc.rpc.monitor.proto.AlarmInfo.Builder addInfoBuilder(
         int index) {
       return getInfoFieldBuilder().addBuilder(
-          index, AlarmInfo.getDefaultInstance());
+          index, krpc.rpc.monitor.proto.AlarmInfo.getDefaultInstance());
     }
     /**
      * <code>repeated .AlarmInfo info = 4;</code>
      */
-    public java.util.List<AlarmInfo.Builder>
+    public java.util.List<krpc.rpc.monitor.proto.AlarmInfo.Builder> 
          getInfoBuilderList() {
       return getInfoFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        AlarmInfo, AlarmInfo.Builder, AlarmInfoOrBuilder>
+        krpc.rpc.monitor.proto.AlarmInfo, krpc.rpc.monitor.proto.AlarmInfo.Builder, krpc.rpc.monitor.proto.AlarmInfoOrBuilder> 
         getInfoFieldBuilder() {
       if (infoBuilder_ == null) {
         infoBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            AlarmInfo, AlarmInfo.Builder, AlarmInfoOrBuilder>(
+            krpc.rpc.monitor.proto.AlarmInfo, krpc.rpc.monitor.proto.AlarmInfo.Builder, krpc.rpc.monitor.proto.AlarmInfoOrBuilder>(
                 info_,
                 ((bitField0_ & 0x00000008) == 0x00000008),
                 getParentForChildren(),
@@ -1074,13 +1059,11 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
-    @Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -1091,18 +1074,18 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:ReportAlarmReq)
-  private static final ReportAlarmReq DEFAULT_INSTANCE;
+  private static final krpc.rpc.monitor.proto.ReportAlarmReq DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new ReportAlarmReq();
+    DEFAULT_INSTANCE = new krpc.rpc.monitor.proto.ReportAlarmReq();
   }
 
-  public static ReportAlarmReq getDefaultInstance() {
+  public static krpc.rpc.monitor.proto.ReportAlarmReq getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<ReportAlarmReq>
       PARSER = new com.google.protobuf.AbstractParser<ReportAlarmReq>() {
-    @Override
+    @java.lang.Override
     public ReportAlarmReq parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1115,13 +1098,13 @@ private static final long serialVersionUID = 0L;
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<ReportAlarmReq> getParserForType() {
     return PARSER;
   }
 
-  @Override
-  public ReportAlarmReq getDefaultInstanceForType() {
+  @java.lang.Override
+  public krpc.rpc.monitor.proto.ReportAlarmReq getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

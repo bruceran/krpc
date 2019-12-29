@@ -20,7 +20,7 @@ public class RpcClient {
         RpcApp app = new Bootstrap()
                 //.setFallbackPlugin("default")
                 //.addClient(new ClientConfig().setConnections(1))
-                .addReferer("us", UserService.class, "127.0.0.1:5600")
+                .addReferer("us", UserService.class, "127.0.0.1:7600")
                 //.setMonitorConfig(new MonitorConfig().setLogFormatter("simple").setMaskFields("password"))
                 //.setTraceAdapter("zipkin:server=127.0.0.1:9411")
                 //.setTraceAdapter("cat:server=10.135.81.135:8081")

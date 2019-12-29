@@ -15,7 +15,7 @@ public interface AlarmInfoOrBuilder extends
   /**
    * <code>string type = 4;</code>
    */
-  String getType();
+  java.lang.String getType();
   /**
    * <code>string type = 4;</code>
    */
@@ -25,7 +25,7 @@ public interface AlarmInfoOrBuilder extends
   /**
    * <code>string msg = 5;</code>
    */
-  String getMsg();
+  java.lang.String getMsg();
   /**
    * <code>string msg = 5;</code>
    */
@@ -44,7 +44,7 @@ public interface AlarmInfoOrBuilder extends
    *
    * <code>string target = 7;</code>
    */
-  String getTarget();
+  java.lang.String getTarget();
   /**
    * <pre>
    * 新增
@@ -62,7 +62,7 @@ public interface AlarmInfoOrBuilder extends
    *
    * <code>string targetAddrs = 8;</code>
    */
-  String getTargetAddrs();
+  java.lang.String getTargetAddrs();
   /**
    * <pre>
    * 新增

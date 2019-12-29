@@ -13,7 +13,7 @@ public class ServerContext {
 
     public static void set(ServerContextData data) {
         tlData.set(data);
-        Trace.setCurrentContext(data.getTraceContext());
+        Trace.restoreContext(data.getTraceContext());
     }
 
     public static void remove() {

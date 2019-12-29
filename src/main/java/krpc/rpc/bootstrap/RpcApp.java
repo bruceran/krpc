@@ -52,6 +52,10 @@ public class RpcApp implements InitClose, StartStop, DumpPlugin, HealthPlugin {
         this.name = name;
     }
 
+    public Validator getValidator() {
+        return validator;
+    }
+
     public HashMap<String, RpcClient> getClients() {
         return clients;
     }

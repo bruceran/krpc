@@ -14,6 +14,7 @@ public class MonitorConfig {
     int maxRepeatedSizeToLog = 1;
     int maxFieldSizeToLog = 500;
     boolean printDefault = false;
+    String auditFreeServiceIds;
 
     boolean printOriginalMsgName = true;
     String tags;
@@ -23,8 +24,9 @@ public class MonitorConfig {
     String plugins = ""; // comma seperated MonitorPlugin names
     List<String> pluginParams = new ArrayList<>(); // config MonitorPlugin if needed
 
-    int selfCheckPort = 0; // self check port
-
+    int selfCheckPort = 0; // very important, self check port, process identity
+    boolean startSelfCheckPort = true; // start the port or not
+    int stdSelfCheckPort = 0; // original port if multiple instances running on a single ip
 
     public MonitorConfig addPluginParams(String params) {
         pluginParams.add(params);
@@ -157,5 +159,31 @@ public class MonitorConfig {
         return this;
     }
 
+    public String getAuditFreeServiceIds() {
+        return auditFreeServiceIds;
+    }
+
+    public MonitorConfig setAuditFreeServiceIds(String auditFreeServiceIds) {
+        this.auditFreeServiceIds = auditFreeServiceIds;
+        return this;
+    }
+
+    public boolean isStartSelfCheckPort() {
+        return startSelfCheckPort;
+    }
+
+    public MonitorConfig setStartSelfCheckPort(boolean startSelfCheckPort) {
+        this.startSelfCheckPort = startSelfCheckPort;
+        return this;
+    }
+
+    public int getStdSelfCheckPort() {
+        return stdSelfCheckPort;
+    }
+
+    public MonitorConfig setStdSelfCheckPort(int stdSelfCheckPort) {
+        this.stdSelfCheckPort = stdSelfCheckPort;
+        return this;
+    }
 }
 

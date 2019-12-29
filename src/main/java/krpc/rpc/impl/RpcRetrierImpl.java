@@ -8,6 +8,7 @@ import krpc.rpc.core.*;
 import krpc.rpc.util.IpUtils;
 import krpc.rpc.util.MapToMessage;
 import krpc.rpc.util.MessageToMap;
+import krpc.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,6 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop, AlarmAware, DumpPlugin, HealthPlugin {
 
@@ -203,6 +203,8 @@ public class RpcRetrierImpl implements RpcRetrier, InitClose, StartStop, AlarmAw
         if( shutdownFlag.get() ) return;
 
         RpcRetryTask task = ctx.task;
+
+        Trace.clearContext(); // generate a new traceId for each retry
 
         if( task.getTimeout() > 0 ) ClientContext.setTimeout(task.getTimeout());
         if( task.getAttachement() != null ) ClientContext.setAttachment(task.getAttachement());

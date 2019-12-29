@@ -124,6 +124,7 @@
               <attribute name="maxUploadLength" type="string" use="optional"/>
               <attribute name="nativeNetty" type="string" use="optional"/>
               <attribute name="allowDynamicUrls" type="string" use="optional"/>
+              <attribute name="idleSecondsForDownload" type="string" use="optional"/>
 	    </complexType>
     </element>
 
@@ -201,6 +202,9 @@
               <attribute name="selfCheckPort" type="string" use="optional"/>
               <attribute name="tags" type="string" use="optional"/>
               <attribute name="maxFieldSizeToLog" type="string" use="optional"/>
+              <attribute name="auditFreeServiceIds" type="string" use="optional"/>
+              <attribute name="startSelfCheckPort" type="string" use="optional"/>
+              <attribute name="stdSelfCheckPort" type="string" use="optional"/>
 	    </complexType>
     </element>
 

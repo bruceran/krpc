@@ -40,6 +40,9 @@ public class SpringBootstrap {
                 bootstrap = new Bootstrap();
             }
         }
+
+        bootstrap.setEnvVarGetter( (key)-> spring.getEnvironment().getProperty(key,"") );
+
         return bootstrap;
     }
 

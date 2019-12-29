@@ -36,12 +36,12 @@ public class DefaultRawRpcFuture extends CompletableFuture<RpcRawMessage> {
             if (factory.notifyPool != null) {
                 factory.notifyPool.execute(new Runnable() {
                     public void run() {
-                        Trace.setCurrentContext(tctx);
+                        Trace.restoreContext(tctx);
                         DefaultRawRpcFuture.super.complete(m);
                     }
                 });
             } else {
-                Trace.setCurrentContext(tctx);
+                Trace.restoreContext(tctx);
                 DefaultRawRpcFuture.super.complete(m);
             }
             return true;

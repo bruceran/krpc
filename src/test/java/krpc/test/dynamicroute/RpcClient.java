@@ -3,13 +3,17 @@ package krpc.test.dynamicroute;
 import com.xxx.userservice.proto.LoginReq;
 import com.xxx.userservice.proto.LoginRes;
 import com.xxx.userservice.proto.UserService;
+import com.xxx.userservice.proto.UserServiceAsync;
 import krpc.rpc.bootstrap.Bootstrap;
 import krpc.rpc.bootstrap.RefererConfig;
 import krpc.rpc.bootstrap.RegistryConfig;
 import krpc.rpc.bootstrap.RpcApp;
+import krpc.rpc.core.ClientContext;
 import krpc.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.CompletableFuture;
 
 public class RpcClient {
 
@@ -38,15 +42,23 @@ public class RpcClient {
 
         for (int i = 0; i < 1; ++i) {
             UserService us = app.getReferer("us");
+            UserServiceAsync usa = app.getReferer("usAsync");
 
             Trace.start("rpc call","aaa");
-            Trace.tagForRpc("dyeing","211");
+//            Trace.tagForRpc("dyeing","211");
+            ClientContext.setDyeing("2112");
             LoginReq req = LoginReq.newBuilder().setUserName("abc").setPassword("mmm").build();
-            LoginRes res = us.login(req);
-            log.info("res=" + res.getRetCode() + "," + res.getRetMsg());
-            Trace.stop();
 
-            Thread.sleep(500);
+            CompletableFuture<LoginRes> resFuture = usa.login(req);
+            resFuture.join();
+            LoginRes res = resFuture.get();
+
+//            LoginRes res = us.login(req);
+
+//            log.info("res=" + res.getRetCode() + "," + res.getRetMsg());
+//            Trace.stop();
+//
+//            Thread.sleep(500);
         }
 
         Thread.sleep(300000);

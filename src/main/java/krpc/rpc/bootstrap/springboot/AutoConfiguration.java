@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
 
@@ -252,6 +253,11 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
             int delayStart = SpringBootstrap.instance.getBootstrap().getAppConfig().getDelayStart();
             SpringBootstrap.instance.getRpcApp().start(delayStart);
         }
+        if (event instanceof ContextClosedEvent) {
+            SpringBootstrap.instance.getRpcApp().stop();
+            log.info("krpc service port stopped");
+        }
+//System.out.println("boot onApplicationEvent called, event = " + event+" ended ----------- ");
     }
 
     Object loadBean(String impl, String interfaceName, BeanFactory beanFactory) {
@@ -287,6 +293,9 @@ public class AutoConfiguration implements ApplicationListener<ApplicationEvent> 
 
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory0) throws BeansException {
+
+            ServerConfig.DEFAULT_PORT = 0;
+            WebServerConfig.DEFAULT_PORT = 0;
 
             DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) beanFactory0;
 

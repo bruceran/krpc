@@ -45,7 +45,7 @@ public interface RpcStatOrBuilder extends
   /**
    * <code>repeated int32 timeUsed = 8;</code>
    */
-  java.util.List<Integer> getTimeUsedList();
+  java.util.List<java.lang.Integer> getTimeUsedList();
   /**
    * <code>repeated int32 timeUsed = 8;</code>
    */
@@ -58,12 +58,12 @@ public interface RpcStatOrBuilder extends
   /**
    * <code>repeated .RetCodeStat retCodeStat = 9;</code>
    */
-  java.util.List<RetCodeStat>
+  java.util.List<krpc.rpc.monitor.proto.RetCodeStat> 
       getRetCodeStatList();
   /**
    * <code>repeated .RetCodeStat retCodeStat = 9;</code>
    */
-  RetCodeStat getRetCodeStat(int index);
+  krpc.rpc.monitor.proto.RetCodeStat getRetCodeStat(int index);
   /**
    * <code>repeated .RetCodeStat retCodeStat = 9;</code>
    */
@@ -71,11 +71,11 @@ public interface RpcStatOrBuilder extends
   /**
    * <code>repeated .RetCodeStat retCodeStat = 9;</code>
    */
-  java.util.List<? extends RetCodeStatOrBuilder>
+  java.util.List<? extends krpc.rpc.monitor.proto.RetCodeStatOrBuilder> 
       getRetCodeStatOrBuilderList();
   /**
    * <code>repeated .RetCodeStat retCodeStat = 9;</code>
    */
-  RetCodeStatOrBuilder getRetCodeStatOrBuilder(
-          int index);
+  krpc.rpc.monitor.proto.RetCodeStatOrBuilder getRetCodeStatOrBuilder(
+      int index);
 }

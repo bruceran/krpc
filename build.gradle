@@ -2,7 +2,7 @@ apply plugin: 'java'
 //apply plugin: 'maven'
 
 group = 'krpc'
-version = '0.2.31'
+version = '0.2.32'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 

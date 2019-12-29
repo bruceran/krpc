@@ -7,6 +7,7 @@ import krpc.common.Plugin;
 import krpc.common.RetCodes;
 import krpc.rpc.core.RpcContextData;
 import krpc.rpc.core.RpcPlugin;
+import krpc.trace.Span;
 import krpc.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -221,7 +222,7 @@ public class JedisFlowControl extends AbstractFlowControl implements RpcPlugin, 
 
     void doUpdate(String key, List<String> incFieldsList, List<String> removeFieldsList) {
 
-        Trace.start("REDIS", "update_and_delete");
+        Span span = Trace.start("JEDIS", "update_and_delete");
 
         if (incFieldsList.size() > 0) {
             hincrby(key, incFieldsList);
@@ -230,7 +231,7 @@ public class JedisFlowControl extends AbstractFlowControl implements RpcPlugin, 
             del(key, removeFieldsList);
         }
 
-        Trace.stop(true);
+        span.stop(true);
     }
 
     void hincrby(String key, List<String> fields) {
@@ -293,18 +294,18 @@ public class JedisFlowControl extends AbstractFlowControl implements RpcPlugin, 
     Map<String, String> hgetall(String key) {
         key = keyPrefix + key;
 
-        Trace.start("REDIS", "hgetall");
+        Span span = Trace.start("JEDIS", "hgetall");
 
         if (!clusterMode) {
             Jedis jedis = null;
             try {
                 jedis = jedisPool.getResource();
                 Map<String, String> v = jedis.hgetAll(key);
-                Trace.stop(true);
+                span.stop(true);
                 return v;
             } catch (Exception e) {
                 log.error("cannot load key, key=" + key);
-                Trace.stop(false);
+                span.stop(false);
                 return null;
             } finally {
                 try {
@@ -316,11 +317,11 @@ public class JedisFlowControl extends AbstractFlowControl implements RpcPlugin, 
         } else {
             try {
                 Map<String, String> v = jedisCluster.hgetAll(key);
-                Trace.stop(true);
+                span.stop(true);
                 return v;
             } catch (Exception e) {
                 log.error("cannot load key, key=" + key);
-                Trace.stop(false);
+                span.stop(false);
                 return null;
             }
         }

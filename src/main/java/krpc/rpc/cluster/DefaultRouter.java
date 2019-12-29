@@ -77,9 +77,14 @@ public class DefaultRouter implements Router {
             dynamicMap.putAll(tags);
         }
 
-        String dyeing = ctx.getTraceContext().getTrace().getDyeing();
+        String dyeing = ctx.getTraceContext().getTrace().getDyeing(); // for webserver
         if( dyeing != null && !dyeing.isEmpty() ) {
             dynamicMap.put("dyeing", dyeing);
+        }
+
+        String metaDyeing = ctx.getMeta().getTrace().getDyeing(); // for ClientContext.setDyeing()
+        if( metaDyeing != null && !metaDyeing.isEmpty() ) {
+            dynamicMap.put("dyeing", metaDyeing);
         }
 
         dynamicMap.put("msgId",String.valueOf(msgId));

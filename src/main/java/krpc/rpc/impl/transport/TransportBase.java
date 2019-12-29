@@ -11,6 +11,7 @@ import io.netty.util.ReferenceCountUtil;
 import krpc.common.RetCodes;
 import krpc.rpc.core.*;
 import krpc.rpc.core.proto.RpcMeta;
+import krpc.trace.Span;
 import krpc.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,6 +168,7 @@ public abstract class TransportBase extends ChannelDuplexHandler{
     @Override
     public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
         //debugLog("channelRead");
+        long receiveMicros = System.nanoTime() / 1000;
 
         RpcData data = null;
         try {
@@ -184,7 +186,7 @@ public abstract class TransportBase extends ChannelDuplexHandler{
 
         if (callback != null) {
             try {
-                callback.receive(connId, data);
+                callback.receive(connId, data, receiveMicros);
             } catch (Exception ex) {
                 ctx.close();
                 log.error("this line should not be logged, connId=" + connId, ex); // donot send to monitor service
@@ -234,7 +236,8 @@ public abstract class TransportBase extends ChannelDuplexHandler{
         RpcClosure closure = new RpcClosure(rpcCtx, null, isRaw);
         closure.done(res);
 
-        closure.asServerCtx().getTraceContext().stopForServer(retCode);
+        Span span = closure.asServerCtx().getTraceContext().stopForServer(retCode);
+        closure.asServerCtx().endWithTime(span.getTimeUsedMicros());
 
         monitorService.reqDone(closure);
     }

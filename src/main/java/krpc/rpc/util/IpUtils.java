@@ -14,8 +14,8 @@ public class IpUtils {
 
     static Logger log = LoggerFactory.getLogger(IpUtils.class);
 
-    static ArrayList<String> localips = new ArrayList<String>();
-    static ArrayList<String> netips = new ArrayList<String>();
+    static ArrayList<String> localips = new ArrayList<>();
+    static ArrayList<String> netips = new ArrayList<>();
 
     static {
         loadIps();

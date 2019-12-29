@@ -10,7 +10,7 @@ public interface SystemInfoKVOrBuilder extends
   /**
    * <code>string key = 1;</code>
    */
-  String getKey();
+  java.lang.String getKey();
   /**
    * <code>string key = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface SystemInfoKVOrBuilder extends
   /**
    * <code>string value = 2;</code>
    */
-  String getValue();
+  java.lang.String getValue();
   /**
    * <code>string value = 2;</code>
    */

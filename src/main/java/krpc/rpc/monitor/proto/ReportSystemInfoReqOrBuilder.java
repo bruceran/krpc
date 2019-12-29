@@ -15,7 +15,7 @@ public interface ReportSystemInfoReqOrBuilder extends
   /**
    * <code>string host = 2;</code>
    */
-  String getHost();
+  java.lang.String getHost();
   /**
    * <code>string host = 2;</code>
    */
@@ -25,7 +25,7 @@ public interface ReportSystemInfoReqOrBuilder extends
   /**
    * <code>string app = 3;</code>
    */
-  String getApp();
+  java.lang.String getApp();
   /**
    * <code>string app = 3;</code>
    */
@@ -35,12 +35,12 @@ public interface ReportSystemInfoReqOrBuilder extends
   /**
    * <code>repeated .SystemInfoKV kvs = 4;</code>
    */
-  java.util.List<SystemInfoKV>
+  java.util.List<krpc.rpc.monitor.proto.SystemInfoKV> 
       getKvsList();
   /**
    * <code>repeated .SystemInfoKV kvs = 4;</code>
    */
-  SystemInfoKV getKvs(int index);
+  krpc.rpc.monitor.proto.SystemInfoKV getKvs(int index);
   /**
    * <code>repeated .SystemInfoKV kvs = 4;</code>
    */
@@ -48,13 +48,13 @@ public interface ReportSystemInfoReqOrBuilder extends
   /**
    * <code>repeated .SystemInfoKV kvs = 4;</code>
    */
-  java.util.List<? extends SystemInfoKVOrBuilder>
+  java.util.List<? extends krpc.rpc.monitor.proto.SystemInfoKVOrBuilder> 
       getKvsOrBuilderList();
   /**
    * <code>repeated .SystemInfoKV kvs = 4;</code>
    */
-  SystemInfoKVOrBuilder getKvsOrBuilder(
-          int index);
+  krpc.rpc.monitor.proto.SystemInfoKVOrBuilder getKvsOrBuilder(
+      int index);
 
   /**
    * <code>int32 appServiceId = 5;</code>

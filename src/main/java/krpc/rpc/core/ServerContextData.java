@@ -9,13 +9,14 @@ public class ServerContextData extends RpcContextData {
 
     Continue<RpcClosure> cont; // used in server side async call
     TraceContext traceContext;
+    long decodeMicros = 0;
     long waitInQueueMicros = 0;
     AtomicBoolean replied = new AtomicBoolean(false);
 
     public ServerContextData(String connId, RpcMeta meta, TraceContext traceContext) {
         super(connId, meta);
         this.traceContext = traceContext;
-        startMicros = traceContext.currentSpan().getStartMicros();
+        startMicros = traceContext.rootSpan().getStartMicros();
         requestTimeMicros = traceContext.getRequestTimeMicros() + (startMicros - traceContext.getStartMicros());
     }
 
@@ -40,4 +41,11 @@ public class ServerContextData extends RpcContextData {
     public boolean isReplied() { return replied.get(); }
 
     public boolean setReplied() { return replied.compareAndSet(false,true); }
+
+    public void setDecodeMicros(long decodeMicros) {this.decodeMicros = decodeMicros; }
+
+    public long getDecodeMicros() {
+        return decodeMicros;
+    }
+
 }

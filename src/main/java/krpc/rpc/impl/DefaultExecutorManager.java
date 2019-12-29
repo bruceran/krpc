@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public class DefaultExecutorManager implements ExecutorManager, InitClose, DumpPlugin {
 
+    String owner = "";
+
     NamedThreadFactory threadFactory = new NamedThreadFactory("krpc_service_worker");
     HashMap<String, ThreadPoolExecutor> pools = new HashMap<String, ThreadPoolExecutor>();
 
@@ -61,13 +63,21 @@ public class DefaultExecutorManager implements ExecutorManager, InitClose, DumpP
         }
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
     @Override
     public void dump(Map<String, Object> metrics) {
         int i=0;
         for (ThreadPoolExecutor pool: pools.values()) {
-            metrics.put("krpc.krpc_service_worker["+i+"].poolSize",pool.getPoolSize());
-            metrics.put("krpc.krpc_service_worker["+i+"].activeCount",pool.getActiveCount());
-            metrics.put("krpc.krpc_service_worker["+i+"].waitingInQueue",pool.getQueue().size());
+            metrics.put("krpc."+owner+".krpc_service_worker["+i+"].poolSize",pool.getPoolSize());
+            metrics.put("krpc."+owner+".krpc_service_worker["+i+"].activeCount",pool.getActiveCount());
+            metrics.put("krpc."+owner+".krpc_service_worker["+i+"].waitingInQueue",pool.getQueue().size());
             i++;
         }
     }

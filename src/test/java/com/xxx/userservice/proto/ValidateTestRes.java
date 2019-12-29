@@ -311,7 +311,6 @@ public static final ValidateTestRes failed(int retCode,java.lang.String retMsg) 
       return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateTestRes_descriptor;
     }
 
-    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateTestRes_fieldAccessorTable
@@ -334,7 +333,6 @@ public static final ValidateTestRes failed(int retCode,java.lang.String retMsg) 
               .alwaysUseFieldBuilders) {
       }
     }
-    @java.lang.Override
     public Builder clear() {
       super.clear();
       retCode_ = 0;
@@ -344,18 +342,15 @@ public static final ValidateTestRes failed(int retCode,java.lang.String retMsg) 
       return this;
     }
 
-    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
       return com.xxx.userservice.proto.UserServiceMetas.internal_static_ValidateTestRes_descriptor;
     }
 
-    @java.lang.Override
     public com.xxx.userservice.proto.ValidateTestRes getDefaultInstanceForType() {
       return com.xxx.userservice.proto.ValidateTestRes.getDefaultInstance();
     }
 
-    @java.lang.Override
     public com.xxx.userservice.proto.ValidateTestRes build() {
       com.xxx.userservice.proto.ValidateTestRes result = buildPartial();
       if (!result.isInitialized()) {
@@ -364,7 +359,6 @@ public static final ValidateTestRes failed(int retCode,java.lang.String retMsg) 
       return result;
     }
 
-    @java.lang.Override
     public com.xxx.userservice.proto.ValidateTestRes buildPartial() {
       com.xxx.userservice.proto.ValidateTestRes result = new com.xxx.userservice.proto.ValidateTestRes(this);
       result.retCode_ = retCode_;
@@ -373,39 +367,32 @@ public static final ValidateTestRes failed(int retCode,java.lang.String retMsg) 
       return result;
     }
 
-    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
-    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
-    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
-    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
-    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
-    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
-    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
       if (other instanceof com.xxx.userservice.proto.ValidateTestRes) {
         return mergeFrom((com.xxx.userservice.proto.ValidateTestRes)other);
@@ -429,12 +416,10 @@ public static final ValidateTestRes failed(int retCode,java.lang.String retMsg) 
       return this;
     }
 
-    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
-    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -545,13 +530,11 @@ public static final ValidateTestRes failed(int retCode,java.lang.String retMsg) 
       onChanged();
       return this;
     }
-    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
-    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);

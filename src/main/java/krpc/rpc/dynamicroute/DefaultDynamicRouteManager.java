@@ -67,7 +67,11 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager, InitClos
             timer = new Timer("krpc_dynamicroute_timer");
             timer.schedule(new TimerTask() {
                 public void run() {
-                    refresh();
+                    try {
+                        refresh();
+                    } catch(Throwable e) {
+                        log.error("refresh exception",e);
+                    }
                 }
             }, startInterval, checkInterval);
         }
@@ -142,6 +146,9 @@ public class DefaultDynamicRouteManager implements DynamicRouteManager, InitClos
             String json = new String(bytes);
             routes = Json.toObject(json, new TypeReference<Map<Integer, DynamicRouteConfig>>() {
             });
+            if( routes == null ) { // invalid local file, example: configured wrong by someone
+                routes = new HashMap<>();
+            }
         } catch (Exception e) {
             // log.info("cannot load from file, path="+path);
         }

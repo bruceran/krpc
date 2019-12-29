@@ -79,7 +79,11 @@ public class PersistQueueManagerImpl implements PersistQueueManager {
 
             @Override
             public void run() {
-                purge();
+                try {
+                    purge();
+                } catch(Throwable e) {
+                    logger.error("purge exception",e);
+                }
             }
 
         }, PURGE_WAIT_TIME, PURGE_WAIT_TIME);

@@ -7,12 +7,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public interface Span {
 
     public Span newChild(String type, String action);
+    public Span newChild(String type, String action,long timeUsedMicros);
 
     public long stop();
 
     public long stop(boolean ok);
 
     public long stop(String status);
+
+    public long stopForServer(String status);
+
+    public long stopWithTime(String status,long timeUsedMicros);
 
     public void logEvent(String type, String action, String status, String data);
 
@@ -54,17 +59,19 @@ public interface Span {
 
     public String getRemoteAddr();
 
-    public List<Span> getChildren();
-
     public List<Event> getEvents();
 
     public Map<String, String> getTags();
 
     public List<Metric> getMetrics();
 
-    public AtomicInteger getCompleted();
-
     public void removeTag(String key);
 
     public void removeTags();
+
+    public List<Span> getChildren();
+
+    public String statsTimeUsed();
+
+    public void changeAction(String action);
 }

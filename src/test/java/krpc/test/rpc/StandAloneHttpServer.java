@@ -24,7 +24,7 @@ public class StandAloneHttpServer {
 
         RpcApp app = new Bootstrap()
                 .addWebServer(new WebServerConfig(8890))
-                // .addServer(5600)
+                 .addServer(7600)
                 .addService(UserService.class, impl)
                 .addService(HttpPluginTestService.class, impl2)
                 .build();

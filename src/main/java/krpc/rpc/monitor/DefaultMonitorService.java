@@ -19,6 +19,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -34,11 +35,14 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     String appName;
     String localIp;
     ServiceMetas serviceMetas;
+    ErrorMsgConverter errorMsgConverter;
+
     RpcCodec codec;
 
     int logThreads = 1;
     int logQueueSize = 10000;
     boolean accessLog = true;
+    Set<Integer> auditFreeServiceIds;
 
     boolean printOriginalMsgName = true;
 
@@ -67,6 +71,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     volatile int lastErrorCount = 0;
 
+    public static Map<Integer,String> vsServiceNames;  // krpc 自己不初始化，由外部初始化
+
+    Set<Integer> usedVsServiceIds = new CopyOnWriteArraySet<>();
+    Map<String,String> usedVsMsgNames = new ConcurrentHashMap<>();
+
     static class AlarmInfoInWait {
         String type;
         String msg;
@@ -91,11 +100,16 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
     DateTimeFormatter statsFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     ZoneOffset offset = OffsetDateTime.now().getOffset();
 
-    ArrayList<Object> resources = new ArrayList<Object>();
+    ArrayList<Object> resources = new ArrayList<>();
 
-    public DefaultMonitorService(RpcCodec codec, ServiceMetas serviceMetas) {
+    long lastReportMetaTime = 0;
+    long reportMetaMinute = 0; // 哪一分钟上报，错开时间上报
+
+
+    public DefaultMonitorService(RpcCodec codec, ServiceMetas serviceMetas,ErrorMsgConverter errorMsgConverter) {
         this.codec = codec;
         this.serviceMetas = serviceMetas;
+        this.errorMsgConverter = errorMsgConverter;
     }
 
     void initTagsMap() {
@@ -114,6 +128,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         }
     }
 
+
     public void init() {
 
         localIp = IpUtils.localIp();
@@ -124,6 +139,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
         timer = new Timer("krpc_asyncstats_timer");
 
+        reportMetaMinute = 10 + System.currentTimeMillis() % 40;  // 每天 3点： 10 分 - 50 分上报元数据
 
         if (serverAddr != null && serverAddr.length() > 0) {
             monitorClient = new MonitorClient(serverAddr, codec, serviceMetas, timer);
@@ -131,12 +147,20 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
         timer.schedule(new TimerTask() {
             public void run() {
-                statsTimer();
+                try {
+                    statsTimer();
+                } catch(Throwable e) {
+                    log.error("statsTimer exception",e);
+                }
             }
         }, 10000, 1000);
         timer.schedule(new TimerTask() {
             public void run() {
-                reportSystemInfo();
+                try {
+                    reportSystemInfo();
+                } catch(Throwable e) {
+                    log.error("reportSystemInfo exception",e);
+                }
             }
         }, 60000, 60000);
 
@@ -144,7 +168,11 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
             timer.schedule(new TimerTask() {
                 public void run() {
-                    reportAlarm();
+                    try {
+                        reportAlarm();
+                    } catch(Throwable e) {
+                        log.error("reportAlarm exception",e);
+                    }
                 }
             }, 5000, 5000);
         }
@@ -187,7 +215,26 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         log.info("monitor service stopped");
     }
 
+    public void setAuditFreeServiceIds(String s) {
+        if( s == null || s.isEmpty() ) return;
+        auditFreeServiceIds = new HashSet<>();
+        String[] ss = s.split(",");
+        for(String t: ss) {
+            int serviceId = TypeSafe.anyToInt(t);
+            if( serviceId > 0 ) {
+                auditFreeServiceIds.add(serviceId);
+            }
+        }
+    }
+
+    boolean ignored(int serviceId) {
+        if( auditFreeServiceIds == null ) return false;
+        return auditFreeServiceIds.contains(serviceId);
+    }
+
     public void webReqDone(WebClosure closure) {
+
+        if( ignored(closure.getCtx().getMeta().getServiceId())) return;
 
         if (accessLog) {
             try {
@@ -235,6 +282,8 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     public void reqDone(final RpcClosure closure0) {
 
+        if( ignored(closure0.getCtx().getMeta().getServiceId())) return;
+
         RpcClosure closure = convertClosure(closure0);
 
         if (accessLog) {
@@ -276,6 +325,8 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     public void callDone(RpcClosure closure0) {
 
+        if( ignored(closure0.getCtx().getMeta().getServiceId())) return;
+
         RpcClosure closure = convertClosure(closure0);
 
         if (accessLog) {
@@ -313,6 +364,39 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
                 p.rpcCallDone(closure);
             }
         }
+    }
+    public void virtualServiceDone(VirtualServiceClosure closure) {
+
+        if( statsPool == null ) return; // may be null in SpringBootTest junit test
+        if( closure.getServiceId() == 0 || ( closure.getServiceId() % 1000 ) == 999 ) return;
+
+        try {
+            statsPool.execute(new Runnable() {
+                public void run() {
+                    try {
+                        doStats(closure);
+                        saveUsedVirtualServiceInfo(closure);
+                    } catch (Exception e) {
+                        log.error("asyncstats exception", e);
+                    }
+                }
+            });
+        } catch (RejectedExecutionException e) {
+            log.error("asyncstats queue is full");
+        }
+
+    }
+
+    void saveUsedVirtualServiceInfo(VirtualServiceClosure closure) {
+        usedVsServiceIds.add(closure.getServiceId());
+        if( closure.getMsgId() == 999 ) return;
+        String msgName = closure.getMsgName();
+        if( closure.getMsgId() >= 900 ) {   // xxx.yyyy -> yyy  由于xxx可变，上报的话会一直变, 所以只报yyy部分
+            msgName = msgName.substring(msgName.lastIndexOf(".")+1);
+        }
+        usedVsMsgNames.put(closure.getServiceId() + "." + closure.getMsgId(), msgName);
+
+        // System.out.println("usedVsMsgNames="+usedVsMsgNames.toString());
     }
 
     void doLog(boolean isServerLog, RpcClosure closure) {
@@ -383,18 +467,34 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         }
     }
 
-    private void appendTimeUsed(ServerContextData serverCtx, StringBuilder extraInfo) {
+    private void appendTimeUsed(ServerContextData serverCtx, StringBuilder extraInfo,long ttl) {
         TraceContext tc = serverCtx.getTraceContext();
         if (tc == null) return;
         if (!(tc instanceof DefaultTraceContext)) return;
         DefaultTraceContext dtc = (DefaultTraceContext) tc;
         String timeUsedStr = dtc.getTimeUsedStr();
         if (isEmpty(timeUsedStr)) return;
+        int p = timeUsedStr.indexOf("^IOSUM:");
+        long ot = 0;
+        if( p > 0 ) {
+            ot = ttl - TypeSafe.anyToLong(timeUsedStr.substring(p+7));
+            if( ot < 0 ) ot = 0;
+            timeUsedStr = timeUsedStr.substring(0,p);
+        }
         if (extraInfo.length() > 0) extraInfo.append("^");
         extraInfo.append(timeUsedStr);
+        if( ot >= 0 ) {
+            extraInfo.append("^OTS:").append(ot);
+        }
     }
 
     private void appendTimeUsedInQueue(ServerContextData serverCtx, StringBuilder extraInfo) {
+
+        if( serverCtx.getDecodeMicros() > 1000 ) { // >= 1ms
+            if (extraInfo.length() > 0) extraInfo.append("^");
+            extraInfo.append("INTS:" + serverCtx.getDecodeMicros());
+        }
+
         if (extraInfo.length() > 0) extraInfo.append("^");
         extraInfo.append("Q:" + serverCtx.getWaitInQueueMicros());
     }
@@ -422,6 +522,14 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         }
     }
 
+    private void appendClientDyeing(RpcContextData ctx, StringBuilder extraInfo) {
+        String dyeing = ctx.getMeta().getTrace().getDyeing();
+        if (dyeing != null && !dyeing.isEmpty()) {
+            if (extraInfo.length() > 0) extraInfo.append("^");
+            extraInfo.append("dyeing:" + dyeing);
+        }
+    }
+
     String getLogStr(RpcClosure closure) {
         StringBuilder b = new StringBuilder();
         RpcContextData ctx = closure.getCtx();
@@ -429,14 +537,22 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         RpcMeta.Trace trace = meta.getTrace();
         String spanId = trace.getSpanId();
         StringBuilder extraInfo = new StringBuilder();
+        long timeUsedMicros = ctx.getTimeUsedMicros();
         if (ctx instanceof ServerContextData) {
             ServerContextData serverCtx = ((ServerContextData) ctx);
+            trace = serverCtx.getTraceContext().getTrace();
+            spanId = trace.getSpanId();
+
+            // timeUsedMicros += serverCtx.getDecodeMicros();
+
             appendTimeUsedInQueue(serverCtx, extraInfo);
-            appendTimeUsed(serverCtx, extraInfo);
+            appendTimeUsed(serverCtx, extraInfo, ctx.getTimeUsedMicros() -serverCtx.getWaitInQueueMicros() );
             appendTags(meta, extraInfo);
             appendVars(serverCtx, extraInfo);
             appendRpcTags(serverCtx, extraInfo);
             appendDyeing(serverCtx, extraInfo);
+        } else {
+            appendClientDyeing(ctx, extraInfo);
         }
 
         long responseTime = ctx.getResponseTimeMicros();
@@ -465,7 +581,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         b.append(sep);
         b.append(closure.getRetCode());
         b.append(sep);
-        b.append(ctx.getTimeUsedMicros());
+        b.append(timeUsedMicros);
         b.append(sep);
         String reqStr = closure.reqData() == null ? "" : logFormatter.toLogStr(closure.asReqMessage());
         if (reqStr.contains(sep)) reqStr = reqStr.replace(sep, ",");
@@ -486,12 +602,13 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         RpcMeta meta = ctx.getMeta();
         RpcMeta.Trace trace = meta.getTrace();
         StringBuilder extraInfo = new StringBuilder();
-
+        long timeUsedMicros = ctx.getTimeUsedMicros();
         if (ctx instanceof ServerContextData) {
             ServerContextData serverCtx = ((ServerContextData) ctx);
+            // timeUsedMicros += serverCtx.getDecodeMicros();
 
             appendTimeUsedInQueue(serverCtx, extraInfo);
-            appendTimeUsed(serverCtx, extraInfo);
+            appendTimeUsed(serverCtx, extraInfo, ctx.getTimeUsedMicros() -serverCtx.getWaitInQueueMicros() );
             appendTags(meta, extraInfo);
             appendVars(serverCtx, extraInfo);
             appendRpcTags(serverCtx, extraInfo);
@@ -523,7 +640,7 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         b.append(sep);
         b.append(closure.getRes().getRetCode());
         b.append(sep);
-        b.append(ctx.getTimeUsedMicros());
+        b.append(timeUsedMicros);
         b.append(sep);
         String clientIp = ctx.getClientIp();
         b.append("httpClientIp:").append(clientIp).append("^");
@@ -684,6 +801,16 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         item.update(closure.getCtx().getResponseTimeMicros() / 1000000, closure.getRetCode(), closure.getCtx().getTimeUsedMillis());
     }
 
+    void doStats(VirtualServiceClosure closure) {
+        String key = typeToName(closure.getLogType()) + ":" + closure.getServiceId() + ":" + closure.getMsgId();
+        StatItem item = stats.get(key);
+        if (item == null) {
+            item = new StatItem(closure.getServiceId(), closure.getMsgId(), closure.getLogType());
+            stats.put(key, item);
+        }
+        item.update(closure.getResponseTimeMicros() / 1000000, closure.getRetCode(), closure.getTimeUsedMillis());
+    }
+
     void doStatsCheckPoint(long time) {
         // print all stats <= time
         ReportRpcStatReq.Builder builder = ReportRpcStatReq.newBuilder();
@@ -780,6 +907,61 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         b.setAppServiceId(TypeSafe.anyToInt(alarmPrefix));
         ReportSystemInfoReq req = b.build();
 
+        monitorClient.send(req);
+
+        // reportMetaData();
+
+        reportMetaDataCheck();
+    }
+
+    void addMap(ReportMetaReq.Builder b, int type,Map<String,String> map) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            b.addInfo(MetaInfo.newBuilder().setType(type).setValue(key).setText(value));
+        }
+    }
+
+    void reportMetaDataCheck() {
+        LocalDateTime ldt = LocalDateTime.now();
+
+        if( ldt.getHour() == 2 && ldt.getMinute() >= reportMetaMinute ) {
+            long now = System.currentTimeMillis();
+            if( now - lastReportMetaTime >= 23 * 60 * 1000L ) { // 一天只一次
+                reportMetaData();
+                lastReportMetaTime = now;
+            }
+        }
+    }
+
+    Map<String,String> getVsServiceNames() {
+        Map<String,String> map = new LinkedHashMap<>();
+        if( vsServiceNames != null ) {
+            for(Integer serviceId: usedVsServiceIds) {
+                String name = vsServiceNames.get(serviceId);
+                if( name != null ) {
+                    map.put(String.valueOf(serviceId), name);
+                }
+            }
+        }
+        return map;
+    }
+
+    Map<String,String> getVsMsgNames() {
+        Map<String,String> map = new LinkedHashMap<>();
+        map.putAll(usedVsMsgNames);
+        return map;
+    }
+
+    void reportMetaData() {
+        ReportMetaReq.Builder b = ReportMetaReq.newBuilder();
+        b.setTimestamp(System.currentTimeMillis()).setHost(localIp).setApp(appName).setAppServiceId(TypeSafe.anyToInt(alarmPrefix));
+        addMap(b,1,serviceMetas.getServiceMetaInfo());
+        addMap(b,2,serviceMetas.getMsgMetaInfo());
+        addMap(b,1,getVsServiceNames());
+        addMap(b,2,getVsMsgNames());
+        addMap(b,3,errorMsgConverter.getAllMsgs());
+        ReportMetaReq req = b.build();
         monitorClient.send(req);
     }
 
@@ -949,10 +1131,17 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
 
     @Override
     public String getAlarmId(String type) {
+        if( type.equals(Alarm.ALARM_TYPE_APM) ) {
+            return "3" + Alarm.ALARM_TYPE_APM;
+        }
+        if( type.equals(Alarm.ALARM_TYPE_APMCFG) ) {
+            return "3" + Alarm.ALARM_TYPE_APMCFG;
+        }
         return alarmPrefix + type;
     }
 
     @Override
+    @Deprecated
     public void alarm(String type, String msg) {
         String alarmId = getAlarmId(type);
         reportAlarm(alarmId, msg, "", "");
@@ -964,14 +1153,13 @@ public class DefaultMonitorService implements MonitorService, WebMonitorService,
         reportAlarm(alarmId, msg, target, addrs);
     }
 
-    public void setSelfCheckPort(int selfCheckPort) {
-        String s = String.valueOf(selfCheckPort);
+    public void setSelfCheckPort(int selfCheckPort, int stdSelfCheckPort) {
+        String s = stdSelfCheckPort > 0 ? String.valueOf(stdSelfCheckPort) : String.valueOf(selfCheckPort);
         if (s.length() == 4 || s.length() == 5) {
             alarmPrefix = s.substring(1);
         }
     }
 
-    //新的4个参数报警
     public void reportAlarm(String type, String msg, String target, String targetAddrs) {
         String traceId = null;
         ServerContextData ctx = ServerContext.get();

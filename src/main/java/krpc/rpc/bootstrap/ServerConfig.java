@@ -5,9 +5,11 @@ import java.util.List;
 
 public class ServerConfig {
 
+    static public int DEFAULT_PORT = 7600;
+
     String id;
 
-    int port = 5600;
+    int port = DEFAULT_PORT;
     String host = "*";
     int backlog = 128;
     int idleSeconds = 180;

@@ -14,10 +14,34 @@ message Validate {
     string nrange = 5; // n or min,max or min,- or -,max compare by number
     string srange = 6; // like nrange but compare by string  
     string arrlen = 7; // length for repeated field
+
+    string empty_or_match = 8;
+    string empty_or_values = 9;
+    string empty_or_length = 10;
+    string empty_or_nrange = 11;
+    string empty_or_srange = 12;
+    string empty_or_arrlen = 13;
+
+    int32 retCode = 14; // error code
+    string retMsg = 15;  // error msg
+};
+
+message Gicl {
+    string field = 1;
+    string default = 2;
+    bool dynamic  = 3;
+    string dynamicValues = 4;
+    string compare = 5;
+    bool must  = 6;
+    bool any = 7;
+    bool sortable  = 8;
+    bool sensitive  = 9;
+    int32 minRows = 10;
+    bool key = 11;
 };
 
 extend google.protobuf.FieldOptions {  Validate vld = 50003;  }  
-extend google.protobuf.FieldOptions {  string map = 50004;  }  
+extend google.protobuf.FieldOptions {  Gicl gicl = 50005;  }
 
 option java_package="krpc";
 option java_outer_classname="KrpcExt";

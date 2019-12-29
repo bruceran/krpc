@@ -15,7 +15,7 @@ public interface ReportAlarmReqOrBuilder extends
   /**
    * <code>string host = 2;</code>
    */
-  String getHost();
+  java.lang.String getHost();
   /**
    * <code>string host = 2;</code>
    */
@@ -25,7 +25,7 @@ public interface ReportAlarmReqOrBuilder extends
   /**
    * <code>string app = 3;</code>
    */
-  String getApp();
+  java.lang.String getApp();
   /**
    * <code>string app = 3;</code>
    */
@@ -35,12 +35,12 @@ public interface ReportAlarmReqOrBuilder extends
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
-  java.util.List<AlarmInfo>
+  java.util.List<krpc.rpc.monitor.proto.AlarmInfo> 
       getInfoList();
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
-  AlarmInfo getInfo(int index);
+  krpc.rpc.monitor.proto.AlarmInfo getInfo(int index);
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
@@ -48,13 +48,13 @@ public interface ReportAlarmReqOrBuilder extends
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
-  java.util.List<? extends AlarmInfoOrBuilder>
+  java.util.List<? extends krpc.rpc.monitor.proto.AlarmInfoOrBuilder> 
       getInfoOrBuilderList();
   /**
    * <code>repeated .AlarmInfo info = 4;</code>
    */
-  AlarmInfoOrBuilder getInfoOrBuilder(
-          int index);
+  krpc.rpc.monitor.proto.AlarmInfoOrBuilder getInfoOrBuilder(
+      int index);
 
   /**
    * <code>int32 appServiceId = 5;</code>

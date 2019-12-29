@@ -6,15 +6,15 @@ import java.util.Map;
 
 public interface TraceContext {
 
-    void startForServer(String type, String action);
-
+    Span startForServer(String type, String action);
     Span stopForServer(int retCode); // the server span ended
     Span stopForServer(int retCode,String retMsg); // the server span ended
-    Span stopForServer(String result); // the server span ended
 
-    void start(String type, String action);
+    Span rootSpan();
 
     Span startAsync(String type, String action);
+    Span appendSpan(String type, String action,long startMicros, String status, long timeUsedMicros);
+    Span start(String type, String action);
 
     void tagForRpc(String key, String value);
 
@@ -23,8 +23,6 @@ public interface TraceContext {
     String getTagForRpc(String key);
 
     String getTagsForRpc();
-
-    Span currentSpan();
 
     RpcMeta.Trace getTrace();
 
@@ -40,4 +38,5 @@ public interface TraceContext {
 
     Map<String,String> getTagsMapForRpc();
 
+    TraceContext detach();
 } 

@@ -40,7 +40,6 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     String[] queryAddrs;
     int queryAddrsIndex = 0;
     boolean enabled = true;
-    boolean v2ErrorCode = false;
 
     String[] serverAddrs = new String[0];
     volatile int serverAddrIndex = -1;
@@ -58,7 +57,13 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     int indexMultiplier = 100;
 
     Alarm alarm = new DummyAlarm();
+
+    int errorCountToAlarm = 5;
     AtomicInteger errorCount = new AtomicInteger();
+
+    int queryInterval = 60;
+    int errorTimeToAlarm = 120;
+    volatile long lastErrorTime = 0;
 
     public CatTraceAdapter() {
         initHourIndex();
@@ -66,13 +71,6 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
         getHostInfo();
 
         domain = Trace.getAppName();
-    }
-
-    public boolean hasError(int retCode) {
-        if( v2ErrorCode )
-            return RetCodes.isSystemErrorV2(retCode);
-        else
-            return RetCodes.isSystemError(retCode);
     }
 
     public void config(String paramsStr) {
@@ -87,9 +85,11 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
         s = params.get("enabled");
         if (!isEmpty(s)) enabled = Boolean.parseBoolean(s);
 
-        s = params.get("v2ErrorCode");
-        if (!isEmpty(s)) v2ErrorCode = Boolean.parseBoolean(s);
+        s = params.get("errorTimeToAlarm");
+        if (!isEmpty(s)) errorTimeToAlarm = Integer.parseInt(s);
 
+        s = params.get("errorCountToAlarm");
+        if (!isEmpty(s)) errorCountToAlarm = Integer.parseInt(s);
 
         if(enabled) {
             servers = params.get("server");
@@ -122,9 +122,13 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
             timer = new Timer("krpc_cat_timer");
             timer.schedule(new TimerTask() {
                 public void run() {
-                    queryRoutesForInit();
+                    try {
+                        queryRoutesForInit();
+                    } catch(Throwable e) {
+                        log.error("queryRoutesForInit exception",e);
+                    }
                 }
-            }, 60000, 60000);
+            }, queryInterval * 1000, queryInterval * 1000);
         } else {
             startQueryRoutesTimer();
         }
@@ -146,13 +150,29 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
         hc = null;
     }
 
+    boolean needAlarm() {
+        if( lastErrorTime == 0 ) return false;
+        long now = System.currentTimeMillis();
+        return (now - lastErrorTime >= errorTimeToAlarm * 1000 );
+    }
+
+    void updateLastErrorTime() {
+        if( lastErrorTime == 0 ) {
+            lastErrorTime = System.currentTimeMillis();
+        }
+    }
+
     void startQueryRoutesTimer() {
         timer = new Timer("krpc_cat_timer");
         timer.schedule(new TimerTask() {
             public void run() {
-                heartBeatAndQueryRoutes();
+                try {
+                    heartBeatAndQueryRoutes();
+                } catch(Throwable e) {
+                    log.error("heartBeatAndQueryRoutes exception",e);
+                }
             }
-        }, 60000, 60000);
+        }, queryInterval * 1000, queryInterval * 1000);
     }
 
     void queryRoutesForInit() {
@@ -161,14 +181,27 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
             timer.cancel();
             startQueryRoutesTimer();
         }
+
+        int cnt = errorCount.getAndSet(0);
+        if( cnt > errorCountToAlarm ) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to cat failed", "cat", servers.replaceAll(",", "#"));
+        }
+
+        if( needAlarm()) {
+            alarm.alarm(Alarm.ALARM_TYPE_APMCFG,"query cat routes failed","cat",servers.replaceAll(",","#"));
+        }
     }
 
     void heartBeatAndQueryRoutes() {
         queryRoutes();
 
         int cnt = errorCount.getAndSet(0);
-        if( cnt > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to cat failed","cat",servers.replaceAll(",","#"));
+        if( cnt > errorCountToAlarm ) {
+            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to cat failed", "cat", servers.replaceAll(",", "#"));
+        }
+
+        if( needAlarm()) {
+            alarm.alarm(Alarm.ALARM_TYPE_APMCFG,"query cat routes failed","cat",servers.replaceAll(",","#"));
         }
     }
 
@@ -180,7 +213,9 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
     boolean queryRoutes() {
         boolean ok = queryRoutesInternal();
         if(!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"query cat routes failed","cat",servers.replaceAll(",","#"));
+            updateLastErrorTime();
+        } else {
+            lastErrorTime = 0;
         }
         return ok;
     }
@@ -264,6 +299,20 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
     public void send(TraceContext ctx, Span span) {
 
+        /*
+         System.out.println("report span type= " + span.getType() +", action=" + span.getAction());
+         if(span.getChildren() != null ) {
+             for(Span c : span.getChildren()) {
+                 System.out.println("report span child type= " + c.getType() +", action=" + c.getAction());
+
+                 if(c.getChildren() != null ) {
+                     for(Span c2 : c.getChildren()) {
+                         System.out.println("report span child type= " + c2.getType() +", action=" + c2.getAction());
+                     }
+                 }
+             }
+        }
+        */
         if(!enabled) {
             return;
         }
@@ -272,7 +321,10 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
             return;
         }
 
-        if (serverAddrIndex == -1) return;
+        if (serverAddrIndex == -1) {
+            errorCount.incrementAndGet();
+            return;
+        }
 
         try {
             pool.execute(new Runnable() {
@@ -285,6 +337,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
                 }
             });
         } catch (Exception e) {
+            errorCount.incrementAndGet();
             log.error("cat report queue is full");
         }
     }
@@ -293,7 +346,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
         String addr = currentServerAddr();
         if (isEmpty(addr)) {
-            errorCount.incrementAndGet();
+            updateLastErrorTime();
             log.error("cat routes is null");
             return;
         }
@@ -332,13 +385,18 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
         b.append(spanId).append(TAB); // message id
 
-        if (!span.getType().equals("RPCSERVER")) {
-            b.append(spanId).append(TAB); // parent message id
-            b.append(spanId).append(TAB); // root message id
+        if (!span.getType().contains("SERVER")) { // RPCSERVER, XXLSERVER, RABBITMQSERVER, KAFKASERVER
+            b.append(spanId).append(TAB); // parent message id, not used in cat server
+            b.append(spanId).append(TAB); // root message id, not used in cat server
         } else {
             String traceId = ctx.getTrace().getTraceId();
-            String rootSpanId = ctx.getTagForRpc("p-root-span-id");
-            b.append(rootSpanId).append(TAB);
+
+            String parentRootSpanId = ctx.getTrace().getParentSpanId();
+            if( parentRootSpanId == null || parentRootSpanId.isEmpty() ) {
+                parentRootSpanId = traceId;
+            }
+
+            b.append(parentRootSpanId).append(TAB);
             b.append(traceId).append(TAB);
         }
 
@@ -373,9 +431,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
             }
             if (children != null) {
                 for (Span s : children) {
-                    //if( s.getCompleted().get() == 1) {
-                        appendMessage(ctx, s, b);
-                    //}
+                    appendMessage(ctx, s, b);
                 }
             }
             appendEndMessage(ctx, span, b);
@@ -437,14 +493,20 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
         b.append(LF);
     }
 
+    String getAsyncFlag(Span span) {
+        return span.getTimeUsedMicros() == 0?"(ASYNC)":"";
+    }
+    boolean isAsync(Span span) {
+        return span.getTimeUsedMicros() == 0;
+    }
     private void appendAtomicMessage(TraceContext ctx, Span span, StringBuilder b) {
         b.append("A");
         long ts = ctx.getRequestTimeMicros() + span.getStartMicros() - ctx.getStartMicros();
         b.append(formatTimeStampMicros(ts)).append(TAB);
         b.append(span.getType()).append(TAB);
         String status = span.getStatus();
-        b.append(span.getAction()+(status.equals("ASYNC")?"(ASYNC)":"")).append(TAB);
-        if (status.equals("SUCCESS")  || status.equals("ASYNC") ) status = "0";
+        b.append(span.getAction()+getAsyncFlag(span)).append(TAB);
+        if (status.equals("SUCCESS") || isAsync(span) ) status = "0";
         b.append(status).append(TAB);
         long us = span.getTimeUsedMicros();
         b.append(us).append("us").append(TAB);
@@ -458,7 +520,7 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
         b.append(formatTimeStampMicros(ts)).append(TAB);
         b.append(span.getType()).append(TAB);
         String status = span.getStatus();
-        b.append(span.getAction()+(status.equals("ASYNC")?"(ASYNC)":"")).append(TAB);
+        b.append(span.getAction()+getAsyncFlag(span)).append(TAB);
         b.append(LF);
     }
 
@@ -468,8 +530,8 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
         b.append(formatTimeStampMicros(ts)).append(TAB);
         b.append(span.getType()).append(TAB);
         String status = span.getStatus();
-        b.append(span.getAction()+(status.equals("ASYNC")?"(ASYNC)":"")).append(TAB);
-        if (status.equals("SUCCESS")  || status.equals("ASYNC")  ) status = "0";
+        b.append(span.getAction()+getAsyncFlag(span)).append(TAB);
+        if (status.equals("SUCCESS") || isAsync(span) ) status = "0";
         b.append(status).append(TAB);
         long us = span.getTimeUsedMicros();
         b.append(us).append("us").append(TAB);
@@ -483,23 +545,19 @@ public class CatTraceAdapter implements TraceAdapter, InitClose, AlarmAware {
 
     public void inject(TraceContext ctx, Span span, RpcMeta.Trace.Builder traceBuilder) {
         String traceId = ctx.getTrace().getTraceId();
-        String rootSpanId = span.getRootSpanId();  // escape parent link error in cat ui
-//        if (!span.getType().equals("RPCSERVER")) { // escape root link error in cat ui
-//            traceId = rootSpanId;
-//        }
+        String rootSpanId = span.getRootSpanId();
 
         ctx.tagForRpc("p-root-span-id", rootSpanId);
 
         traceBuilder.setTraceId(traceId);
-        traceBuilder.setParentSpanId("");
+        traceBuilder.setParentSpanId(rootSpanId);
         traceBuilder.setSpanId(span.getSpanId());
-        //traceBuilder.setSpanId(nextSpanId());
         traceBuilder.setTags(ctx.getTagsForRpc());
     }
 
     public SpanIds restore(String parentSpanId, String spanId) {
-        return new SpanIds("", nextSpanId());
-        //return null;
+        // return new SpanIds("", nextSpanId());
+        return new SpanIds(parentSpanId, nextSpanId());
     }
 
     public TraceIds newStartTraceIds(boolean isServer) {

@@ -81,7 +81,21 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
     AtomicInteger seq = new AtomicInteger(0);
 
     Alarm alarm = new DummyAlarm();
-    AtomicInteger errorCount = new AtomicInteger();
+
+    int errorTimeToAlarm = 180;
+    volatile long lastErrorTime = 0;
+
+    boolean needAlarm() {
+        if( lastErrorTime == 0 ) return false;
+        long now = System.currentTimeMillis();
+        return (now - lastErrorTime >= errorTimeToAlarm * 1000 );
+    }
+
+    void updateLastErrorTime() {
+        if( lastErrorTime == 0 ) {
+            lastErrorTime = System.currentTimeMillis();
+        }
+    }
 
     public SkyWalkingTraceAdapter() {
 
@@ -128,7 +142,11 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
             timer = new Timer("krpc_skywalking_timer");
             timer.schedule(new TimerTask() {
                 public void run() {
-                    retryRegister();
+                    try {
+                        retryRegister();
+                    } catch(Throwable e) {
+                        log.error("retryRegister exception",e);
+                    }
                 }
             }, 60000, 60000);
         } else {
@@ -156,7 +174,11 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
         timer = new Timer("krpc_skywalking_timer");
         timer.schedule(new TimerTask() {
             public void run() {
-                heartBeatAndQueryRoutes();
+                try {
+                    heartBeatAndQueryRoutes();
+                } catch(Throwable e) {
+                    log.error("heartBeatAndQueryRoutes exception",e);
+                }
             }
         }, 60000, 60000);
     }
@@ -167,6 +189,10 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
             timer.cancel();
             startQueryRoutesTimer();
         }
+
+        if( needAlarm() ) {
+            alarm.alarm(Alarm.ALARM_TYPE_APMCFG, "query skywalking routes failed","skywalking",servers.replaceAll(",","#"));
+        }
     }
 
     boolean register() {
@@ -176,12 +202,12 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
         }
         ok = registerAppId(0);
         if (!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"register appId failed","skywalking",servers.replaceAll(",","#"));
+            alarm.alarm(Alarm.ALARM_TYPE_APMCFG,"register appId failed","skywalking",servers.replaceAll(",","#"));
             return false;
         }
         ok = registerInstanceId(0);
         if (!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"register instanceId failed","skywalking",servers.replaceAll(",","#"));
+            alarm.alarm(Alarm.ALARM_TYPE_APMCFG,"register instanceId failed","skywalking",servers.replaceAll(",","#"));
             return false;
         }
         return ok;
@@ -199,16 +225,18 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
         // heartBeat();
         queryRoutes();
 
-        int cnt = errorCount.getAndSet(0);
-        if( cnt > 0 ) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to skywalking failed","skywalking",servers.replaceAll(",","#"));
+        if( needAlarm() ) {
+            alarm.alarm(Alarm.ALARM_TYPE_APMCFG, "query skywalking routes failed","skywalking",servers.replaceAll(",","#"));
         }
+
     }
 
     boolean queryRoutes() {
         boolean ok = queryRoutesInternal();
         if(!ok) {
-            alarm.alarm(Alarm.ALARM_TYPE_APM,"query skywalking routes failed","skywalking",servers.replaceAll(",","#"));
+            updateLastErrorTime();
+        } else {
+            lastErrorTime = 0;
         }
         return ok;
     }
@@ -364,7 +392,7 @@ public class SkyWalkingTraceAdapter implements TraceAdapter, InitClose, AlarmAwa
     boolean report(TraceContext ctx, Span span) {
         boolean ok = reportInternal(ctx,span);
         if(!ok) {
-            errorCount.incrementAndGet();
+            alarm.alarm(Alarm.ALARM_TYPE_APM, "report to skywalking failed","skywalking",servers.replaceAll(",","#"));
         }
         return ok;
     }

@@ -8,7 +8,9 @@ import krpc.rpc.util.MessageToMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RpcClient extends RpcCallableBase {
@@ -16,7 +18,7 @@ public class RpcClient extends RpcCallableBase {
     static Logger log = LoggerFactory.getLogger(RpcClient.class);
 
     ClusterManager clusterManager;
-    ConnectionPlugin connectionPlugin;
+    List<ConnectionPlugin> connectionPlugins;
     RpcCodec rpcCodec;
 
     public void init() {
@@ -63,16 +65,20 @@ public class RpcClient extends RpcCallableBase {
     public void connected(String connId, String localAddr) {
         clusterManager.connected(connId, localAddr);
         super.connected(connId, localAddr);
-        if( connectionPlugin != null ) {
-            connectionPlugin.connected(connId,localAddr);
+        if( connectionPlugins != null ) {
+            for( ConnectionPlugin c: connectionPlugins ) {
+                c.connected(connId, localAddr);
+            }
         }
     }
 
     public void disconnected(String connId) {
         clusterManager.disconnected(connId);
         super.disconnected(connId);
-        if( connectionPlugin != null ) {
-            connectionPlugin.disconnected(connId);
+        if( connectionPlugins != null ) {
+            for( ConnectionPlugin c: connectionPlugins ) {
+                c.disconnected(connId);
+            }
         }
     }
 
@@ -93,12 +99,13 @@ public class RpcClient extends RpcCallableBase {
         this.clusterManager = clusterManager;
     }
 
-    public ConnectionPlugin getConnectionPlugin() {
-        return connectionPlugin;
+    public List<ConnectionPlugin> getConnectionPlugins() {
+        return connectionPlugins;
     }
 
-    public void setConnectionPlugin(ConnectionPlugin connectionPlugin) {
-        this.connectionPlugin = connectionPlugin;
+    public void addConnectionPlugin(ConnectionPlugin connectionPlugin) {
+        if( connectionPlugins == null ) connectionPlugins = new ArrayList<>();
+        connectionPlugins.add(connectionPlugin);
     }
 
     public RpcCodec getRpcCodec() {

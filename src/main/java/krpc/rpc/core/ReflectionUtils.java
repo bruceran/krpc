@@ -32,10 +32,15 @@ public class ReflectionUtils {
     static Map<String, Field> retCodeFields = new HashMap<String, Field>();
     static Map<String, Field> retMsgFields = new HashMap<String, Field>();
     static Field metaSequenceField = null;
-    static Field metaPeersField = null;
     static Field metaCompressField = null;
     static Field metaEncryptField = null;
     static ConcurrentHashMap<String, Object> errors = new ConcurrentHashMap<String, Object>();
+
+    static Field metaTraceField = null;
+    static Field metaPeersField = null;
+    static Field metaTraceIdField = null;
+    static Field metaParentSpanIdField = null;
+    static Field metaSpanIdField = null;
 
     static {
         init();
@@ -43,8 +48,18 @@ public class ReflectionUtils {
 
     public static void init() {
         try {
+
+            metaTraceField = RpcMeta.class.getDeclaredField("trace_");
+            metaTraceField.setAccessible(true);
             metaPeersField = RpcMeta.Trace.class.getDeclaredField("peers_");
             metaPeersField.setAccessible(true);
+            metaTraceIdField = RpcMeta.Trace.class.getDeclaredField("traceId_");
+            metaTraceIdField.setAccessible(true);
+            metaParentSpanIdField = RpcMeta.Trace.class.getDeclaredField("parentSpanId_");
+            metaParentSpanIdField.setAccessible(true);
+            metaSpanIdField = RpcMeta.Trace.class.getDeclaredField("spanId_");
+            metaSpanIdField.setAccessible(true);
+
             metaCompressField = RpcMeta.class.getDeclaredField("compress_");
             metaCompressField.setAccessible(true);
             metaEncryptField = RpcMeta.class.getDeclaredField("encrypt_");
@@ -213,17 +228,57 @@ public class ReflectionUtils {
         }
     }
 
+
     public static void adjustPeers(RpcMeta meta, String connId) {
-        try {
-            int p = connId.lastIndexOf(":");
-            String addr = connId.substring(0, p);
+        int p = connId.lastIndexOf(":");
+        String addr = connId.substring(0, p);
+
+        if( meta.getTrace() == RpcMeta.Trace.getDefaultInstance() ) { // 默认对象, 否则每次都是修改默认对象，会造成OOM
+
+            String newPeers = addr;
+
+            RpcMeta.Trace trace = RpcMeta.Trace.newBuilder().setPeers(newPeers).build();
+            try {
+                metaTraceField.set(meta, trace);
+            } catch (Exception e) {
+                log.error("adjustPeers exception");
+            }
+
+        } else {
+
             String peers = meta.getTrace().getPeers();
             String newPeers = peers.isEmpty() ? addr : peers + "," + addr;
-            metaPeersField.set(meta.getTrace(), newPeers);
-        } catch (Exception e) {
-            log.error("adjustPeers exception");
+
+            try {
+                metaPeersField.set(meta.getTrace(), newPeers);
+            } catch (Exception e) {
+                log.error("adjustPeers exception");
+            }
         }
     }
+
+    public static void adjustTrace(RpcMeta meta, String traceId, String parentSpanId, String spanId) {
+        if( meta.getTrace() == RpcMeta.Trace.getDefaultInstance() ) { // 默认对象
+
+            RpcMeta.Trace trace = RpcMeta.Trace.newBuilder().setTraceId(traceId).setParentSpanId(parentSpanId).setSpanId(spanId).build();
+
+            try {
+                metaTraceField.set(meta, trace);
+            } catch (Exception e) {
+                log.error("adjustTrace exception");
+            }
+
+        } else {
+            try {
+                metaTraceIdField.set(meta.getTrace(), traceId);
+                metaParentSpanIdField.set(meta.getTrace(), parentSpanId);
+                metaSpanIdField.set(meta.getTrace(), spanId);
+            } catch (Exception e) {
+                log.error("adjustTrace exception");
+            }
+        }
+    }
+
 
     public static void updateSequence(RpcMeta meta, int sequence) {
         try {
@@ -311,6 +366,22 @@ public class ReflectionUtils {
             return msgNames;
         } catch (Exception e) {
             throw new RuntimeException("interface_parse_msgId_exception");
+        }
+    }
+
+    public static void checkReqResSame(Class<?> intf) {
+        Method[] methods = intf.getDeclaredMethods();
+        for (Method m : methods) {
+            if (Modifier.isStatic(m.getModifiers())) continue;
+            if (m.getParameterCount() != 1) continue;
+            Class<?> reqCls = m.getParameterTypes()[0];
+            Class<?> resCls = m.getReturnType();
+            if (!Message.class.isAssignableFrom(reqCls)) continue;
+            if (!Message.class.isAssignableFrom(resCls)) continue;
+
+            if( reqCls == resCls ) {
+                throw new RuntimeException("method define error in proto file, method="+m.getName()+", res cls == req cls");
+            }
         }
     }
 

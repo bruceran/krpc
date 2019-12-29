@@ -29,8 +29,6 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
     // curl -X PUT "http://192.168.31.144:2379/v2/keys/dynamicroutes/default/100/routes.json.version" -d  value=1
     // curl -X PUT "http://192.168.31.144:2379/v2/keys/dynamicroutes/default/100/routes.json" -d value=%7B%22serviceId%22%3A100%2C%22disabled%22%3Afalse%2C%22weights%22%3A%5B%7B%22addr%22%3A%22192.168.31.27%22%2C%22weight%22%3A50%7D%2C%7B%22addr%22%3A%22192.168.31.28%22%2C%22weight%22%3A50%7D%5D%2C%22rules%22%3A%5B%7B%22from%22%3A%22host%20%3D%20192.168.31.27%22%2C%22to%22%3A%22host%20%3D%20192.168.31.27%22%2C%22priority%22%3A2%7D%2C%7B%22from%22%3A%22host%20%3D%20192.168.31.28%22%2C%22to%22%3A%22host%20%3D%20%24host%22%2C%22priority%22%3A1%7D%5D%7D
 
-    AtomicBoolean healthy = new AtomicBoolean(true);
-
     ConcurrentHashMap<String, String> versionCache = new ConcurrentHashMap<>();
 
     Alarm alarm = new DummyAlarm();
@@ -142,7 +140,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         if (res.getRetCode() != 0 || res.getHttpCode() != 201 && res.getHttpCode() != 200) {
             log.error("cannot register service " + serviceName + ", content=" + res.getContent());
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return;
         }
 
@@ -150,15 +148,15 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         Map<String, Object> m = Json.toMap(json);
         if (m == null) {
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return;
         }
 
         if (m.containsKey("errorCode") || !"set".equals(m.get("action"))) {
             log.error("cannot register service " + serviceName + ", content=" + res.getContent());
-            healthy.set(false);
+            updateLastErrorTime();
         } else {
-            healthy.set(true);
+            lastErrorTime = 0;
         }
     }
 
@@ -176,7 +174,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
             log.error("cannot deregister service " + serviceName + ", content=" + res.getContent());
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return;
         }
 
@@ -184,15 +182,15 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         Map<String, Object> m = Json.toMap(json);
         if (m == null) {
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return;
         }
 
         if (m.containsKey("errorCode") || !"delete".equals(m.get("action"))) {
             log.error("cannot deregister service " + serviceName + ", content=" + res.getContent());
-            healthy.set(false);
+            updateLastErrorTime();
         } else {
-            healthy.set(true);
+            lastErrorTime = 0;
         }
     }
 
@@ -209,7 +207,7 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         if (res.getRetCode() != 0 || res.getHttpCode() != 200) {
             log.error("cannot discover service " + serviceName + ", content=" + res.getContent());
             if (res.getHttpCode() != 404) nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return null;
         }
 
@@ -217,16 +215,16 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
         Map<String, Object> m = Json.toMap(json);
         if (m == null) {
             nextAddr();
-            healthy.set(false);
+            updateLastErrorTime();
             return null;
         }
 
         if (m.containsKey("errorCode") || !"get".equals(m.get("action"))) {
             log.error("cannot discover service " + serviceName + ", content=" + res.getContent());
-            healthy.set(false);
+            updateLastErrorTime();
             return null;
         } else {
-            healthy.set(true);
+            lastErrorTime = 0;
         }
 
         TreeSet<String> set = new TreeSet<>();
@@ -258,16 +256,15 @@ public class EtcdRegistry extends AbstractHttpRegistry implements DynamicRoutePl
 
     @Override
     public void healthCheck(List<HealthStatus> list) {
-        boolean b = healthy.get();
-        if( b ) return;
+        if( !needAlarm() ) return;
+
         String alarmId = alarm.getAlarmId(Alarm.ALARM_TYPE_REGDIS);
         list.add(new HealthStatus(alarmId,false,"etcd_registry connect failed","etcd",addrs.replaceAll(",","#")));
     }
 
     @Override
     public void dump(Map<String, Object> metrics) {
-        boolean b = healthy.get();
-        if( b ) return;
+        if( !needAlarm() ) return;
 
         alarm.alarm(Alarm.ALARM_TYPE_REGDIS,"etcd_registry connect failed","etcd",addrs.replaceAll(",","#"));
         metrics.put("krpc.consul.errorCount",1);
